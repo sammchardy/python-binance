@@ -112,6 +112,8 @@ Fetch all orders
 
 Create an order
 
+.. code:: python
+
     from binance.enums import *
     order = client.create_order(
         symbol='BNBBTC',
