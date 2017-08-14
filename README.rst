@@ -19,7 +19,7 @@ Install with ``pip``:
 
 .. code:: bash
 
-    pip install binance
+    pip install python-binance
 
 Documentation
 -------------
