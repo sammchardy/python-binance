@@ -8,6 +8,7 @@ Features
 
 - Implementation of General, Market Data and Account endpoints.
 - Simple handling of authentication
+- No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 
 Installation
@@ -58,6 +59,8 @@ If a required parameter is not supplied, an error will be raised.
 
 Each API method returns a dictionary of the JSON response as per the `Binance API documentation <https://www.binance.com/restapipub.html>`_.
 The docstring of each method in the code references the endpoint it implements.
+
+Some methods require a `timestamp` parameter, this is generated for you where required.
 
 Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://www.binance.com/restapipub.html#timing-security>`_.
 
