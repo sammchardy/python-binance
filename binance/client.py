@@ -21,6 +21,9 @@ class Client(object):
         self.API_SECRET = api_secret
         self.session = self._init_session()
 
+        # init DNS and SSL cert
+        self.ping()
+
     def _init_session(self):
 
         session = requests.session()
