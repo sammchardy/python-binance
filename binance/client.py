@@ -55,8 +55,6 @@ class Client(object):
             kwargs['params'] = kwargs['data']
             del(kwargs['data'])
 
-        print kwargs
-
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
