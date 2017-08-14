@@ -14,7 +14,7 @@ Features
 Installation
 ------------
 
-``binance`` is available on `PYPI <https://pypi.python.org/pypi/python-binance/0.0.1>`_.
+``binance`` is available on `PYPI <https://pypi.python.org/pypi/python-binance/>`_.
 Install with ``pip``:
 
 .. code:: bash
