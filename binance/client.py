@@ -7,7 +7,7 @@ if six.PY2:
 elif six.PY3:
     from urllib.parse import urlencode
 
-from exceptions import BinanceAPIException
+from .exceptions import BinanceAPIException
 
 
 class Client(object):
