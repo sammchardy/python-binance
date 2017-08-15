@@ -11,6 +11,6 @@ setup(
     author='Sam McHardy',
     license='MIT',
     author_email='',
-    install_requires=['requests', 'six'],
+    install_requires=['requests', 'six', 'Twisted', 'pyOpenSSL', 'autobahn', 'service-identity'],
     keywords='binance exchange bitcoin ethereum btc eth neo'
 )
