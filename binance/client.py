@@ -266,3 +266,15 @@ class Client(object):
         :return:
         """
         return self._get('myTrades', True, data=params)
+
+    # User Stream Endpoints
+
+    def stream_get_listen_key(self):
+        res = self._post('userDataStream', False, data={})
+        return res['listenKey']
+
+    def stream_keepalive(self, **params):
+        return self._put('userDataStream', False, data=params)
+
+    def stream_close(self, **params):
+        return self._delete('userDataStream', False, data=params)
