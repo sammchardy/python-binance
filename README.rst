@@ -154,11 +154,75 @@ Error Handling
         print e.status_code
         print e.message
 
+Websockets
+^^^^^^^^^^
+
+Sockets are handled through a Socket Manager `BinanceSocketManager`.
+Multiple socket connections can be made through the manager.
+
+Socket connections pass a callback function to receive messages.
+Messages are received are dictionary objects relating to the message formats defined in the `Binance API documentation <https://www.binance.com/restapipub.html#wss-endpoint>`_.
+
+Create the manager like so.
+
+.. code:: python
+
+    bm = BinanceSocketManager()
+    # attach any sockets here then start
+    bm.start()
+
+A callback to process messages would take the format
+
+.. code:: python
+
+    def process_message(msg):
+        print("message type:" + msg[e])
+        print(msg)
+        # do something
+
+** Depth Socket **
+
+.. code:: python
+
+    bm.start_depth_socket('BNBBTC', process_message)
+
+** Kline Socket **
+
+.. code:: python
+
+    bm.start_kline_socket('BNBBTC', process_message)
+
+** Aggregated Trade Socket **
+
+.. code:: python
+
+    bm.start_trade_socket('BNBBTC', process_message)
+
+** Ticker Socket **
+
+.. code:: python
+
+    bm.start_ticker_socket(process_message)
+
+** User Socket **
+
+This watches for 3 different events
+
+- Account Update Event
+- Order Update Event
+- Trade Update Event
+
+A listen key is required to connect this socket.
+
+.. code:: python
+
+    # Fetch listen key using API
+    listen_key = client.stream_get_listen_key()
+    bm.start_user_socket(listen_key, process_message)
+
 TODO
 ----
 
-- Websocket handling
-- Stream handling?
 - Tests
 
 Donate
