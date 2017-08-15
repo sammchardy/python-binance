@@ -55,7 +55,6 @@ Making API Calls
 
 Every method supports the passing of arbitrary parameters via keyword.
 These keyword arguments will be sent directly to the relevant endpoint.
-If a required parameter is not supplied, an error will be raised.
 
 Each API method returns a dictionary of the JSON response as per the `Binance API documentation <https://www.binance.com/restapipub.html>`_.
 The docstring of each method in the code references the endpoint it implements.
@@ -63,6 +62,8 @@ The docstring of each method in the code references the endpoint it implements.
 Some methods require a `timestamp` parameter, this is generated for you where required.
 
 Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://www.binance.com/restapipub.html#timing-security>`_.
+
+API Endpoints are rate limited by Binance at 20 requests per second.
 
 ENUMs
 ^^^^^
@@ -165,11 +166,11 @@ and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 Socket connections pass a callback function to receive messages.
 Messages are received are dictionary objects relating to the message formats defined in the `Binance API documentation <https://www.binance.com/restapipub.html#wss-endpoint>`_.
 
-Create the manager like so.
+Create the manager like so, passing the api client.
 
 .. code:: python
 
-    bm = BinanceSocketManager()
+    bm = BinanceSocketManager(client)
     # attach any sockets here then start
     bm.start()
 
@@ -214,13 +215,11 @@ This watches for 3 different events
 - Order Update Event
 - Trade Update Event
 
-A listen key is required to connect this socket.
+The Manager handles keeping the socket alive.
 
 .. code:: python
 
-    # Fetch listen key using API
-    listen_key = client.stream_get_listen_key()
-    bm.start_user_socket(listen_key, process_message)
+    bm.start_user_socket(process_message)
 
 ** Close Socket **
 
@@ -231,6 +230,13 @@ To close an individual socket call the corresponding close function
 - stop_trade_socket
 - stop_ticker_socket
 - stop_user_socket
+
+
+To stop all sockets and end the manager call `close` after doing this a `start` call would be required to connect any new sockets.
+
+.. code:: python
+
+    bm.close()
 
 TODO
 ----

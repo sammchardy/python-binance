@@ -21,13 +21,18 @@ class BinanceClientProtol(WebSocketClientProtocol):
 class BinanceSocketManager(threading.Thread):
 
     _conns = {}
+    _user_timer = None
+    _client = None
+    _user_listen_key = None
+    _user_timeout = 50 * 60  # 50 minutes
 
-    def __init__(self):
+    def __init__(self, client):
         threading.Thread.__init__(self)
+        self._client = client
 
     def _start_socket(self, path, callback):
         if path in self._conns:
-            return
+            return False
 
         factory = WebSocketClientFactory(BINANCE_STREAM_URL + path)
         factory.protocol = BinanceClientProtol
@@ -35,21 +40,34 @@ class BinanceSocketManager(threading.Thread):
         context_factory = ssl.ClientContextFactory()
 
         self._conns[path] = connectWS(factory, context_factory)
+        return True
 
     def start_depth_socket(self, symbol, callback):
-        self._start_socket(symbol.lower() + '@depth', callback)
+        return self._start_socket(symbol.lower() + '@depth', callback)
 
     def start_kline_socket(self, symbol, callback):
-        self._start_socket(symbol.lower() + '@kline', callback)
+        return self._start_socket(symbol.lower() + '@kline', callback)
 
     def start_trade_socket(self, symbol, callback):
-        self._start_socket(symbol.lower() + '@trade', callback)
+        return self._start_socket(symbol.lower() + '@trade', callback)
 
     def start_ticker_socket(self, callback):
-        self._start_socket('!ticker@arr', callback)
+        return self._start_socket('!ticker@arr', callback)
 
-    def start_user_socket(self, listen_key, callback):
-        self._start_socket(listen_key, callback)
+    def start_user_socket(self, callback):
+        self._user_listen_key = self._client.stream_get_listen_key()
+        if self._start_socket(self._user_listen_key, callback):
+            # start timer to keep socket alive
+            self._start_user_timer()
+
+    def _start_user_timer(self):
+        self._user_timer = threading.Timer(self._user_timeout, self._keepalive_user_socket)
+        self._user_timer.setDaemon(True)
+        self._user_timer.start()
+
+    def _keepalive_user_socket(self):
+        self._client.stream_keepalive(listenKey=self._user_listen_key)
+        self._start_user_timer()
 
     def _stop_socket(self, path):
         if path not in self._conns:
@@ -70,8 +88,16 @@ class BinanceSocketManager(threading.Thread):
     def stop_ticker_socket(self):
         self._stop_socket('!ticker@arr')
 
-    def stop_user_socket(self, listen_key):
-        self._stop_socket(listen_key)
+    def stop_user_socket(self):
+        if not self._user_listen_key:
+            return
+        self._stop_socket(self._user_listen_key)
+        # stop the timer
+        self._user_timer.cancel()
+        self._user_timer = None
+        # close the stream
+        self._client.stream_close(listenKey=self._user_listen_key)
+        self._user_listen_key = None
 
     def run(self):
         reactor.run(installSignalHandlers=False)
