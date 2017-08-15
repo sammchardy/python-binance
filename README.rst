@@ -159,6 +159,8 @@ Websockets
 
 Sockets are handled through a Socket Manager `BinanceSocketManager`.
 Multiple socket connections can be made through the manager.
+Only one instance of each socket type will be created, i.e. only one BNBBTC Depth socket can be created
+and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 
 Socket connections pass a callback function to receive messages.
 Messages are received are dictionary objects relating to the message formats defined in the `Binance API documentation <https://www.binance.com/restapipub.html#wss-endpoint>`_.
@@ -219,6 +221,16 @@ A listen key is required to connect this socket.
     # Fetch listen key using API
     listen_key = client.stream_get_listen_key()
     bm.start_user_socket(listen_key, process_message)
+
+** Close Socket **
+
+To close an individual socket call the corresponding close function
+
+- stop_depth_socket
+- stop_kline_socket
+- stop_trade_socket
+- stop_ticker_socket
+- stop_user_socket
 
 TODO
 ----
