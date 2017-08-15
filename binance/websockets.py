@@ -104,3 +104,6 @@ class BinanceSocketManager(threading.Thread):
 
     def close(self):
         reactor.stop()
+
+        self.stop_user_socket()
+        self._conns = {}
