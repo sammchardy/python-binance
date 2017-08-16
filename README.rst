@@ -50,6 +50,24 @@ The exception provides access to the
 - `message` - Binance error message
 - `request` - request object if available
 
+
+When placing an order parameters are validated to check they fit within the `Binance Trading Rules <https://binance.zendesk.com/hc/en-us/articles/115000594711>`_.
+
+The following exceptions extend `BinanceOrderException`.
+
+** BinanceOrderMinAmountException **
+
+Raised if the specified amount isn't a multiple of the trade minimum amount.
+
+** BinanceOrderMinPriceException **
+
+Raised if the price is lower than the trade minimum price.
+
+** BinanceOrderTotalPriceException **
+
+Raised if the total is lower than the trade minimum total.
+
+
 Making API Calls
 ^^^^^^^^^^^^^^^^
 

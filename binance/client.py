@@ -8,6 +8,7 @@ elif six.PY3:
     from urllib.parse import urlencode
 
 from .exceptions import BinanceAPIException
+from .validation import validate_order
 
 
 class Client(object):
@@ -170,6 +171,7 @@ class Client(object):
             icebergQty - Used with iceberg orders
         :return:
         """
+        validate_order(params)
         return self._post('order', True, data=params)
 
     def create_test_order(self, **params):
@@ -189,6 +191,7 @@ class Client(object):
             recvWindow - the number of milliseconds the request is valid for
         :return:
         """
+        validate_order(params)
         return self._post('order/test', True, data=params)
 
     def get_order(self, **params):
