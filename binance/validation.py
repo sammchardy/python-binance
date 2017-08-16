@@ -89,8 +89,6 @@ def validate_order(params):
     if price < limits['min_price'] != 0:
         raise BinanceOrderMinPriceException(limits['min_price'])
 
-    print "quantity: %s min_amount: %s" % (quantity, limits['min_amount'])
-    print "mod: %f" % (quantity % limits['min_amount'])
     # check order amount
     if quantity % limits['min_amount'] != 0.0:
         raise BinanceOrderMinAmountException(limits['min_amount'])
