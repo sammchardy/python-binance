@@ -1,7 +1,7 @@
 Binance API
 ========
 
-This is an unofficial Python wrapper for Binance exchange API v1. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the Binance exchange API v1. I am in no way affiliated with Binance, use at your own risk.
 
 Features
 --------
@@ -10,6 +10,8 @@ Features
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
+- Websocket handling
+- Order parameter validation based on Trade Rules
 
 Installation
 ------------
@@ -269,3 +271,27 @@ If this library helped you out feel free to donate.
 - ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
 - NEO: AVJB4ZgN7VgSUtArCt94y7ZYT6d5NDfpBo
 - BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
+
+Changelog
+---------
+
+v0.1.0
+^^^^^^
+
+Websocket release
+
+** Added **
+
+- Websocket manager
+- Order parameter validation
+- Order and Symbol enums
+- API Endpoints for Data Streams
+
+v0.0.2
+^^^^^^
+
+Initial version
+
+** Added **
+
+- General, Market Data and Account endpoints
