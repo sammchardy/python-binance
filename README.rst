@@ -275,8 +275,8 @@ If this library helped you out feel free to donate.
 Changelog
 ---------
 
-v0.1.0
-^^^^^^
+v0.1.0 - 2017-08-16
+^^^^^^^^^^^^^^^^^^^
 
 Websocket release
 
@@ -287,8 +287,8 @@ Websocket release
 - Order and Symbol enums
 - API Endpoints for Data Streams
 
-v0.0.2
-^^^^^^
+v0.0.2 - 2017-08-14
+^^^^^^^^^^^^^^^^^^^
 
 Initial version
 
