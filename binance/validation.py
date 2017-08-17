@@ -77,6 +77,11 @@ TRADE_LIMITS = {
         'min_amount': 1,
         'min_price': 0.00000001,
         'min_order_value': 0.001
+    },
+    'HSRBTC': {
+        'min_amount': 0.01,
+        'min_price': 0.000001,
+        'min_order_value': 0.001
     }
 }
 
