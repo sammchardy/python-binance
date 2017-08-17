@@ -7,6 +7,12 @@ Binance API
 .. image:: https://img.shields.io/pypi/l/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
+.. image:: https://img.shields.io/pypi/wheel/python-binance.svg
+    :target: https://pypi.python.org/pypi/python-binance
+
+.. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
+    :target: https://pypi.python.org/pypi/python-binance
+
 This is an unofficial Python wrapper for the `Binance exchange API v1 <https://www.binance.com/restapipub.html>`_. I am in no way affiliated with Binance, use at your own risk.
 
 Features
@@ -280,6 +286,13 @@ If this library helped you out feel free to donate.
 
 Changelog
 ---------
+
+v0.1.1 - 2017-08-17
+^^^^^^^^^^^^^^^^^^^
+
+** Added **
+
+- Validation for HSR/BTC pair
 
 v0.1.0 - 2017-08-16
 ^^^^^^^^^^^^^^^^^^^

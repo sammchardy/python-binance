@@ -7,7 +7,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'PYPIREADME.rst')).read()
 
 setup(
     name='python-binance',
-    version='0.1.0',
+    version='0.1.1',
     packages=['binance'],
     description='Binance API python implementation',
     url='https://github.com/sammchardy/python-binance',
