@@ -13,15 +13,40 @@ TRADE_LIMITS = {
         'min_price': 0.000001,
         'min_order_value': 0.001
     },
+    'BNBBTC': {
+        'min_amount': 1,
+        'min_price': 0.00000001,
+        'min_order_value': 0.001
+    },
     'NEOBTC': {
         'min_amount': 0.001,
         'min_price': 0.000001,
         'min_order_value': 0.001
     },
-    'BNBBTC': {
+    'GASBTC': {
+        'min_amount': 0.01,
+        'min_price': 0.000001,
+        'min_order_value': 0.001
+    },
+    'BCCBTC': {
+        'min_amount': 0.001,
+        'min_price': 0.000001,
+        'min_order_value': 0.001
+    },
+    'HCCBTC': {
         'min_amount': 1,
         'min_price': 0.00000001,
         'min_order_value': 0.001
+    },
+    'HSRBTC': {
+        'min_amount': 0.01,
+        'min_price': 0.000001,
+        'min_order_value': 0.001
+    },
+    'BNBETH': {
+        'min_amount': 1,
+        'min_price': 0.00000001,
+        'min_order_value': 0.01
     },
     'QTUMETH': {
         'min_amount': 0.01,
@@ -33,32 +58,17 @@ TRADE_LIMITS = {
         'min_price': 0.00000001,
         'min_order_value': 0.01
     },
-    'EOSETH': {
-        'min_amount': 0.01,
-        'min_price': 0.000001,
-        'min_order_value': 0.01
-    },
     'BNTETH': {
         'min_amount': 0.01,
         'min_price': 0.000001,
         'min_order_value': 0.01
     },
-    'BCCBTC': {
-        'min_amount': 0.001,
-        'min_price': 0.000001,
-        'min_order_value': 0.001
-    },
-    'GASBTC': {
+    'EOSETH': {
         'min_amount': 0.01,
         'min_price': 0.000001,
-        'min_order_value': 0.001
-    },
-    'BTMETH': {
-        'min_amount': 1,
-        'min_price': 0.00000001,
         'min_order_value': 0.01
     },
-    'BNBETH': {
+    'BTMETH': {
         'min_amount': 1,
         'min_price': 0.00000001,
         'min_order_value': 0.01
@@ -73,16 +83,6 @@ TRADE_LIMITS = {
         'min_price': 0.01,
         'min_order_value': 1
     },
-    'HCCBTC': {
-        'min_amount': 1,
-        'min_price': 0.00000001,
-        'min_order_value': 0.001
-    },
-    'HSRBTC': {
-        'min_amount': 0.01,
-        'min_price': 0.000001,
-        'min_order_value': 0.001
-    }
 }
 
 
