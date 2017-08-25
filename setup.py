@@ -1,16 +1,11 @@
 #!/usr/bin/env python
-
-import os
 from setuptools import setup
-
-README = open(os.path.join(os.path.dirname(__file__), 'PYPIREADME.rst')).read()
 
 setup(
     name='python-binance',
     version='0.1.1',
     packages=['binance'],
     description='Binance API python implementation',
-    long_description=README,
     url='https://github.com/sammchardy/python-binance',
     author='Sam McHardy',
     license='MIT',
