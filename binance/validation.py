@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from .exceptions import *
+from .exceptions import BinanceOrderUnknownSymbolException, \
+    BinanceOrderInactiveSymbolException, \
+    BinanceOrderMinPriceException, \
+    BinanceOrderMinAmountException, \
+    BinanceOrderMinTotalException
 
 """
 Use details from
