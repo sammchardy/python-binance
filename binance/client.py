@@ -14,7 +14,10 @@ from .validation import validate_order
 class Client(object):
 
     API_URL = 'https://www.binance.com/api'
+    WEBSITE_URL = 'https://www.binance.com'
     API_VERSION = 'v1'
+
+    _products = None
 
     def __init__(self, api_key, api_secret):
 
@@ -24,6 +27,7 @@ class Client(object):
 
         # init DNS and SSL cert
         self.ping()
+        self.get_products()
 
     def _init_session(self):
 
@@ -35,6 +39,9 @@ class Client(object):
 
     def _create_api_uri(self, path):
         return self.API_URL + '/' + self.API_VERSION + '/' + path
+
+    def _create_website_uri(self, path):
+        return self.API_URL + '/' + path
 
     def _generate_signature(self, data):
 
@@ -52,8 +59,23 @@ class Client(object):
             kwargs['data'] = data
         if signed:
             # generate signature
-            kwargs['data']['timestamp'] =int(time.time() * 1000)
+            kwargs['data']['timestamp'] = int(time.time() * 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
+
+        if data and method == 'get':
+            kwargs['params'] = kwargs['data']
+            del(kwargs['data'])
+
+        response = getattr(self.session, method)(uri, **kwargs)
+        return self._handle_response(response)
+
+    def _request_website(self, method, path, **kwargs):
+
+        uri = self._create_website_uri(path)
+
+        data = kwargs.get('data', None)
+        if data and isinstance(data, dict):
+            kwargs['data'] = data
 
         if data and method == 'get':
             kwargs['params'] = kwargs['data']
@@ -82,6 +104,23 @@ class Client(object):
 
     def _delete(self, path, signed=False, **kwargs):
         return self._request('delete', path, signed, **kwargs)
+
+    def _parse_products(self, products):
+        """
+
+        :param products:
+        :return:
+        """
+        self._products = []
+        for p in products:
+            self._products[p['symbol']] = p
+
+    # Website Endpoints
+
+    def get_products(self):
+        products = self._request_website('get', 'exchange/public/product')
+        self._parse_products(products)
+        return products
 
     # General Endpoints
 
