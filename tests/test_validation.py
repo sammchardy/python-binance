@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding=utf-8
+
 from binance.validation import validate_order
 from binance.exceptions import *
 import pytest
