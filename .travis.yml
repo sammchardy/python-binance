@@ -15,7 +15,6 @@ install:
 
 script:
   - tox
-  - coverage report -m
 
 after_success:
   - coveralls
