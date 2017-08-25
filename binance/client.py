@@ -5,13 +5,13 @@ import hashlib
 import requests
 import six
 import time
+from .exceptions import BinanceAPIException
+from .validation import validate_order
+
 if six.PY2:
     from urllib import urlencode
 elif six.PY3:
     from urllib.parse import urlencode
-
-from .exceptions import BinanceAPIException
-from .validation import validate_order
 
 
 class Client(object):
