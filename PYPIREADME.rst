@@ -7,7 +7,7 @@ Binance API
 .. image:: https://img.shields.io/pypi/l/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
-.. image:: https://img.shields.io/travis/sammchardy/python-binance/master.svg
+.. image:: https://img.shields.io/travis/sammchardy/python-binance.svg
     :target: https://travis-ci.org/sammchardy/python-binance
 
 .. image::https://img.shields.io/coveralls/sammchardy/python-binance.svg
