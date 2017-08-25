@@ -97,6 +97,17 @@ Some methods have a `recvWindow` parameter for `timing security, see Binance doc
 
 API Endpoints are rate limited by Binance at 20 requests per second.
 
+Order Validation
+^^^^^^^^^^^^^^^^
+
+Binance has a number of rules around symbol pair orders with validation on minimum price, quantity and total order value.
+
+These rules are fetched when the client is initialised.
+
+The rules can be refreshed by calling the `get_products` API endpoint.
+
+We can then validate if pairs are being actively traded on Binance as well.
+
 ENUMs
 ^^^^^
 
