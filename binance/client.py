@@ -41,7 +41,7 @@ class Client(object):
         return self.API_URL + '/' + self.API_VERSION + '/' + path
 
     def _create_website_uri(self, path):
-        return self.API_URL + '/' + path
+        return self.WEBSITE_URL + '/' + path
 
     def _generate_signature(self, data):
 
