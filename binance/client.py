@@ -111,7 +111,9 @@ class Client(object):
         :param products:
         :return:
         """
-        self._products = []
+        self._products = {}
+        if 'data' in products:
+            products = products['data']
         for p in products:
             self._products[p['symbol']] = p
 
