@@ -15,7 +15,6 @@ install:
 
 script:
   - tox
-  - coverage run --source icon_font_to_png -m py.test
   - coverage report -m
 
 after_success:

@@ -1,6 +1,5 @@
 coverage==4.4.1
 flake8==3.4.1
-icon-font-to-png==0.4.1
 pytest==3.2.1
 pytest-cov==2.5.1
 pytest-pep8==1.0.6
