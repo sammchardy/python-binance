@@ -182,9 +182,9 @@ class Client(object):
             symbol - required
             side - required enum
             type - required enum
-            timeInForce - required enum
+            timeInForce - required if limit order
             quantity - required
-            price - required
+            price - required if limit order
             newClientOrderId - A unique id for the order. Automatically generated if not sent.
             stopPrice - Used with stop orders
             icebergQty - Used with iceberg orders
