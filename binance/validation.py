@@ -39,7 +39,7 @@ def validate_order(params, products):
     price = float(params['price'])
     quantity = float(params['quantity'])
     # check price
-    if price < float(limits['tickSize']) != 0:
+    if price < float(limits['tickSize']):
         raise BinanceOrderMinPriceException(limits['tickSize'])
 
     # check order amount
