@@ -75,15 +75,15 @@ When placing an order parameters are validated to check they fit within the `Bin
 
 The following exceptions extend `BinanceOrderException`.
 
-** BinanceOrderMinAmountException **
+**BinanceOrderMinAmountException**
 
 Raised if the specified amount isn't a multiple of the trade minimum amount.
 
-** BinanceOrderMinPriceException **
+**BinanceOrderMinPriceException**
 
 Raised if the price is lower than the trade minimum price.
 
-** BinanceOrderTotalPriceException **
+**BinanceOrderTotalPriceException**
 
 Raised if the total is lower than the trade minimum total.
 
@@ -232,31 +232,31 @@ A callback to process messages would take the format
         print(msg)
         # do something
 
-** Depth Socket **
+**Depth Socket**
 
 .. code:: python
 
     bm.start_depth_socket('BNBBTC', process_message)
 
-** Kline Socket **
+**Kline Socket**
 
 .. code:: python
 
     bm.start_kline_socket('BNBBTC', process_message)
 
-** Aggregated Trade Socket **
+**Aggregated Trade Socket**
 
 .. code:: python
 
     bm.start_trade_socket('BNBBTC', process_message)
 
-** Ticker Socket **
+**Ticker Socket**
 
 .. code:: python
 
     bm.start_ticker_socket(process_message)
 
-** User Socket **
+**User Socket**
 
 This watches for 3 different events
 
@@ -270,7 +270,7 @@ The Manager handles keeping the socket alive.
 
     bm.start_user_socket(process_message)
 
-** Close Socket **
+**Close Socket**
 
 To close an individual socket call the corresponding close function
 
@@ -307,18 +307,18 @@ Changelog
 v0.1.2 - 2017-08-25
 ^^^^^^^^^^^^^^^^^^^
 
-** Added **
+**Added**
 
 - Travis.CI and Coveralls support
 
-** Changes **
+**Changes**
 
 - Validation for pairs using public endpoint
 
 v0.1.1 - 2017-08-17
 ^^^^^^^^^^^^^^^^^^^
 
-** Added **
+**Added**
 
 - Validation for HSR/BTC pair
 
@@ -327,7 +327,7 @@ v0.1.0 - 2017-08-16
 
 Websocket release
 
-** Added **
+**Added**
 
 - Websocket manager
 - Order parameter validation
@@ -339,6 +339,6 @@ v0.0.2 - 2017-08-14
 
 Initial version
 
-** Added **
+**Added**
 
 - General, Market Data and Account endpoints
