@@ -88,7 +88,7 @@ class Client(object):
         return self._handle_response(response)
 
     def _handle_response(self, response):
-        """Internal helper for handling API responses from the Coinbase server.
+        """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
@@ -110,7 +110,7 @@ class Client(object):
 
     def _parse_products(self, products):
         """
-
+        Parse the response from get_products to use for validation
         :param products:
         :return:
         """
@@ -123,6 +123,10 @@ class Client(object):
     # Website Endpoints
 
     def get_products(self):
+        """
+        Return list of products currently listed on Binance
+        :return:
+        """
         products = self._request_website('get', 'exchange/public/product')
         self._parse_products(products)
         return products
@@ -293,7 +297,7 @@ class Client(object):
     # User Stream Endpoints
     def get_account(self, **params):
         """
-        Get all account orders; active, canceled, or filled.
+        Get current account information.
         https://www.binance.com/restapipub.html#account-information-signed
         :param params:
             recvWindow - the number of milliseconds the request is valid for
@@ -317,11 +321,26 @@ class Client(object):
     # User Stream Endpoints
 
     def stream_get_listen_key(self):
+        """
+        Start a new user data stream and return the listen key
+        https://www.binance.com/restapipub.html#start-user-data-stream-api-key
+        :return:
+        """
         res = self._post('userDataStream', False, data={})
         return res['listenKey']
 
     def stream_keepalive(self, **params):
+        """
+        PING a user data stream to prevent a time out.
+        https://www.binance.com/restapipub.html#keepalive-user-data-stream-api-key
+        :return:
+        """
         return self._put('userDataStream', False, data=params)
 
     def stream_close(self, **params):
+        """
+        Close out a user data stream.
+        https://www.binance.com/restapipub.html#close-user-data-stream-api-key
+        :return:
+        """
         return self._delete('userDataStream', False, data=params)
