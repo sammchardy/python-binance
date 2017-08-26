@@ -304,6 +304,17 @@ If this library helped you out feel free to donate.
 Changelog
 ---------
 
+v0.1.3 - 2017-08-26
+^^^^^^^^^^^^^^^^^^^
+
+**Changes**
+
+- Updated documentation
+
+**Fixes**
+
+- Small bugfix
+
 v0.1.2 - 2017-08-25
 ^^^^^^^^^^^^^^^^^^^
 
