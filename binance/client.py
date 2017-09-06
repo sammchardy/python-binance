@@ -7,6 +7,7 @@ import six
 import time
 from .exceptions import BinanceAPIException
 from .validation import validate_order
+from .enums import *
 
 if six.PY2:
     from urllib import urlencode
@@ -223,6 +224,110 @@ class Client(object):
         if not disable_validation:
             validate_order(params, self._products)
         return self._post('order', True, data=params)
+
+    def order_limit(self, disable_validation=False, **params):
+        """
+        Send in a new limit order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            side - required
+            timeInForce - required
+            quantity - required
+            price - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+            stopPrice - Used with stop orders
+            icebergQty - Used with iceberg orders
+        :return:
+        """
+        params.update({
+            'type': ORDER_TYPE_LIMIT
+        })
+        return self.create_order(disable_validation=disable_validation, **params)
+
+    def order_limit_buy(self, disable_validation=False, **params):
+        """
+        Send in a new limit buy order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            timeInForce - required
+            quantity - required
+            price - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+            stopPrice - Used with stop orders
+            icebergQty - Used with iceberg orders
+        :return:
+        """
+        params.update({
+            'side': SIDE_BUY
+        })
+        return self.order_limit(disable_validation=disable_validation, **params)
+
+    def order_limit_sell(self, disable_validation=False, **params):
+        """
+        Send in a new limit sell order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            timeInForce - required
+            quantity - required
+            price - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+            stopPrice - Used with stop orders
+            icebergQty - Used with iceberg orders
+        :return:
+        """
+        params.update({
+            'side': SIDE_SELL
+        })
+        return self.order_limit(disable_validation=disable_validation, **params)
+
+    def order_market(self, disable_validation=False, **params):
+        """
+        Send in a new market order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            side - required
+            quantity - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+        :return:
+        """
+        params.update({
+            'type': ORDER_TYPE_MARKET
+        })
+        return self.create_order(disable_validation=disable_validation, **params)
+
+    def order_market_buy(self, disable_validation=False, **params):
+        """
+        Send in a new market buy order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            quantity - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+        :return:
+        """
+        params.update({
+            'side': SIDE_BUY
+        })
+        return self.order_market(disable_validation=disable_validation, **params)
+
+    def order_market_sell(self, disable_validation=False, **params):
+        """
+        Send in a new market sell order
+        :param disable_validation:
+        :param params:
+            symbol - required
+            quantity - required
+            newClientOrderId - A unique id for the order. Automatically generated if not sent.
+        :return:
+        """
+        params.update({
+            'side': SIDE_SELL
+        })
+        return self.order_market(disable_validation=disable_validation, **params)
 
     def create_test_order(self, disable_validation=False, **params):
         """
