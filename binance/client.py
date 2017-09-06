@@ -225,14 +225,14 @@ class Client(object):
             validate_order(params, self._products)
         return self._post('order', True, data=params)
 
-    def order_limit(self, disable_validation=False, **params):
+    def order_limit(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
         """
         Send in a new limit order
         :param disable_validation:
+        :param time_in_force: default Good till cancelled
         :param params:
             symbol - required
             side - required
-            timeInForce - required
             quantity - required
             price - required
             newClientOrderId - A unique id for the order. Automatically generated if not sent.
@@ -241,17 +241,18 @@ class Client(object):
         :return:
         """
         params.update({
-            'type': ORDER_TYPE_LIMIT
+            'type': ORDER_TYPE_LIMIT,
+            'timeInForce': time_in_force
         })
         return self.create_order(disable_validation=disable_validation, **params)
 
-    def order_limit_buy(self, disable_validation=False, **params):
+    def order_limit_buy(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
         """
         Send in a new limit buy order
         :param disable_validation:
+        :param time_in_force: default Good till cancelled
         :param params:
             symbol - required
-            timeInForce - required
             quantity - required
             price - required
             newClientOrderId - A unique id for the order. Automatically generated if not sent.
@@ -260,17 +261,17 @@ class Client(object):
         :return:
         """
         params.update({
-            'side': SIDE_BUY
+            'side': SIDE_BUY,
         })
-        return self.order_limit(disable_validation=disable_validation, **params)
+        return self.order_limit(disable_validation=disable_validation, time_in_force=time_in_force, **params)
 
-    def order_limit_sell(self, disable_validation=False, **params):
+    def order_limit_sell(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
         """
         Send in a new limit sell order
         :param disable_validation:
+        :param time_in_force: default Good till cancelled
         :param params:
             symbol - required
-            timeInForce - required
             quantity - required
             price - required
             newClientOrderId - A unique id for the order. Automatically generated if not sent.
@@ -281,7 +282,7 @@ class Client(object):
         params.update({
             'side': SIDE_SELL
         })
-        return self.order_limit(disable_validation=disable_validation, **params)
+        return self.order_limit(disable_validation=disable_validation, time_in_force=time_in_force, **params)
 
     def order_market(self, disable_validation=False, **params):
         """
