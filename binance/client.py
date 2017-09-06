@@ -203,10 +203,11 @@ class Client(object):
 
     # Account Endpoints
 
-    def create_order(self, **params):
+    def create_order(self, disable_validation=False, **params):
         """
         Send in a new order
         https://www.binance.com/restapipub.html#new-order--signed
+        :param disable_validation: disable client side order validation
         :param params:
             symbol - required
             side - required
@@ -219,13 +220,15 @@ class Client(object):
             icebergQty - Used with iceberg orders
         :return:
         """
-        validate_order(params, self._products)
+        if not disable_validation:
+            validate_order(params, self._products)
         return self._post('order', True, data=params)
 
-    def create_test_order(self, **params):
+    def create_test_order(self, disable_validation=False, **params):
         """
         Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
         https://www.binance.com/restapipub.html#test-new-order-signed
+        :param disable_validation: disable client side order validation
         :param params:
             symbol - required
             side - required enum
@@ -239,7 +242,8 @@ class Client(object):
             recvWindow - the number of milliseconds the request is valid for
         :return:
         """
-        validate_order(params, self._products)
+        if not disable_validation:
+            validate_order(params, self._products)
         return self._post('order/test', True, data=params)
 
     def get_order(self, **params):
