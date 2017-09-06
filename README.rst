@@ -304,11 +304,6 @@ To stop all sockets and end the manager call `close` after doing this a `start` 
 
     bm.close()
 
-TODO
-----
-
-- Tests
-
 Donate
 ------
 
@@ -320,6 +315,13 @@ If this library helped you out feel free to donate.
 
 Changelog
 ---------
+
+v0.1.4 - 2017-09-06
+^^^^^^^^^^^^^^^^^^^
+
+**Changes**
+
+- Added parameter to disable client side order validation
 
 v0.1.3 - 2017-08-26
 ^^^^^^^^^^^^^^^^^^^
