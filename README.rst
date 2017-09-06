@@ -160,21 +160,21 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force and 
 Examples
 ^^^^^^^^
 
-Get the server time
+**Get the server time**
 
 .. code:: python
 
     time_res = client.get_server_time()
 
 
-Fetch all orders
+**Fetch all orders**
 
 .. code:: python
 
     orders = client.get_all_orders(symbol='BNBBTC', limit=10)
 
 
-Create an order
+**Create an order**
 
 .. code:: python
 
@@ -187,14 +187,31 @@ Create an order
         quantity=100,
         price='0.00001')
 
-Using Enumerated types
+** Disable Client Side Order Validation**
+
+    Pass the optional `disable_validation` parameter to turn off client side validation of orders.
+
+.. code:: python
+
+    from binance.enums import *
+    order = client.create_order(
+        symbol='BNBBTC',
+        side=SIDE_BUY,
+        type=ORDER_TYPE_LIMIT,
+        timeInForce=TIME_IN_FORCE_GTC,
+        quantity=100,
+        price='0.00001',
+        disable_validation=True)
+
+
+**Using Enumerated types**
 
 .. code:: python
 
     from binance.enums import *
     candles = client.get_klines(symbol='BNBBTC', interval=KLINE_INTERVAL_30MINUTE)
 
-Error Handling
+**Error Handling**
 
 .. code:: python
 
