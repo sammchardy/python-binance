@@ -151,6 +151,20 @@ class Client(object):
 
     # Market Data Endpoints
 
+    def get_all_tickers(self):
+        """
+        Get last price for all markets
+        :return:
+        """
+        return self._get('ticker/allPrices')
+
+    def get_orderbook_tickers(self):
+        """
+        Get first bid and ask entry in the order book for all markets
+        :return:
+        """
+        return self._get('ticker/allBookTickers')
+
     def get_order_book(self, **params):
         """
         Get the Order Book for the market

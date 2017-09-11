@@ -221,6 +221,39 @@ Examples
         print e.status_code
         print e.message
 
+
+Undocumented Endpoints
+^^^^^^^^^^^^^^^^^^^^^^
+
+**get_all_tickers()**
+
+Get last price for all markets.
+
+Response format
+
+.. code:: json
+
+    [
+        {"price": "0.07074900", "symbol": "ETHBTC"},
+        {"price": "0.01612500", "symbol": "LTCBTC"},
+        {"price": "0.00024791", "symbol": "BNBBTC"}
+    ]
+
+**get_orderbook_tickers()**
+
+Get first bid and ask entry in the order book for all markets.
+
+Response format
+
+.. code:: json
+
+    [
+        {"askQty": "1.25900000", "bidPrice": "0.07050000", "symbol": "ETHBTC", "bidQty": "0.18000000", "askPrice": "0.07074900"},
+        {"askQty": "0.23000000", "bidPrice": "0.01611400", "symbol": "LTCBTC", "bidQty": "1.17000000", "askPrice": "0.01613900"},
+        {"askQty": "49.00000000", "bidPrice": "0.00024604", "symbol": "BNBBTC", "bidQty": "32.00000000", "askPrice": "0.00024690"}
+    ]
+
+
 Websockets
 ^^^^^^^^^^
 
