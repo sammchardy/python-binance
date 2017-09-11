@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='python-binance',
-    version='0.1.4',
+    version='0.1.5',
     packages=['binance'],
     description='Binance API python implementation',
     url='https://github.com/sammchardy/python-binance',
