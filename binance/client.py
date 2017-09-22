@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import hashlib
+import hmac
 import requests
 import six
 import time
@@ -18,7 +19,7 @@ class Client(object):
 
     API_URL = 'https://www.binance.com/api'
     WEBSITE_URL = 'https://www.binance.com'
-    API_VERSION = 'v1'
+    API_VERSION = 'v3'
 
     _products = None
 
@@ -49,8 +50,7 @@ class Client(object):
     def _generate_signature(self, data):
 
         query_string = urlencode(data)
-        m = hashlib.sha256()
-        m.update((self.API_SECRET + '|' + query_string).encode())
+        m = hmac.new(bytearray(self.API_SECRET, 'utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
     def _request(self, method, path, signed, **kwargs):
