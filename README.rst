@@ -371,6 +371,19 @@ If this library helped you out feel free to donate.
 Changelog
 ---------
 
+v0.1.5 - 2017-09-12
+^^^^^^^^^^^^^^^^^^^
+
+**Changes**
+
+- Added get_all_tickers call
+- Added get_orderbook_tickers call
+- Added some FAQs
+
+**Fixes**
+
+- Fix error in enum value
+
 v0.1.4 - 2017-09-06
 ^^^^^^^^^^^^^^^^^^^
 
