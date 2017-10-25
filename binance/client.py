@@ -469,7 +469,7 @@ class Client(object):
         return self._post('order/test', True, data=params)
 
     def get_order(self, **params):
-        """Check an order's status.Either orderId or origClientOrderId must be sent.
+        """Check an order's status. Either orderId or origClientOrderId must be sent.
 
         https://www.binance.com/restapipub.html#query-order-signed
 
@@ -547,9 +547,9 @@ class Client(object):
         return self._get('allOrders', True, data=params)
 
     def cancel_order(self, **params):
-        """Cancel an active order.
+        """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://www.binance.com/restapipub.html#all-orders-signed
+        https://www.binance.com/restapipub.html#cancel-order-signed
 
         :param symbol: required
         :type symbol: str
