@@ -174,7 +174,7 @@ Examples
     orders = client.get_all_orders(symbol='BNBBTC', limit=10)
 
 
-**Create an order**
+**Place a limit order**
 
 .. code:: python
 
@@ -186,6 +186,37 @@ Examples
         timeInForce=TIME_IN_FORCE_GTC,
         quantity=100,
         price='0.00001')
+
+
+**Place a market order**
+
+.. code:: python
+
+    from binance.enums import *
+    order = client.create_order(
+        symbol='BNBBTC',
+        side=SIDE_BUY,
+        type=ORDER_TYPE_MARKET,
+        quantity=100,)
+
+
+**Check order status**
+
+.. code:: python
+
+    order = client.cancel_order(
+        style='BNBBTC',
+        orderId='orderId')
+
+
+**Cancel an order**
+
+.. code:: python
+
+    order = client.get_order(
+        symbol='BNBBTC',
+        orderId='orderId')
+
 
 ** Disable Client Side Order Validation**
 
@@ -202,6 +233,13 @@ Examples
         quantity=100,
         price='0.00001',
         disable_validation=True)
+
+
+**Get all open orders**
+
+.. code:: python
+
+    order = client.get_open_orders(symbol='BNBBTC')
 
 
 **Using Enumerated types**
