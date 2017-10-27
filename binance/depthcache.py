@@ -26,6 +26,7 @@ class DepthCache(object):
 
         :param bid:
         :return:
+
         """
         self._bids[bid[0]] = float(bid[1])
         if bid[1] == "0.00000000":
@@ -36,6 +37,7 @@ class DepthCache(object):
 
         :param ask:
         :return:
+
         """
         self._asks[ask[0]] = float(ask[1])
         if ask[1] == "0.00000000":
@@ -45,7 +47,9 @@ class DepthCache(object):
         """Get the current bids
 
         :return: list of bids with price and quantity as floats
+
         .. code-block:: python
+
             [
                 [
                     0.0001946,  # Price
@@ -67,7 +71,8 @@ class DepthCache(object):
                     0.00019082,
                     287.0
                 ]
-            }
+            ]
+
         """
         return DepthCache.sort_depth(self._bids, reverse=True)
 
@@ -75,7 +80,9 @@ class DepthCache(object):
         """Get the current asks
 
         :return: list of asks with price and quantity as floats
+
         .. code-block:: python
+
             [
                 [
                     0.0001955,  # Price
@@ -97,7 +104,8 @@ class DepthCache(object):
                     0.0001971,
                     385.0
                 ]
-            }
+            ]
+
         """
         return DepthCache.sort_depth(self._asks, reverse=False)
 
@@ -160,6 +168,7 @@ class DepthCacheManager(object):
 
         :param msg:
         :return:
+
         """
         # ignore any updates before the initial update id
         if msg['u'] <= self._first_update_id:
@@ -178,5 +187,6 @@ class DepthCacheManager(object):
         """Get the current depth cache
 
         :return: DepthCache object
+
         """
         return self._depth_cache
