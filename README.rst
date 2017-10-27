@@ -29,6 +29,7 @@ Features
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling
+- Symbol Depth Cache
 - Order parameter validation based on Trade Rules
 
 Installation
