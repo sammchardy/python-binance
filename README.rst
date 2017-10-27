@@ -218,7 +218,7 @@ Examples
         orderId='orderId')
 
 
-** Disable Client Side Order Validation**
+**Disable Client Side Order Validation**
 
     Pass the optional `disable_validation` parameter to turn off client side validation of orders.
 
