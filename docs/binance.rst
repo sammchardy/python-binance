@@ -12,6 +12,14 @@ binance\.client module
     :undoc-members:
     :show-inheritance:
 
+binance\.depthcache module
+--------------------------
+
+.. automodule:: binance.depthcache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 binance\.enums module
 ---------------------
 

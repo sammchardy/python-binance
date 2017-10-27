@@ -10,11 +10,9 @@ Welcome to python-binance's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   modules
 
-
-Indices and tables
+Index
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
