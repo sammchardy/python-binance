@@ -151,6 +151,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#test-connectivity
 
         :returns: Empty array
+
         .. code-block:: python
 
             {}
@@ -166,6 +167,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#check-server-time
 
         :returns: Current server time
+
         .. code-block:: python
 
             {
@@ -185,6 +187,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#symbols-price-ticker
 
         :returns: List of market tickers
+
         .. code-block:: python
 
             [
@@ -209,6 +212,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#symbols-order-book-ticker
 
         :returns: List of order book market entries
+
         .. code-block:: python
 
             [
@@ -227,6 +231,7 @@ class Client(object):
                     "askQty": "1000.00000000"
                 }
             ]
+
         :raises: BinanceAPIException
 
         """
@@ -243,6 +248,7 @@ class Client(object):
         :type limit: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -286,6 +292,7 @@ class Client(object):
         :type limit: int
 
         :returns: API response
+
         .. code-block:: python
 
             [
@@ -323,6 +330,7 @@ class Client(object):
         :type endTime: int
 
         :returns: API response
+
         .. code-block:: python
 
             [
@@ -356,6 +364,7 @@ class Client(object):
         :type symbol: str
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -411,6 +420,7 @@ class Client(object):
         :type icebergQty: decimal
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -456,6 +466,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {}
@@ -483,6 +494,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -521,6 +533,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             [
@@ -563,6 +576,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -588,6 +602,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             [
@@ -623,6 +638,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -653,7 +669,7 @@ class Client(object):
         return self._get('account', True, data=params)
 
     def get_my_trades(self, **params):
-        """Get trades for a specific account and symbol.
+        """Get trades for a specific symbol.
 
         https://www.binance.com/restapipub.html#account-trade-list-signed
 
@@ -667,6 +683,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             [
@@ -696,6 +713,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#start-user-data-stream-api-key
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -714,6 +732,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#keepalive-user-data-stream-api-key
 
         :returns: API response
+
         .. code-block:: python
 
             {}
@@ -729,6 +748,7 @@ class Client(object):
         https://www.binance.com/restapipub.html#close-user-data-stream-api-key
 
         :returns: API response
+
         .. code-block:: python
 
             {}

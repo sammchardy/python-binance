@@ -1,4 +1,4 @@
-"""an unofficial Python wrapper for the `Binance exchange API v1
+"""An unofficial Python wrapper for the Binance exchange API v3
 
 .. moduleauthor:: Sam McHardy
 

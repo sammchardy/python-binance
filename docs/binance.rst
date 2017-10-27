@@ -1,10 +1,7 @@
-binance package
-===============
+Binance API
+===========
 
-Submodules
-----------
-
-binance\.client module
+client module
 ----------------------
 
 .. automodule:: binance.client
@@ -12,7 +9,15 @@ binance\.client module
     :undoc-members:
     :show-inheritance:
 
-binance\.enums module
+depthcache module
+--------------------------
+
+.. automodule:: binance.depthcache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+enums module
 ---------------------
 
 .. automodule:: binance.enums
@@ -20,7 +25,7 @@ binance\.enums module
     :undoc-members:
     :show-inheritance:
 
-binance\.exceptions module
+exceptions module
 --------------------------
 
 .. automodule:: binance.exceptions
@@ -28,7 +33,7 @@ binance\.exceptions module
     :undoc-members:
     :show-inheritance:
 
-binance\.validation module
+validation module
 --------------------------
 
 .. automodule:: binance.validation
@@ -36,19 +41,10 @@ binance\.validation module
     :undoc-members:
     :show-inheritance:
 
-binance\.websockets module
+websockets module
 --------------------------
 
 .. automodule:: binance.websockets
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: binance
     :members:
     :undoc-members:
     :show-inheritance:
