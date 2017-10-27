@@ -77,6 +77,8 @@ Quick Start
     bm.start_trade_socket(symbol='BNBBTC')
     bm.start()
 
+For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
+
 Donate
 ------
 
