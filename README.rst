@@ -66,6 +66,17 @@ Quick Start
     # get all symbol prices
     prices = client.get_all_tickers()
 
+    # start trade websocket
+    def process_message(msg):
+        print("message type:" + msg[e])
+        print(msg)
+        # do something
+
+    from binance.websockets import BinanceSocketManager
+    bm = BinanceSocketManager(client)
+    bm.start_trade_socket(symbol='BNBBTC')
+    bm.start()
+
 Donate
 ------
 

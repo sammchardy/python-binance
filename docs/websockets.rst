@@ -17,6 +17,7 @@ Create the manager like so, passing the api client.
 
 .. code:: python
 
+    from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
     # attach any sockets here then start
     bm.start()
