@@ -50,7 +50,7 @@ With this information we can validate if pairs are being actively traded on Bina
         symbol='BNBBTC',
         side=SIDE_BUY,
         type=ORDER_TYPE_MARKET,
-        quantity=100,)
+        quantity=100)
 
 
 **Place Order Without Client Side Order Validation**
