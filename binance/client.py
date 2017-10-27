@@ -438,75 +438,153 @@ class Client(object):
             validate_order(params, self._products)
         return self._post('order', True, data=params)
 
-    def order_limit(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
-        """
-        Send in a new limit order
-        :param disable_validation:
-        :param time_in_force: default Good till cancelled
-        :param params:
-            symbol - required
-            side - required
-            quantity - required
-            price - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-            stopPrice - Used with stop orders
-            icebergQty - Used with iceberg orders
-        :return:
+    def order_limit(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit order
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: enum
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: decimal
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: enum
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'type': ORDER_TYPE_LIMIT,
-            'timeInForce': time_in_force
+            'timeInForce': timeInForce
         })
         return self.create_order(disable_validation=disable_validation, **params)
 
-    def order_limit_buy(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
-        """
-        Send in a new limit buy order
-        :param disable_validation:
-        :param time_in_force: default Good till cancelled
-        :param params:
-            symbol - required
-            quantity - required
-            price - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-            stopPrice - Used with stop orders
-            icebergQty - Used with iceberg orders
-        :return:
+    def order_limit_buy(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit buy order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: decimal
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: enum
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'side': SIDE_BUY,
         })
-        return self.order_limit(disable_validation=disable_validation, time_in_force=time_in_force, **params)
+        return self.order_limit(disable_validation=disable_validation, timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, disable_validation=False, time_in_force=TIME_IN_FORCE_GTC, **params):
-        """
-        Send in a new limit sell order
-        :param disable_validation:
-        :param time_in_force: default Good till cancelled
-        :param params:
-            symbol - required
-            quantity - required
-            price - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-            stopPrice - Used with stop orders
-            icebergQty - Used with iceberg orders
-        :return:
+    def order_limit_sell(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit sell order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: decimal
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: enum
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'side': SIDE_SELL
         })
-        return self.order_limit(disable_validation=disable_validation, time_in_force=time_in_force, **params)
+        return self.order_limit(disable_validation=disable_validation, timeInForce=timeInForce, **params)
 
     def order_market(self, disable_validation=False, **params):
-        """
-        Send in a new market order
-        :param disable_validation:
-        :param params:
-            symbol - required
-            side - required
-            quantity - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-        :return:
+        """Send in a new market order
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: enum
+        :param quantity: required
+        :type quantity: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'type': ORDER_TYPE_MARKET
@@ -514,14 +592,30 @@ class Client(object):
         return self.create_order(disable_validation=disable_validation, **params)
 
     def order_market_buy(self, disable_validation=False, **params):
-        """
-        Send in a new market buy order
-        :param disable_validation:
-        :param params:
-            symbol - required
-            quantity - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-        :return:
+        """Send in a new market buy order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'side': SIDE_BUY
@@ -529,14 +623,30 @@ class Client(object):
         return self.order_market(disable_validation=disable_validation, **params)
 
     def order_market_sell(self, disable_validation=False, **params):
-        """
-        Send in a new market sell order
-        :param disable_validation:
-        :param params:
-            symbol - required
-            quantity - required
-            newClientOrderId - A unique id for the order. Automatically generated if not sent.
-        :return:
+        """Send in a new market sell order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param disable_validation: disable client side order validation, default False
+        :type disable_validation: bool
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol":"LTCBTC",
+                "orderId": 1,
+                "clientOrderId": "myOrder1" # Will be newClientOrderId
+                "transactTime": 1499827319559
+            }
+
+        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
         """
         params.update({
             'side': SIDE_SELL
