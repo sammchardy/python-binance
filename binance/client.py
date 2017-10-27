@@ -669,7 +669,7 @@ class Client(object):
         return self._get('account', True, data=params)
 
     def get_my_trades(self, **params):
-        """Get trades for a specific account and symbol.
+        """Get trades for a specific symbol.
 
         https://www.binance.com/restapipub.html#account-trade-list-signed
 

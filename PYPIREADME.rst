@@ -1,5 +1,6 @@
-Binance API
-========
+=========================
+Welcome to python-binance
+=========================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
@@ -10,7 +11,7 @@ Binance API
 .. image:: https://img.shields.io/travis/sammchardy/python-binance.svg
     :target: https://travis-ci.org/sammchardy/python-binance
 
-.. image::https://img.shields.io/coveralls/sammchardy/python-binance.svg
+.. image:: https://img.shields.io/coveralls/sammchardy/python-binance.svg
     :target: https://coveralls.io/github/sammchardy/python-binance
 
 .. image:: https://img.shields.io/pypi/wheel/python-binance.svg
@@ -21,6 +22,12 @@ Binance API
 
 This is an unofficial Python wrapper for the `Binance exchange API v1 <https://www.binance.com/restapipub.html>`_. I am in no way affiliated with Binance, use at your own risk.
 
+Source code
+  https://github.com/sammchardy/python-binance
+
+Documentation
+  https://python-binance.readthedocs.io/en/latest/
+
 Features
 --------
 
@@ -29,4 +36,14 @@ Features
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling
+- Symbol Depth Cache
 - Order parameter validation based on Trade Rules
+
+Donate
+------
+
+If this library helped you out feel free to donate.
+
+- ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
+- NEO: AVJB4ZgN7VgSUtArCt94y7ZYT6d5NDfpBo
+- BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
