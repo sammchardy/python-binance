@@ -409,6 +409,15 @@ If this library helped you out feel free to donate.
 Changelog
 ---------
 
+v0.1.6 - 2017-10-25
+^^^^^^^^^^^^^^^^^^^
+
+**Changes**
+
+- Upgrade to v3 signed endpoints
+- Update function documentation
+
+
 v0.1.5 - 2017-09-12
 ^^^^^^^^^^^^^^^^^^^
 
