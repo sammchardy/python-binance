@@ -444,6 +444,13 @@ If this library helped you out feel free to donate.
 Changelog
 ---------
 
+v0.2.0 - 2017-10-27
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Symbol Depth Cache
+
 v0.1.6 - 2017-10-25
 ^^^^^^^^^^^^^^^^^^^
 
