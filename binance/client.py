@@ -748,6 +748,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -777,6 +778,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
@@ -813,6 +815,7 @@ class Client(object):
         :type recvWindow: int
 
         :returns: API response
+
         .. code-block:: python
 
             {
