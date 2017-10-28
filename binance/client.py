@@ -68,7 +68,25 @@ class Client(object):
         m = hmac.new(bytearray(self.API_SECRET, 'utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
-    def _request(self, method, uri, signed, **kwargs):
+    def _order_params(self, data):
+        """Convert params to list with signature as last element
+
+        :param data:
+        :return:
+
+        """
+        has_signature = False
+        params = []
+        for key, value in data.items():
+            if key == 'signature':
+                has_signature = True
+            else:
+                params.append((key, value))
+        if has_signature:
+            params.append(('signature', data['signature']))
+        return params
+
+    def _request(self, method, uri, signed, force_params=False, **kwargs):
 
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
@@ -78,8 +96,8 @@ class Client(object):
             kwargs['data']['timestamp'] = int(time.time() * 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
-        if data and method == 'get':
-            kwargs['params'] = kwargs['data']
+        if data and (method == 'get' or force_params):
+            kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
 
         print(kwargs)
@@ -95,7 +113,7 @@ class Client(object):
     def _request_withdraw_api(self, method, path, signed=False, **kwargs):
         uri = self._create_withdraw_api_uri(path)
 
-        return self._request(method, uri, signed, **kwargs)
+        return self._request(method, uri, signed, True, **kwargs)
 
     def _request_website(self, method, path, signed=False, **kwargs):
 
