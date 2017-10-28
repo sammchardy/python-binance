@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.3.0 - 2017-10-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Withdraw endpoints
+- Order helper functions
+
 v0.2.0 - 2017-10-27
 ^^^^^^^^^^^^^^^^^^^
 
