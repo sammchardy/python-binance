@@ -37,6 +37,7 @@ Features
 - Response exception handling
 - Websocket handling
 - Symbol Depth Cache
+- Withdraw functionality
 - Order parameter validation based on Trade Rules
 
 Quick Start
@@ -65,6 +66,15 @@ Quick Start
 
     # get all symbol prices
     prices = client.get_all_tickers()
+
+    # withdraw 100 ETH
+    result = client.withdraw(
+        asset='ETH',
+        address='<eth_address>',
+        amount=100)
+
+    # fetch list of withdrawals
+    withdraws = client.get_withdraw_history()
 
     # start trade websocket
     def process_message(msg):
