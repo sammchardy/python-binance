@@ -8,7 +8,7 @@ import six
 import time
 from .exceptions import BinanceAPIException
 from .validation import validate_order
-from .enums import *
+from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
 if six.PY2:
     from urllib import urlencode
