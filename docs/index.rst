@@ -16,6 +16,7 @@ Contents
    account
    websockets
    depth_cache
+   withdraw
    exceptions
    faqs
    changelog

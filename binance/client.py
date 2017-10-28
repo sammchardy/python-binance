@@ -18,9 +18,11 @@ elif six.PY3:
 class Client(object):
 
     API_URL = 'https://www.binance.com/api'
+    WITHDRAW_API_URL = 'https://www.binance.com/wapi'
     WEBSITE_URL = 'https://www.binance.com'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
+    WITHDRAW_API_VERSION = 'v1'
 
     _products = None
 
@@ -54,6 +56,9 @@ class Client(object):
         v = self.PRIVATE_API_VERSION if signed else self.PUBLIC_API_VERSION
         return self.API_URL + '/' + v + '/' + path
 
+    def _create_withdraw_api_uri(self, path):
+        return self.WITHDRAW_API_URL + '/' + self.WITHDRAW_API_VERSION + '/' + path
+
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
 
@@ -63,9 +68,25 @@ class Client(object):
         m = hmac.new(bytearray(self.API_SECRET, 'utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
-    def _request(self, method, path, signed, **kwargs):
+    def _order_params(self, data):
+        """Convert params to list with signature as last element
 
-        uri = self._create_api_uri(path, signed)
+        :param data:
+        :return:
+
+        """
+        has_signature = False
+        params = []
+        for key, value in data.items():
+            if key == 'signature':
+                has_signature = True
+            else:
+                params.append((key, value))
+        if has_signature:
+            params.append(('signature', data['signature']))
+        return params
+
+    def _request(self, method, uri, signed, force_params=False, **kwargs):
 
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
@@ -75,27 +96,30 @@ class Client(object):
             kwargs['data']['timestamp'] = int(time.time() * 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
-        if data and method == 'get':
-            kwargs['params'] = kwargs['data']
+        if data and (method == 'get' or force_params):
+            kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
+
+        print(kwargs)
 
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
-    def _request_website(self, method, path, **kwargs):
+    def _request_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_api_uri(path, signed)
+
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_withdraw_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_withdraw_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_website(self, method, path, signed=False, **kwargs):
 
         uri = self._create_website_uri(path)
 
-        data = kwargs.get('data', None)
-        if data and isinstance(data, dict):
-            kwargs['data'] = data
-
-        if data and method == 'get':
-            kwargs['params'] = kwargs['data']
-            del(kwargs['data'])
-
-        response = getattr(self.session, method)(uri, **kwargs)
-        return self._handle_response(response)
+        return self._request(method, uri, signed, **kwargs)
 
     def _handle_response(self, response):
         """Internal helper for handling API responses from the Binance server.
@@ -107,16 +131,16 @@ class Client(object):
         return response.json()
 
     def _get(self, path, signed=False, **kwargs):
-        return self._request('get', path, signed, **kwargs)
+        return self._request_api('get', path, signed, **kwargs)
 
     def _post(self, path, signed=False, **kwargs):
-        return self._request('post', path, signed, **kwargs)
+        return self._request_api('post', path, signed, **kwargs)
 
     def _put(self, path, signed=False, **kwargs):
-        return self._request('put', path, signed, **kwargs)
+        return self._request_api('put', path, signed, **kwargs)
 
     def _delete(self, path, signed=False, **kwargs):
-        return self._request('delete', path, signed, **kwargs)
+        return self._request_api('delete', path, signed, **kwargs)
 
     def _parse_products(self, products):
         """
@@ -704,6 +728,121 @@ class Client(object):
 
         """
         return self._get('myTrades', True, data=params)
+
+    # Withdraw Endpoints
+
+    def withdraw(self, **params):
+        """Submit a withdraw request.
+
+        https://www.binance.com/restapipub.html
+
+        :param asset: required
+        :type asset: str
+        :type address: required
+        :type address: str
+        :param amount: required
+        :type amount: decimal
+        :param name: Description of the address - optional
+        :type name: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "msg": "success",
+                "success": true
+            }
+
+        :raises: BinanceAPIException
+
+        """
+        return self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+
+    def get_deposit_history(self, **params):
+        """Fetch deposit history.
+
+        https://www.binance.com/restapipub.html
+
+        :param asset: optional
+        :type asset: str
+        :type status: 0(0:pending,1:success) optional
+        :type status: int
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "depositList": [
+                    {
+                        "insertTime": 1508198532000,
+                        "amount": 0.04670582,
+                        "asset": "ETH",
+                        "status": 1
+                    }
+                ],
+                "success": true
+            }
+
+        :raises: BinanceAPIException
+
+        """
+        return self._request_withdraw_api('post', 'getDepositHistory.html', True, data=params)
+
+    def get_withdraw_history(self, **params):
+        """Fetch withdraw history.
+
+        https://www.binance.com/restapipub.html
+
+        :param asset: optional
+        :type asset: str
+        :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
+        :type status: int
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "withdrawList": [
+                    {
+                        "amount": 1,
+                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                        "asset": "ETH",
+                        "applyTime": 1508198532000
+                        "status": 4
+                    },
+                    {
+                        "amount": 0.005,
+                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                        "txId": "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1",
+                        "asset": "ETH",
+                        "applyTime": 1508198532000,
+                        "status": 4
+                    }
+                ],
+                "success": true
+            }
+
+        :raises: BinanceAPIException
+
+        """
+        return self._request_withdraw_api('post', 'getWithdrawHistory.html', True, data=params)
 
     # User Stream Endpoints
 
