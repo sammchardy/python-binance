@@ -952,6 +952,11 @@ class Client(object):
 
         https://www.binance.com/restapipub.html
 
+        Assumptions:
+
+        - You must have Withdraw permissions enabled on your API key
+        - You must have withdrawn to the address specified through the website and approved the transaction via email
+
         :param asset: required
         :type asset: str
         :type address: required
