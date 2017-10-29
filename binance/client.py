@@ -6,7 +6,7 @@ import hmac
 import requests
 import six
 import time
-from .exceptions import BinanceAPIException
+from .exceptions import BinanceAPIException, BinanceWithdrawException
 from .validation import validate_order
 from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
@@ -952,6 +952,11 @@ class Client(object):
 
         https://www.binance.com/restapipub.html
 
+        Assumptions:
+
+        - You must have Withdraw permissions enabled on your API key
+        - You must have withdrawn to the address specified through the website and approved the transaction via email
+
         :param asset: required
         :type asset: str
         :type address: required
@@ -972,10 +977,13 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceAPIException, BinanceWithdrawException
 
         """
-        return self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
 
     def get_deposit_history(self, **params):
         """Fetch deposit history.

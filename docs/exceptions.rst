@@ -47,9 +47,15 @@ Raised if the total is lower than the trade minimum total.
 BinanceOrderUnknownSymbolException
 ----------------------------------
 
-Raised if the symbol is not recognised
+Raised if the symbol is not recognised.
 
 BinanceOrderInactiveSymbolException
 -----------------------------------
 
-Raised if the symbol is inactive
+Raised if the symbol is inactive.
+
+
+BinanceWithdrawException
+------------------------
+
+Raised if the withdraw fails.
