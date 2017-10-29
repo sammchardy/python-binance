@@ -12,15 +12,18 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
 .. code:: python
 
-    result = client.withdraw(
-        asset='ETH',
-        address='<eth_address>',
-        amount=100)
-
-    if result['success']:
-        print("Success")
+    from binance.exceptions import BinanceApiException, BinanceWithdrawException
+    try:
+        result = client.withdraw(
+            asset='ETH',
+            address='<eth_address>',
+            amount=100)
+    except BinanceApiException as e:
+        print(e)
+    except BinanceWithdrawException as e:
+        print(e)
     else:
-        print(result['msg')
+        print("Success")
 
 `Fetch deposit history <binance.html#binance.client.Client.get_deposit_history>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
