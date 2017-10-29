@@ -6,7 +6,7 @@ import hmac
 import requests
 import six
 import time
-from .exceptions import BinanceAPIException
+from .exceptions import BinanceAPIException, BinanceWithdrawException
 from .validation import validate_order
 from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
@@ -972,10 +972,13 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceAPIException, BinanceWithdrawException
 
         """
-        return self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
 
     def get_deposit_history(self, **params):
         """Fetch deposit history.
