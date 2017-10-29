@@ -68,6 +68,7 @@ Quick Start
     prices = client.get_all_tickers()
 
     # withdraw 100 ETH
+    # check docs for assumptions around withdrawals
     result = client.withdraw(
         asset='ETH',
         address='<eth_address>',
