@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.3.1 - 2017-10-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Withdraw exception handler with translation of obscure error
+
+**Fixes**
+
+- Validation fixes
+
 v0.3.0 - 2017-10-29
 ^^^^^^^^^^^^^^^^^^^
 
