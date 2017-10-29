@@ -6,6 +6,8 @@ Withdraw Endpoints
 
 Make sure you enable Withdrawal permissions for your API Key to use this call.
 
+You must have withdrawn to the address through the website and approved the withdraw via email before you can withdraw using the API.
+
 .. code:: python
 
     result = client.withdraw(
