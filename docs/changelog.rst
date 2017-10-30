@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.3.2 - 2017-10-30
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- More test coverage of requests
+
+**Fixes**
+
+- Order quantity validation fix
+
 v0.3.1 - 2017-10-29
 ^^^^^^^^^^^^^^^^^^^
 
