@@ -101,8 +101,6 @@ class Client(object):
             kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
 
-        print(kwargs)
-
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
