@@ -27,7 +27,6 @@ NOTIONAL_LIMITS = {
 
 
 def validate_order(params, products):
-    print(params)
     if params['symbol'] not in products:
         raise BinanceOrderUnknownSymbolException(params['symbol'])
 
@@ -44,7 +43,9 @@ def validate_order(params, products):
 
     # check order amount
     min_trade = float(limits['minTrade'])
-    if quantity / min_trade - int(quantity / min_trade) > 0.0:
+    # round here to 8 decimal places to remove any float division strangeness
+    qty_per_trade = round(quantity / min_trade, 8)
+    if qty_per_trade - int(qty_per_trade) > 0.0:
         raise BinanceOrderMinAmountException(limits['minTrade'])
 
     # check order total
