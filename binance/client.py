@@ -6,7 +6,7 @@ import hmac
 import requests
 import six
 import time
-from .exceptions import BinanceAPIException, BinanceWithdrawException
+from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 from .validation import validate_order
 from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
@@ -101,8 +101,6 @@ class Client(object):
             kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
 
-        print(kwargs)
-
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
@@ -129,7 +127,10 @@ class Client(object):
         """
         if not str(response.status_code).startswith('2'):
             raise BinanceAPIException(response)
-        return response.json()
+        try:
+            return response.json()
+        except ValueError:
+            raise BinanceRequestException('Invalid Response: %s' % response.text)
 
     def _get(self, path, signed=False, **kwargs):
         return self._request_api('get', path, signed, **kwargs)
@@ -162,6 +163,8 @@ class Client(object):
 
         :returns: list - List of product dictionaries
 
+        :raises: BinanceResponseException, BinanceAPIException
+
         """
 
         products = self._request_website('get', 'exchange/public/product')
@@ -181,7 +184,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ping')
@@ -199,7 +202,7 @@ class Client(object):
                 "serverTime": 1499827319559
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('time')
@@ -226,7 +229,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ticker/allPrices')
@@ -257,7 +260,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ticker/allBookTickers')
@@ -294,7 +297,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('depth', data=params)
@@ -333,7 +336,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('aggTrades', data=params)
@@ -375,7 +378,7 @@ class Client(object):
                 ]
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('klines', data=params)
@@ -411,7 +414,7 @@ class Client(object):
                 "count": 76         # Trade count
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ticker/24hr', data=params)
@@ -455,7 +458,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         if not disable_validation:
@@ -495,7 +498,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -535,7 +538,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -574,7 +577,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -607,7 +610,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -638,7 +641,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -669,7 +672,7 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -711,7 +714,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
 
         """
@@ -753,7 +756,7 @@ class Client(object):
                 "time": 1499827319559
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('order', True, data=params)
@@ -794,7 +797,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('allOrders', True, data=params)
@@ -826,7 +829,7 @@ class Client(object):
                 "clientOrderId": "cancelMyOrder1"
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._delete('order', True, data=params)
@@ -863,7 +866,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('openOrders', True, data=params)
@@ -903,7 +906,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('account', True, data=params)
@@ -940,7 +943,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('myTrades', True, data=params)
@@ -977,7 +980,7 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceAPIException, BinanceWithdrawException
+        :raises: BinanceResponseException, BinanceAPIException, BinanceWithdrawException
 
         """
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
@@ -1017,7 +1020,7 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._request_withdraw_api('post', 'getDepositHistory.html', True, data=params)
@@ -1063,7 +1066,7 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._request_withdraw_api('post', 'getWithdrawHistory.html', True, data=params)
@@ -1083,7 +1086,7 @@ class Client(object):
                 "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
             }
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         res = self._post('userDataStream', False, data={})
@@ -1100,7 +1103,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._put('userDataStream', False, data=params)
@@ -1116,7 +1119,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceAPIException
+        :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._delete('userDataStream', False, data=params)

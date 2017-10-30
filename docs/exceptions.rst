@@ -1,6 +1,11 @@
 Exceptions
 ==========
 
+BinanceResponseException
+------------------------
+
+Raised if a non JSON response is returned
+
 BinanceAPIException
 -------------------
 
