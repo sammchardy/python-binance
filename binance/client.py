@@ -6,7 +6,7 @@ import hmac
 import requests
 import six
 import time
-from .exceptions import BinanceAPIException, BinanceWithdrawException
+from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 from .validation import validate_order
 from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
@@ -129,7 +129,10 @@ class Client(object):
         """
         if not str(response.status_code).startswith('2'):
             raise BinanceAPIException(response)
-        return response.json()
+        try:
+            return response.json()
+        except ValueError:
+            raise BinanceRequestException('Invalid Response: %s' % response.text)
 
     def _get(self, path, signed=False, **kwargs):
         return self._request_api('get', path, signed, **kwargs)
