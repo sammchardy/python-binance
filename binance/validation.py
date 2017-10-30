@@ -27,7 +27,6 @@ NOTIONAL_LIMITS = {
 
 
 def validate_order(params, products):
-    print(params)
     if params['symbol'] not in products:
         raise BinanceOrderUnknownSymbolException(params['symbol'])
 
