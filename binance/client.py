@@ -66,7 +66,7 @@ class Client(object):
     def _generate_signature(self, data):
 
         query_string = urlencode(data)
-        m = hmac.new(bytearray(self.API_SECRET, 'utf-8'), query_string.encode('utf-8'), hashlib.sha256)
+        m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
     def _order_params(self, data):
