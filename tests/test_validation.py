@@ -36,6 +36,31 @@ products = {
         "tickSize": "0.00000001",
         "matchingUnitType": "STANDARD"
     },
+    "NEOBTC": {
+         "symbol": "NEOBTC",
+         "tradedMoney": 2085.15327359,
+         "baseAssetUnit": "",
+         "active": True,
+         "minTrade": "0.01000000",
+         "baseAsset": "NEO",
+         "activeSell": 447667.17,
+         "withdrawFee": "0",
+         "tickSize": "0.000001",
+         "prevClose": 0.004762,
+         "activeBuy": 0,
+         "volume": "447667.170000",
+         "high": "0.004881",
+         "lastAggTradeId": 1653525,
+         "decimalPlaces": 8,
+         "low": "0.004285",
+         "quoteAssetUnit": "฿",
+         "matchingUnitType": "STANDARD",
+         "close": "0.004628",
+         "quoteAsset": "BTC",
+         "open": "0.004762",
+         "status": "TRADING",
+         "minQty": "1E-8"
+    }
 }
 
 
@@ -79,6 +104,14 @@ def test_invalid_quantity():
                 'quantity': float(products['BNBBTC']['minTrade']) * m
             }
             validate_order(params, products)
+    
+    # this should be valid
+    params = {
+        'symbol': 'NEOBTC',
+        'price': 0.02,
+        'quantity': 2.24
+    }
+    validate_order(params, products)
 
 
 def test_invalid_total():
