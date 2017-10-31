@@ -43,6 +43,10 @@ Features
 Quick Start
 -----------
 
+`Register an account with Binance <https://www.binance.com/register.html?ref=10099792>`_.
+
+`Generate an API Key <https://www.binance.com/userCenter/createApi.html>`_ and assign relevant permissions.
+
 .. code:: bash
 
     pip install python-binance
