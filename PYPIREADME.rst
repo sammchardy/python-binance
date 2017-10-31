@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.3.2
+Welcome to python-binance v0.3.3
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
