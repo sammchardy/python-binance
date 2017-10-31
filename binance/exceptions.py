@@ -70,7 +70,7 @@ class BinanceOrderInactiveSymbolException(BinanceOrderException):
 
 class BinanceWithdrawException(Exception):
     def __init__(self, message):
-        if message == '参数异常':
+        if message == u'参数异常':
             message = 'Withdraw to this address through the website first'
         self.message = message
 
