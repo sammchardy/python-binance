@@ -1,6 +1,26 @@
 Changelog
 =========
 
+v0.3.4 - 2017-10-31
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- depth parameter to depth socket
+- interval parameter to kline socket
+- update time parameter for compatible sockets
+- new enums for socket depth and update time values
+- better websocket documentation
+
+**Changed**
+
+- Depth Cache Manager uses 0ms socket update time
+- connection key returned when creating socket, this key is then used to stop it
+
+**Fixes**
+
+- General fixes
+
 v0.3.3 - 2017-10-31
 ^^^^^^^^^^^^^^^^^^^
 
