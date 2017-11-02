@@ -9,11 +9,12 @@ from autobahn.twisted.websocket import WebSocketClientFactory, \
     connectWS
 from twisted.internet import reactor, ssl
 
+from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_UPDATE_1SECOND, WEBSOCKET_DEPTH_1
 
 BINANCE_STREAM_URL = 'wss://stream.binance.com:9443/ws/'
 
 
-class BinanceClientProtol(WebSocketClientProtocol):
+class BinanceClientProtocol(WebSocketClientProtocol):
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
@@ -39,72 +40,229 @@ class BinanceSocketManager(threading.Thread):
         threading.Thread.__init__(self)
         self._client = client
 
-    def _start_socket(self, path, callback):
+    def _start_socket(self, path, callback, update_time=WEBSOCKET_UPDATE_1SECOND):
+        if update_time != WEBSOCKET_UPDATE_1SECOND:
+            path = '{}@{}'.format(path, update_time)
+
         if path in self._conns:
             return False
 
         factory = WebSocketClientFactory(BINANCE_STREAM_URL + path)
-        factory.protocol = BinanceClientProtol
+        factory.protocol = BinanceClientProtocol
         factory.callback = callback
         context_factory = ssl.ClientContextFactory()
 
         self._conns[path] = connectWS(factory, context_factory)
-        return True
+        return path
 
-    def start_depth_socket(self, symbol, callback):
+    def start_depth_socket(self, symbol, callback, depth=WEBSOCKET_DEPTH_1, update_time=WEBSOCKET_UPDATE_1SECOND):
         """Start a websocket for symbol market depth
 
-        :param symbol:
-        :param callback:
+        https://www.binance.com/restapipub.html#depth-wss-endpoint
 
-        :returns: bool True if successful
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param depth: Number of depth entries to return, default WEBSOCKET_DEPTH_1
+        :type depth: enum
+        :param update_time: Update time interval, default WEBSOCKET_UPDATE_1SECOND
+        :type update_time: enum
 
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "depthUpdate",			# event type
+                "E": 1499404630606, 		# event time
+                "s": "ETHBTC", 				# symbol
+                "u": 7913455, 				# updateId to sync up with updateid in /api/v1/depth
+                "b": [						# bid depth delta
+                    [
+                        "0.10376590", 		# price (need to update the quantity on this price)
+                        "59.15767010", 		# quantity
+                        []					# can be ignored
+                    ],
+                ],
+                "a": [						# ask depth delta
+                    [
+                        "0.10376586", 		# price (need to update the quantity on this price)
+                        "159.15767010", 	# quantity
+                        []					# can be ignored
+                    ],
+                    [
+                        "0.10383109",
+                        "345.86845230",
+                        []
+                    ],
+                    [
+                        "0.10490700",
+                        "0.00000000", 		# quantity=0 means remove this level
+                        []
+                    ]
+                ]
+            }
         """
-        return self._start_socket(symbol.lower() + '@depth', callback)
+        socket_name = symbol.lower() + '@depth'
+        if depth != WEBSOCKET_DEPTH_1:
+            socket_name = '{}{}'.format(socket_name, depth)
+        return self._start_socket(socket_name, callback, update_time=update_time)
 
-    def start_kline_socket(self, symbol, callback):
+    def start_kline_socket(self, symbol, callback, interval=KLINE_INTERVAL_1MINUTE, update_time=WEBSOCKET_UPDATE_1SECOND):
         """Start a websocket for symbol kline data
 
-        :param symbol:
-        :param callback:
+        https://www.binance.com/restapipub.html#kline-wss-endpoint
 
-        :returns: bool True if successful
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
+        :type interval: enum
+        :param update_time: Update time interval, default WEBSOCKET_UPDATE_1SECOND
+        :type update_time: enum
 
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "kline",					# event type
+                "E": 1499404907056,				# event time
+                "s": "ETHBTC",					# symbol
+                "k": {
+                    "t": 1499404860000, 		# start time of this bar
+                    "T": 1499404919999, 		# end time of this bar
+                    "s": "ETHBTC",				# symbol
+                    "i": "1m",					# interval
+                    "f": 77462,					# first trade id
+                    "L": 77465,					# last trade id
+                    "o": "0.10278577",			# open
+                    "c": "0.10278645",			# close
+                    "h": "0.10278712",			# high
+                    "l": "0.10278518",			# low
+                    "v": "17.47929838",			# volume
+                    "n": 4,						# number of trades
+                    "x": false,					# whether this bar is final
+                    "q": "1.79662878",			# quote volume
+                    "V": "2.34879839",			# volume of active buy
+                    "Q": "0.24142166",			# quote volume of active buy
+                    "B": "13279784.01349473"	# can be ignored
+                    }
+            }
         """
-        return self._start_socket(symbol.lower() + '@kline', callback)
+        socket_name = '{}@kline_{}'.format(symbol.lower(), interval)
+        return self._start_socket(socket_name, callback, update_time=update_time)
 
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
-        :param symbol:
-        :param callback:
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
 
-        :returns: bool True if successful
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "aggTrade",		# event type
+                "E": 1499405254326,		# event time
+                "s": "ETHBTC",			# symbol
+                "a": 70232,				# aggregated tradeid
+                "p": "0.10281118",		# price
+                "q": "8.15632997",		# quantity
+                "f": 77489,				# first breakdown trade id
+                "l": 77489,				# last breakdown trade id
+                "T": 1499405254324,		# trade time
+                "m": false,				# whether buyer is a maker
+                "M": true				# can be ignored
+            }
 
         """
         return self._start_socket(symbol.lower() + '@trade', callback)
 
-    def start_ticker_socket(self, callback):
+    def start_ticker_socket(self, callback, update_time=WEBSOCKET_UPDATE_1SECOND):
         """Start a websocket for ticker data
 
-        :param callback:
+        By default all markets are included in an array.
 
-        :returns: bool True if successful
+        Using a 0ms update time will split markets into separate messages.
 
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param update_time: Update time interval, default WEBSOCKET_UPDATE_1SECOND
+        :type update_time: enum
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            [
+                {
+                    'F': 278610,
+                    'o': '0.07393000',
+                    's': 'BCCBTC',
+                    'C': 1509622420916,
+                    'b': '0.07800800',
+                    'l': '0.07160300',
+                    'h': '0.08199900',
+                    'L': 287722,
+                    'P': '6.694',
+                    'Q': '0.10000000',
+                    'q': '1202.67106335',
+                    'p': '0.00494900',
+                    'O': 1509536020916,
+                    'a': '0.07887800',
+                    'n': 9113,
+                    'B': '1.00000000',
+                    'c': '0.07887900',
+                    'x': '0.07399600',
+                    'w': '0.07639068',
+                    'A': '2.41900000',
+                    'v': '15743.68900000'
+                }
+            ]
         """
-        return self._start_socket('!ticker@arr', callback)
+        return self._start_socket('!ticker@arr', callback, update_time=update_time)
 
-    def start_user_socket(self, callback):
+    def start_user_socket(self, callback, update_time=WEBSOCKET_UPDATE_1SECOND):
         """Start a websocket for user data
 
-        :param callback:
+        https://www.binance.com/restapipub.html#user-wss-endpoint
 
-        :returns: bool True if successful
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param update_time: Update time interval, default WEBSOCKET_UPDATE_1SECOND
+        :type update_time: enum
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
         """
+        if self._user_listen_key:
+            # cleanup any sockets with this key
+            for conn_key in self._conns:
+                if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
+                    self.stop_socket(conn_key)
+                    break
         self._user_listen_key = self._client.stream_get_listen_key()
-        if self._start_socket(self._user_listen_key, callback):
+        conn_key = self._start_socket(self._user_listen_key, callback, update_time=update_time)
+        if conn_key:
             # start timer to keep socket alive
             self._start_user_timer()
+
+        return conn_key
 
     def _start_user_timer(self):
         self._user_timer = threading.Timer(self._user_timeout, self._keepalive_user_socket)
@@ -115,50 +273,27 @@ class BinanceSocketManager(threading.Thread):
         self._client.stream_keepalive(listenKey=self._user_listen_key)
         self._start_user_timer()
 
-    def _stop_socket(self, path):
-        if path not in self._conns:
+    def stop_socket(self, conn_key):
+        """Stop a websocket given the connection key
+
+        :param conn_key: Socket connection key
+        :type conn_key: string
+
+        :returns: connection key string if successful, False otherwise
+        """
+        if conn_key not in self._conns:
             return
 
-        self._conns[path].disconnect()
-        del(self._conns[path])
+        self._conns[conn_key].disconnect()
+        del(self._conns[conn_key])
 
-    def stop_depth_socket(self, symbol):
-        """Stop the symbol depth socket
+        # check if we have a user stream socket
+        if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
+            self._stop_user_socket()
 
-        :param symbol:
-
-        """
-        self._stop_socket(symbol.lower() + '@depth')
-
-    def stop_kline_socket(self, symbol):
-        """Stop the symbol kline socket
-
-        :param symbol:
-
-        """
-        self._stop_socket(symbol.lower() + '@kline')
-
-    def stop_trade_socket(self, symbol):
-        """Stop the symbol trade socket
-
-        :param symbol:
-
-        """
-        self._stop_socket(symbol.lower() + '@trade')
-
-    def stop_ticker_socket(self):
-        """Stop the ticker data websocket
-
-        """
-        self._stop_socket('!ticker@arr')
-
-    def stop_user_socket(self):
-        """Stop the user data websocket
-
-        """
+    def _stop_user_socket(self):
         if not self._user_listen_key:
             return
-        self._stop_socket(self._user_listen_key)
         # stop the timer
         self._user_timer.cancel()
         self._user_timer = None
@@ -175,5 +310,5 @@ class BinanceSocketManager(threading.Thread):
         """
         reactor.stop()
 
-        self.stop_user_socket()
+        self._stop_user_socket()
         self._conns = {}

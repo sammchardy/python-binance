@@ -17,14 +17,6 @@ depthcache module
     :undoc-members:
     :show-inheritance:
 
-enums module
----------------------
-
-.. automodule:: binance.enums
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 exceptions module
 --------------------------
 
