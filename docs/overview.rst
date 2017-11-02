@@ -46,3 +46,12 @@ The Binance API documentation references a `timestamp` parameter, this is genera
 Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://www.binance.com/restapipub.html#timing-security>`_.
 
 API Endpoints are rate limited by Binance at 20 requests per second, ask them if you require more.
+
+API Rate Limit
+--------------
+
+Binance rate limits are:
+
+- 1200 requests per minute
+- 10 orders per second
+- 100,000 orders per 24hrs

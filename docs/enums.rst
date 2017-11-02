@@ -40,6 +40,14 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force and 
     TIME_IN_FORCE_GTC = 'GTC'
     TIME_IN_FORCE_IOC = 'IOC'
 
+    WEBSOCKET_UPDATE_0SECOND = '0ms'
+    WEBSOCKET_UPDATE_1SECOND = '1000ms'
+
+    WEBSOCKET_DEPTH_1 = '1'
+    WEBSOCKET_DEPTH_5 = '5'
+    WEBSOCKET_DEPTH_10 = '10'
+    WEBSOCKET_DEPTH_20 = '5'
+
 
 To use in your code import the contents of the `enums.py` module
 
