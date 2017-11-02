@@ -62,6 +62,17 @@ class BinanceSocketManager(threading.Thread):
         """
         return self._start_socket(symbol.lower() + '@depth', callback)
 
+    def start_depth20_socket(self, symbol, callback):
+        """Start a websocket for symbol market depth with up to date 20 levels
+
+        :param symbol:
+        :param callback:
+
+        :returns: bool True if successful
+
+        """
+        return self._start_socket(symbol.lower() + '@depth20', callback)
+
     def start_kline_socket(self, symbol, callback):
         """Start a websocket for symbol kline data
 
