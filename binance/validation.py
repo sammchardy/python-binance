@@ -17,12 +17,14 @@ Notional limits from https://binance.zendesk.com/hc/en-us/articles/115000594711
 BTC - 0.001
 ETH - 0.01
 USDT - 1
+BNB - 1
 """
 
 NOTIONAL_LIMITS = {
     'BTC': 0.001,
     'ETH': 0.01,
-    'USDT': 1
+    'USDT': 1,
+    'BNB': 1
 }
 
 
@@ -49,7 +51,8 @@ def validate_order(params, products):
         raise BinanceOrderMinAmountException(limits['minTrade'])
 
     # check order total
-    total = float(params['price']) * float(params['quantity'])
-    notional_total = NOTIONAL_LIMITS[limits['quoteAsset']]
-    if total < notional_total:
-        raise BinanceOrderMinTotalException(notional_total)
+    if limits['quoteAsset'] in NOTIONAL_LIMITS:
+        notional_total = NOTIONAL_LIMITS[limits['quoteAsset']]
+        total = float(params['price']) * float(params['quantity'])
+        if total < notional_total:
+            raise BinanceOrderMinTotalException(notional_total)
