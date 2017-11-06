@@ -17,12 +17,14 @@ Notional limits from https://binance.zendesk.com/hc/en-us/articles/115000594711
 BTC - 0.001
 ETH - 0.01
 USDT - 1
+BNB - 1
 """
 
 NOTIONAL_LIMITS = {
     'BTC': 0.001,
     'ETH': 0.01,
-    'USDT': 1
+    'USDT': 1,
+    'BNB': 1
 }
 
 
