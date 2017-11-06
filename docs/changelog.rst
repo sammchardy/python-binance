@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.3.5 - 2017-11-06
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- support for BNB market
+
+**Fixes**
+
+- fixed error if new market type is created that we don't know about
+
 v0.3.4 - 2017-10-31
 ^^^^^^^^^^^^^^^^^^^
 
