@@ -49,7 +49,8 @@ def validate_order(params, products):
         raise BinanceOrderMinAmountException(limits['minTrade'])
 
     # check order total
-    total = float(params['price']) * float(params['quantity'])
-    notional_total = NOTIONAL_LIMITS[limits['quoteAsset']]
-    if total < notional_total:
-        raise BinanceOrderMinTotalException(notional_total)
+    if limits['quoteAsset'] in NOTIONAL_LIMITS:
+        notional_total = NOTIONAL_LIMITS[limits['quoteAsset']]
+        total = float(params['price']) * float(params['quantity'])
+        if total < notional_total:
+            raise BinanceOrderMinTotalException(notional_total)
