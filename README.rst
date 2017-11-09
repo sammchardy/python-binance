@@ -28,6 +28,9 @@ Source code
 Documentation
   https://python-binance.readthedocs.io/en/latest/
 
+Binance API Telegram
+  https://t.me/binance_api_english
+
 Features
 --------
 
