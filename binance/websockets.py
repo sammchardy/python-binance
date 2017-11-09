@@ -31,7 +31,7 @@ class BinanceSocketManager(threading.Thread):
     _user_timeout = 50 * 60  # 50 minutes
 
     def __init__(self, client):
-        """Intialise the BinanceSocketManager
+        """Initialise the BinanceSocketManager
 
         :param client: Binance API client
         :type client: binance.Client
