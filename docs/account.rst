@@ -106,7 +106,7 @@ Creates and validates a new order but does not send it into the exchange.
 .. code:: python
 
     order = client.get_order(
-        style='BNBBTC',
+        symbol='BNBBTC',
         orderId='orderId')
 
 
