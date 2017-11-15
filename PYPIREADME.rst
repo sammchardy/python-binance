@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.3.5
+Welcome to python-binance v0.3.6
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -27,6 +27,9 @@ Source code
 
 Documentation
   https://python-binance.readthedocs.io/en/latest/
+
+Binance API Telegram
+  https://t.me/binance_api_english
 
 Features
 --------
@@ -110,3 +113,13 @@ If this library helped you out feel free to donate.
 - ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
 - NEO: AVJB4ZgN7VgSUtArCt94y7ZYT6d5NDfpBo
 - BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
+
+Other Exchanges
+---------------
+
+If you use `Quoinex <https://accounts.quoinex.com/sign-up?affiliate=PAxghztC67615>`_
+or `Qryptos <https://accounts.qryptos.com/sign-up?affiliate=PAxghztC67615>`_ check out my `python-quoine <https://github.com/sammchardy/python-quoine>`_ library.
+
+If you use `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
+
+If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.

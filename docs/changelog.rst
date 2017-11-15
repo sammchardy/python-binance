@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.3.6 - 2017-11-15
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- check if Reactor is already running
+
 v0.3.5 - 2017-11-06
 ^^^^^^^^^^^^^^^^^^^
 
