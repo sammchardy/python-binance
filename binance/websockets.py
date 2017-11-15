@@ -8,6 +8,7 @@ from autobahn.twisted.websocket import WebSocketClientFactory, \
     WebSocketClientProtocol, \
     connectWS
 from twisted.internet import reactor, ssl
+from twisted.internet.error import ReactorAlreadyRunning
 
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_UPDATE_1SECOND, WEBSOCKET_DEPTH_1
 
@@ -302,7 +303,11 @@ class BinanceSocketManager(threading.Thread):
         self._user_listen_key = None
 
     def run(self):
-        reactor.run(installSignalHandlers=False)
+        try:
+            reactor.run(installSignalHandlers=False)
+        except ReactorAlreadyRunning:
+            # Ignore error about reactor already running
+            pass
 
     def close(self):
         """Stop the websocket manager and close connections
