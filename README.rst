@@ -117,4 +117,9 @@ If this library helped you out feel free to donate.
 Other Exchanges
 ---------------
 
-If you use Quoinex or Qryptos check out my `python-quoine <https://github.com/sammchardy/python-quoine>`_ library.
+If you use `Quoinex <https://accounts.quoinex.com/sign-up?affiliate=PAxghztC67615>`_
+or `Qryptos <https://accounts.qryptos.com/sign-up?affiliate=PAxghztC67615>`_ check out my `python-quoine <https://github.com/sammchardy/python-quoine>`_ library.
+
+If you use `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
+
+If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
