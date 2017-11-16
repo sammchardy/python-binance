@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.3.7 - 2017-11-16
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- Fix multiple depth caches sharing a cache by initialising bid and ask objects each time
+
 v0.3.6 - 2017-11-15
 ^^^^^^^^^^^^^^^^^^^
 
