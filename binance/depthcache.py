@@ -21,6 +21,8 @@ class DepthCache(object):
 
         """
         self._symbol = symbol
+        self._bids = {}
+        self._asks = {}
 
     def add_bid(self, bid):
         """Add a bid to the cache
