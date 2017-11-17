@@ -149,6 +149,10 @@ def test_valid_order():
             'price': 0.002,
             'quantity': 1
         },
+        {
+            'symbol': 'BNBBTC',  # market order
+            'quantity': 1
+        },
     ]
     for p in params:
         validate_order(p, products)

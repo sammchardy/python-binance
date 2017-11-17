@@ -9,10 +9,6 @@ from .websockets import BinanceSocketManager
 
 class DepthCache(object):
 
-    _symbol = None
-    _bids = {}
-    _asks = {}
-
     def __init__(self, symbol):
         """Intialise the DepthCache
 
@@ -123,13 +119,6 @@ class DepthCache(object):
 
 class DepthCacheManager(object):
 
-    _first_update_id = 0
-    _client = None
-    _symbol = None
-    _callback = None
-    _bm = None
-    _depth_cache = None
-
     def __init__(self, client, symbol, callback):
         """Intialise the DepthCacheManager
 
@@ -144,6 +133,8 @@ class DepthCacheManager(object):
         self._client = client
         self._symbol = symbol
         self._callback = callback
+        self._first_update_id = 0
+        self._bm = None
         self._depth_cache = DepthCache(self._symbol)
 
         self._init_cache()

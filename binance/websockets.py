@@ -25,10 +25,6 @@ class BinanceClientProtocol(WebSocketClientProtocol):
 
 class BinanceSocketManager(threading.Thread):
 
-    _conns = {}
-    _user_timer = None
-    _client = None
-    _user_listen_key = None
     _user_timeout = 50 * 60  # 50 minutes
 
     def __init__(self, client):
@@ -39,6 +35,9 @@ class BinanceSocketManager(threading.Thread):
 
         """
         threading.Thread.__init__(self)
+        self._conns = {}
+        self._user_timer = None
+        self._user_listen_key = None
         self._client = client
 
     def _start_socket(self, path, callback, update_time=WEBSOCKET_UPDATE_1SECOND):

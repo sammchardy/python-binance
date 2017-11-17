@@ -25,8 +25,6 @@ class Client(object):
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v1'
 
-    _products = None
-
     def __init__(self, api_key, api_secret):
         """Binance API Client constructor
 
@@ -40,6 +38,8 @@ class Client(object):
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
+
+        self._products = None
 
         # init DNS and SSL cert
         self.ping()
