@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.3.8 - 2017-11-17
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- Fix order validation for market orders
+- WEBSOCKET_DEPTH_20 value, 20 instead of 5
+- General tidy up
+
 v0.3.7 - 2017-11-16
 ^^^^^^^^^^^^^^^^^^^
 
