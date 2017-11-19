@@ -25,7 +25,7 @@ def test_api_exception():
     with pytest.raises(BinanceAPIException):
         with requests_mock.mock() as m:
             json_obj = {"code": 1002, "msg": "Invalid API call"}
-            m.get('https://www.binance.com/api/v1/time', json=json_obj, status_code=400)
+            m.get('https://api.binance.com/api/v1/time', json=json_obj, status_code=400)
             client.get_server_time()
 
 

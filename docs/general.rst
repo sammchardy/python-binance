@@ -15,8 +15,17 @@ General Endpoints
 
     time_res = client.get_server_time()
 
+`Get Exchange Info <binance.html#binance.client.Client.get_exchange_info>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    info = client.get_exchange_info()
+
 `Get Current Products <binance.html#binance.client.Client.get_products>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This call is deprecated, use the above Exchange Info call
 
 .. code:: python
 
