@@ -7,7 +7,6 @@ import requests
 import six
 import time
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-from .validation import validate_order
 from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
 if six.PY2:
@@ -43,7 +42,6 @@ class Client(object):
 
         # init DNS and SSL cert
         self.ping()
-        self.get_products()
 
     def _init_session(self):
 
@@ -144,22 +142,12 @@ class Client(object):
     def _delete(self, path, signed=False, **kwargs):
         return self._request_api('delete', path, signed, **kwargs)
 
-    def _parse_products(self, products):
-        """
-        Parse the response from get_products to use for validation
-        :param products:
-        :return:
-        """
-        self._products = {}
-        if 'data' in products:
-            products = products['data']
-        for p in products:
-            self._products[p['symbol']] = p
-
-    # Website Endpoints
+    # Exchange Endpoints
 
     def get_products(self):
         """Return list of products currently listed on Binance
+
+        Use get_exchange_info() call instead
 
         :returns: list - List of product dictionaries
 
@@ -168,8 +156,18 @@ class Client(object):
         """
 
         products = self._request_website('get', 'exchange/public/product')
-        self._parse_products(products)
         return products
+
+    def get_exchange_info(self):
+        """Return rate limits and list of symbols
+
+        :returns: list - List of product dictionaries
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+
+        return self._get('exchangeinfo')
 
     # General Endpoints
 
@@ -421,13 +419,11 @@ class Client(object):
 
     # Account Endpoints
 
-    def create_order(self, disable_validation=False, **params):
+    def create_order(self, **params):
         """Send in a new order
 
         https://www.binance.com/restapipub.html#new-order--signed
 
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
         :param symbol: required
         :type symbol: str
         :param side: required
@@ -461,11 +457,9 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        if not disable_validation:
-            validate_order(params, self._products)
         return self._post('order', True, data=params)
 
-    def order_limit(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         :param symbol: required
@@ -484,8 +478,6 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -505,9 +497,9 @@ class Client(object):
             'type': ORDER_TYPE_LIMIT,
             'timeInForce': timeInForce
         })
-        return self.create_order(disable_validation=disable_validation, **params)
+        return self.create_order(**params)
 
-    def order_limit_buy(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         :param symbol: required
@@ -524,8 +516,6 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -544,9 +534,9 @@ class Client(object):
         params.update({
             'side': SIDE_BUY,
         })
-        return self.order_limit(disable_validation=disable_validation, timeInForce=timeInForce, **params)
+        return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, disable_validation=False, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_sell(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
@@ -563,8 +553,6 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -583,9 +571,9 @@ class Client(object):
         params.update({
             'side': SIDE_SELL
         })
-        return self.order_limit(disable_validation=disable_validation, timeInForce=timeInForce, **params)
+        return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_market(self, disable_validation=False, **params):
+    def order_market(self, **params):
         """Send in a new market order
 
         :param symbol: required
@@ -596,8 +584,6 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -616,9 +602,9 @@ class Client(object):
         params.update({
             'type': ORDER_TYPE_MARKET
         })
-        return self.create_order(disable_validation=disable_validation, **params)
+        return self.create_order(**params)
 
-    def order_market_buy(self, disable_validation=False, **params):
+    def order_market_buy(self, **params):
         """Send in a new market buy order
 
         :param symbol: required
@@ -627,8 +613,6 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -647,9 +631,9 @@ class Client(object):
         params.update({
             'side': SIDE_BUY
         })
-        return self.order_market(disable_validation=disable_validation, **params)
+        return self.order_market(**params)
 
-    def order_market_sell(self, disable_validation=False, **params):
+    def order_market_sell(self, **params):
         """Send in a new market sell order
 
         :param symbol: required
@@ -658,8 +642,6 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
 
         :returns: API response
 
@@ -678,15 +660,13 @@ class Client(object):
         params.update({
             'side': SIDE_SELL
         })
-        return self.order_market(disable_validation=disable_validation, **params)
+        return self.order_market(**params)
 
-    def create_test_order(self, disable_validation=False, **params):
+    def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
         https://www.binance.com/restapipub.html#test-new-order-signed
 
-        :param disable_validation: disable client side order validation, default False
-        :type disable_validation: bool
         :param symbol: required
         :type symbol: str
         :param side: required
@@ -718,8 +698,6 @@ class Client(object):
 
 
         """
-        if not disable_validation:
-            validate_order(params, self._products)
         return self._post('order/test', True, data=params)
 
     def get_order(self, **params):
