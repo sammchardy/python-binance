@@ -41,3 +41,10 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
     withdraws = client.get_withdraw_history()
     btc_withdraws = client.get_withdraw_history(asset='BTC')
+
+`Get deposit address <binance.html#binance.client.Client.get_deposit_address>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    address = client.get_deposit_address('BTC)
