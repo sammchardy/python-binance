@@ -17,12 +17,12 @@ elif six.PY3:
 
 class Client(object):
 
-    API_URL = 'https://www.binance.com/api'
-    WITHDRAW_API_URL = 'https://www.binance.com/wapi'
+    API_URL = 'https://api.binance.com/api'
+    WITHDRAW_API_URL = 'https://api.binance.com/wapi'
     WEBSITE_URL = 'https://www.binance.com'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
-    WITHDRAW_API_VERSION = 'v1'
+    WITHDRAW_API_VERSION = 'v3'
 
     def __init__(self, api_key, api_secret):
         """Binance API Client constructor
@@ -1001,7 +1001,7 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('post', 'getDepositHistory.html', True, data=params)
+        return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
 
     def get_withdraw_history(self, **params):
         """Fetch withdraw history.
@@ -1047,7 +1047,7 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('post', 'getWithdrawHistory.html', True, data=params)
+        return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
     # User Stream Endpoints
 
