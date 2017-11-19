@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.3.8
+Welcome to python-binance v0.4.0
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -41,6 +41,7 @@ Features
 - Websocket handling
 - Symbol Depth Cache
 - Withdraw functionality
+- Deposit addresses
 - Order parameter validation based on Trade Rules
 
 Quick Start
@@ -91,6 +92,9 @@ Quick Start
 
     # fetch list of withdrawals
     withdraws = client.get_withdraw_history()
+
+    # get a deposit address
+    address = client.get_deposit_address('BTC)
 
     # start trade websocket
     def process_message(msg):

@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.4.0 - 2017-11-19
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Get deposit address endpoint
+- Upgraded withdraw endpoints to v3
+- New exchange info endpoint with rate limits and full symbol info
+
+**Removed**
+
+- Order validation to return at a later date
+
 v0.3.8 - 2017-11-17
 ^^^^^^^^^^^^^^^^^^^
 

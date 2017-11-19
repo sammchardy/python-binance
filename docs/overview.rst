@@ -50,7 +50,9 @@ API Endpoints are rate limited by Binance at 20 requests per second, ask them if
 API Rate Limit
 --------------
 
-Binance rate limits are:
+Check the `get_exchange_info() <binance.html#binance.client.Client.get_exchange_info>`_ call for up to date rate limits.
+
+At the current time Binance rate limits are:
 
 - 1200 requests per minute
 - 10 orders per second
