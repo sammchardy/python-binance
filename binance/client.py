@@ -1049,6 +1049,32 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
+    def get_deposit_address(self, **params):
+        """Fetch a deposit address for a symbol
+
+        https://www.binance.com/restapipub.html
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                "success": true,
+                "addressTag": "1231212",
+                "asset": "BNB"
+            }
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
+
     # User Stream Endpoints
 
     def stream_get_listen_key(self):
