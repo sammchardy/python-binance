@@ -33,6 +33,10 @@ class BinanceReconnectingClientFactory(ReconnectingClientFactory):
     # set initial delay to a short time
     initialDelay = 0.1
 
+    maxDelay = 10
+
+    maxRetries = 5
+
 
 class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFactory):
 
