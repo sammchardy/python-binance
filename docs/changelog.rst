@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.4.1 - 2017-11-24
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Reconnecting websockets, automatic retry on disconnect
+
 v0.4.0 - 2017-11-19
 ^^^^^^^^^^^^^^^^^^^
 
