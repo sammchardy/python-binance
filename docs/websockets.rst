@@ -12,6 +12,8 @@ When creating socket connections a callback function is passed which receives th
 
 Messages are received as dictionary objects relating to the message formats defined in the `Binance API documentation <https://www.binance.com/restapipub.html#wss-endpoint>`_.
 
+Websockets are setup to reconnect with a maximum of 5 retries.
+
 Websocket Update Time
 ---------------------
 
