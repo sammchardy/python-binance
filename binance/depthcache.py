@@ -3,7 +3,6 @@
 
 from operator import itemgetter
 
-from .enums import WEBSOCKET_UPDATE_0SECOND
 from .websockets import BinanceSocketManager
 
 
@@ -153,7 +152,7 @@ class DepthCacheManager(object):
     def _start_socket(self):
         self._bm = BinanceSocketManager(self._client)
 
-        self._bm.start_depth_socket(self._symbol, self._depth_event, update_time=WEBSOCKET_UPDATE_0SECOND)
+        self._bm.start_depth_socket(self._symbol, self._depth_event)
 
         self._bm.start()
 
