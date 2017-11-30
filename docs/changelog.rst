@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.4.2 - 2017-11-30
+^^^^^^^^^^^^^^^^^^^
+
+**Removed**
+
+- Removed websocket update time as 0ms option is not available
+
 v0.4.1 - 2017-11-24
 ^^^^^^^^^^^^^^^^^^^
 
