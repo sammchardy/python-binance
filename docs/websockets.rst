@@ -14,19 +14,6 @@ Messages are received as dictionary objects relating to the message formats defi
 
 Websockets are setup to reconnect with a maximum of 5 retries.
 
-Websocket Update Time
----------------------
-
-By default sockets push aggregated content once a second.
-
-When creating a sockets there is an `update_time` parameter, with valid values being 0ms and 1000ms `defined as enums <enums.html>`_.
-
-Using 0ms forces the socket to send updates as soon as they are available.
-
-An example of setting the update time to 0ms is shown below for the Ticker Socket.
-
-This parameter is not available for the Trade Socket.
-
 Websocket Usage
 ---------------
 
@@ -78,8 +65,6 @@ Valid interval values are `defined as enums <enums.html>`_.
 `Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-This socket does not support the `update_time` parameter
-
 .. code:: python
 
     conn_key = bm.start_trade_socket('BNBBTC', process_message)
@@ -90,8 +75,7 @@ This socket does not support the `update_time` parameter
 
 .. code:: python
 
-    from binance.enums import *
-    conn_key = bm.start_ticker_socket(process_message, update_time=WEBSOCKET_UPDATE_0SECOND)
+    conn_key = bm.start_ticker_socket(process_message)
 
 
 `User Socket <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
