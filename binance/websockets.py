@@ -12,6 +12,7 @@ from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
+from .exceptions import BinanceAPIException
 
 BINANCE_STREAM_URL = 'wss://stream.binance.com:9443/ws/'
 
@@ -289,7 +290,15 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        self._client.stream_keepalive(listenKey=self._user_listen_key)
+        try:
+            self._client.stream_keepalive(listenKey=self._user_listen_key)
+        except BinanceAPIException as e:
+            # check if listen key is invalid
+            if e.code == BinanceAPIException.LISTENKEY_NOT_EXIST:
+                # generate a new one and try to keep the stream alive again
+                self._user_listen_key = self._client.stream_get_listen_key()
+                self._keepalive_user_socket()
+
         self._start_user_timer()
 
     def stop_socket(self, conn_key):
