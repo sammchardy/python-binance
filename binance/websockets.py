@@ -24,8 +24,12 @@ class BinanceClientProtocol(WebSocketClientProtocol):
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
-            payload_obj = json.loads(payload.decode('utf8'))
-            self.factory.callback(payload_obj)
+            try:
+                payload_obj = json.loads(payload.decode('utf8'))
+            except ValueError:
+                pass
+            else:
+                self.factory.callback(payload_obj)
 
 
 class BinanceReconnectingClientFactory(ReconnectingClientFactory):
