@@ -71,6 +71,7 @@ class BinanceSocketManager(threading.Thread):
         self._conns = {}
         self._user_timer = None
         self._user_listen_key = None
+        self._user_callback = None
         self._client = client
 
     def _start_socket(self, path, callback):
@@ -277,6 +278,7 @@ class BinanceSocketManager(threading.Thread):
                     self.stop_socket(conn_key)
                     break
         self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
             # start timer to keep socket alive
@@ -296,10 +298,9 @@ class BinanceSocketManager(threading.Thread):
             # check if listen key is invalid
             if e.code == BinanceAPIException.LISTENKEY_NOT_EXIST:
                 # generate a new one and try to keep the stream alive again
-                self._user_listen_key = self._client.stream_get_listen_key()
-                self._keepalive_user_socket()
-
-        self._start_user_timer()
+                self.start_user_socket(self._user_callback)
+        else:
+            self._start_user_timer()
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key
