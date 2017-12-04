@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.4.3 - 2017-12-04
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- Fixed stopping sockets where they were reconnecting
+- Fixed websockets unable to be restarted after close
+- Exception in parsing non-JSON websocket message
+
 v0.4.2 - 2017-11-30
 ^^^^^^^^^^^^^^^^^^^
 
