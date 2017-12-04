@@ -33,7 +33,7 @@ A callback to process messages would take the format
 .. code:: python
 
     def process_message(msg):
-        print("message type:" + msg[e])
+        print("message type:" + msg['e'])
         print(msg)
         # do something
 
