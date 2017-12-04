@@ -24,8 +24,12 @@ class BinanceClientProtocol(WebSocketClientProtocol):
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
-            payload_obj = json.loads(payload.decode('utf8'))
-            self.factory.callback(payload_obj)
+            try:
+                payload_obj = json.loads(payload.decode('utf8'))
+            except ValueError:
+                pass
+            else:
+                self.factory.callback(payload_obj)
 
 
 class BinanceReconnectingClientFactory(ReconnectingClientFactory):
@@ -46,7 +50,9 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
         self.retry(connector)
 
     def clientConnectionLost(self, connector, reason):
-        self.retry(connector)
+        # check if closed cleanly
+        if reason.getErrorMessage() != 'Connection was closed cleanly.':
+            self.retry(connector)
 
 
 class BinanceSocketManager(threading.Thread):
@@ -322,10 +328,11 @@ class BinanceSocketManager(threading.Thread):
             pass
 
     def close(self):
-        """Stop the websocket manager and close connections
+        """Close all connections
 
         """
-        reactor.stop()
+        keys = self._conns.keys()
+        for key in keys:
+            self.stop_socket(key)
 
-        self._stop_user_socket()
         self._conns = {}
