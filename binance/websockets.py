@@ -328,10 +328,11 @@ class BinanceSocketManager(threading.Thread):
             pass
 
     def close(self):
-        """Stop the websocket manager and close connections
+        """Close all connections
 
         """
-        reactor.stop()
+        keys = self._conns.keys()
+        for key in keys:
+            self.stop_socket(key)
 
-        self._stop_user_socket()
         self._conns = {}
