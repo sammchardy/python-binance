@@ -3,6 +3,9 @@
 
 
 class BinanceAPIException(Exception):
+
+    LISTENKEY_NOT_EXIST = '-1125'
+
     def __init__(self, response):
         json_res = response.json()
         self.status_code = response.status_code
