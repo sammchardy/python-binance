@@ -50,7 +50,9 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
         self.retry(connector)
 
     def clientConnectionLost(self, connector, reason):
-        self.retry(connector)
+        # check if closed cleanly
+        if reason.getErrorMessage() != 'Connection was closed cleanly.':
+            self.retry(connector)
 
 
 class BinanceSocketManager(threading.Thread):
