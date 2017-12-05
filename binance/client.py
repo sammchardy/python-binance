@@ -529,10 +529,118 @@ class Client(object):
                 "count": 76         # Trade count
             }
 
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "priceChange": "-94.99999800",
+                    "priceChangePercent": "-95.960",
+                    "weightedAvgPrice": "0.29628482",
+                    "prevClosePrice": "0.10002000",
+                    "lastPrice": "4.00000200",
+                    "bidPrice": "4.00000000",
+                    "askPrice": "4.00000200",
+                    "openPrice": "99.00000000",
+                    "highPrice": "100.00000000",
+                    "lowPrice": "0.10000000",
+                    "volume": "8913.30000000",
+                    "openTime": 1499783499040,
+                    "closeTime": 1499869899040,
+                    "fristId": 28385,   # First tradeId
+                    "lastId": 28460,    # Last tradeId
+                    "count": 76         # Trade count
+                }
+            ]
+
         :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ticker/24hr', data=params)
+
+    def get_symbol_ticker(self, **params):
+        """Latest price for a symbol or symbols.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+
+        :param symbol:
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol": "LTCBTC",
+                "price": "4.00000200"
+            }
+
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "symbol": "LTCBTC",
+                    "price": "4.00000200"
+                },
+                {
+                    "symbol": "ETHBTC",
+                    "price": "0.07946600"
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
+
+    def get_orderbook_ticker(self, **params):
+        """Latest price for a symbol or symbols.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
+
+        :param symbol:
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol": "LTCBTC",
+                "bidPrice": "4.00000000",
+                "bidQty": "431.00000000",
+                "askPrice": "4.00000200",
+                "askQty": "9.00000000"
+            }
+
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "symbol": "LTCBTC",
+                    "bidPrice": "4.00000000",
+                    "bidQty": "431.00000000",
+                    "askPrice": "4.00000200",
+                    "askQty": "9.00000000"
+                },
+                {
+                    "symbol": "ETHBTC",
+                    "bidPrice": "0.07946700",
+                    "bidQty": "9.00000000",
+                    "askPrice": "100000.00000000",
+                    "askQty": "1000.00000000"
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('ticker/bookTicker', data=params, version=self.PRIVATE_API_VERSION)
 
     # Account Endpoints
 
@@ -557,12 +665,14 @@ class Client(object):
         :type price: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
-        :param icebergQty: Used with iceberg orders
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
+
+        Response ACK:
 
         .. code-block:: python
 
@@ -573,6 +683,74 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
+        Response RESULT:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "0.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL"
+            }
+
+        Response FULL:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "0.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL",
+                "fills": [
+                    {
+                        "price": "4000.00000000",
+                        "qty": "1.00000000",
+                        "commission": "4.00000000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3999.00000000",
+                        "qty": "5.00000000",
+                        "commission": "19.99500000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3998.00000000",
+                        "qty": "2.00000000",
+                        "commission": "7.99600000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3997.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99700000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3995.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99500000",
+                        "commissionAsset": "USDT"
+                    }
+                ]
+            }
+
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
@@ -580,6 +758,8 @@ class Client(object):
 
     def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
 
         :param symbol: required
         :type symbol: str
@@ -593,21 +773,14 @@ class Client(object):
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
-        :param icebergQty: Used with iceberg orders
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -620,6 +793,8 @@ class Client(object):
 
     def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
 
         :param symbol: required
         :type symbol: str
@@ -635,17 +810,12 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -675,14 +845,7 @@ class Client(object):
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -703,17 +866,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -732,17 +890,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -761,17 +914,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -800,10 +948,10 @@ class Client(object):
         :type price: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 
