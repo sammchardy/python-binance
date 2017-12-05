@@ -9,6 +9,20 @@ Market Data Endpoints
 
     depth = client.get_order_book(symbol='BNBBTC')
 
+`Get Recent Trades <binance.html#binance.client.Client.get_recent_trades>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    trades = client.get_recent_trades(symbol='BNBBTC')
+
+`Get Historical Trades <binance.html#binance.client.Client.get_historical_trades>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    trades = client.get_historical_trades(symbol='BNBBTC')
+
 `Get Aggregate Trades <binance.html#binance.client.Client.get_aggregate_trades>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

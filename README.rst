@@ -20,7 +20,7 @@ Welcome to python-binance v0.4.3
 .. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
-This is an unofficial Python wrapper for the `Binance exchange REST API v1 <https://www.binance.com/restapipub.html>`_. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the `Binance exchange REST API v1/3 <https://github.com/binance-exchange/binance-official-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
 
 Source code
   https://github.com/sammchardy/python-binance
@@ -92,6 +92,9 @@ Quick Start
     # fetch list of withdrawals
     withdraws = client.get_withdraw_history()
 
+    # fetch list of ETH withdrawals
+    eth_withdraws = client.get_withdraw_history('ETH)
+
     # get a deposit address
     address = client.get_deposit_address('BTC)
 
@@ -103,7 +106,7 @@ Quick Start
 
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
-    bm.start_trade_socket(symbol='BNBBTC')
+    bm.start_aggtrade_socket(symbol='BNBBTC')
     bm.start()
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.

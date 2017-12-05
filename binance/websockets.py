@@ -12,6 +12,7 @@ from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
+from .exceptions import BinanceAPIException
 
 BINANCE_STREAM_URL = 'wss://stream.binance.com:9443/ws/'
 
@@ -70,6 +71,7 @@ class BinanceSocketManager(threading.Thread):
         self._conns = {}
         self._user_timer = None
         self._user_listen_key = None
+        self._user_callback = None
         self._client = client
 
     def _start_socket(self, path, callback):
@@ -199,6 +201,37 @@ class BinanceSocketManager(threading.Thread):
         .. code-block:: python
 
             {
+                "e": "trade",     # Event type
+                "E": 123456789,   # Event time
+                "s": "BNBBTC",    # Symbol
+                "t": 12345,       # Trade ID
+                "p": "0.001",     # Price
+                "q": "100",       # Quantity
+                "b": 88,          # Buyer order Id
+                "a": 50,          # Seller order Id
+                "T": 123456785,   # Trade time
+                "m": true,        # Is the buyer the market maker?
+                "M": true         # Ignore.
+            }
+
+        """
+        return self._start_socket(symbol.lower() + '@trade', callback)
+
+    def start_aggtrade_socket(self, symbol, callback):
+        """Start a websocket for symbol trade data
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
                 "e": "aggTrade",		# event type
                 "E": 1499405254326,		# event time
                 "s": "ETHBTC",			# symbol
@@ -213,10 +246,53 @@ class BinanceSocketManager(threading.Thread):
             }
 
         """
-        return self._start_socket(symbol.lower() + '@trade', callback)
+        return self._start_socket(symbol.lower() + '@aggTrade', callback)
+
+    def start_symbol_ticker_socket(self, symbol, callback):
+        """Start a websocket for a symbol's ticker data
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "24hrTicker",  # Event type
+                "E": 123456789,     # Event time
+                "s": "BNBBTC",      # Symbol
+                "p": "0.0015",      # Price change
+                "P": "250.00",      # Price change percent
+                "w": "0.0018",      # Weighted average price
+                "x": "0.0009",      # Previous day's close price
+                "c": "0.0025",      # Current day's close price
+                "Q": "10",          # Close trade's quantity
+                "b": "0.0024",      # Best bid price
+                "B": "10",          # Bid bid quantity
+                "a": "0.0026",      # Best ask price
+                "A": "100",         # Best ask quantity
+                "o": "0.0010",      # Open price
+                "h": "0.0025",      # High price
+                "l": "0.0010",      # Low price
+                "v": "10000",       # Total traded base asset volume
+                "q": "18",          # Total traded quote asset volume
+                "O": 0,             # Statistics open time
+                "C": 86400000,      # Statistics close time
+                "F": 0,             # First trade ID
+                "L": 18150,         # Last trade Id
+                "n": 18151          # Total number of trades
+            }
+
+        """
+        return self._start_socket(symbol.lower() + '@ticker', callback)
 
     def start_ticker_socket(self, callback):
-        """Start a websocket for ticker data
+        """Start a websocket for all ticker data
 
         By default all markets are included in an array.
 
@@ -276,6 +352,7 @@ class BinanceSocketManager(threading.Thread):
                     self.stop_socket(conn_key)
                     break
         self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
             # start timer to keep socket alive
@@ -289,8 +366,17 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        self._client.stream_keepalive(listenKey=self._user_listen_key)
-        self._start_user_timer()
+        try:
+            self._client.stream_keepalive(listenKey=self._user_listen_key)
+        except BinanceAPIException as e:
+            print("got stream_keepalive error: %s" % e)
+            # check if listen key is invalid
+            if e.code == BinanceAPIException.LISTENKEY_NOT_EXIST:
+                print("restarting user socket")
+                # generate a new one and try to keep the stream alive again
+                self.start_user_socket(self._user_callback)
+        else:
+            self._start_user_timer()
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key

@@ -40,6 +40,10 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force and 
     TIME_IN_FORCE_GTC = 'GTC'
     TIME_IN_FORCE_IOC = 'IOC'
 
+    ORDER_RESP_TYPE_ACK = 'ACK'
+    ORDER_RESP_TYPE_RESULT = 'RESULT'
+    ORDER_RESP_TYPE_FULL = 'FULL'
+
     WEBSOCKET_DEPTH_1 = '1'
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
