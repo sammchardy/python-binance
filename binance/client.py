@@ -72,15 +72,16 @@ class Client(object):
         :return:
 
         """
-        has_signature = False
+        try:
+            has_signature = data['signature'] if True else False
+            break
+        except ValueError:
+            pass
         params = []
         for key, value in data.items():
-            if key == 'signature':
-                has_signature = True
-            else:
-                params.append((key, value))
+            params.append((key, value))
         if has_signature:
-            params.append(('signature', data['signature']))
+            params.append(('signature', has_signature))
         return params
 
     def _request(self, method, uri, signed, force_params=False, **kwargs):
