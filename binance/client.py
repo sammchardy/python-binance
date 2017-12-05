@@ -24,6 +24,10 @@ class Client(object):
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
 
+    ORDER_RESP_TYPE_ACK = 'ACK'
+    ORDER_RESP_TYPE_RESULT = 'RESULT'
+    ORDER_RESP_TYPE_FULL = 'FULL'
+
     def __init__(self, api_key, api_secret):
         """Binance API Client constructor
 
