@@ -201,6 +201,37 @@ class BinanceSocketManager(threading.Thread):
         .. code-block:: python
 
             {
+                "e": "trade",     # Event type
+                "E": 123456789,   # Event time
+                "s": "BNBBTC",    # Symbol
+                "t": 12345,       # Trade ID
+                "p": "0.001",     # Price
+                "q": "100",       # Quantity
+                "b": 88,          # Buyer order Id
+                "a": 50,          # Seller order Id
+                "T": 123456785,   # Trade time
+                "m": true,        # Is the buyer the market maker?
+                "M": true         # Ignore.
+            }
+
+        """
+        return self._start_socket(symbol.lower() + '@trade', callback)
+
+    def start_aggtrade_socket(self, symbol, callback):
+        """Start a websocket for symbol trade data
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
                 "e": "aggTrade",		# event type
                 "E": 1499405254326,		# event time
                 "s": "ETHBTC",			# symbol
@@ -215,7 +246,7 @@ class BinanceSocketManager(threading.Thread):
             }
 
         """
-        return self._start_socket(symbol.lower() + '@trade', callback)
+        return self._start_socket(symbol.lower() + '@aggTrade', callback)
 
     def start_ticker_socket(self, callback):
         """Start a websocket for ticker data
