@@ -53,8 +53,8 @@ class Client(object):
                                 'X-MBX-APIKEY': self.API_KEY})
         return session
 
-    def _create_api_uri(self, path, signed=True):
-        v = self.PRIVATE_API_VERSION if signed else self.PUBLIC_API_VERSION
+    def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
+        v = self.PRIVATE_API_VERSION if signed else version
         return self.API_URL + '/' + v + '/' + path
 
     def _create_withdraw_api_uri(self, path):
@@ -104,8 +104,8 @@ class Client(object):
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
-    def _request_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_api_uri(path, signed)
+    def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        uri = self._create_api_uri(path, signed, version)
 
         return self._request(method, uri, signed, **kwargs)
 
@@ -132,17 +132,17 @@ class Client(object):
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % response.text)
 
-    def _get(self, path, signed=False, **kwargs):
-        return self._request_api('get', path, signed, **kwargs)
+    def _get(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('get', path, signed, version, **kwargs)
 
-    def _post(self, path, signed=False, **kwargs):
-        return self._request_api('post', path, signed, **kwargs)
+    def _post(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('post', path, signed, version, **kwargs)
 
-    def _put(self, path, signed=False, **kwargs):
-        return self._request_api('put', path, signed, **kwargs)
+    def _put(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('put', path, signed, version, **kwargs)
 
-    def _delete(self, path, signed=False, **kwargs):
-        return self._request_api('delete', path, signed, **kwargs)
+    def _delete(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
 
