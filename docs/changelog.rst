@@ -1,6 +1,22 @@
 Changelog
 =========
 
+v0.5.0 - 2017-12-05
+^^^^^^^^^^^^^^^^^^^
+
+Updating to match new API documentation
+
+**Added**
+
+- Recent trades endpoint
+- Historical trades endpoint
+- Order response type option
+- Check for invalid user stream listen key in socket to keep connected
+
+**Fixes**
+
+- Fixed exchange info endpoint as it was renamed slightly
+
 v0.4.3 - 2017-12-04
 ^^^^^^^^^^^^^^^^^^^
 
