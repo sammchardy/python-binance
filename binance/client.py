@@ -229,7 +229,7 @@ class Client(object):
     def ping(self):
         """Test connectivity to the Rest API.
 
-        https://www.binance.com/restapipub.html#test-connectivity
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-connectivity
 
         :returns: Empty array
 
@@ -245,7 +245,7 @@ class Client(object):
     def get_server_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://www.binance.com/restapipub.html#check-server-time
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#check-server-time
 
         :returns: Current server time
 
@@ -321,7 +321,7 @@ class Client(object):
     def get_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://www.binance.com/restapipub.html#order-book
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#order-book
 
         :param symbol: required
         :type symbol: str
@@ -359,7 +359,7 @@ class Client(object):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://www.binance.com/restapipub.html#compressedaggregate-trades-list
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -397,7 +397,7 @@ class Client(object):
     def get_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://www.binance.com/restapipub.html#klinecandlesticks
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
 
         :param symbol: required
         :type symbol: str
@@ -439,9 +439,9 @@ class Client(object):
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://www.binance.com/restapipub.html#24hr-ticker-price-change-statistics
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
 
-        :param symbol: required
+        :param symbol:
         :type symbol: str
 
         :returns: API response
@@ -477,7 +477,9 @@ class Client(object):
     def create_order(self, **params):
         """Send in a new order
 
-        https://www.binance.com/restapipub.html#new-order--signed
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#new-order--trade
 
         :param symbol: required
         :type symbol: str
@@ -720,7 +722,7 @@ class Client(object):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://www.binance.com/restapipub.html#test-new-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -758,7 +760,7 @@ class Client(object):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://www.binance.com/restapipub.html#query-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -797,7 +799,7 @@ class Client(object):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://www.binance.com/restapipub.html#all-orders-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -838,7 +840,7 @@ class Client(object):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://www.binance.com/restapipub.html#cancel-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -870,7 +872,7 @@ class Client(object):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://www.binance.com/restapipub.html#current-open-orders-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -908,7 +910,7 @@ class Client(object):
     def get_account(self, **params):
         """Get current account information.
 
-        https://www.binance.com/restapipub.html#account-information-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -947,7 +949,7 @@ class Client(object):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://www.binance.com/restapipub.html#account-trade-list-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1135,7 +1137,7 @@ class Client(object):
     def stream_get_listen_key(self):
         """Start a new user data stream and return the listen key
 
-        https://www.binance.com/restapipub.html#start-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
 
         :returns: API response
 
@@ -1154,7 +1156,7 @@ class Client(object):
     def stream_keepalive(self, **params):
         """PING a user data stream to prevent a time out.
 
-        https://www.binance.com/restapipub.html#keepalive-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
 
         :returns: API response
 
@@ -1170,7 +1172,7 @@ class Client(object):
     def stream_close(self, **params):
         """Close out a user data stream.
 
-        https://www.binance.com/restapipub.html#close-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
 
         :returns: API response
 
