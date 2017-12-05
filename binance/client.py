@@ -38,8 +38,6 @@ class Client(object):
         self.API_SECRET = api_secret
         self.session = self._init_session()
 
-        self._products = None
-
         # init DNS and SSL cert
         self.ping()
 
