@@ -165,7 +165,7 @@ class Client(object):
 
         """
 
-        return self._get('exchangeinfo')
+        return self._get('exchangeInfo')
 
     # General Endpoints
 
