@@ -62,13 +62,27 @@ Valid interval values are `defined as enums <enums.html>`_.
     conn_key = bm.start_kline_socket('BNBBTC', process_message, interval=KLINE_INTERVAL_30MINUTE)
 
 
-`Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_aggtrade_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: python
+
+    conn_key = bm.start_aggtrade_socket('BNBBTC', process_message)
+
+
+` Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
     conn_key = bm.start_trade_socket('BNBBTC', process_message)
 
+`Symbol Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_symbol_ticker_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: python
+
+    conn_key = bm.start_symbol_ticker_socket('BNBBTC', process_message)
 
 `Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_ticker_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -76,7 +90,6 @@ Valid interval values are `defined as enums <enums.html>`_.
 .. code:: python
 
     conn_key = bm.start_ticker_socket(process_message)
-
 
 `User Socket <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
