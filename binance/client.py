@@ -24,6 +24,10 @@ class Client(object):
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
 
+    ORDER_RESP_TYPE_ACK = 'ACK'
+    ORDER_RESP_TYPE_RESULT = 'RESULT'
+    ORDER_RESP_TYPE_FULL = 'FULL'
+
     def __init__(self, api_key, api_secret):
         """Binance API Client constructor
 
@@ -49,8 +53,8 @@ class Client(object):
                                 'X-MBX-APIKEY': self.API_KEY})
         return session
 
-    def _create_api_uri(self, path, signed=True):
-        v = self.PRIVATE_API_VERSION if signed else self.PUBLIC_API_VERSION
+    def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
+        v = self.PRIVATE_API_VERSION if signed else version
         return self.API_URL + '/' + v + '/' + path
 
     def _create_withdraw_api_uri(self, path):
@@ -100,8 +104,8 @@ class Client(object):
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
-    def _request_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_api_uri(path, signed)
+    def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        uri = self._create_api_uri(path, signed, version)
 
         return self._request(method, uri, signed, **kwargs)
 
@@ -128,17 +132,17 @@ class Client(object):
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % response.text)
 
-    def _get(self, path, signed=False, **kwargs):
-        return self._request_api('get', path, signed, **kwargs)
+    def _get(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('get', path, signed, version, **kwargs)
 
-    def _post(self, path, signed=False, **kwargs):
-        return self._request_api('post', path, signed, **kwargs)
+    def _post(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('post', path, signed, version, **kwargs)
 
-    def _put(self, path, signed=False, **kwargs):
-        return self._request_api('put', path, signed, **kwargs)
+    def _put(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('put', path, signed, version, **kwargs)
 
-    def _delete(self, path, signed=False, **kwargs):
-        return self._request_api('delete', path, signed, **kwargs)
+    def _delete(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+        return self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
 
@@ -161,18 +165,71 @@ class Client(object):
 
         :returns: list - List of product dictionaries
 
+        .. code-block:: python
+
+            {
+                "timezone": "UTC",
+                "serverTime": 1508631584636,
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUESTS",
+                        "interval": "MINUTE",
+                        "limit": 1200
+                    },
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "SECOND",
+                        "limit": 10
+                    },
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "DAY",
+                        "limit": 100000
+                    }
+                ],
+                "exchangeFilters": [],
+                "symbols": [
+                    {
+                        "symbol": "ETHBTC",
+                        "status": "TRADING",
+                        "baseAsset": "ETH",
+                        "baseAssetPrecision": 8,
+                        "quoteAsset": "BTC",
+                        "quotePrecision": 8,
+                        "orderTypes": ["LIMIT", "MARKET"],
+                        "icebergAllowed": false,
+                        "filters": [
+                            {
+                                "filterType": "PRICE_FILTER",
+                                "minPrice": "0.00000100",
+                                "maxPrice": "100000.00000000",
+                                "tickSize": "0.00000100"
+                            }, {
+                                "filterType": "LOT_SIZE",
+                                "minQty": "0.00100000",
+                                "maxQty": "100000.00000000",
+                                "stepSize": "0.00100000"
+                            }, {
+                                "filterType": "MIN_NOTIONAL",
+                                "minNotional": "0.00100000"
+                            }
+                        ]
+                    }
+                ]
+            }
+
         :raises: BinanceResponseException, BinanceAPIException
 
         """
 
-        return self._get('exchangeinfo')
+        return self._get('exchangeInfo')
 
     # General Endpoints
 
     def ping(self):
         """Test connectivity to the Rest API.
 
-        https://www.binance.com/restapipub.html#test-connectivity
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-connectivity
 
         :returns: Empty array
 
@@ -188,7 +245,7 @@ class Client(object):
     def get_server_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://www.binance.com/restapipub.html#check-server-time
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#check-server-time
 
         :returns: Current server time
 
@@ -264,7 +321,7 @@ class Client(object):
     def get_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://www.binance.com/restapipub.html#order-book
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#order-book
 
         :param symbol: required
         :type symbol: str
@@ -298,11 +355,73 @@ class Client(object):
         """
         return self._get('depth', data=params)
 
+    def get_recent_trades(self, **params):
+        """Get recent trades (up to last 500).
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+
+        :param symbol: required
+        :type symbol: str
+        :param limit:  Default 500; max 500.
+        :type limit: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "id": 28457,
+                    "price": "4.00000100",
+                    "qty": "12.00000000",
+                    "time": 1499865549590,
+                    "isBuyerMaker": true,
+                    "isBestMatch": true
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('trades', data=params)
+
+    def get_historical_trades(self, **params):
+        """Get older trades.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+
+        :param symbol: required
+        :type symbol: str
+        :param limit:  Default 500; max 500.
+        :type limit: int
+        :param fromId:  TradeId to fetch from. Default gets most recent trades.
+        :type fromId: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "id": 28457,
+                    "price": "4.00000100",
+                    "qty": "12.00000000",
+                    "time": 1499865549590,
+                    "isBuyerMaker": true,
+                    "isBestMatch": true
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('historicalTrades', data=params)
+
     def get_aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://www.binance.com/restapipub.html#compressedaggregate-trades-list
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -340,7 +459,7 @@ class Client(object):
     def get_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://www.binance.com/restapipub.html#klinecandlesticks
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
 
         :param symbol: required
         :type symbol: str
@@ -382,9 +501,9 @@ class Client(object):
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://www.binance.com/restapipub.html#24hr-ticker-price-change-statistics
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
 
-        :param symbol: required
+        :param symbol:
         :type symbol: str
 
         :returns: API response
@@ -410,17 +529,127 @@ class Client(object):
                 "count": 76         # Trade count
             }
 
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "priceChange": "-94.99999800",
+                    "priceChangePercent": "-95.960",
+                    "weightedAvgPrice": "0.29628482",
+                    "prevClosePrice": "0.10002000",
+                    "lastPrice": "4.00000200",
+                    "bidPrice": "4.00000000",
+                    "askPrice": "4.00000200",
+                    "openPrice": "99.00000000",
+                    "highPrice": "100.00000000",
+                    "lowPrice": "0.10000000",
+                    "volume": "8913.30000000",
+                    "openTime": 1499783499040,
+                    "closeTime": 1499869899040,
+                    "fristId": 28385,   # First tradeId
+                    "lastId": 28460,    # Last tradeId
+                    "count": 76         # Trade count
+                }
+            ]
+
         :raises: BinanceResponseException, BinanceAPIException
 
         """
         return self._get('ticker/24hr', data=params)
+
+    def get_symbol_ticker(self, **params):
+        """Latest price for a symbol or symbols.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+
+        :param symbol:
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol": "LTCBTC",
+                "price": "4.00000200"
+            }
+
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "symbol": "LTCBTC",
+                    "price": "4.00000200"
+                },
+                {
+                    "symbol": "ETHBTC",
+                    "price": "0.07946600"
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
+
+    def get_orderbook_ticker(self, **params):
+        """Latest price for a symbol or symbols.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
+
+        :param symbol:
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol": "LTCBTC",
+                "bidPrice": "4.00000000",
+                "bidQty": "431.00000000",
+                "askPrice": "4.00000200",
+                "askQty": "9.00000000"
+            }
+
+        OR
+
+        .. code-block:: python
+
+            [
+                {
+                    "symbol": "LTCBTC",
+                    "bidPrice": "4.00000000",
+                    "bidQty": "431.00000000",
+                    "askPrice": "4.00000200",
+                    "askQty": "9.00000000"
+                },
+                {
+                    "symbol": "ETHBTC",
+                    "bidPrice": "0.07946700",
+                    "bidQty": "9.00000000",
+                    "askPrice": "100000.00000000",
+                    "askQty": "1000.00000000"
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('ticker/bookTicker', data=params, version=self.PRIVATE_API_VERSION)
 
     # Account Endpoints
 
     def create_order(self, **params):
         """Send in a new order
 
-        https://www.binance.com/restapipub.html#new-order--signed
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#new-order--trade
 
         :param symbol: required
         :type symbol: str
@@ -436,12 +665,14 @@ class Client(object):
         :type price: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
-        :param icebergQty: Used with iceberg orders
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
+
+        Response ACK:
 
         .. code-block:: python
 
@@ -452,6 +683,74 @@ class Client(object):
                 "transactTime": 1499827319559
             }
 
+        Response RESULT:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "0.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL"
+            }
+
+        Response FULL:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "0.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL",
+                "fills": [
+                    {
+                        "price": "4000.00000000",
+                        "qty": "1.00000000",
+                        "commission": "4.00000000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3999.00000000",
+                        "qty": "5.00000000",
+                        "commission": "19.99500000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3998.00000000",
+                        "qty": "2.00000000",
+                        "commission": "7.99600000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3997.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99700000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3995.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99500000",
+                        "commissionAsset": "USDT"
+                    }
+                ]
+            }
+
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
@@ -459,6 +758,8 @@ class Client(object):
 
     def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
 
         :param symbol: required
         :type symbol: str
@@ -472,21 +773,14 @@ class Client(object):
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
-        :param icebergQty: Used with iceberg orders
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -499,6 +793,8 @@ class Client(object):
 
     def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
 
         :param symbol: required
         :type symbol: str
@@ -514,17 +810,12 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -554,14 +845,7 @@ class Client(object):
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -582,17 +866,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -611,17 +890,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -640,17 +914,12 @@ class Client(object):
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
 
         :returns: API response
 
-        .. code-block:: python
-
-            {
-                "symbol":"LTCBTC",
-                "orderId": 1,
-                "clientOrderId": "myOrder1" # Will be newClientOrderId
-                "transactTime": 1499827319559
-            }
+        See order endpoint for full response options
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
@@ -663,7 +932,7 @@ class Client(object):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://www.binance.com/restapipub.html#test-new-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -679,10 +948,10 @@ class Client(object):
         :type price: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
-        :param stopPrice: Used with stop orders
-        :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -701,7 +970,7 @@ class Client(object):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://www.binance.com/restapipub.html#query-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -740,7 +1009,7 @@ class Client(object):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://www.binance.com/restapipub.html#all-orders-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -781,7 +1050,7 @@ class Client(object):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://www.binance.com/restapipub.html#cancel-order-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -813,7 +1082,7 @@ class Client(object):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://www.binance.com/restapipub.html#current-open-orders-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -851,7 +1120,7 @@ class Client(object):
     def get_account(self, **params):
         """Get current account information.
 
-        https://www.binance.com/restapipub.html#account-information-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -890,7 +1159,7 @@ class Client(object):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://www.binance.com/restapipub.html#account-trade-list-signed
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1078,7 +1347,7 @@ class Client(object):
     def stream_get_listen_key(self):
         """Start a new user data stream and return the listen key
 
-        https://www.binance.com/restapipub.html#start-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
 
         :returns: API response
 
@@ -1097,7 +1366,7 @@ class Client(object):
     def stream_keepalive(self, **params):
         """PING a user data stream to prevent a time out.
 
-        https://www.binance.com/restapipub.html#keepalive-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
 
         :returns: API response
 
@@ -1113,7 +1382,7 @@ class Client(object):
     def stream_close(self, **params):
         """Close out a user data stream.
 
-        https://www.binance.com/restapipub.html#close-user-data-stream-api-key
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
 
         :returns: API response
 

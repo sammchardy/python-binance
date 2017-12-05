@@ -35,15 +35,15 @@ Pass your API Key and Secret
 Making API Calls
 ----------------
 
-Every method supports the passing of arbitrary parameters via keyword matching those in the`Binance API documentation <https://www.binance.com/restapipub.html>`_.
+Every method supports the passing of arbitrary parameters via keyword matching those in the`Binance API documentation <https://github.com/binance-exchange/binance-official-api-docs>`_.
 These keyword arguments will be sent directly to the relevant endpoint.
 
-Each API method returns a dictionary of the JSON response as per the `Binance API documentation <https://www.binance.com/restapipub.html>`_.
+Each API method returns a dictionary of the JSON response as per the `Binance API documentation <https://github.com/binance-exchange/binance-official-api-docs>`_.
 The docstring of each method in the code references the endpoint it implements.
 
 The Binance API documentation references a `timestamp` parameter, this is generated for you where required.
 
-Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://www.binance.com/restapipub.html#timing-security>`_.
+Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#timing-security>`_.
 
 API Endpoints are rate limited by Binance at 20 requests per second, ask them if you require more.
 

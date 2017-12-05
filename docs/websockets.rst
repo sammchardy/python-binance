@@ -10,7 +10,7 @@ and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 
 When creating socket connections a callback function is passed which receives the messages.
 
-Messages are received as dictionary objects relating to the message formats defined in the `Binance API documentation <https://www.binance.com/restapipub.html#wss-endpoint>`_.
+Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md>`_.
 
 Websockets are setup to reconnect with a maximum of 5 retries.
 
