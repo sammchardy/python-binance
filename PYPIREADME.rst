@@ -93,6 +93,9 @@ Quick Start
     # fetch list of withdrawals
     withdraws = client.get_withdraw_history()
 
+    # fetch list of ETH withdrawals
+    eth_withdraws = client.get_withdraw_history('ETH)
+
     # get a deposit address
     address = client.get_deposit_address('BTC)
 
@@ -104,7 +107,7 @@ Quick Start
 
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
-    bm.start_trade_socket(symbol='BNBBTC')
+    bm.start_aggtrade_socket(symbol='BNBBTC')
     bm.start()
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
