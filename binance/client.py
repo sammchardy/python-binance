@@ -355,6 +355,68 @@ class Client(object):
         """
         return self._get('depth', data=params)
 
+    def get_recent_trades(self, **params):
+        """Get recent trades (up to last 500).
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+
+        :param symbol: required
+        :type symbol: str
+        :param limit:  Default 500; max 500.
+        :type limit: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "id": 28457,
+                    "price": "4.00000100",
+                    "qty": "12.00000000",
+                    "time": 1499865549590,
+                    "isBuyerMaker": true,
+                    "isBestMatch": true
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('trades', data=params)
+
+    def get_historical_trades(self, **params):
+        """Get older trades.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+
+        :param symbol: required
+        :type symbol: str
+        :param limit:  Default 500; max 500.
+        :type limit: int
+        :param fromId:  TradeId to fetch from. Default gets most recent trades.
+        :type fromId: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "id": 28457,
+                    "price": "4.00000100",
+                    "qty": "12.00000000",
+                    "time": 1499865549590,
+                    "isBuyerMaker": true,
+                    "isBestMatch": true
+                }
+            ]
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        return self._get('historicalTrades', data=params)
+
     def get_aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
