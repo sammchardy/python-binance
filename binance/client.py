@@ -43,7 +43,10 @@ class Client(object):
         self.session = self._init_session()
 
         # init DNS and SSL cert
-        self.ping()
+        try:
+            self.ping()
+        except Exception as e:
+            print('binance: %s', e)
 
     def _init_session(self):
 
