@@ -417,7 +417,7 @@ class BinanceSocketManager(threading.Thread):
         """Close all connections
 
         """
-        keys = self._conns.keys()
+        keys = set(self._conns.keys())
         for key in keys:
             self.stop_socket(key)
 
