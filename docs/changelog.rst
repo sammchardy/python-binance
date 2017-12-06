@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.5.1 - 2017-12-06
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Close method for DepthCacheManager
+
+**Fixes**
+
+- Fixed modifying array error message when closing the BinanceSocketManager
+
 v0.5.0 - 2017-12-05
 ^^^^^^^^^^^^^^^^^^^
 
