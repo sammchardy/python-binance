@@ -183,3 +183,10 @@ class DepthCacheManager(object):
 
         """
         return self._depth_cache
+
+    def close(self):
+        """Close the open socket for this manager
+
+        :return:
+        """
+        self._bm.close()

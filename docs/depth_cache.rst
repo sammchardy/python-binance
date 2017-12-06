@@ -30,3 +30,10 @@ At any time the current `DepthCache` object can be retrieved from the `DepthCach
     print(depth_cache.get_bids()[:5])
     print("top 5 asks")
     print(depth_cache.get_asks()[:5])
+
+To stop the `DepthCacheManager` from returning messages use the `close` method.
+This will close the internal websocket and this instance of the `DepthCacheManager` will not be able to be used again.
+
+.. code:: python
+
+    dcm.close()
