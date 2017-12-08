@@ -33,10 +33,29 @@ A callback to process messages would take the format
 .. code:: python
 
     def process_message(msg):
-        print("message type:" + msg['e'])
+        print("message type: {}".format(msg['e']))
         print(msg)
         # do something
 
+
+`Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.start_multiplex_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Create a socket combining multiple streams.
+
+These streams can include the depth, kline, ticker and trade streams but not the user stream which requires extra authentication.
+
+Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
+
+See the `Binance Websocket Streams API documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md>`_ for details on socket names.
+
+.. code:: python
+
+    def process_m_message(msg):
+        print("stream: {} data: {}".format(msg['stream'], msg['data']))
+
+    # pass a list of stream names
+    conn_key = bm.start_multiplex_socket(['bnbbtc@aggTrade', 'neobtc@ticker'], process_m_message)
 
 `Depth Socket <binance.html#binance.websockets.BinanceSocketManager.start_depth_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

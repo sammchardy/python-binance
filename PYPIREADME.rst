@@ -101,7 +101,7 @@ Quick Start
 
     # start trade websocket
     def process_message(msg):
-        print("message type:" + msg['e'])
+        print("message type: {}".format(msg['e']))
         print(msg)
         # do something
 
