@@ -14,8 +14,6 @@ from twisted.internet.error import ReactorAlreadyRunning
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
 from .exceptions import BinanceAPIException
 
-BINANCE_STREAM_URL = 'wss://stream.binance.com:9443/ws/'
-
 
 class BinanceClientProtocol(WebSocketClientProtocol):
 
@@ -58,6 +56,8 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
 
 class BinanceSocketManager(threading.Thread):
 
+    STREAM_URL = 'wss://stream.binance.com:9443/'
+
     _user_timeout = 50 * 60  # 50 minutes
 
     def __init__(self, client):
@@ -74,11 +74,12 @@ class BinanceSocketManager(threading.Thread):
         self._user_callback = None
         self._client = client
 
-    def _start_socket(self, path, callback):
+    def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
             return False
 
-        factory = BinanceClientFactory(BINANCE_STREAM_URL + path)
+        factory_url = self.STREAM_URL + prefix + path
+        factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
         context_factory = ssl.ClientContextFactory()
@@ -89,7 +90,7 @@ class BinanceSocketManager(threading.Thread):
     def start_depth_socket(self, symbol, callback, depth=WEBSOCKET_DEPTH_1):
         """Start a websocket for symbol market depth
 
-        https://www.binance.com/restapipub.html#depth-wss-endpoint
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#partial-book-depth-streams
 
         :param symbol: required
         :type symbol: str
@@ -143,7 +144,7 @@ class BinanceSocketManager(threading.Thread):
     def start_kline_socket(self, symbol, callback, interval=KLINE_INTERVAL_1MINUTE):
         """Start a websocket for symbol kline data
 
-        https://www.binance.com/restapipub.html#kline-wss-endpoint
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
 
         :param symbol: required
         :type symbol: str
@@ -189,6 +190,8 @@ class BinanceSocketManager(threading.Thread):
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#trade-streams
+
         :param symbol: required
         :type symbol: str
         :param callback: callback function to handle messages
@@ -220,6 +223,8 @@ class BinanceSocketManager(threading.Thread):
     def start_aggtrade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#aggregate-trade-streams
+
         :param symbol: required
         :type symbol: str
         :param callback: callback function to handle messages
@@ -250,6 +255,8 @@ class BinanceSocketManager(threading.Thread):
 
     def start_symbol_ticker_socket(self, symbol, callback):
         """Start a websocket for a symbol's ticker data
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#individual-symbol-ticker-streams
 
         :param symbol: required
         :type symbol: str
@@ -296,6 +303,8 @@ class BinanceSocketManager(threading.Thread):
 
         By default all markets are included in an array.
 
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#all-market-tickers-stream
+
         :param callback: callback function to handle messages
         :type callback: function
 
@@ -332,6 +341,29 @@ class BinanceSocketManager(threading.Thread):
             ]
         """
         return self._start_socket('!ticker@arr', callback)
+
+    def start_multiplex_socket(self, streams, callback):
+        """Start a multiplexed socket using a list of socket names.
+        User stream sockets can not be included.
+
+        Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
+
+        Combined stream events are wrapped as follows: {"stream":"<streamName>","data":<rawPayload>}
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
+
+        :param streams: list of stream names in lower case
+        :type streams: list
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+
+        """
+        stream_path = 'streams={}'.format('/'.join(streams))
+        return self._start_socket(stream_path, callback, 'stream?')
 
     def start_user_socket(self, callback):
         """Start a websocket for user data
