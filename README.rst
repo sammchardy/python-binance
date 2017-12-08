@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.5.1
+Welcome to python-binance v0.5.2
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -38,7 +38,7 @@ Features
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
-- Websocket handling with reconnection
+- Websocket handling with reconnection and multiplexed connections
 - Symbol Depth Cache
 - Withdraw functionality
 - Deposit addresses
