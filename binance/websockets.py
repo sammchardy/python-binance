@@ -14,8 +14,6 @@ from twisted.internet.error import ReactorAlreadyRunning
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
 from .exceptions import BinanceAPIException
 
-BINANCE_STREAM_URL = 'wss://stream.binance.com:9443/ws/'
-
 
 class BinanceClientProtocol(WebSocketClientProtocol):
 
@@ -58,6 +56,8 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
 
 class BinanceSocketManager(threading.Thread):
 
+    STREAM_URL = 'wss://stream.binance.com:9443/'
+
     _user_timeout = 50 * 60  # 50 minutes
 
     def __init__(self, client):
@@ -74,11 +74,12 @@ class BinanceSocketManager(threading.Thread):
         self._user_callback = None
         self._client = client
 
-    def _start_socket(self, path, callback):
+    def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
             return False
 
-        factory = BinanceClientFactory(BINANCE_STREAM_URL + path)
+        factory_url = self.STREAM_URL + prefix + path
+        factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
         context_factory = ssl.ClientContextFactory()
