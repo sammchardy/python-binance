@@ -90,7 +90,7 @@ class BinanceSocketManager(threading.Thread):
     def start_depth_socket(self, symbol, callback, depth=WEBSOCKET_DEPTH_1):
         """Start a websocket for symbol market depth
 
-        https://www.binance.com/restapipub.html#depth-wss-endpoint
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#partial-book-depth-streams
 
         :param symbol: required
         :type symbol: str
@@ -144,7 +144,7 @@ class BinanceSocketManager(threading.Thread):
     def start_kline_socket(self, symbol, callback, interval=KLINE_INTERVAL_1MINUTE):
         """Start a websocket for symbol kline data
 
-        https://www.binance.com/restapipub.html#kline-wss-endpoint
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
 
         :param symbol: required
         :type symbol: str
@@ -190,6 +190,8 @@ class BinanceSocketManager(threading.Thread):
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#trade-streams
+
         :param symbol: required
         :type symbol: str
         :param callback: callback function to handle messages
@@ -221,6 +223,8 @@ class BinanceSocketManager(threading.Thread):
     def start_aggtrade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#aggregate-trade-streams
+
         :param symbol: required
         :type symbol: str
         :param callback: callback function to handle messages
@@ -251,6 +255,8 @@ class BinanceSocketManager(threading.Thread):
 
     def start_symbol_ticker_socket(self, symbol, callback):
         """Start a websocket for a symbol's ticker data
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#individual-symbol-ticker-streams
 
         :param symbol: required
         :type symbol: str
@@ -296,6 +302,8 @@ class BinanceSocketManager(threading.Thread):
         """Start a websocket for all ticker data
 
         By default all markets are included in an array.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#all-market-tickers-stream
 
         :param callback: callback function to handle messages
         :type callback: function
