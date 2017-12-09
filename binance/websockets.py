@@ -58,7 +58,7 @@ class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
-    _user_timeout = 50 * 60  # 50 minutes
+    _user_timeout = 30 * 60  # 30 minutes
 
     def __init__(self, client):
         """Initialise the BinanceSocketManager
@@ -398,17 +398,11 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        try:
-            self._client.stream_keepalive(listenKey=self._user_listen_key)
-        except BinanceAPIException as e:
-            print("got stream_keepalive error: %s" % e)
-            # check if listen key is invalid
-            if e.code == BinanceAPIException.LISTENKEY_NOT_EXIST:
-                print("restarting user socket")
-                # generate a new one and try to keep the stream alive again
-                self.start_user_socket(self._user_callback)
-        else:
-            self._start_user_timer()
+        listen_key = self._client.stream_get_listen_key()
+        # check if they key changed and
+        if listen_key != self._user_listen_key:
+            self.start_user_socket(self._user_callback)
+        self._start_user_timer()
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key

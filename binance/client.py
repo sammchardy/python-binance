@@ -1346,6 +1346,10 @@ class Client(object):
 
     def stream_get_listen_key(self):
         """Start a new user data stream and return the listen key
+        If a stream already exists it should return the same key.
+        If the stream becomes invalid a new key is returned.
+
+        Can be used to keep the user stream alive.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
 
@@ -1367,6 +1371,9 @@ class Client(object):
         """PING a user data stream to prevent a time out.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
+
+        :param listenKey: required
+        :type listenKey: str
 
         :returns: API response
 
