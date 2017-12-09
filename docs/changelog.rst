@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.2 - 2017-12-08
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- start_multiplex_socket function to BinanceSocketManager to create multiplexed streams
+
 v0.5.1 - 2017-12-06
 ^^^^^^^^^^^^^^^^^^^
 
