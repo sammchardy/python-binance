@@ -12,7 +12,6 @@ from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
 from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
-from .exceptions import BinanceAPIException
 
 
 class BinanceClientProtocol(WebSocketClientProtocol):
