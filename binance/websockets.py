@@ -58,7 +58,7 @@ class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
-    _user_timeout = 50 * 60  # 50 minutes
+    _user_timeout = 30 * 60  # 30 minutes
 
     def __init__(self, client):
         """Initialise the BinanceSocketManager
