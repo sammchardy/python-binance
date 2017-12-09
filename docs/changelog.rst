@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.5.3 - 2017-12-09
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- User stream refresh timeout from 50 minutes to 30 minutes
+- User stream socket listen key change check simplified
+
 v0.5.2 - 2017-12-08
 ^^^^^^^^^^^^^^^^^^^
 
