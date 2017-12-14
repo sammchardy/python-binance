@@ -1,7 +1,7 @@
 Enumerated Types
 ================
 
-Binance defines Enumerated Types for Order Types, Order Side, Time in Force and Kline intervals.
+Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Order response and Kline intervals these are found on `binance.client.Client`.
 
 .. code:: python
 
@@ -36,22 +36,38 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force and 
 
     ORDER_TYPE_LIMIT = 'LIMIT'
     ORDER_TYPE_MARKET = 'MARKET'
+    ORDER_TYPE_STOP_LOSS = 'STOP_LOSS'
+    ORDER_TYPE_STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT'
+    ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
+    ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
+    ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
 
     TIME_IN_FORCE_GTC = 'GTC'
     TIME_IN_FORCE_IOC = 'IOC'
+    TIME_IN_FORCE_FOK = 'FOK'
 
     ORDER_RESP_TYPE_ACK = 'ACK'
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
+
+
+For Websocket Depth these are found on `binance.websockets.BinanceSocketManager`
+
+.. code:: python
 
     WEBSOCKET_DEPTH_1 = '1'
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '5'
 
-
-To use in your code import the contents of the `enums.py` module
+To use in your code reference either binance.client.Client or binance.websockets.BinanceSocketManager
 
 .. code:: python
 
-    from binance.enums import *
+    from binance.client import Client
+    from binance.websockets import BinanceSocketManager
+
+    side = Client.SIDE_BUY
+
+    socket_depth = BinanceSocketManager.WEBSOCKET_DEPTH_1
+
