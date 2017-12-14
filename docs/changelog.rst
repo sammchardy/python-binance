@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.5.4 - 2017-12-14
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- symbol property made public on DepthCache class
+
+**Changed**
+
+- Enums now also accessible from binance.client.Client and binance.websockets.BinanceSocketManager
+
 v0.5.3 - 2017-12-09
 ^^^^^^^^^^^^^^^^^^^
 
