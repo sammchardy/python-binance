@@ -65,8 +65,7 @@ Valid depth values are 1, 5, 10 and 20 and `defined as enums <enums.html>`_.
 
 .. code:: python
 
-    from binance.enums import *
-    conn_key = bm.start_depth_socket('BNBBTC', process_message, depth=WEBSOCKET_DEPTH_5)
+    conn_key = bm.start_depth_socket('BNBBTC', process_message, depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
 
 
 `Kline Socket <binance.html#binance.websockets.BinanceSocketManager.start_kline_socket>`_
