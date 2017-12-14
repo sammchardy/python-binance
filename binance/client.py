@@ -7,7 +7,6 @@ import requests
 import six
 import time
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-from .enums import TIME_IN_FORCE_GTC, SIDE_BUY, SIDE_SELL, ORDER_TYPE_LIMIT, ORDER_TYPE_MARKET
 
 if six.PY2:
     from urllib import urlencode
@@ -23,6 +22,47 @@ class Client(object):
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
+
+    SYMBOL_TYPE_SPOT = 'SPOT'
+
+    ORDER_STATUS_NEW = 'NEW'
+    ORDER_STATUS_PARTIALLY_FILLED = 'PARTIALLY_FILLED'
+    ORDER_STATUS_FILLED = 'FILLED'
+    ORDER_STATUS_CANCELED = 'CANCELED'
+    ORDER_STATUS_PENDING_CANCEL = 'PENDING_CANCEL'
+    ORDER_STATUS_REJECTED = 'REJECTED'
+    ORDER_STATUS_EXPIRED = 'EXPIRED'
+
+    KLINE_INTERVAL_1MINUTE = '1m'
+    KLINE_INTERVAL_3MINUTE = '3m'
+    KLINE_INTERVAL_5MINUTE = '5m'
+    KLINE_INTERVAL_15MINUTE = '15m'
+    KLINE_INTERVAL_30MINUTE = '30m'
+    KLINE_INTERVAL_1HOUR = '1h'
+    KLINE_INTERVAL_2HOUR = '2h'
+    KLINE_INTERVAL_4HOUR = '4h'
+    KLINE_INTERVAL_6HOUR = '6h'
+    KLINE_INTERVAL_8HOUR = '8h'
+    KLINE_INTERVAL_12HOUR = '12h'
+    KLINE_INTERVAL_1DAY = '1d'
+    KLINE_INTERVAL_3DAY = '3d'
+    KLINE_INTERVAL_1WEEK = '1w'
+    KLINE_INTERVAL_1MONTH = '1M'
+
+    SIDE_BUY = 'BUY'
+    SIDE_SELL = 'SELL'
+
+    ORDER_TYPE_LIMIT = 'LIMIT'
+    ORDER_TYPE_MARKET = 'MARKET'
+    ORDER_TYPE_STOP_LOSS = 'STOP_LOSS'
+    ORDER_TYPE_STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT'
+    ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
+    ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
+    ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
+
+    TIME_IN_FORCE_GTC = 'GTC'  # Good till cancelled
+    TIME_IN_FORCE_IOC = 'IOC'  # Immediate or cancel
+    TIME_IN_FORCE_FOK = 'FOK'  # Fill or kill
 
     ORDER_RESP_TYPE_ACK = 'ACK'
     ORDER_RESP_TYPE_RESULT = 'RESULT'
@@ -786,7 +826,7 @@ class Client(object):
 
         """
         params.update({
-            'type': ORDER_TYPE_LIMIT,
+            'type': self.ORDER_TYPE_LIMIT,
             'timeInForce': timeInForce
         })
         return self.create_order(**params)
@@ -821,7 +861,7 @@ class Client(object):
 
         """
         params.update({
-            'side': SIDE_BUY,
+            'side': self.SIDE_BUY,
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
@@ -851,7 +891,7 @@ class Client(object):
 
         """
         params.update({
-            'side': SIDE_SELL
+            'side': self.SIDE_SELL
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
@@ -877,7 +917,7 @@ class Client(object):
 
         """
         params.update({
-            'type': ORDER_TYPE_MARKET
+            'type': self.ORDER_TYPE_MARKET
         })
         return self.create_order(**params)
 
@@ -901,7 +941,7 @@ class Client(object):
 
         """
         params.update({
-            'side': SIDE_BUY
+            'side': self.SIDE_BUY
         })
         return self.order_market(**params)
 
@@ -925,7 +965,7 @@ class Client(object):
 
         """
         params.update({
-            'side': SIDE_SELL
+            'side': self.SIDE_SELL
         })
         return self.order_market(**params)
 

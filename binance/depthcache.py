@@ -15,7 +15,7 @@ class DepthCache(object):
         :type symbol: string
 
         """
-        self._symbol = symbol
+        self.symbol = symbol
         self._bids = {}
         self._asks = {}
 

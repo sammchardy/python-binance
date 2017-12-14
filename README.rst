@@ -64,11 +64,10 @@ Quick Start
     depth = client.get_order_book(symbol='BNBBTC')
 
     # place market buy order
-    from binance.enums import *
     order = client.create_order(
         symbol='BNBBTC',
-        side=SIDE_BUY,
-        type=ORDER_TYPE_MARKET,
+        side=Client.SIDE_BUY,
+        type=Client.ORDER_TYPE_MARKET,
         quantity=100)
 
     # get all symbol prices

@@ -11,7 +11,7 @@ from twisted.internet import reactor, ssl
 from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
-from .enums import KLINE_INTERVAL_1MINUTE, WEBSOCKET_DEPTH_1
+from binance.client import Client
 
 
 class BinanceClientProtocol(WebSocketClientProtocol):
@@ -56,6 +56,11 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
 class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
+
+    WEBSOCKET_DEPTH_1 = '1'
+    WEBSOCKET_DEPTH_5 = '5'
+    WEBSOCKET_DEPTH_10 = '10'
+    WEBSOCKET_DEPTH_20 = '20'
 
     _user_timeout = 30 * 60  # 30 minutes
 
@@ -136,11 +141,11 @@ class BinanceSocketManager(threading.Thread):
             }
         """
         socket_name = symbol.lower() + '@depth'
-        if depth != WEBSOCKET_DEPTH_1:
+        if depth != self.WEBSOCKET_DEPTH_1:
             socket_name = '{}{}'.format(socket_name, depth)
         return self._start_socket(socket_name, callback)
 
-    def start_kline_socket(self, symbol, callback, interval=KLINE_INTERVAL_1MINUTE):
+    def start_kline_socket(self, symbol, callback, interval=Client.KLINE_INTERVAL_1MINUTE):
         """Start a websocket for symbol kline data
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
