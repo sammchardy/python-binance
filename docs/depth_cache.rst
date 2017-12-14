@@ -13,9 +13,12 @@ Create the manager like so, passing the api client, symbol and callback function
 The callback function receives the current `DepthCache` object which allows access to a pre-sorted
 list of bids or asks able to be filtered as required.
 
+Access the symbol value from the `depth_cache` object in case you have multiple caches using the same callback.
+
 .. code:: python
 
     def process_depth(depth_cache):
+        print("symbol {}".format(depth_cache.symbol))
         print("top 5 bids")
         print(depth_cache.get_bids()[:5])
         print("top 5 asks")
@@ -26,6 +29,7 @@ At any time the current `DepthCache` object can be retrieved from the `DepthCach
 .. code:: python
 
     depth_cache = dcm.get_depth_cache()
+    print("symbol {}".format(depth_cache.symbol))
     print("top 5 bids")
     print(depth_cache.get_bids()[:5])
     print("top 5 asks")
