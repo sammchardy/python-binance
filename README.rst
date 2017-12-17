@@ -115,7 +115,7 @@ Donate
 
 If this library helped you out feel free to donate.
 
-- ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
+- ETH: 0x79c9A113d63B6AC024c1AAae6f6419721C3611A3
 - NEO: AVJB4ZgN7VgSUtArCt94y7ZYT6d5NDfpBo
 - BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
 
