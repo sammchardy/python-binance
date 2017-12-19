@@ -140,7 +140,7 @@ class DepthCacheManager(object):
         self._start_socket()
 
     def _init_cache(self):
-        res = self._client.get_order_book(symbol=self._symbol, limit=10)
+        res = self._client.get_order_book(symbol=self._symbol, limit=500)
 
         self._first_update_id = res['lastUpdateId']
 
