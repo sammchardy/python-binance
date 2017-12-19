@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.5 - 2017-12-19
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- Increased default limit for order book on depth cache from 10 to 500
+
 v0.5.4 - 2017-12-14
 ^^^^^^^^^^^^^^^^^^^
 
