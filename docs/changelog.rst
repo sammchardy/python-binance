@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.6 - 2017-12-20
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- get_symbol_info function to simplify getting info about a particular symbol
+
 v0.5.5 - 2017-12-19
 ^^^^^^^^^^^^^^^^^^^
 
