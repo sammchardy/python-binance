@@ -22,6 +22,15 @@ General Endpoints
 
     info = client.get_exchange_info()
 
+`Get Symbol Info <binance.html#binance.client.Client.get_symbol_info>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Get the exchange info for a particular symbol
+
+.. code:: python
+
+    info = client.get_symbol_info('BNBBTC')
+
 `Get Current Products <binance.html#binance.client.Client.get_products>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

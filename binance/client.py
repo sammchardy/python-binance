@@ -264,6 +264,55 @@ class Client(object):
 
         return self._get('exchangeInfo')
 
+    def get_symbol_info(self, symbol):
+        """Return information about a symbol
+
+        :param symbol: required e.g BNBBTC
+        :type symbol: str
+
+        :returns: Dict if found, None if not
+
+        .. code-block:: python
+
+            {
+                "symbol": "ETHBTC",
+                "status": "TRADING",
+                "baseAsset": "ETH",
+                "baseAssetPrecision": 8,
+                "quoteAsset": "BTC",
+                "quotePrecision": 8,
+                "orderTypes": ["LIMIT", "MARKET"],
+                "icebergAllowed": false,
+                "filters": [
+                    {
+                        "filterType": "PRICE_FILTER",
+                        "minPrice": "0.00000100",
+                        "maxPrice": "100000.00000000",
+                        "tickSize": "0.00000100"
+                    }, {
+                        "filterType": "LOT_SIZE",
+                        "minQty": "0.00100000",
+                        "maxQty": "100000.00000000",
+                        "stepSize": "0.00100000"
+                    }, {
+                        "filterType": "MIN_NOTIONAL",
+                        "minNotional": "0.00100000"
+                    }
+                ]
+            }
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+
+        res = self._get('exchangeInfo')
+
+        for item in res['symbols']:
+            if item['symbol'] == symbol.upper():
+                return item
+
+        return None
+
     # General Endpoints
 
     def ping(self):
