@@ -22,7 +22,7 @@ Welcome to python-binance v0.5.5
 
 This is an unofficial Python wrapper for the `Binance exchange REST API v1/3 <https://github.com/binance-exchange/binance-official-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
 
-If you came here looking for the `Binance exchange <https://www.binance.com/register.html?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/register.html?ref=10099792>`_. If you want to automate interactions with Binance stick around.
+If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_. If you want to automate interactions with Binance stick around.
 
 Source code
   https://github.com/sammchardy/python-binance
