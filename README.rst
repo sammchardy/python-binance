@@ -130,3 +130,5 @@ or `Qryptos <https://accounts.qryptos.com/sign-up?affiliate=PAxghztC67615>`_ che
 If you use `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
 
 If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance?pixel
