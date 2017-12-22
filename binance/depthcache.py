@@ -118,7 +118,7 @@ class DepthCache(object):
 
 class DepthCacheManager(object):
 
-    def __init__(self, client, symbol, callback):
+    def __init__(self, client, symbol, callback=None):
         """Intialise the DepthCacheManager
 
         :param client: Binance API client
@@ -174,7 +174,8 @@ class DepthCacheManager(object):
             self._depth_cache.add_ask(ask)
 
         # call the callback with the updated depth cache
-        self._callback(self._depth_cache)
+        if self._callback:
+            self._callback(self._depth_cache)
 
     def get_depth_cache(self):
         """Get the current depth cache
