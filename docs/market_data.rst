@@ -63,3 +63,5 @@ Get first bid and ask entry in the order book for all markets.
 .. code:: python
 
     tickers = client.get_orderbook_tickers()
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/market_data?pixel

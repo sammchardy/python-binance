@@ -141,3 +141,5 @@ To stop all sockets and end the manager call `close` after doing this a `start` 
 .. code:: python
 
     bm.close()
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/websockets?pixel

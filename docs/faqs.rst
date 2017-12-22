@@ -19,3 +19,5 @@ time and the Binance server time.
 Check recvWindow is an integer and not a string.
 
 *A2*: You may be attempting to access the API from a Chinese IP address, these are now restricted by Binance.
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/faqs?pixel

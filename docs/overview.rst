@@ -57,3 +57,5 @@ At the current time Binance rate limits are:
 - 1200 requests per minute
 - 10 orders per second
 - 100,000 orders per 24hrs
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
