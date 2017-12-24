@@ -58,7 +58,7 @@ For Websocket Depth these are found on `binance.websockets.BinanceSocketManager`
     WEBSOCKET_DEPTH_1 = '1'
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
-    WEBSOCKET_DEPTH_20 = '5'
+    WEBSOCKET_DEPTH_20 = '20'
 
 To use in your code reference either binance.client.Client or binance.websockets.BinanceSocketManager
 
