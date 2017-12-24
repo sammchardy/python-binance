@@ -143,3 +143,21 @@ To stop all sockets and end the manager call `close` after doing this a `start` 
     bm.close()
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/websockets?pixel
+
+
+Close and exit program
+++++++++++++++++++++++
+
+Websockets utilise a reactor loop from the Twisted library. Using the `close` method above will close
+the websocket connections but it won't stop the reactor loop so your code may not exit when you expect.
+
+If you do want to exit then use the `stop` method from reactor like below.
+
+.. code:: python
+
+    from twisted.internet import reactor
+
+    # program code here
+
+    # when you need to exit
+    reactor.stop()
