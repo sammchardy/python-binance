@@ -88,7 +88,7 @@ Valid interval values are `defined as enums <enums.html>`_.
     conn_key = bm.start_aggtrade_socket('BNBBTC', process_message)
 
 
-` Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
+`Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
