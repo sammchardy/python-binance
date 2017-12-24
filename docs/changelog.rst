@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.5.7 - 2017-12-24
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- change depth cache callback parameter to optional
+
+**Added**
+
+- note about stopping Twisted reactor loop to exit program
+
 v0.5.6 - 2017-12-20
 ^^^^^^^^^^^^^^^^^^^
 
