@@ -119,13 +119,13 @@ class DepthCache(object):
 class DepthCacheManager(object):
 
     def __init__(self, client, symbol, callback=None):
-        """Intialise the DepthCacheManager
+        """Initialise the DepthCacheManager
 
         :param client: Binance API client
         :type client: binance.Client
         :param symbol: Symbol to create depth cache for
         :type symbol: string
-        :param callback: Function to receive depth cache updates
+        :param callback: Optional function to receive depth cache updates
         :type callback: function
 
         """
