@@ -3,7 +3,7 @@ Depth Cache
 
 To follow the depth cache updates for a symbol use the `DepthCacheManager`
 
-Create the manager like so, passing the api client, symbol and callback function.
+Create the manager like so, passing the api client, symbol and an optional callback function.
 
 .. code:: python
 
