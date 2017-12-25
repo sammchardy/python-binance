@@ -1189,7 +1189,7 @@ class Client(object):
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
-        :param symbol: required
+        :param symbol: optional
         :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
