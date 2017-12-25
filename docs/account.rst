@@ -143,13 +143,20 @@ Account
 
 .. code:: python
 
-    order = client.get_account()
+    info = client.get_account()
+
+`Get account status <binance.html#binance.client.Client.get_account_status>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    status = client.get_account_status()
 
 `Get trades <binance.html#binance.client.Client.get_account>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    order = client.get_my_trades(symbol='BNBBTC')
+    trades = client.get_my_trades(symbol='BNBBTC')
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/account?pixel
