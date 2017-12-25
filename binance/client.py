@@ -1282,6 +1282,34 @@ class Client(object):
         """
         return self._get('myTrades', True, data=params)
 
+    def get_account_status(self, **params):
+        """Get account status detail.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#account-status-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "msg": "Order failed:Low Order fill rate! Will be reactivated after 5 minutes.",
+                "success": true,
+                "objs": [
+                    "5"
+                ]
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):
