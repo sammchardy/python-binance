@@ -1500,7 +1500,7 @@ class Client(object):
         res = self._post('userDataStream', False, data={})
         return res['listenKey']
 
-    def stream_keepalive(self, **params):
+    def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
@@ -1517,6 +1517,9 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._put('userDataStream', False, data=params)
 
     def stream_close(self, listenKey):
