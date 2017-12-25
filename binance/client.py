@@ -1519,10 +1519,13 @@ class Client(object):
         """
         return self._put('userDataStream', False, data=params)
 
-    def stream_close(self, **params):
+    def stream_close(self, listenKey):
         """Close out a user data stream.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+
+        :param listenKey: required
+        :type listenKey: str
 
         :returns: API response
 
@@ -1533,4 +1536,7 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._delete('userDataStream', False, data=params)
