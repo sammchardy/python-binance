@@ -758,6 +758,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -866,6 +868,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -901,6 +905,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -931,6 +937,10 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -957,6 +967,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -981,6 +993,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -1005,6 +1019,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
