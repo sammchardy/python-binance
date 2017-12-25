@@ -758,6 +758,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -866,6 +868,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -901,6 +905,8 @@ class Client(object):
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -931,6 +937,10 @@ class Client(object):
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -957,6 +967,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -981,6 +993,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -1005,6 +1019,8 @@ class Client(object):
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
         :type newOrderRespType: enum
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -1173,7 +1189,7 @@ class Client(object):
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
-        :param symbol: required
+        :param symbol: optional
         :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1484,7 +1500,7 @@ class Client(object):
         res = self._post('userDataStream', False, data={})
         return res['listenKey']
 
-    def stream_keepalive(self, **params):
+    def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
@@ -1501,12 +1517,18 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._put('userDataStream', False, data=params)
 
-    def stream_close(self, **params):
+    def stream_close(self, listenKey):
         """Close out a user data stream.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+
+        :param listenKey: required
+        :type listenKey: str
 
         :returns: API response
 
@@ -1517,4 +1539,7 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._delete('userDataStream', False, data=params)
