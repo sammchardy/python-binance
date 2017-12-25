@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v0.5.8 - 2017-12-25
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- change symbol parameter to optional for get_open_orders function
+- added listenKey parameter to stream_close function
+
+**Added**
+
+- get_account_status function that was missed
+
 v0.5.7 - 2017-12-24
 ^^^^^^^^^^^^^^^^^^^
 
