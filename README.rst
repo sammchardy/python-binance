@@ -94,10 +94,10 @@ Quick Start
     withdraws = client.get_withdraw_history()
 
     # fetch list of ETH withdrawals
-    eth_withdraws = client.get_withdraw_history('ETH)
+    eth_withdraws = client.get_withdraw_history(asset='ETH')
 
-    # get a deposit address
-    address = client.get_deposit_address('BTC)
+    # get a deposit address got BTC
+    address = client.get_deposit_address(asset='BTC')
 
     # start trade websocket
     def process_message(msg):

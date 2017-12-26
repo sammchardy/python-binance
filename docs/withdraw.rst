@@ -47,6 +47,6 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
 .. code:: python
 
-    address = client.get_deposit_address('BTC)
+    address = client.get_deposit_address(asset='BTC')
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/withdraw?pixel
