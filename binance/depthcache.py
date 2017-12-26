@@ -132,12 +132,13 @@ class DepthCacheManager(object):
         self._client = client
         self._symbol = symbol
         self._callback = callback
-        self._first_update_id = 0
+        self._first_update_id = None
+        self._depth_message_buffer = []
         self._bm = None
         self._depth_cache = DepthCache(self._symbol)
 
-        self._init_cache()
         self._start_socket()
+        self._init_cache()
 
     def _init_cache(self):
         res = self._client.get_order_book(symbol=self._symbol, limit=500)
@@ -148,6 +149,11 @@ class DepthCacheManager(object):
             self._depth_cache.add_bid(bid)
         for ask in res['asks']:
             self._depth_cache.add_ask(ask)
+
+        for msg in self._depth_message_buffer:
+            self._process_depth_message(msg)
+
+        del self._depth_message_buffer
 
     def _start_socket(self):
         self._bm = BinanceSocketManager(self._client)
@@ -160,6 +166,21 @@ class DepthCacheManager(object):
         """
 
         :param msg:
+        :return:
+
+        """
+
+        if self._first_update_id is None:
+            # Initial depth snapshot fetch not yet performed, buffer messages
+            self._depth_message_buffer.append(msg)
+            return
+
+        self._process_depth_message(msg)
+
+    def _process_depth_message(self, msg):
+        """Process a depth event message.
+
+        :param msg: Depth event message.
         :return:
 
         """
