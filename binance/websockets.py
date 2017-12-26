@@ -48,9 +48,7 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
         self.retry(connector)
 
     def clientConnectionLost(self, connector, reason):
-        # check if closed cleanly
-        if reason.getErrorMessage() != 'Connection was closed cleanly.':
-            self.retry(connector)
+        self.retry(connector)
 
 
 class BinanceSocketManager(threading.Thread):
@@ -86,6 +84,7 @@ class BinanceSocketManager(threading.Thread):
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
+        factory.reconnect = True
         context_factory = ssl.ClientContextFactory()
 
         self._conns[path] = connectWS(factory, context_factory)
@@ -419,6 +418,8 @@ class BinanceSocketManager(threading.Thread):
         if conn_key not in self._conns:
             return
 
+        # disable reconnecting if we are closing
+        self._conns[conn_key].factory = WebSocketClientFactory(self.STREAM_URL + 'tmp_path')
         self._conns[conn_key].disconnect()
         del(self._conns[conn_key])
 
