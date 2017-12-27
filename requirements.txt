@@ -1,8 +1,8 @@
 autobahn==17.9.3
 certifi==2017.11.5
 chardet==3.0.4
-cryptography==1.8.1
-pyOpenSSL==17.3.0
+cryptography==2.1.4
+pyOpenSSL==17.5.0
 requests==2.18.4
 service-identity==17.0.0
 six==1.11.0
