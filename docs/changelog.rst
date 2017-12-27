@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.10 - 2017-12-28
+^^^^^^^^^^^^^^^^^^^
+
+**Updated**
+
+- updated dependencies certifi and cryptography to help resolve signature error
+
 v0.5.9 - 2017-12-26
 ^^^^^^^^^^^^^^^^^^^
 
