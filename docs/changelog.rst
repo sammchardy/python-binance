@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.9 - 2017-12-26
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- fixed websocket reconnecting, was no distinction between manual close or network error
+
 v0.5.8 - 2017-12-25
 ^^^^^^^^^^^^^^^^^^^
 
