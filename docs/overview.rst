@@ -58,4 +58,7 @@ At the current time Binance rate limits are:
 - 10 orders per second
 - 100,000 orders per 24hrs
 
+Some calls have a higher weight than others especially if a call returns information about all symbols.
+Read the `official Binance documentation <https://github.com/binance-exchange/binance-official-api-docs`_ for specific information.
+
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
