@@ -141,21 +141,36 @@ class DepthCacheManager(object):
         self._init_cache()
 
     def _init_cache(self):
+        """Initialise the depth cache calling REST endpoint
+
+        :return:
+        """
+        self._first_update_id = None
+        self._depth_message_buffer = []
+
         res = self._client.get_order_book(symbol=self._symbol, limit=500)
 
-        self._first_update_id = res['lastUpdateId']
-
+        # process bid and asks from the order book
         for bid in res['bids']:
             self._depth_cache.add_bid(bid)
         for ask in res['asks']:
             self._depth_cache.add_ask(ask)
 
+        # set first update id
+        self._first_update_id = res['lastUpdateId']
+
+        # Apply any updates from the websocket
         for msg in self._depth_message_buffer:
             self._process_depth_message(msg)
 
+        # clear the depth buffer
         del self._depth_message_buffer
 
     def _start_socket(self):
+        """Start the depth cache socket
+
+        :return:
+        """
         self._bm = BinanceSocketManager(self._client)
 
         self._bm.start_depth_socket(self._symbol, self._depth_event)
@@ -163,7 +178,7 @@ class DepthCacheManager(object):
         self._bm.start()
 
     def _depth_event(self, msg):
-        """
+        """Handle a depth event
 
         :param msg:
         :return:
@@ -173,9 +188,8 @@ class DepthCacheManager(object):
         if self._first_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
             self._depth_message_buffer.append(msg)
-            return
-
-        self._process_depth_message(msg)
+        else:
+            self._process_depth_message(msg)
 
     def _process_depth_message(self, msg):
         """Process a depth event message.
