@@ -9,11 +9,16 @@ Order Validation
 
 Binance has a number of rules around symbol pair orders with validation on minimum price, quantity and total order value.
 
-The `python-binance` client updates these rules when the client is initialised.
+Read more about their specifics in the `Filters <https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#filters>`_
+section of the official API.
 
-If you have a long running client then the rules can be refreshed by calling the `get_products` API endpoint.
+It can be helpful to format the output using the following snippet
 
-With this information we can validate if pairs are being actively traded on Binance as well.
+.. code:: python
+
+    amount = 0.000234234
+    precision = 5
+    amt_str = "{:0.0{}f}".format(amount, precision)
 
 
 `Fetch all orders <binance.html#binance.client.Client.get_all_orders>`_
