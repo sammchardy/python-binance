@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.5.11 - 2017-12-28
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- refresh interval parameter to depth cache to keep it fresh, set default at 30 minutes
+
+**Fixed**
+
+- watch depth cache socket before fetching order book to replay any messages
+
 v0.5.10 - 2017-12-28
 ^^^^^^^^^^^^^^^^^^^
 
