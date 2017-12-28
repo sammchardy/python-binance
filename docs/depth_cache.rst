@@ -8,12 +8,24 @@ Create the manager like so, passing the api client, symbol and an optional callb
 .. code:: python
 
     from binance.depthcache import DepthCacheManager
-    dcm = DepthCacheManager(client, 'BNBBTC', process_depth)
+    dcm = DepthCacheManager(client, 'BNBBTC', callback=process_depth)
 
 The callback function receives the current `DepthCache` object which allows access to a pre-sorted
 list of bids or asks able to be filtered as required.
 
 Access the symbol value from the `depth_cache` object in case you have multiple caches using the same callback.
+
+By default the depth cache will fetch the order book via REST request every 30 minutes.
+This duration can be changed by using the `refresh_interval` parameter. To disable the refresh pass 0 or None.
+The socket connection will stay open receiving updates to be replayed once the full order book is received.
+
+.. code:: python
+
+    # 1 hour interval refresh
+    dcm = DepthCacheManager(client, 'BNBBTC', callback=process_depth, refresh_interval=60*60)
+
+    # disable refreshing
+    dcm = DepthCacheManager(client, 'BNBBTC', callback=process_depth, refresh_interval=0)
 
 .. code:: python
 
