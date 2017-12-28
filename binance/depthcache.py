@@ -2,6 +2,7 @@
 # coding=utf-8
 
 from operator import itemgetter
+import time
 
 from .websockets import BinanceSocketManager
 
@@ -118,7 +119,9 @@ class DepthCache(object):
 
 class DepthCacheManager(object):
 
-    def __init__(self, client, symbol, callback=None):
+    _default_refresh = 60 * 30  # 30 minutes
+
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -127,6 +130,8 @@ class DepthCacheManager(object):
         :type symbol: string
         :param callback: Optional function to receive depth cache updates
         :type callback: function
+        :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+        :type refresh_interval: int
 
         """
         self._client = client
@@ -136,6 +141,7 @@ class DepthCacheManager(object):
         self._depth_message_buffer = []
         self._bm = None
         self._depth_cache = DepthCache(self._symbol)
+        self._refresh_interval = refresh_interval
 
         self._start_socket()
         self._init_cache()
@@ -158,6 +164,10 @@ class DepthCacheManager(object):
 
         # set first update id
         self._first_update_id = res['lastUpdateId']
+
+        # set a time to refresh the depth cache
+        if self._refresh_interval:
+            self._refresh_time = int(time.time()) + self._refresh_interval
 
         # Apply any updates from the websocket
         for msg in self._depth_message_buffer:
@@ -211,6 +221,10 @@ class DepthCacheManager(object):
         # call the callback with the updated depth cache
         if self._callback:
             self._callback(self._depth_cache)
+
+        # after processing event see if we need to refresh the depth cache
+        if self._refresh_interval and int(time.time()) > self._refresh_time:
+            self._init_cache()
 
     def get_depth_cache(self):
         """Get the current depth cache
