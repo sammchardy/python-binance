@@ -6,11 +6,11 @@ setup(
     version='0.5.11',
     packages=['binance'],
     description='Binance REST API python implementation',
-    url='https://github.com/sammchardy/python-binance',
+    url='https://github.com/philsong/python-binance',
     author='Sam McHardy',
     license='MIT',
     author_email='',
-    install_requires=['requests', 'six', 'Twisted', 'pyOpenSSL', 'autobahn', 'service-identity'],
+    install_requires=['requests', 'six', 'pyOpenSSL', 'autobahn', 'service-identity'],
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[
           'Intended Audience :: Developers',
