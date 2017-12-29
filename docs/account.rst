@@ -150,6 +150,13 @@ Account
 
     info = client.get_account()
 
+`Get asset balance <binance.html#binance.client.Client.get_asset_balance>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    balance = client.get_asset_balance(asset='BTC')
+
 `Get account status <binance.html#binance.client.Client.get_account_status>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -158,7 +165,7 @@ Account
     status = client.get_account_status()
 
 `Get trades <binance.html#binance.client.Client.get_my_trades>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 

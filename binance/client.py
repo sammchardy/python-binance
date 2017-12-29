@@ -141,7 +141,7 @@ class Client(object):
             kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
 
-        response = getattr(self.session, method)(uri, **kwargs)
+        response = getattr(self.session, method)(uri, timeout=10, **kwargs)
         return self._handle_response(response)
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
@@ -751,7 +751,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
@@ -859,7 +859,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -894,7 +894,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -928,7 +928,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -1050,7 +1050,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with iceberg orders
@@ -1260,6 +1260,37 @@ class Client(object):
 
         """
         return self._get('account', True, data=params)
+
+    def get_asset_balance(self, asset, **params):
+        """Get current asset balance.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: dictionary or None if not found
+
+        .. code-block:: python
+
+            {
+                "asset": "BTC",
+                "free": "4723846.89208129",
+                "locked": "0.00000000"
+            }
+
+        :raises: BinanceResponseException, BinanceAPIException
+
+        """
+        res = self.get_account(**params)
+        # find asset balance in list of balances
+        if "balances" in res:
+            for bal in res['balances']:
+                if bal['asset'].lower() == asset.lower():
+                    return bal
+        return None
 
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
