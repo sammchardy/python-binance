@@ -1,8 +1,21 @@
 Changelog
 =========
 
+v0.5.12 - 2017-12-29
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- get_asset_balance helper function to fetch an individual asset's balance
+
+**Fixed**
+
+- added timeout to requests call to prevent hanging
+- changed variable type to str for price parameter when creating an order
+- documentation fixes
+
 v0.5.11 - 2017-12-28
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 **Added**
 
@@ -13,7 +26,7 @@ v0.5.11 - 2017-12-28
 - watch depth cache socket before fetching order book to replay any messages
 
 v0.5.10 - 2017-12-28
-^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 **Updated**
 
