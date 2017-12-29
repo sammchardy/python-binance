@@ -141,7 +141,7 @@ class Client(object):
             kwargs['params'] = self._order_params(kwargs['data'])
             del(kwargs['data'])
 
-        response = getattr(self.session, method)(uri, **kwargs)
+        response = getattr(self.session, method)(uri, timeout=10, **kwargs)
         return self._handle_response(response)
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
