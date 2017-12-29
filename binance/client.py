@@ -751,7 +751,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
@@ -859,7 +859,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -894,7 +894,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -928,7 +928,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
         :type timeInForce: enum
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -1050,7 +1050,7 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with iceberg orders
