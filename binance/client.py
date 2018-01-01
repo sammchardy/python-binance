@@ -6,6 +6,8 @@ import hmac
 import requests
 import six
 import time
+import logging
+from operator import itemgetter
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
 if six.PY2:
@@ -105,7 +107,8 @@ class Client(object):
 
     def _generate_signature(self, data):
 
-        query_string = urlencode(data)
+        ordered_data = self._order_params(data)
+        query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
@@ -123,6 +126,8 @@ class Client(object):
                 has_signature = True
             else:
                 params.append((key, value))
+        # sort parameters by key
+        params.sort(key=itemgetter(0))
         if has_signature:
             params.append(('signature', data['signature']))
         return params
@@ -137,8 +142,14 @@ class Client(object):
             kwargs['data']['timestamp'] = int(time.time() * 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
+        # sort get and post params to match signature order
+        if data:
+            # sort post params
+            kwargs['data'] = self._order_params(kwargs['data'])
+
+        # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
-            kwargs['params'] = self._order_params(kwargs['data'])
+            kwargs['params'] = kwargs['data']
             del(kwargs['data'])
 
         response = getattr(self.session, method)(uri, timeout=10, **kwargs)
