@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v0.5.12
+Welcome to python-binance v0.5.13
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -33,10 +33,12 @@ Documentation
 Binance API Telegram
   https://t.me/binance_api_english
 
+Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
+
 Features
 --------
 
-- Implementation of General, Market Data and Account endpoints.
+- Implementation of all General, Market Data and Account endpoints.
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
