@@ -6,7 +6,6 @@ import hmac
 import requests
 import six
 import time
-import logging
 from operator import itemgetter
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
