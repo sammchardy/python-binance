@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.5.15 - 2018-01-03
+^^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- removed all references to WEBSOCKET_DEPTH_1 enum
+
 v0.5.14 - 2018-01-02
 ^^^^^^^^^^^^^^^^^^^^
 
