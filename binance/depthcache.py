@@ -187,6 +187,10 @@ class DepthCacheManager(object):
 
         self._bm.start()
 
+        # wait for some socket responses
+        while not len(self._depth_message_buffer):
+            time.sleep(1)
+
     def _depth_event(self, msg):
         """Handle a depth event
 
