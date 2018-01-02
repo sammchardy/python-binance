@@ -4,15 +4,9 @@
 import hashlib
 import hmac
 import requests
-import six
 import time
 from operator import itemgetter
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-
-if six.PY2:
-    from urllib import urlencode
-elif six.PY3:
-    from urllib.parse import urlencode
 
 
 class Client(object):
