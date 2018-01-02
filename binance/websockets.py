@@ -55,7 +55,6 @@ class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
-    WEBSOCKET_DEPTH_1 = '1'
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
@@ -90,8 +89,8 @@ class BinanceSocketManager(threading.Thread):
         self._conns[path] = connectWS(factory, context_factory)
         return path
 
-    def start_depth_socket(self, symbol, callback, depth=WEBSOCKET_DEPTH_1):
-        """Start a websocket for symbol market depth
+    def start_depth_socket(self, symbol, callback, depth=None):
+        """Start a websocket for symbol market depth returning either a diff or a partial book
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#partial-book-depth-streams
 
@@ -99,48 +98,63 @@ class BinanceSocketManager(threading.Thread):
         :type symbol: str
         :param callback: callback function to handle messages
         :type callback: function
-        :param depth: Number of depth entries to return, default WEBSOCKET_DEPTH_1
+        :param depth: optional Number of depth entries to return, default None. If passed returns a partial book instead of a diff
         :type depth: enum
 
         :returns: connection key string if successful, False otherwise
 
-        Message Format
+        Partial Message Format
 
         .. code-block:: python
 
             {
-                "e": "depthUpdate",			# event type
-                "E": 1499404630606, 		# event time
-                "s": "ETHBTC", 				# symbol
-                "u": 7913455, 				# updateId to sync up with updateid in /api/v1/depth
-                "b": [						# bid depth delta
+                "lastUpdateId": 160,  # Last update ID
+                "bids": [             # Bids to be updated
                     [
-                        "0.10376590", 		# price (need to update the quantity on this price)
-                        "59.15767010", 		# quantity
-                        []					# can be ignored
-                    ],
+                        "0.0024",     # price level to be updated
+                        "10",         # quantity
+                        []            # ignore
+                    ]
                 ],
-                "a": [						# ask depth delta
+                "asks": [             # Asks to be updated
                     [
-                        "0.10376586", 		# price (need to update the quantity on this price)
-                        "159.15767010", 	# quantity
-                        []					# can be ignored
-                    ],
-                    [
-                        "0.10383109",
-                        "345.86845230",
-                        []
-                    ],
-                    [
-                        "0.10490700",
-                        "0.00000000", 		# quantity=0 means remove this level
-                        []
+                        "0.0026",     # price level to be updated
+                        "100",        # quantity
+                        []            # ignore
                     ]
                 ]
             }
+
+
+        Diff Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "depthUpdate", # Event type
+                "E": 123456789,     # Event time
+                "s": "BNBBTC",      # Symbol
+                "U": 157,           # First update ID in event
+                "u": 160,           # Final update ID in event
+                "b": [              # Bids to be updated
+                    [
+                        "0.0024",   # price level to be updated
+                        "10",       # quantity
+                        []          # ignore
+                    ]
+                ],
+                "a": [              # Asks to be updated
+                    [
+                        "0.0026",   # price level to be updated
+                        "100",      # quantity
+                        []          # ignore
+                    ]
+                ]
+            }
+
         """
         socket_name = symbol.lower() + '@depth'
-        if depth != self.WEBSOCKET_DEPTH_1:
+        if depth and depth != self.WEBSOCKET_DEPTH_1:
             socket_name = '{}{}'.format(socket_name, depth)
         return self._start_socket(socket_name, callback)
 

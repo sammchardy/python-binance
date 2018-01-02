@@ -60,12 +60,17 @@ See the `Binance Websocket Streams API documentation <https://github.com/binance
 `Depth Socket <binance.html#binance.websockets.BinanceSocketManager.start_depth_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Depth sockets have an optional depth parameter. By default this is set to 1.
-Valid depth values are 1, 5, 10 and 20 and `defined as enums <enums.html>`_.
+Depth sockets have an optional depth parameter to receive partial book rather than a diff response.
+By default this the diff response is returned.
+Valid depth values are 5, 10 and 20 and `defined as enums <enums.html>`_.
 
 .. code:: python
 
-    conn_key = bm.start_depth_socket('BNBBTC', process_message, depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
+    # depth diff response
+    diff_key = bm.start_depth_socket('BNBBTC', process_message)
+
+    # partial book response
+    partial_key = bm.start_depth_socket('BNBBTC', process_message, depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
 
 
 `Kline Socket <binance.html#binance.websockets.BinanceSocketManager.start_kline_socket>`_
