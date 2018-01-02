@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v0.5.14 - 2018-01-02
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Wait for depth cache socket to start
+- check for sequential depth cache messages
+
+**Updated**
+
+- documentation around depth websocket and diff and partial responses
+
+**Removed**
+
+- Removed unused WEBSOCKET_DEPTH_1 enum
+- removed unused libraries and imports
+
 v0.5.13 - 2018-01-01
 ^^^^^^^^^^^^^^^^^^^^
 
