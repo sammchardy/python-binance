@@ -154,7 +154,7 @@ class BinanceSocketManager(threading.Thread):
 
         """
         socket_name = symbol.lower() + '@depth'
-        if depth and depth != self.WEBSOCKET_DEPTH_1:
+        if depth and depth != '1':
             socket_name = '{}{}'.format(socket_name, depth)
         return self._start_socket(socket_name, callback)
 
