@@ -137,7 +137,7 @@ class DepthCacheManager(object):
         self._client = client
         self._symbol = symbol
         self._callback = callback
-        self._first_update_id = None
+        self._last_update_id = None
         self._depth_message_buffer = []
         self._bm = None
         self._depth_cache = DepthCache(self._symbol)
@@ -151,7 +151,7 @@ class DepthCacheManager(object):
 
         :return:
         """
-        self._first_update_id = None
+        self._last_update_id = None
         self._depth_message_buffer = []
 
         res = self._client.get_order_book(symbol=self._symbol, limit=500)
@@ -163,7 +163,7 @@ class DepthCacheManager(object):
             self._depth_cache.add_ask(ask)
 
         # set first update id
-        self._first_update_id = res['lastUpdateId']
+        self._last_update_id = res['lastUpdateId']
 
         # set a time to refresh the depth cache
         if self._refresh_interval:
@@ -171,7 +171,7 @@ class DepthCacheManager(object):
 
         # Apply any updates from the websocket
         for msg in self._depth_message_buffer:
-            self._process_depth_message(msg)
+            self._process_depth_message(msg, buffer=True)
 
         # clear the depth buffer
         del self._depth_message_buffer
@@ -187,6 +187,10 @@ class DepthCacheManager(object):
 
         self._bm.start()
 
+        # wait for some socket responses
+        while not len(self._depth_message_buffer):
+            time.sleep(1)
+
     def _depth_event(self, msg):
         """Handle a depth event
 
@@ -195,22 +199,27 @@ class DepthCacheManager(object):
 
         """
 
-        if self._first_update_id is None:
+        if self._last_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
             self._depth_message_buffer.append(msg)
         else:
             self._process_depth_message(msg)
 
-    def _process_depth_message(self, msg):
+    def _process_depth_message(self, msg, buffer=False):
         """Process a depth event message.
 
         :param msg: Depth event message.
         :return:
 
         """
-        # ignore any updates before the initial update id
-        if msg['u'] <= self._first_update_id:
+
+        if buffer and msg['u'] <= self._last_update_id:
+            # ignore any updates before the initial update id
             return
+        elif msg['U'] != self._last_update_id + 1:
+            # if not buffered check we get sequential updates
+            # otherwise init cache again
+            self._init_cache()
 
         # add any bid or ask values
         for bid in msg['b']:
@@ -221,6 +230,8 @@ class DepthCacheManager(object):
         # call the callback with the updated depth cache
         if self._callback:
             self._callback(self._depth_cache)
+
+        self._last_update_id = msg['u']
 
         # after processing event see if we need to refresh the depth cache
         if self._refresh_interval and int(time.time()) > self._refresh_time:
