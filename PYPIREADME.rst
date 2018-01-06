@@ -67,8 +67,8 @@ Quick Start
     # get market depth
     depth = client.get_order_book(symbol='BNBBTC')
 
-    # place market buy order
-    order = client.create_order(
+    # place a test market buy order, to place an actual order use the create_order function
+    order = client.create_test_order(
         symbol='BNBBTC',
         side=Client.SIDE_BUY,
         type=Client.ORDER_TYPE_MARKET,
@@ -79,13 +79,13 @@ Quick Start
 
     # withdraw 100 ETH
     # check docs for assumptions around withdrawals
-    from binance.exceptions import BinanceApiException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
     try:
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceApiException as e:
+    except BinanceAPIException as e:
         print(e)
     except BinanceWithdrawException as e:
         print(e)

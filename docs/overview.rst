@@ -62,3 +62,23 @@ Some calls have a higher weight than others especially if a call returns informa
 Read the `official Binance documentation <https://github.com/binance-exchange/binance-official-api-docs`_ for specific information.
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
+
+Proxy Settings
+--------------
+
+`python-binance` uses the `requests <http://docs.python-requests.org/en/master/>`_ library which means you can set environment variable for your proxy if required.
+Check out the `requests Proxies documentation <http://docs.python-requests.org/en/master/user/advanced/#proxies>`_ for further details.
+
+An example for Linux environments from the `requests` Proxies documentation is as follows.
+
+.. code-block:: bash
+
+    $ export HTTP_PROXY="http://10.10.1.10:3128"
+    $ export HTTPS_PROXY="http://10.10.1.10:1080"
+
+For Windows environments
+
+.. code-block:: bash
+
+    C:\>set HTTP_PROXY=http://10.10.1.10:3128
+    C:\>set HTTPS_PROXY=http://10.10.1.10:1080
