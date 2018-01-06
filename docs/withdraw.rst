@@ -12,13 +12,13 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
 .. code:: python
 
-    from binance.exceptions import BinanceApiException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
     try:
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceApiException as e:
+    except BinanceAPIException as e:
         print(e)
     except BinanceWithdrawException as e:
         print(e)
