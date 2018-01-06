@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v0.5.16 - 2018-01-06
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- addressTag documentation to withdraw function
+- documentation about requests proxy environment variables
+
+**Update**
+
+- FAQ for signature error with solution to regenerate API key
+- change create_order to create_test_order in example
+
+**Fixed**
+
+- reference to BinanceAPIException in documentation
+
 v0.5.15 - 2018-01-03
 ^^^^^^^^^^^^^^^^^^^^
 
