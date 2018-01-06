@@ -1377,9 +1377,11 @@ class Client(object):
         :type asset: str
         :type address: required
         :type address: str
+        :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
+        :type address: str
         :param amount: required
         :type amount: decimal
-        :param name: Description of the address - optional
+        :param name: optional - Description of the address
         :type name: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1390,7 +1392,8 @@ class Client(object):
 
             {
                 "msg": "success",
-                "success": true
+                "success": true,
+                "id":"7213fea8e94b4a5593d507237e5a555b"
             }
 
         :raises: BinanceResponseException, BinanceAPIException, BinanceWithdrawException
