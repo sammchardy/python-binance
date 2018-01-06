@@ -25,6 +25,13 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
     else:
         print("Success")
 
+    # if the coin requires a extra tag or name such as XRP or XMR then pass an `addressTag` parameter.
+    result = client.withdraw(
+        asset='XRP',
+        address='<xrp_address>',
+        addressTag='<xrp_address_tag>',
+        amount=10000)
+
 `Fetch deposit history <binance.html#binance.client.Client.get_deposit_history>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
