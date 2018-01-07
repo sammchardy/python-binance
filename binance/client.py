@@ -1381,7 +1381,7 @@ class Client(object):
         :type address: str
         :param amount: required
         :type amount: decimal
-        :param name: optional - Description of the address
+        :param name: optional - Description of the address, default asset value passed will be used
         :type name: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1399,6 +1399,9 @@ class Client(object):
         :raises: BinanceResponseException, BinanceAPIException, BinanceWithdrawException
 
         """
+        # force a name for the withdrawal if one not set
+        if 'asset' in params and 'name' not in params:
+            params['name'] = params['asset']
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
         if not res['success']:
             raise BinanceWithdrawException(res['msg'])
