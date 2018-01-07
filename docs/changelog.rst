@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v0.5.17 - 2018-01-08
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- check for name parameter in withdraw, set to asset parameter if not passed
+
+**Update**
+
+- Windows install error documentation
+
+**Removed**
+
+- reference to disable_validation in documentation
+
 v0.5.16 - 2018-01-06
 ^^^^^^^^^^^^^^^^^^^^
 
