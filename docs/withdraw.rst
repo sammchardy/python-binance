@@ -14,6 +14,7 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
     from binance.exceptions import BinanceAPIException, BinanceWithdrawException
     try:
+        # name parameter will be set to the asset value by the client if not passed
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
@@ -24,6 +25,13 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
         print(e)
     else:
         print("Success")
+
+    # passing a name parameter
+    result = client.withdraw(
+        asset='ETH',
+        address='<eth_address>',
+        amount=100,
+        name='Withdraw')
 
     # if the coin requires a extra tag or name such as XRP or XMR then pass an `addressTag` parameter.
     result = client.withdraw(
