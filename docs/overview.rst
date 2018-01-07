@@ -11,6 +11,10 @@ Install with ``pip``:
 
     pip install python-binance
 
+**Windows**
+
+If you see errors building Twisted indication Microsoft Visual C++ is required you may need to install the Visual C++ Build Tools
+refer to the `Python Wiki on Widows Compilers <https://wiki.python.org/moin/WindowsCompilers>`_ for your relevant version.
 
 Register on Binance
 -------------------
