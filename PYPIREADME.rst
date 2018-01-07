@@ -109,7 +109,7 @@ Quick Start
 
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
-    bm.start_aggtrade_socket(symbol='BNBBTC')
+    bm.start_aggtrade_socket(symbol='BNBBTC', callback=process_message)
     bm.start()
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
