@@ -77,18 +77,6 @@ Use the helper functions to easily place a market buy or sell order
         symbol='BNBBTC',
         quantity=100)
 
-**Place Order Without Client Side Order Validation**
-
-Pass the optional `disable_validation` parameter to turn off client side validation of orders.
-
-.. code:: python
-
-    order = client.order_limit_buy(
-        symbol='BNBBTC',
-        quantity=100,
-        price='0.00001',
-        disable_validation=True)
-
 `Place a test order <binance.html#binance.client.Client.create_test_order>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
