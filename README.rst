@@ -101,7 +101,7 @@ Quick Start
     # get a deposit address got BTC
     address = client.get_deposit_address(asset='BTC')
 
-    # start trade websocket
+    # start aggregated trade websocket for BNBBTC
     def process_message(msg):
         print("message type: {}".format(msg['e']))
         print(msg)
@@ -109,7 +109,7 @@ Quick Start
 
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
-    bm.start_aggtrade_socket(symbol='BNBBTC')
+    bm.start_aggtrade_socket('BNBBTC', process_message)
     bm.start()
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
