@@ -44,6 +44,7 @@ Features
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
 - Symbol Depth Cache
+- Historical Kline/Candle fetching function
 - Withdraw functionality
 - Deposit addresses
 
@@ -111,6 +112,17 @@ Quick Start
     bm = BinanceSocketManager(client)
     bm.start_aggtrade_socket('BNBBTC', process_message)
     bm.start()
+
+    # get historical kline data from any date range
+
+    # fetch 1 minute klines for the last day up until now
+    klines = client.get_historical_klines("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC"))
+
+    # fetch 30 minute klines for the last month of 2017
+    klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018"))
+
+    # fetch weekly klines since it listed
+    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK, "1 Jan, 2017"))
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 
