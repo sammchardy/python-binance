@@ -64,19 +64,22 @@ class Client(object):
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
 
-    def __init__(self, api_key, api_secret):
+    def __init__(self, api_key, api_secret, requests_params=None):
         """Binance API Client constructor
 
         :param api_key: Api Key
         :type api_key: str.
         :param api_secret: Api Secret
         :type api_secret: str.
+        :param requests_params: optional - Dictionary of requests params to use for all calls
+        :type requests_params: dict.
 
         """
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
+        self._requests_params = requests_params
 
         # init DNS and SSL cert
         self.ping()
@@ -128,6 +131,12 @@ class Client(object):
 
     def _request(self, method, uri, signed, force_params=False, **kwargs):
 
+        # set default requests timeout
+        kwargs['timeout'] = 10
+
+        # add our global requests params
+        kwargs.update(self._requests_params)
+
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
             kwargs['data'] = data
@@ -138,6 +147,12 @@ class Client(object):
 
         # sort get and post params to match signature order
         if data:
+            # find any requests params passed and apply them
+            if 'requests_params' in kwargs['data']:
+                # merge requests params into kwargs
+                kwargs.update(kwargs['data']['requests_params'])
+                del(kwargs['data']['requests_params'])
+
             # sort post params
             kwargs['data'] = self._order_params(kwargs['data'])
 
@@ -146,7 +161,7 @@ class Client(object):
             kwargs['params'] = kwargs['data']
             del(kwargs['data'])
 
-        response = getattr(self.session, method)(uri, timeout=10, **kwargs)
+        response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):

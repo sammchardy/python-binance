@@ -67,13 +67,47 @@ Read the `official Binance documentation <https://github.com/binance-exchange/bi
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
 
-Proxy Settings
---------------
+Requests Settings
+-----------------
 
-`python-binance` uses the `requests <http://docs.python-requests.org/en/master/>`_ library which means you can set environment variable for your proxy if required.
-Check out the `requests Proxies documentation <http://docs.python-requests.org/en/master/user/advanced/#proxies>`_ for further details.
+`python-binance` uses the `requests <http://docs.python-requests.org/en/master/>`_ library.
 
-An example for Linux environments from the `requests` Proxies documentation is as follows.
+You can set custom requests parameters for all API calls when creating the client.
+
+.. code:: python
+
+    client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
+
+You may also pass custom requests parameters through any API call to override default settings or the above settingsspecify new ones like the example below.
+
+.. code:: python
+
+    # this would result in verify: False and timeout: 5 for the get_all_orders call
+    client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
+    client.get_all_orders(symbol='BNBBTC', requests_params={'timeout': 5})
+
+Check out the `requests documentation <http://docs.python-requests.org/en/master/>`_ for all options.
+
+**Proxy Settings**
+
+You can use the Requests Settings method above
+
+.. code:: python
+
+    proxies = {
+        'http': 'http://10.10.1.10:3128',
+        'https': 'http://10.10.1.10:1080'
+    }
+
+    # in the Client instantiation
+    client = Client("api-key", "api-secret", {'proxies': proxies})
+
+    # or on an individual call
+    client.get_all_orders(symbol='BNBBTC', requests_params={'proxies': proxies})
+
+Or set an environment variable for your proxy if required to work across all requests.
+
+An example for Linux environments from the `requests Proxies documentation <http://docs.python-requests.org/en/master/user/advanced/#proxies>`_ is as follows.
 
 .. code-block:: bash
 
