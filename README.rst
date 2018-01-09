@@ -98,7 +98,7 @@ Quick Start
     # fetch list of ETH withdrawals
     eth_withdraws = client.get_withdraw_history(asset='ETH')
 
-    # get a deposit address got BTC
+    # get a deposit address for BTC
     address = client.get_deposit_address(asset='BTC')
 
     # start aggregated trade websocket for BNBBTC
