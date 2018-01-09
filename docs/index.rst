@@ -17,6 +17,7 @@ Contents
    websockets
    depth_cache
    withdraw
+   helpers
    exceptions
    faqs
    changelog

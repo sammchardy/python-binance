@@ -25,10 +25,10 @@ exceptions module
     :undoc-members:
     :show-inheritance:
 
-validation module
+helpers module
 --------------------------
 
-.. automodule:: binance.validation
+.. automodule:: binance.helpers
     :members:
     :undoc-members:
     :show-inheritance:
