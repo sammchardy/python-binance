@@ -43,12 +43,20 @@ class BinanceReconnectingClientFactory(ReconnectingClientFactory):
 class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFactory):
 
     protocol = BinanceClientProtocol
+    _reconnect_error_payload = {
+        'e': 'error',
+        'm': 'Max reconnect retries reached'
+    }
 
     def clientConnectionFailed(self, connector, reason):
         self.retry(connector)
+        if self.retries > self.maxRetries:
+            self.callback(self._reconnect_error_payload)
 
     def clientConnectionLost(self, connector, reason):
         self.retry(connector)
+        if self.retries > self.maxRetries:
+            self.callback(self._reconnect_error_payload)
 
 
 class BinanceSocketManager(threading.Thread):
