@@ -199,6 +199,14 @@ class DepthCacheManager(object):
 
         """
 
+        if 'e' in msg and msg['e'] == 'error':
+            # close the socket
+            self.close()
+
+            # notify the user by returning a None value
+            if self._callback:
+                self._callback(None)
+
         if self._last_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
             self._depth_message_buffer.append(msg)
@@ -251,3 +259,4 @@ class DepthCacheManager(object):
         :return:
         """
         self._bm.close()
+        self._depth_cache = None
