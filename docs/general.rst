@@ -39,5 +39,3 @@ This call is deprecated, use the above Exchange Info call
 .. code:: python
 
     products = client.get_products()
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/general?pixel

@@ -404,5 +404,3 @@ Initial version
 **Added**
 
 - General, Market Data and Account endpoints
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/changelog?pixel

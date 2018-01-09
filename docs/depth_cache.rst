@@ -53,5 +53,3 @@ This will close the internal websocket and this instance of the `DepthCacheManag
 .. code:: python
 
     dcm.close()
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/depth_cache?pixel

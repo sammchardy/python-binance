@@ -158,5 +158,3 @@ Account
 .. code:: python
 
     trades = client.get_my_trades(symbol='BNBBTC')
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/account?pixel
