@@ -40,5 +40,3 @@ websockets module
     :members:
     :undoc-members:
     :show-inheritance:
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/binance?pixel

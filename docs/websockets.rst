@@ -38,6 +38,26 @@ A callback to process messages would take the format
         # do something
 
 
+Websocket Errors
+----------------
+
+If the websocket is disconnected and is unable to reconnect a message is sent to the callback to indicate this. The format is
+
+.. code:: python
+
+    {
+        'e': 'error',
+        'm': 'Max reconnect retries reached'
+    }
+
+    # check for it like so
+    def process_message(msg):
+        if msg['e'] == 'error':
+            # close and restart the socket
+        else:
+            # process message normally
+
+
 `Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.start_multiplex_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

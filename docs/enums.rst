@@ -67,7 +67,3 @@ To use in your code reference either binance.client.Client or binance.websockets
     from binance.websockets import BinanceSocketManager
 
     side = Client.SIDE_BUY
-
-    socket_depth = BinanceSocketManager.WEBSOCKET_DEPTH_1
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/enums?pixel
