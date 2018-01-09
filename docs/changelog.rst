@@ -1,8 +1,16 @@
 Changelog
 =========
 
+v0.6.1 - 2018-01-10
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- added missing dateparser dependency to setup.py
+- documentation fixes
+
 v0.6.0 - 2018-01-09
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
 
 New version because why not.
 
