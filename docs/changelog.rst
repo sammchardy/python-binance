@@ -1,6 +1,22 @@
 Changelog
 =========
 
+v0.6.0 - 2018-01-09
+^^^^^^^^^^^^^^^^^^^^
+
+New version because why not.
+
+**Added**
+
+- get_historical_klines function to fetch klines for any date range
+- ability to override requests parameters globally
+- error on websocket disconnect
+- example related to blog post
+
+**Fixes**
+
+- documentation fixes
+
 v0.5.17 - 2018-01-08
 ^^^^^^^^^^^^^^^^^^^^
 
