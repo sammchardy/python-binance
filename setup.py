@@ -10,7 +10,9 @@ setup(
     author='Sam McHardy',
     license='MIT',
     author_email='',
-    install_requires=['requests', 'six', 'Twisted', 'pyOpenSSL', 'autobahn', 'service-identity'],
+    install_requires=['requests', 'six', 'Twisted', 'pyOpenSSL', 'autobahn',
+                      'service-identity', 'dateparser', 'certifi', 'urllib3',
+                      'chardet', 'pyasn1'],
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[
           'Intended Audience :: Developers',
