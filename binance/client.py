@@ -135,7 +135,8 @@ class Client(object):
         kwargs['timeout'] = 10
 
         # add our global requests params
-        kwargs.update(self._requests_params)
+        if self._requests_params:
+            kwargs.update(self._requests_params)
 
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
