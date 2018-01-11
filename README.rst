@@ -89,9 +89,7 @@ Quick Start
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceAPIException as e:
-        print(e)
-    except BinanceWithdrawException as e:
+    except (BinanceAPIException, BinanceWithdrawException) as e:
         print(e)
     else:
         print("Success")
