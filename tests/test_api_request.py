@@ -29,6 +29,16 @@ def test_api_exception():
             client.get_server_time()
 
 
+def test_api_exception_invalid_json():
+    """Test API response Exception"""
+
+    with pytest.raises(BinanceAPIException):
+        with requests_mock.mock() as m:
+            not_json_str = "<html><body>Error</body></html>"
+            m.get('https://api.binance.com/api/v1/time', text=not_json_str, status_code=400)
+            client.get_server_time()
+
+
 def test_withdraw_api_exception():
     """Test Withdraw API response Exception"""
 
