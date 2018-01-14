@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.6.2 - 2018-01-12
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- fixed handling Binance errors that aren't JSON objects
+
 v0.6.1 - 2018-01-10
 ^^^^^^^^^^^^^^^^^^^
 
