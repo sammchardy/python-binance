@@ -1,3 +1,7 @@
 .tox
 .cache/v/cache
 docs/_build
+binance/__pycache__/
+build/
+dist/
+python_binance.egg-info/
