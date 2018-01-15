@@ -1,7 +1,7 @@
 Enumerated Types
 ================
 
-Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Order response and Kline intervals these are found on `binance.client.Client`.
+The Binance web API requires specific string constants for Order Types, Order Side, Time in Force, Order response, Kline intervals, and Websocket Depth. These are found in `constants`
 
 .. code:: python
 
@@ -50,20 +50,14 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Ord
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
 
-
-For Websocket Depth these are found on `binance.websockets.BinanceSocketManager`
-
-.. code:: python
-
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-To use in your code reference either binance.client.Client or binance.websockets.BinanceSocketManager
+To use in your code, import `constants`.
 
 .. code:: python
 
-    from binance.client import Client
-    from binance.websockets import BinanceSocketManager
+    from constants import *
 
-    side = Client.SIDE_BUY
+    side = SIDE_BUY
