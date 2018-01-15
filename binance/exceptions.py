@@ -1,5 +1,6 @@
 # coding=utf-8
 
+
 class BinanceAPIException(Exception):
 
     LISTENKEY_NOT_EXIST = '-1125'

@@ -592,13 +592,12 @@ class Client(object):
         timeframe = interval_to_milliseconds(interval)
 
         # convert our datetimes to milliseconds
-        startTime = int(start.timestamp()*1000)
+        startTime = int(start.timestamp() * 1000)
 
         # if an end time was passed convert it
         endTime = None
         if end:
-            endTime = int(end.timestamp()*1000)
-
+            endTime = int(end.timestamp() * 1000)
 
         idx = 0
         # it can be difficult to know when a symbol was listed on Binance so allow start time to be before list date

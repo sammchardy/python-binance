@@ -12,6 +12,7 @@ from twisted.internet.error import ReactorAlreadyRunning
 
 import binance.constants as bc
 
+
 class BinanceClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self, response):
