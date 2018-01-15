@@ -7,7 +7,7 @@ from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
 
-class Client(object):
+class Client:
 
     API_URL = 'https://api.binance.com/api'
     WITHDRAW_API_URL = 'https://api.binance.com/wapi'
