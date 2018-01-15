@@ -8,7 +8,7 @@ from twisted.internet import reactor, ssl
 from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
-import .constants as bc
+import binance.constants as bc
 
 class BinanceClientProtocol(WebSocketClientProtocol):
 

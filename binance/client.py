@@ -5,7 +5,7 @@ import time
 from operator import itemgetter
 from .helpers import interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-import .constants as bc
+import binance.constants as bc
 
 
 class Client:
