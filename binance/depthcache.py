@@ -1,10 +1,12 @@
+# coding=utf-8
+
 from operator import itemgetter
 import time
 
 from .websockets import BinanceSocketManager
 
 
-class DepthCache:
+class DepthCache(object):
 
     def __init__(self, symbol):
         """Intialise the DepthCache

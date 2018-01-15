@@ -1,3 +1,5 @@
+# coding=utf-8
+
 def interval_to_milliseconds(interval):
     """Convert a Binance interval string to milliseconds
 
