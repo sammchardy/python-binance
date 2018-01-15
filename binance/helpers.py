@@ -1,8 +1,3 @@
-import pytz
-
-from datetime import datetime
-
-
 def interval_to_milliseconds(interval):
     """Convert a Binance interval string to milliseconds
 
