@@ -1,3 +1,6 @@
 .tox
 .cache/v/cache
 docs/_build
+build
+python_binance.egg-info
+*/.*.swp
