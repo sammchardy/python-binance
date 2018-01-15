@@ -60,10 +60,6 @@ class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
-    WEBSOCKET_DEPTH_5 = '5'
-    WEBSOCKET_DEPTH_10 = '10'
-    WEBSOCKET_DEPTH_20 = '20'
-
     _user_timeout = 30 * 60  # 30 minutes
 
     def __init__(self, client):
@@ -104,7 +100,7 @@ class BinanceSocketManager(threading.Thread):
         :param callback: callback function to handle messages
         :type callback: function
         :param depth: optional Number of depth entries to return, default None. If passed returns a partial book instead of a diff
-        :type depth: enum
+        :type depth: str
 
         :returns: connection key string if successful, False otherwise
 
@@ -173,7 +169,7 @@ class BinanceSocketManager(threading.Thread):
         :param callback: callback function to handle messages
         :type callback: function
         :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
-        :type interval: enum
+        :type interval: str
 
         :returns: connection key string if successful, False otherwise
 

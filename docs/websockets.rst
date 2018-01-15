@@ -82,7 +82,7 @@ See the `Binance Websocket Streams API documentation <https://github.com/binance
 
 Depth sockets have an optional depth parameter to receive partial book rather than a diff response.
 By default this the diff response is returned.
-Valid depth values are 5, 10 and 20 and `defined as enums <enums.html>`_.
+Valid depth values are 5, 10 and 20 and `defined as string constants <constants.html>`_.
 
 .. code:: python
 
@@ -97,11 +97,11 @@ Valid depth values are 5, 10 and 20 and `defined as enums <enums.html>`_.
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Kline sockets have an optional interval parameter. By default this is set to 1 minute.
-Valid interval values are `defined as enums <enums.html>`_.
+Valid interval values are `defined as string constants <constants.html>`_.
 
 .. code:: python
 
-    from binance.enums import *
+    from binance.constants import *
     conn_key = bm.start_kline_socket('BNBBTC', process_message, interval=KLINE_INTERVAL_30MINUTE)
 
 

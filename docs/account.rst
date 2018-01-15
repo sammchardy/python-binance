@@ -37,7 +37,7 @@ It can be helpful to format the output using the following snippet
 Use the `create_order` function to have full control over creating an order
 .. code:: python
 
-    from binance.enums import *
+    from binance.constants import *
     order = client.create_order(
         symbol='BNBBTC',
         side=SIDE_BUY,
@@ -84,7 +84,7 @@ Creates and validates a new order but does not send it into the exchange.
 
 .. code:: python
 
-    from binance.enums import *
+    from binance.constants import *
     order = client.create_test_order(
         symbol='BNBBTC',
         side=SIDE_BUY,
