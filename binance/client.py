@@ -5,7 +5,7 @@ import time
 from operator import itemgetter
 from .helpers import interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-from .constants import *
+import .constants as bc
 
 
 class Client:
@@ -897,7 +897,7 @@ class Client:
         """
         return self._post('order', True, data=params)
 
-    def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -929,12 +929,12 @@ class Client:
 
         """
         params.update({
-            'type': self.ORDER_TYPE_LIMIT,
+            'type': bc.ORDER_TYPE_LIMIT,
             'timeInForce': timeInForce
         })
         return self.create_order(**params)
 
-    def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_buy(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -966,11 +966,11 @@ class Client:
 
         """
         params.update({
-            'side': self.SIDE_BUY,
+            'side': bc.SIDE_BUY,
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_sell(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
@@ -1000,7 +1000,7 @@ class Client:
 
         """
         params.update({
-            'side': self.SIDE_SELL
+            'side': bc.SIDE_SELL
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
@@ -1028,7 +1028,7 @@ class Client:
 
         """
         params.update({
-            'type': self.ORDER_TYPE_MARKET
+            'type': bc.ORDER_TYPE_MARKET
         })
         return self.create_order(**params)
 
@@ -1054,7 +1054,7 @@ class Client:
 
         """
         params.update({
-            'side': self.SIDE_BUY
+            'side': bc.SIDE_BUY
         })
         return self.order_market(**params)
 
@@ -1080,7 +1080,7 @@ class Client:
 
         """
         params.update({
-            'side': self.SIDE_SELL
+            'side': bc.SIDE_SELL
         })
         return self.order_market(**params)
 

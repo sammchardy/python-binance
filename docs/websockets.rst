@@ -90,7 +90,9 @@ Valid depth values are 5, 10 and 20 and `defined as string constants <constants.
     diff_key = bm.start_depth_socket('BNBBTC', process_message)
 
     # partial book response
-    partial_key = bm.start_depth_socket('BNBBTC', process_message, depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
+    import binance.constants as bc
+    partial_key = bm.start_depth_socket('BNBBTC', process_message,
+            depth=bc.WEBSOCKET_DEPTH_5)
 
 
 `Kline Socket <binance.html#binance.websockets.BinanceSocketManager.start_kline_socket>`_
@@ -101,8 +103,9 @@ Valid interval values are `defined as string constants <constants.html>`_.
 
 .. code:: python
 
-    from binance.constants import *
-    conn_key = bm.start_kline_socket('BNBBTC', process_message, interval=KLINE_INTERVAL_30MINUTE)
+    import binance.constants as bc
+    conn_key = bm.start_kline_socket('BNBBTC', process_message,
+            interval=bc.KLINE_INTERVAL_30MINUTE)
 
 
 `Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_aggtrade_socket>`_

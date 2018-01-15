@@ -36,7 +36,8 @@ Market Data Endpoints
 
 .. code:: python
 
-    candles = client.get_klines(symbol='BNBBTC', interval=KLINE_INTERVAL_30MINUTE)
+    candles = client.get_klines(symbol='BNBBTC',
+            interval=bc.KLINE_INTERVAL_30MINUTE)
 
 `Get Historical Kline/Candlesticks <binance.html#binance.client.Client.get_historical_klines>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -48,15 +49,15 @@ Fetch klines for any date range and interval
     # fetch 1 minute klines from one day ago until now
     from datetime import datetime, timedelta
     from time import time
-    klines = client.get_historical_klines("BNBBTC", KLINE_INTERVAL_1MINUTE,
+    klines = client.get_historical_klines("BNBBTC", bc.KLINE_INTERVAL_1MINUTE,
             datetime.utcnow() - timedelta(1))
 
     # fetch 30 minute klines for the last month of 2017
-    klines = client.get_historical_klines("ETHBTC", KLINE_INTERVAL_30MINUTE,
+    klines = client.get_historical_klines("ETHBTC", bc.KLINE_INTERVAL_30MINUTE,
             datetime(2017, 12, 1), datetime(2018, 1, 1))
 
     # fetch weekly klines since it listed
-    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK,
+    klines = client.get_historical_klines("NEOBTC", bc.KLINE_INTERVAL_1WEEK,
             datetime(2017, 1, 1))
 
 `Get 24hr Ticker <binance.html#binance.client.Client.get_ticker>`_

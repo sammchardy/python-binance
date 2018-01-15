@@ -37,12 +37,12 @@ It can be helpful to format the output using the following snippet
 Use the `create_order` function to have full control over creating an order
 .. code:: python
 
-    from binance.constants import *
+    import binance.constants as bc
     order = client.create_order(
         symbol='BNBBTC',
-        side=SIDE_BUY,
-        type=ORDER_TYPE_LIMIT,
-        timeInForce=TIME_IN_FORCE_GTC,
+        side=bc.SIDE_BUY,
+        type=bc.ORDER_TYPE_LIMIT,
+        timeInForce=bc.TIME_IN_FORCE_GTC,
         quantity=100,
         price='0.00001')
 
@@ -84,12 +84,12 @@ Creates and validates a new order but does not send it into the exchange.
 
 .. code:: python
 
-    from binance.constants import *
+    import binance.constants as bc
     order = client.create_test_order(
         symbol='BNBBTC',
-        side=SIDE_BUY,
-        type=ORDER_TYPE_LIMIT,
-        timeInForce=TIME_IN_FORCE_GTC,
+        side=bc.SIDE_BUY,
+        type=bc.ORDER_TYPE_LIMIT,
+        timeInForce=bc.TIME_IN_FORCE_GTC,
         quantity=100,
         price='0.00001')
 
