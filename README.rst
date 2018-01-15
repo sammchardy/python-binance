@@ -66,6 +66,7 @@ Quick Start
 .. code:: python
 
     from binance.client import Client
+    from constants import *
     client = Client(api_key, api_secret)
 
     # get market depth
@@ -74,8 +75,8 @@ Quick Start
     # place a test market buy order, to place an actual order use the create_order function
     order = client.create_test_order(
         symbol='BNBBTC',
-        side=Client.SIDE_BUY,
-        type=Client.ORDER_TYPE_MARKET,
+        side=SIDE_BUY,
+        type=ORDER_TYPE_MARKET,
         quantity=100)
 
     # get all symbol prices
@@ -118,14 +119,19 @@ Quick Start
 
     # get historical kline data from any date range
 
-    # fetch 1 minute klines for the last day up until now
-    klines = client.get_historical_klines("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+    # fetch 1 minute klines from one day ago until now
+    from datetime import datetime, timedelta
+    from time import time
+    klines = client.get_historical_klines("BNBBTC", KLINE_INTERVAL_1MINUTE,
+            datetime.utcnow() - timedelta(1))
 
     # fetch 30 minute klines for the last month of 2017
-    klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+    klines = client.get_historical_klines("ETHBTC", KLINE_INTERVAL_30MINUTE,
+            datetime(2017, 12, 1), datetime(2018, 1, 1))
 
     # fetch weekly klines since it listed
-    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK,
+            datetime(2017, 1, 1))
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 

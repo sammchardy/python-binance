@@ -139,7 +139,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 symbol = "ETHBTC"
 start = "1 Dec, 2017"
 end = "1 Jan, 2018"
-interval = Client.KLINE_INTERVAL_30MINUTE
+interval = KLINE_INTERVAL_30MINUTE
 
 klines = get_historical_klines(symbol, interval, start, end)
 
