@@ -149,4 +149,6 @@ If you use `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_ check out my `python-k
 
 If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
 
+If you use `BigONE <https://big.one>`_ check out my `python-bigone <https://github.com/sammchardy/python-bigone>`_ library.
+
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance?pixel&useReferer
