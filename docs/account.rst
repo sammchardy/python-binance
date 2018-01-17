@@ -35,6 +35,7 @@ It can be helpful to format the output using the following snippet
 **Place an order**
 
 Use the `create_order` function to have full control over creating an order
+
 .. code:: python
 
     from binance.enums import *
