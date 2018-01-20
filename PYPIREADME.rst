@@ -109,8 +109,8 @@ Quick Start
         print(msg)
         # do something
 
-    from binance.websockets import BinanceSocketManager
-    bm = BinanceSocketManager(client)
+    from binance.websockets import SocketManager
+    bm = SocketManager(client)
     bm.start_aggtrade_socket('BNBBTC', process_message)
     bm.start()
 

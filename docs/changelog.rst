@@ -179,7 +179,7 @@ v0.5.4 - 2017-12-14
 
 **Changed**
 
-- Enums now also accessible from binance.client.Client and binance.websockets.BinanceSocketManager
+- Enums now also accessible from binance.client.Client and binance.websockets.SocketManager
 
 v0.5.3 - 2017-12-09
 ^^^^^^^^^^^^^^^^^^^
@@ -194,7 +194,7 @@ v0.5.2 - 2017-12-08
 
 **Added**
 
-- start_multiplex_socket function to BinanceSocketManager to create multiplexed streams
+- start_multiplex_socket function to SocketManager to create multiplexed streams
 
 v0.5.1 - 2017-12-06
 ^^^^^^^^^^^^^^^^^^^
@@ -205,7 +205,7 @@ v0.5.1 - 2017-12-06
 
 **Fixes**
 
-- Fixed modifying array error message when closing the BinanceSocketManager
+- Fixed modifying array error message when closing the SocketManager
 
 v0.5.0 - 2017-12-05
 ^^^^^^^^^^^^^^^^^^^

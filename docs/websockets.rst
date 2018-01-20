@@ -1,7 +1,7 @@
 Websockets
 ==========
 
-Sockets are handled through a Socket Manager `BinanceSocketManager <binance.html#binance.websockets.BinanceSocketManager>`_.
+Sockets are handled through a Socket Manager `SocketManager <binance.html#binance.websockets.SocketManager>`_.
 
 Multiple socket connections can be made through the manager.
 
@@ -21,8 +21,8 @@ Create the manager like so, passing the API client.
 
 .. code:: python
 
-    from binance.websockets import BinanceSocketManager
-    bm = BinanceSocketManager(client)
+    from binance.websockets import SocketManager
+    bm = SocketManager(client)
     # start any sockets here, i.e a trade socket
     conn_key = bm.start_trade_socket('BNBBTC', process_message)
     # then start the socket manager
@@ -58,7 +58,7 @@ If the websocket is disconnected and is unable to reconnect a message is sent to
             # process message normally
 
 
-`Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.start_multiplex_socket>`_
+`Multiplex Socket <binance.html#binance.websockets.SocketManager.start_multiplex_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Create a socket combining multiple streams.
@@ -77,7 +77,7 @@ See the `Binance Websocket Streams API documentation <https://github.com/binance
     # pass a list of stream names
     conn_key = bm.start_multiplex_socket(['bnbbtc@aggTrade', 'neobtc@ticker'], process_m_message)
 
-`Depth Socket <binance.html#binance.websockets.BinanceSocketManager.start_depth_socket>`_
+`Depth Socket <binance.html#binance.websockets.SocketManager.start_depth_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Depth sockets have an optional depth parameter to receive partial book rather than a diff response.
@@ -95,7 +95,7 @@ Valid depth values are 5, 10 and 20 and `defined as string constants <constants.
             depth=bc.WEBSOCKET_DEPTH_5)
 
 
-`Kline Socket <binance.html#binance.websockets.BinanceSocketManager.start_kline_socket>`_
+`Kline Socket <binance.html#binance.websockets.SocketManager.start_kline_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Kline sockets have an optional interval parameter. By default this is set to 1 minute.
@@ -108,7 +108,7 @@ Valid interval values are `defined as string constants <constants.html>`_.
             interval=bc.KLINE_INTERVAL_30MINUTE)
 
 
-`Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_aggtrade_socket>`_
+`Aggregated Trade Socket <binance.html#binance.websockets.SocketManager.start_aggtrade_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
@@ -116,28 +116,28 @@ Valid interval values are `defined as string constants <constants.html>`_.
     conn_key = bm.start_aggtrade_socket('BNBBTC', process_message)
 
 
-`Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
+`Trade Socket <binance.html#binance.websockets.SocketManager.start_trade_socket>`_
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
     conn_key = bm.start_trade_socket('BNBBTC', process_message)
 
-`Symbol Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_symbol_ticker_socket>`_
+`Symbol Ticker Socket <binance.html#binance.websockets.SocketManager.start_symbol_ticker_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
     conn_key = bm.start_symbol_ticker_socket('BNBBTC', process_message)
 
-`Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_ticker_socket>`_
+`Ticker Socket <binance.html#binance.websockets.SocketManager.start_ticker_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
     conn_key = bm.start_ticker_socket(process_message)
 
-`User Socket <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
+`User Socket <binance.html#binance.websockets.SocketManager.start_user_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 This watches for 3 different user events
@@ -153,7 +153,7 @@ The Manager handles keeping the socket alive.
     bm.start_user_socket(process_message)
 
 
-`Close a Socket <binance.html#binance.websockets.BinanceSocketManager.stop_socket>`_
+`Close a Socket <binance.html#binance.websockets.SocketManager.stop_socket>`_
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 To close an individual socket call the `stop_socket` function.
