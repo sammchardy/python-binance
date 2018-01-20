@@ -81,15 +81,15 @@ Quick Start
 
     # withdraw 100 ETH
     # check docs for assumptions around withdrawals
-    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
+    from binance.exceptions import APIException, WithdrawException
     try:
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceAPIException as e:
+    except APIException as e:
         print(e)
-    except BinanceWithdrawException as e:
+    except WithdrawException as e:
         print(e)
     else:
         print("Success")

@@ -62,7 +62,7 @@ v0.5.16 - 2018-01-06
 
 **Fixed**
 
-- reference to BinanceAPIException in documentation
+- reference to APIException in documentation
 
 v0.5.15 - 2018-01-03
 ^^^^^^^^^^^^^^^^^^^^
