@@ -4,3 +4,4 @@ docs/_build
 build
 python_binance.egg-info
 *.*.swp
+*__pycache__*
