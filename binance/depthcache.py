@@ -3,7 +3,7 @@
 from operator import itemgetter
 import time
 
-from .websockets import BinanceSocketManager
+from .websockets import SocketManager
 
 
 class DepthCache(object):
@@ -180,7 +180,7 @@ class DepthCacheManager(object):
 
         :return:
         """
-        self._bm = BinanceSocketManager(self._client)
+        self._bm = SocketManager(self._client)
 
         self._bm.start_depth_socket(self._symbol, self._depth_event)
 
