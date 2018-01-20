@@ -3,17 +3,17 @@
 import json
 import threading
 
-from autobahn.twisted.websocket import WebSocketClientFactory, \
-    WebSocketClientProtocol, \
-    connectWS
+from autobahn.twisted.websocket \
+        import WebSocketClientFactory, WebSocketClientProtocol, connectWS
 from twisted.internet import reactor, ssl
-from twisted.internet.protocol import ReconnectingClientFactory
+from twisted.internet.protocol \
+        import ReconnectingClientFactory as TReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
 import binance.constants as bc
 
 
-class BinanceClientProtocol(WebSocketClientProtocol):
+class ClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self, response):
         # reset the delay after reconnecting
@@ -29,7 +29,7 @@ class BinanceClientProtocol(WebSocketClientProtocol):
                 self.factory.callback(payload_obj)
 
 
-class BinanceReconnectingClientFactory(ReconnectingClientFactory):
+class ReconnectingClientFactory(TReconnectingClientFactory):
 
     # set initial delay to a short time
     initialDelay = 0.1
@@ -39,9 +39,9 @@ class BinanceReconnectingClientFactory(ReconnectingClientFactory):
     maxRetries = 5
 
 
-class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFactory):
+class ClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
 
-    protocol = BinanceClientProtocol
+    protocol = ClientProtocol
     _reconnect_error_payload = {
         'e': 'error',
         'm': 'Max reconnect retries reached'
@@ -58,14 +58,14 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
             self.callback(self._reconnect_error_payload)
 
 
-class BinanceSocketManager(threading.Thread):
+class SocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
     _user_timeout = 30 * 60  # 30 minutes
 
     def __init__(self, client):
-        """Initialise the BinanceSocketManager
+        """Initialise the SocketManager
 
         :param client: Binance API client
         :type client: binance.Client
@@ -83,8 +83,8 @@ class BinanceSocketManager(threading.Thread):
             return False
 
         factory_url = self.STREAM_URL + prefix + path
-        factory = BinanceClientFactory(factory_url)
-        factory.protocol = BinanceClientProtocol
+        factory = ClientFactory(factory_url)
+        factory.protocol = ClientProtocol
         factory.callback = callback
         factory.reconnect = True
         context_factory = ssl.ClientContextFactory()
