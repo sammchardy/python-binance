@@ -3,11 +3,11 @@
 import json
 import threading
 
-from autobahn.twisted.websocket \
-        import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+from autobahn.twisted.websocket import WebSocketClientFactory, \
+        WebSocketClientProtocol, connectWS
 from twisted.internet import reactor, ssl
-from twisted.internet.protocol \
-        import ReconnectingClientFactory as TReconnectingClientFactory
+from twisted.internet.protocol import ReconnectingClientFactory \
+        as TReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
 import binance.constants as bc
