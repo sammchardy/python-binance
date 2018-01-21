@@ -83,3 +83,13 @@ class WithdrawException(Exception):
 
     def __str__(self):
         return 'WithdrawException: %s' % self.message
+
+
+class NoAPIKeyException(Exception):
+    def __str__(self):
+        return 'NoAPIKeyException: This endpoint requires an API key.'
+
+
+class NoAPISecretException(Exception):
+    def __str__(self):
+        return 'NoAPISecretException: This endpoint requires an API secret.'

@@ -6,7 +6,8 @@ import requests
 import time
 from operator import itemgetter
 from .helpers import interval_to_milliseconds
-from .exceptions import APIException, RequestException, WithdrawException
+from .exceptions import APIException, RequestException, WithdrawException, \
+    NoAPIKeyException, NoAPISecretException
 import binance.constants as bc
 
 
@@ -19,12 +20,12 @@ class Client(object):
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
 
-    def __init__(self, api_key, api_secret, requests_params=None):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None):
         """Binance API Client constructor
 
-        :param api_key: Api Key
+        :param api_key: optional - API Key
         :type api_key: str.
-        :param api_secret: Api Secret
+        :param api_secret: optional - API Secret
         :type api_secret: str.
         :param requests_params: optional - Dictionary of requests params to use for all calls
         :type requests_params: dict.
@@ -43,8 +44,9 @@ class Client(object):
 
         session = requests.session()
         session.headers.update({'Accept': 'application/json',
-                                'User-Agent': 'binance/python',
-                                'X-MBX-APIKEY': self.API_KEY})
+                                'User-Agent': 'binance/python',})
+        if self.API_KEY:
+            session.headers.update({'X-MBX-APIKEY': self.API_KEY})
         return session
 
     def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
@@ -57,7 +59,13 @@ class Client(object):
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
 
+    def _assert_api_key(self):
+        if not self.API_KEY:
+            raise NoAPIKeyException()
+
     def _generate_signature(self, data):
+        if not self.API_SECRET:
+            raise NoAPISecretException()
 
         ordered_data = self._order_params(data)
         query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
@@ -477,9 +485,10 @@ class Client(object):
                 }
             ]
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPIKeyException
 
         """
+        self._assert_api_key()
         return self._get('historicalTrades', data=params)
 
     def get_aggregate_trades(self, **params):
@@ -893,7 +902,7 @@ class Client(object):
                 ]
             }
 
-        :raises: ResponseException, APIException, OrderException, OrderMinAmountException, OrderMinPriceException, OrderMinTotalException, OrderUnknownSymbolException, OrderInactiveSymbolException
+        :raises: ResponseException, APIException, OrderException, OrderMinAmountException, OrderMinPriceException, OrderMinTotalException, OrderUnknownSymbolException, OrderInactiveSymbolException, NoAPISecretException
 
         """
         return self._post('order', True, data=params)
@@ -1117,7 +1126,7 @@ class Client(object):
 
             {}
 
-        :raises: ResponseException, APIException, OrderException, OrderMinAmountException, OrderMinPriceException, OrderMinTotalException, OrderUnknownSymbolException, OrderInactiveSymbolException
+        :raises: ResponseException, APIException, OrderException, OrderMinAmountException, OrderMinPriceException, OrderMinTotalException, OrderUnknownSymbolException, OrderInactiveSymbolException, NoAPISecretException
 
 
         """
@@ -1157,7 +1166,7 @@ class Client(object):
                 "time": 1499827319559
             }
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._get('order', True, data=params)
@@ -1198,7 +1207,7 @@ class Client(object):
                 }
             ]
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._get('allOrders', True, data=params)
@@ -1230,7 +1239,7 @@ class Client(object):
                 "clientOrderId": "cancelMyOrder1"
             }
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._delete('order', True, data=params)
@@ -1267,7 +1276,7 @@ class Client(object):
                 }
             ]
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._get('openOrders', True, data=params)
@@ -1307,7 +1316,7 @@ class Client(object):
                 ]
             }
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._get('account', True, data=params)
@@ -1375,7 +1384,7 @@ class Client(object):
                 }
             ]
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPISecretException
 
         """
         return self._get('myTrades', True, data=params)
@@ -1582,9 +1591,10 @@ class Client(object):
                 "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
             }
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPIKeyException
 
         """
+        self._assert_api_key()
         res = self._post('userDataStream', False, data={})
         return res['listenKey']
 
@@ -1602,9 +1612,10 @@ class Client(object):
 
             {}
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPIKeyException
 
         """
+        self._assert_api_key()
         params = {
             'listenKey': listenKey
         }
@@ -1624,9 +1635,10 @@ class Client(object):
 
             {}
 
-        :raises: ResponseException, APIException
+        :raises: ResponseException, APIException, NoAPIKeyException
 
         """
+        self._assert_api_key()
         params = {
             'listenKey': listenKey
         }
