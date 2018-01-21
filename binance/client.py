@@ -44,7 +44,7 @@ class Client(object):
 
         session = requests.session()
         session.headers.update({'Accept': 'application/json',
-                                'User-Agent': 'binance/python',})
+                                'User-Agent': 'binance/python'})
         if self.API_KEY:
             session.headers.update({'X-MBX-APIKEY': self.API_KEY})
         return session
