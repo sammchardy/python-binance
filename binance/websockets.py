@@ -403,7 +403,7 @@ class SocketManager(threading.Thread):
                 if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
                     self.stop_socket(conn_key)
                     break
-        self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_listen_key = self._client.stream_listen_key()
         self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
@@ -418,7 +418,7 @@ class SocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        listen_key = self._client.stream_get_listen_key()
+        listen_key = self._client.stream_listen_key()
         # check if they key changed and
         if listen_key != self._user_listen_key:
             self.start_user_socket(self._user_callback)
