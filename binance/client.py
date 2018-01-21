@@ -907,7 +907,7 @@ class Client(object):
         """
         return self._post('order', True, data=params)
 
-    def order_limit(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
+    def create_limit_order(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -920,7 +920,7 @@ class Client(object):
         :type quantity: decimal
         :param price: required
         :type price: str
-        :param timeInForce: default Good till cancelled
+        :param timeInForce: default Good 'til cancelled
         :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
@@ -944,7 +944,7 @@ class Client(object):
         })
         return self.create_order(**params)
 
-    def order_limit_buy(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
+    def create_limit_buy_order(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -978,9 +978,9 @@ class Client(object):
         params.update({
             'side': bc.SIDE_BUY,
         })
-        return self.order_limit(timeInForce=timeInForce, **params)
+        return self.create_limit_order(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
+    def create_limit_sell_order(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
@@ -1012,7 +1012,7 @@ class Client(object):
         params.update({
             'side': bc.SIDE_SELL
         })
-        return self.order_limit(timeInForce=timeInForce, **params)
+        return self.create_limit_order(timeInForce=timeInForce, **params)
 
     def order_market(self, **params):
         """Send in a new market order
