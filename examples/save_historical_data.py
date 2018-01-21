@@ -4,7 +4,7 @@ import pytz
 import json
 
 from datetime import datetime
-from binance.client import Client
+from binance import Client
 import binance.constants as bc
 
 

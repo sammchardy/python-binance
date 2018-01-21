@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from binance.client import Client
+from binance import Client
 from binance.exceptions import APIException, RequestException, WithdrawException
 import pytest
 import requests_mock

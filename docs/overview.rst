@@ -33,7 +33,7 @@ Pass your API Key and Secret
 
 .. code:: python
 
-    from binance.client import Client
+    from binance import Client
     client = Client(api_key, api_secret)
 
 Making API Calls

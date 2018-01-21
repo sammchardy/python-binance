@@ -5,3 +5,5 @@
 .. moduleauthor:: Sam McHardy
 
 """
+
+from .client import Client
