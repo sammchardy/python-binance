@@ -1014,7 +1014,7 @@ class Client(object):
         })
         return self.create_limit_order(timeInForce=timeInForce, **params)
 
-    def order_market(self, **params):
+    def create_market_order(self, **params):
         """Send in a new market order
 
         :param symbol: required
@@ -1042,7 +1042,7 @@ class Client(object):
         })
         return self.create_order(**params)
 
-    def order_market_buy(self, **params):
+    def create_market_buy(self, **params):
         """Send in a new market buy order
 
         :param symbol: required
@@ -1066,9 +1066,9 @@ class Client(object):
         params.update({
             'side': bc.SIDE_BUY
         })
-        return self.order_market(**params)
+        return self.create_market_order(**params)
 
-    def order_market_sell(self, **params):
+    def create_market_sell(self, **params):
         """Send in a new market sell order
 
         :param symbol: required
@@ -1092,7 +1092,7 @@ class Client(object):
         params.update({
             'side': bc.SIDE_SELL
         })
-        return self.order_market(**params)
+        return self.create_market_order(**params)
 
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.

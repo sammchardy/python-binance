@@ -70,11 +70,11 @@ Use the helper functions to easily place a market buy or sell order
 
 .. code:: python
 
-    order = client.order_market_buy(
+    order = client.create_market_buy(
         symbol='BNBBTC',
         quantity=100)
 
-    order = client.order_market_sell(
+    order = client.create_market_sell(
         symbol='BNBBTC',
         quantity=100)
 
