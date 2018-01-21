@@ -50,11 +50,11 @@ WEBSOCKET_DEPTH_10 = '10'
 WEBSOCKET_DEPTH_20 = '20'
 
 # For munching upon the data returned by Client.aggregate_trades().
-AGG_ID             = 'a'
-AGG_PRICE          = 'p'
-AGG_QUANTITY       = 'q'
-AGG_FIRST_TRADE_ID = 'f'
-AGG_LAST_TRADE_ID  = 'l'
-AGG_TIME           = 'T'
-AGG_BUYER_MAKES    = 'm'
-AGG_BEST_MATCH     = 'M'
+AGG_ID             = 'a'  # noqa: E221
+AGG_PRICE          = 'p'  # noqa: E221
+AGG_QUANTITY       = 'q'  # noqa: E221
+AGG_FIRST_TRADE_ID = 'f'  # noqa: E221
+AGG_LAST_TRADE_ID  = 'l'  # noqa: E221
+AGG_TIME           = 'T'  # noqa: E221
+AGG_BUYER_MAKES    = 'm'  # noqa: E221
+AGG_BEST_MATCH     = 'M'  # noqa: E221
