@@ -149,7 +149,7 @@ class Client(object):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        if not str(response.status_code).startswith('2'):
+        if response.status_code // 100 != 2:
             raise APIException(response)
         try:
             return response.json()
