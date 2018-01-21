@@ -170,10 +170,10 @@ class Client(object):
 
     # Exchange Endpoints
 
-    def get_products(self):
+    def products(self):
         """Return list of products currently listed on Binance
 
-        Use get_exchange_info() call instead
+        Use exchange_info() call instead
 
         :returns: list - List of product dictionaries
 
@@ -184,7 +184,7 @@ class Client(object):
         products = self._request_website('get', 'exchange/public/product')
         return products
 
-    def get_exchange_info(self):
+    def exchange_info(self):
         """Return rate limits and list of symbols
 
         :returns: list - List of product dictionaries
@@ -248,7 +248,7 @@ class Client(object):
 
         return self._get('exchangeInfo')
 
-    def get_symbol_info(self, symbol):
+    def symbol_info(self, symbol):
         """Return information about a symbol
 
         :param symbol: required e.g BNBBTC
@@ -315,7 +315,7 @@ class Client(object):
         """
         return self._get('ping')
 
-    def get_server_time(self):
+    def server_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#check-server-time
@@ -335,7 +335,7 @@ class Client(object):
 
     # Market Data Endpoints
 
-    def get_all_tickers(self):
+    def all_tickers(self):
         """Latest price for all symbols.
 
         https://www.binance.com/restapipub.html#symbols-price-ticker
@@ -360,7 +360,7 @@ class Client(object):
         """
         return self._get('ticker/allPrices')
 
-    def get_orderbook_tickers(self):
+    def orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
 
         https://www.binance.com/restapipub.html#symbols-order-book-ticker
@@ -391,7 +391,7 @@ class Client(object):
         """
         return self._get('ticker/allBookTickers')
 
-    def get_order_book(self, **params):
+    def order_book(self, **params):
         """Get the Order Book for the market
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#order-book
@@ -428,7 +428,7 @@ class Client(object):
         """
         return self._get('depth', data=params)
 
-    def get_recent_trades(self, **params):
+    def recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
@@ -458,7 +458,7 @@ class Client(object):
         """
         return self._get('trades', data=params)
 
-    def get_historical_trades(self, **params):
+    def historical_trades(self, **params):
         """Get older trades.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
@@ -491,7 +491,7 @@ class Client(object):
         self._assert_api_key()
         return self._get('historicalTrades', data=params)
 
-    def get_aggregate_trades(self, **params):
+    def aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
@@ -530,7 +530,7 @@ class Client(object):
         """
         return self._get('aggTrades', data=params)
 
-    def get_klines(self, **params):
+    def klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
@@ -572,7 +572,7 @@ class Client(object):
         """
         return self._get('klines', data=params)
 
-    def get_historical_klines(self, symbol, interval, start, end=None):
+    def historical_klines(self, symbol, interval, start, end=None):
         """Get Historical Klines from Binance
 
         See dateparse docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -613,7 +613,7 @@ class Client(object):
         symbol_existed = False
         while True:
             # fetch the klines from startTime up to max 500 entries or the endTime if set
-            temp_data = self.get_klines(
+            temp_data = self.klines(
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -647,7 +647,7 @@ class Client(object):
 
         return output_data
 
-    def get_ticker(self, **params):
+    def ticker(self, **params):
         """24 hour price change statistics.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
@@ -708,7 +708,7 @@ class Client(object):
         """
         return self._get('ticker/24hr', data=params)
 
-    def get_symbol_ticker(self, **params):
+    def symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
@@ -745,7 +745,7 @@ class Client(object):
         """
         return self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
 
-    def get_orderbook_ticker(self, **params):
+    def orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
@@ -1132,7 +1132,7 @@ class Client(object):
         """
         return self._post('order/test', True, data=params)
 
-    def get_order(self, **params):
+    def order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#query-order-user_data
@@ -1171,7 +1171,7 @@ class Client(object):
         """
         return self._get('order', True, data=params)
 
-    def get_all_orders(self, **params):
+    def all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#all-orders-user_data
@@ -1244,7 +1244,7 @@ class Client(object):
         """
         return self._delete('order', True, data=params)
 
-    def get_open_orders(self, **params):
+    def open_orders(self, **params):
         """Get all open orders on a symbol.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
@@ -1282,7 +1282,7 @@ class Client(object):
         return self._get('openOrders', True, data=params)
 
     # User Stream Endpoints
-    def get_account(self, **params):
+    def account(self, **params):
         """Get current account information.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
@@ -1321,7 +1321,7 @@ class Client(object):
         """
         return self._get('account', True, data=params)
 
-    def get_asset_balance(self, asset, **params):
+    def asset_balance(self, asset, **params):
         """Get current asset balance.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
@@ -1344,7 +1344,7 @@ class Client(object):
         :raises: ResponseException, APIException
 
         """
-        res = self.get_account(**params)
+        res = self.account(**params)
         # find asset balance in list of balances
         if "balances" in res:
             for bal in res['balances']:
@@ -1352,7 +1352,7 @@ class Client(object):
                     return bal
         return None
 
-    def get_my_trades(self, **params):
+    def my_trades(self, **params):
         """Get trades for a specific symbol.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-trade-list-user_data
@@ -1389,7 +1389,7 @@ class Client(object):
         """
         return self._get('myTrades', True, data=params)
 
-    def get_account_status(self, **params):
+    def account_status(self, **params):
         """Get account status detail.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#account-status-user_data
@@ -1463,7 +1463,7 @@ class Client(object):
             raise WithdrawException(res['msg'])
         return res
 
-    def get_deposit_history(self, **params):
+    def deposit_history(self, **params):
         """Fetch deposit history.
 
         https://www.binance.com/restapipub.html
@@ -1500,7 +1500,7 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
 
-    def get_withdraw_history(self, **params):
+    def withdraw_history(self, **params):
         """Fetch withdraw history.
 
         https://www.binance.com/restapipub.html
@@ -1546,7 +1546,7 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
-    def get_deposit_address(self, **params):
+    def deposit_address(self, **params):
         """Fetch a deposit address for a symbol
 
         https://www.binance.com/restapipub.html
@@ -1574,7 +1574,7 @@ class Client(object):
 
     # User Stream Endpoints
 
-    def stream_get_listen_key(self):
+    def stream_listen_key(self):
         """Start a new user data stream and return the listen key
         If a stream already exists it should return the same key.
         If the stream becomes invalid a new key is returned.

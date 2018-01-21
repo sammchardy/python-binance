@@ -54,7 +54,7 @@ API Endpoints are rate limited by Binance at 20 requests per second, ask them if
 API Rate Limit
 --------------
 
-Check the `get_exchange_info() <binance.html#binance.client.Client.get_exchange_info>`_ call for up to date rate limits.
+Check the `exchange_info() <binance.html#binance.client.Client.exchange_info>`_ call for up to date rate limits.
 
 At the current time Binance rate limits are:
 
@@ -82,9 +82,9 @@ You may also pass custom requests parameters through any API call to override de
 
 .. code:: python
 
-    # this would result in verify: False and timeout: 5 for the get_all_orders call
+    # this would result in verify: False and timeout: 5 for the all_orders call
     client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
-    client.get_all_orders(symbol='BNBBTC', requests_params={'timeout': 5})
+    client.all_orders(symbol='BNBBTC', requests_params={'timeout': 5})
 
 Check out the `requests documentation <http://docs.python-requests.org/en/master/>`_ for all options.
 
@@ -103,7 +103,7 @@ You can use the Requests Settings method above
     client = Client("api-key", "api-secret", {'proxies': proxies})
 
     # or on an individual call
-    client.get_all_orders(symbol='BNBBTC', requests_params={'proxies': proxies})
+    client.all_orders(symbol='BNBBTC', requests_params={'proxies': proxies})
 
 Or set an environment variable for your proxy if required to work across all requests.
 

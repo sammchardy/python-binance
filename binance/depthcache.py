@@ -41,7 +41,7 @@ class DepthCache(object):
         if ask[1] == "0.00000000":
             del self._asks[ask[0]]
 
-    def get_bids(self):
+    def bids(self):
         """Get the current bids
 
         :return: list of bids with price and quantity as floats
@@ -74,7 +74,7 @@ class DepthCache(object):
         """
         return DepthCache.sort_depth(self._bids, reverse=True)
 
-    def get_asks(self):
+    def asks(self):
         """Get the current asks
 
         :return: list of asks with price and quantity as floats
@@ -153,7 +153,7 @@ class DepthCacheManager(object):
         self._last_update_id = None
         self._depth_message_buffer = []
 
-        res = self._client.get_order_book(symbol=self._symbol, limit=500)
+        res = self._client.order_book(symbol=self._symbol, limit=500)
 
         # process bid and asks from the order book
         for bid in res['bids']:
@@ -244,7 +244,7 @@ class DepthCacheManager(object):
         if self._refresh_interval and int(time.time()) > self._refresh_time:
             self._init_cache()
 
-    def get_depth_cache(self):
+    def depth_cache(self):
         """Get the current depth cache
 
         :return: DepthCache object

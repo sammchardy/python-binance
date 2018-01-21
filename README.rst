@@ -70,7 +70,7 @@ Quick Start
     client = Client(api_key, api_secret)
 
     # get market depth
-    depth = client.get_order_book(symbol='BNBBTC')
+    depth = client.order_book(symbol='BNBBTC')
 
     # place a test market buy order, to place an actual order use the create_order function
     order = client.create_test_order(
@@ -80,7 +80,7 @@ Quick Start
         quantity=100)
 
     # get all symbol prices
-    prices = client.get_all_tickers()
+    prices = client.all_tickers()
 
     # withdraw 100 ETH
     # check docs for assumptions around withdrawals
@@ -98,13 +98,13 @@ Quick Start
         print("Success")
 
     # fetch list of withdrawals
-    withdraws = client.get_withdraw_history()
+    withdraws = client.withdraw_history()
 
     # fetch list of ETH withdrawals
-    eth_withdraws = client.get_withdraw_history(asset='ETH')
+    eth_withdraws = client.withdraw_history(asset='ETH')
 
     # get a deposit address for BTC
-    address = client.get_deposit_address(asset='BTC')
+    address = client.deposit_address(asset='BTC')
 
     # start aggregated trade websocket for BNBBTC
     def process_message(msg):
@@ -122,15 +122,15 @@ Quick Start
     # fetch 1 minute klines from one day ago until now
     from datetime import datetime, timedelta
     from time import time
-    klines = client.get_historical_klines("BNBBTC", bc.KLINE_INTERVAL_1MINUTE,
+    klines = client.historical_klines("BNBBTC", bc.KLINE_INTERVAL_1MINUTE,
             datetime.utcnow() - timedelta(1))
 
     # fetch 30 minute klines for the last month of 2017
-    klines = client.get_historical_klines("ETHBTC", bc.KLINE_INTERVAL_30MINUTE,
+    klines = client.historical_klines("ETHBTC", bc.KLINE_INTERVAL_30MINUTE,
             datetime(2017, 12, 1), datetime(2018, 1, 1))
 
     # fetch weekly klines since it listed
-    klines = client.get_historical_klines("NEOBTC", bc.KLINE_INTERVAL_1WEEK,
+    klines = client.historical_klines("NEOBTC", bc.KLINE_INTERVAL_1WEEK,
             datetime(2017, 1, 1))
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.

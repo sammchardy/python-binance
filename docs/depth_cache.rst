@@ -41,9 +41,9 @@ Examples
         if depth_cache is not None:
             print("symbol {}".format(depth_cache.symbol))
             print("top 5 bids")
-            print(depth_cache.get_bids()[:5])
+            print(depth_cache.bids()[:5])
             print("top 5 asks")
-            print(depth_cache.get_asks()[:5])
+            print(depth_cache.asks()[:5])
         else:
             # depth cache had an error and needs to be restarted
 
@@ -51,13 +51,13 @@ At any time the current `DepthCache` object can be retrieved from the `DepthCach
 
 .. code:: python
 
-    depth_cache = dcm.get_depth_cache()
+    depth_cache = dcm.depth_cache()
     if depth_cache is not None:
         print("symbol {}".format(depth_cache.symbol))
         print("top 5 bids")
-        print(depth_cache.get_bids()[:5])
+        print(depth_cache.bids()[:5])
         print("top 5 asks")
-        print(depth_cache.get_asks()[:5])
+        print(depth_cache.asks()[:5])
     else:
         # depth cache had an error and needs to be restarted
 

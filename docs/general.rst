@@ -8,34 +8,34 @@ General Endpoints
 
     client.ping()
 
-`Get the server time <binance.html#binance.client.Client.get_server_time>`_
+`Get the server time <binance.html#binance.client.Client.server_time>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    time_res = client.get_server_time()
+    time_res = client.server_time()
 
-`Get Exchange Info <binance.html#binance.client.Client.get_exchange_info>`_
+`Get Exchange Info <binance.html#binance.client.Client.exchange_info>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    info = client.get_exchange_info()
+    info = client.exchange_info()
 
-`Get Symbol Info <binance.html#binance.client.Client.get_symbol_info>`_
+`Get Symbol Info <binance.html#binance.client.Client.symbol_info>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Get the exchange info for a particular symbol
 
 .. code:: python
 
-    info = client.get_symbol_info('BNBBTC')
+    info = client.symbol_info('BNBBTC')
 
-`Get Current Products <binance.html#binance.client.Client.get_products>`_
+`Get Current Products <binance.html#binance.client.Client.products>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This call is deprecated, use the above Exchange Info call
 
 .. code:: python
 
-    products = client.get_products()
+    products = client.products()

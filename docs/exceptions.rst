@@ -22,7 +22,7 @@ The exception provides access to the
 .. code:: python
 
     try:
-        client.get_all_orders()
+        client.all_orders()
     except APIException as e:
         print e.status_code
         print e.message

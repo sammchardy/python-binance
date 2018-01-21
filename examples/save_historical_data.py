@@ -58,7 +58,7 @@ def interval_to_milliseconds(interval):
     return ms
 
 
-def get_historical_klines(symbol, interval, start_str, end_str=None):
+def historical_klines(symbol, interval, start_str, end_str=None):
     """Get Historical Klines from Binance
 
     See dateparse docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -102,7 +102,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
     symbol_existed = False
     while True:
         # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-        temp_data = client.get_klines(
+        temp_data = client.klines(
             symbol=symbol,
             interval=interval,
             limit=limit,
@@ -142,7 +142,7 @@ start = "1 Dec, 2017"
 end = "1 Jan, 2018"
 interval = bc.KLINE_INTERVAL_30MINUTE
 
-klines = get_historical_klines(symbol, interval, start, end)
+klines = historical_klines(symbol, interval, start, end)
 
 # open a file with filename including symbol, interval and start and end converted to milliseconds
 with open(

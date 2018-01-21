@@ -23,7 +23,7 @@ New version because why not.
 
 **Added**
 
-- get_historical_klines function to fetch klines for any date range
+- historical_klines function to fetch klines for any date range
 - ability to override requests parameters globally
 - error on websocket disconnect
 - example related to blog post
@@ -100,7 +100,7 @@ v0.5.12 - 2017-12-29
 
 **Added**
 
-- get_asset_balance helper function to fetch an individual asset's balance
+- asset_balance helper function to fetch an individual asset's balance
 
 **Fixed**
 
@@ -138,12 +138,12 @@ v0.5.8 - 2017-12-25
 
 **Changed**
 
-- change symbol parameter to optional for get_open_orders function
+- change symbol parameter to optional for open_orders function
 - added listenKey parameter to stream_close function
 
 **Added**
 
-- get_account_status function that was missed
+- account_status function that was missed
 
 v0.5.7 - 2017-12-24
 ^^^^^^^^^^^^^^^^^^^
@@ -161,7 +161,7 @@ v0.5.6 - 2017-12-20
 
 **Added**
 
-- get_symbol_info function to simplify getting info about a particular symbol
+- symbol_info function to simplify getting info about a particular symbol
 
 v0.5.5 - 2017-12-19
 ^^^^^^^^^^^^^^^^^^^
@@ -371,8 +371,8 @@ v0.1.5 - 2017-09-12
 
 **Changes**
 
-- Added get_all_tickers call
-- Added get_orderbook_tickers call
+- Added all_tickers call
+- Added orderbook_tickers call
 - Added some FAQs
 
 **Fixes**

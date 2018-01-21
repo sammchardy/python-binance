@@ -40,26 +40,26 @@ Raises a `WithdrawException <binance.html#binance.exceptions.WithdrawException>`
         addressTag='<xrp_address_tag>',
         amount=10000)
 
-`Fetch deposit history <binance.html#binance.client.Client.get_deposit_history>`_
+`Fetch deposit history <binance.html#binance.client.Client.deposit_history>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    deposits = client.get_deposit_history()
-    btc_deposits = client.get_deposit_history(asset='BTC')
+    deposits = client.deposit_history()
+    btc_deposits = client.deposit_history(asset='BTC')
 
 
-`Fetch withdraw history <binance.html#binance.client.Client.get_withdraw_history>`_
+`Fetch withdraw history <binance.html#binance.client.Client.withdraw_history>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    withdraws = client.get_withdraw_history()
-    btc_withdraws = client.get_withdraw_history(asset='BTC')
+    withdraws = client.withdraw_history()
+    btc_withdraws = client.withdraw_history(asset='BTC')
 
-`Get deposit address <binance.html#binance.client.Client.get_deposit_address>`_
+`Get deposit address <binance.html#binance.client.Client.deposit_address>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    address = client.get_deposit_address(asset='BTC')
+    address = client.deposit_address(asset='BTC')

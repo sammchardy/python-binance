@@ -16,7 +16,7 @@ def test_invalid_json():
     with pytest.raises(RequestException):
         with requests_mock.mock() as m:
             m.get('https://www.binance.com/exchange/public/product', text='<head></html>')
-            client.get_products()
+            client.products()
 
 
 def test_api_exception():
@@ -26,7 +26,7 @@ def test_api_exception():
         with requests_mock.mock() as m:
             json_obj = {"code": 1002, "msg": "Invalid API call"}
             m.get('https://api.binance.com/api/v1/time', json=json_obj, status_code=400)
-            client.get_server_time()
+            client.server_time()
 
 
 def test_api_exception_invalid_json():
@@ -36,7 +36,7 @@ def test_api_exception_invalid_json():
         with requests_mock.mock() as m:
             not_json_str = "<html><body>Error</body></html>"
             m.get('https://api.binance.com/api/v1/time', text=not_json_str, status_code=400)
-            client.get_server_time()
+            client.server_time()
 
 
 def test_withdraw_api_exception():
