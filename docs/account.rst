@@ -94,12 +94,12 @@ Creates and validates a new order but does not send it into the exchange.
         quantity=100,
         price='0.00001')
 
-`Check order status <binance.html#binance.client.Client.order>`_
+`Check order status <binance.html#binance.client.Client.query_order>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
-    order = client.order(
+    order = client.query_order(
         symbol='BNBBTC',
         orderId='orderId')
 

@@ -1132,7 +1132,7 @@ class Client(object):
         """
         return self._post('order/test', True, data=params)
 
-    def order(self, **params):
+    def query_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#query-order-user_data
