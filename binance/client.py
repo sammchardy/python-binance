@@ -944,7 +944,7 @@ class Client(object):
         })
         return self.create_order(**params)
 
-    def create_limit_buy_order(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
+    def create_limit_buy(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -980,7 +980,7 @@ class Client(object):
         })
         return self.create_limit_order(timeInForce=timeInForce, **params)
 
-    def create_limit_sell_order(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
+    def create_limit_sell(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required

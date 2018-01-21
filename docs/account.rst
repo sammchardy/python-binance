@@ -53,12 +53,12 @@ Use the helper functions to easily place a limit buy or sell order
 
 .. code:: python
 
-    order = client.create_limit_buy_order(
+    order = client.create_limit_buy(
         symbol='BNBBTC',
         quantity=100,
         price='0.00001')
 
-    order = client.create_limit_sell_order(
+    order = client.create_limit_sell(
         symbol='BNBBTC',
         quantity=100,
         price='0.00001')
