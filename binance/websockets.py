@@ -423,10 +423,8 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        listen_key = self._client.stream_get_listen_key()
-        # check if they key changed and
-        if listen_key != self._user_listen_key:
-            self.start_user_socket(self._user_callback)
+        # Use the REST API method to keep alive connection
+        self._client.stream_keepalive(self._user_listen_key)
         self._start_user_timer()
 
     def stop_socket(self, conn_key):
