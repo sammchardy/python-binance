@@ -530,6 +530,46 @@ class Client(object):
         """
         return self._get('aggTrades', data=params)
 
+    def aggregate_trade_iter(self, pair, start_time=None, last_id=None):
+        """Iterate over aggregate trade data from (start_time or last_id) to
+        the end of the history so far.
+
+        If start_time is specified, start with the first trade after
+        start_time.
+
+        If last_id is specified, start with the trade after it. This is meant
+        for updating a pre-existing trade database.
+
+        Only allows start_time or last_id—not both."""
+        if start_time is not None and last_id is not None:
+            raise ValueError(
+                'start_time and last_id may not be simultaneously specified.')
+
+        # If there's no last_id, get one.
+        if last_id is None:
+            # Without a last_id, we actually need the first trade.  Normally,
+            # we'd get rid of it. See the next loop.
+            if start_time is None:
+                trades = self.aggregate_trades(symbol=pair, fromId=0)
+            else:
+                trades = self.aggregate_trades(
+                    symbol=pair, startTime=start_time,
+                    endTime=start_time + 1000 * 3600)
+            for t in trades:
+                yield t
+            last_id = trades[-1][bc.AGG_ID]
+
+        while True:
+            trades = self.aggregate_trades(symbol=pair, fromId=last_id)
+            # fromId=n returns a set starting with id n, but we already have
+            # that one. So get rid of the first item in the result set.
+            trades = trades[1:]
+            if len(trades) == 0:
+                return
+            for t in trades:
+                yield t
+            last_id = trades[-1][bc.AGG_ID]
+
     def klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
