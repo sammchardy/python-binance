@@ -134,6 +134,18 @@ Valid interval values are `defined as enums <enums.html>`_.
 
     conn_key = bm.start_ticker_socket(process_message)
 
+`Mini Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_miniticker_socket>`_
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: python
+
+    # by default updates every second
+    conn_key = bm.start_miniticker_socket(process_message)
+
+    # this socket can take an update interval parameter
+    # set as 5000 to receive updates every 5 seconds
+    conn_key = bm.start_miniticker_socket(process_message, 5000)
+
 `User Socket <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
