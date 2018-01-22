@@ -535,12 +535,26 @@ class Client(object):
         the end of the history so far.
 
         If start_time is specified, start with the first trade after
-        start_time.
+        start_time. Meant to initialise a local cache of trade data.
 
         If last_id is specified, start with the trade after it. This is meant
-        for updating a pre-existing trade database.
+        for updating a pre-existing local trade data cache.
 
-        Only allows start_time or last_id—not both."""
+        Only allows start_time or last_id—not both. Not guaranteed to work
+        right if you're running more than one of these simultaneously. You
+        will probably hit your rate limit.
+
+        :param start_time: UNIX timestamp in milliseconds. The iterator will
+        return the first trade occurring later than this time.
+        :type start_time: int
+        :param last_id: aggregate trade ID of the last known aggregate trade.
+        Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+
+        :returns: an iterator of JSON objects, one per trade. The format of
+        each object is identical to Client.aggregate_trades().
+
+        :type last_id: int
+        """
         if start_time is not None and last_id is not None:
             raise ValueError(
                 'start_time and last_id may not be simultaneously specified.')
@@ -552,6 +566,9 @@ class Client(object):
             if start_time is None:
                 trades = self.aggregate_trades(symbol=pair, fromId=0)
             else:
+                # It doesn't matter what the end time is, as long as it's less
+                # than a day and the result set contains at least one trade.
+                # A half a day should be fine.
                 trades = self.aggregate_trades(
                     symbol=pair, startTime=start_time,
                     endTime=start_time + 1000 * 3600)
@@ -560,6 +577,12 @@ class Client(object):
             last_id = trades[-1][bc.AGG_ID]
 
         while True:
+            # There is no need to wait between queries, to avoid hitting the
+            # rate limit. We're using blocking IO, and as long as we're the
+            # only thread running calls like this, binance will automatically
+            # add the right delay time on their end, forcing us to wait for
+            # data. That really simplifies this function's job. Binance is
+            # fucking awesome.
             trades = self.aggregate_trades(symbol=pair, fromId=last_id)
             # fromId=n returns a set starting with id n, but we already have
             # that one. So get rid of the first item in the result set.
