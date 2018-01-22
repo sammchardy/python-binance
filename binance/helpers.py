@@ -29,26 +29,36 @@ def date_to_milliseconds(date_str):
 def interval_to_milliseconds(interval):
     """Convert a Binance interval string to milliseconds
 
-    :param interval: Binance interval string 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w
+    :param interval: Binance interval string, e.g.: 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M
     :type interval: str
 
     :return:
-         None if unit not one of m, h, d or w
-         None if string not in correct format
          int value of interval in milliseconds
+         None if interval prefix is not a decimal integer
+         None if interval suffix is not one of m, h, d, w, or M
+
+    Note that a Binance month interval, 1M, is 31 days.
+
+    >>> interval_to_milliseconds('1m')
+    60000
+
+    >>> interval_to_milliseconds('2h')
+    7200000
+
+    >>> interval_to_milliseconds('1M') == interval_to_milliseconds('31d')
+    True
+
+    >>> interval_to_milliseconds('3.3d')
+    >>> interval_to_milliseconds('4Y')
     """
-    ms = None
     seconds_per_unit = {
         "m": 60,
         "h": 60 * 60,
         "d": 24 * 60 * 60,
-        "w": 7 * 24 * 60 * 60
+        "w": 7 * 24 * 60 * 60,
+        "M": 31 * 24 * 60 * 60,
     }
-
-    unit = interval[-1]
-    if unit in seconds_per_unit:
-        try:
-            ms = int(interval[:-1]) * seconds_per_unit[unit] * 1000
-        except ValueError:
-            pass
-    return ms
+    try:
+        return int(interval[:-1]) * seconds_per_unit[interval[-1]] * 1000
+    except (ValueError, KeyError):
+        return None
