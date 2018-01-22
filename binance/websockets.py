@@ -212,6 +212,40 @@ class BinanceSocketManager(threading.Thread):
         socket_name = '{}@kline_{}'.format(symbol.lower(), interval)
         return self._start_socket(socket_name, callback)
 
+    def start_miniticker_socket(self, callback, update_time=1000):
+        """Start a miniticker websocket for all trades
+
+        This is not in the official Binance api docs, but this is what
+        feeds the right column on a ticker page on Binance.
+
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param update_time: time between callbacks in milliseconds, must be 1000 or greater
+        :type update_time: int
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            [
+                {
+                    'e': '24hrMiniTicker',  # Event type
+                    'E': 1515906156273,     # Event time
+                    's': 'QTUMETH',         # Symbol
+                    'c': '0.03836900',      # close
+                    'o': '0.03953500',      # open
+                    'h': '0.04400000',      # high
+                    'l': '0.03756000',      # low
+                    'v': '147435.80000000', # volume
+                    'q': '5903.84338533'    # quote volume
+                }
+            ]
+        """
+
+        return self._start_socket('!miniTicker@arr@{}ms'.format(update_time), callback)
+
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
 
