@@ -573,7 +573,7 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param interval: -
-        :type interval: enum
+        :type interval: str
         :param limit: - Default 500; max 500.
         :type limit: int
         :param startTime:
@@ -838,11 +838,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -852,7 +852,7 @@ class Client(object):
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -950,19 +950,19 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -991,7 +991,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -999,7 +999,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1025,7 +1025,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -1033,7 +1033,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1055,13 +1055,13 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1087,7 +1087,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1113,7 +1113,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1137,11 +1137,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -1151,7 +1151,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 
