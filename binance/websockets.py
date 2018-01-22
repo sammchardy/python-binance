@@ -212,7 +212,7 @@ class BinanceSocketManager(threading.Thread):
         socket_name = '{}@kline_{}'.format(symbol.lower(), interval)
         return self._start_socket(socket_name, callback)
 
-    def start_miniticker_socket(self, callback):
+    def start_miniticker_socket(self, callback, update_time=1000):
         """Start a miniticker websocket for all trades
 
         This is not in the official Binance api docs, but this is what
@@ -220,6 +220,8 @@ class BinanceSocketManager(threading.Thread):
 
         :param callback: callback function to handle messages
         :type callback: function
+        :param update_time: time between callbacks in milliseconds, must be 1000 or greater
+        :type update_time: int
 
         :returns: connection key string if successful, False otherwise
 
@@ -242,7 +244,7 @@ class BinanceSocketManager(threading.Thread):
             ]
         """
 
-        return self._start_socket('!miniTicker@arr@3000ms', callback)
+        return self._start_socket('!miniTicker@arr@{}ms'.format(update_time), callback)
 
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
