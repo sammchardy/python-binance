@@ -746,7 +746,7 @@ class Client(object):
                 output_data += temp_data
 
                 # update our start timestamp using the last value in the array and add the interval timeframe
-                start_ts = temp_data[len(temp_data) - 1][0] + timeframe
+                start_ts = temp_data[-1][0] + timeframe
             else:
                 # it wasn't listed yet, increment our start date
                 start_ts += timeframe
