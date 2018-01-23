@@ -33,7 +33,7 @@ def interval_to_milliseconds(interval):
 
     :param interval: Binance interval string, e.g.: 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w
     :type interval: str
-    
+
     :return:
          int value of interval in milliseconds
          None if interval prefix is not a decimal integer
