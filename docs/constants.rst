@@ -50,6 +50,16 @@ Binance requires specific string constants for Order Types, Order Side, Time in 
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
 
+    # For accessing the data returned by Client.aggregate_trades().
+    AGG_ID             = 'a'
+    AGG_PRICE          = 'p'
+    AGG_QUANTITY       = 'q'
+    AGG_FIRST_TRADE_ID = 'f'
+    AGG_LAST_TRADE_ID  = 'l'
+    AGG_TIME           = 'T'
+    AGG_BUYER_MAKES    = 'm'
+    AGG_BEST_MATCH     = 'M'
+
 
 For Websocket Depth these are found on `binance.websockets.BinanceSocketManager`
 
