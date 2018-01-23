@@ -691,7 +691,7 @@ class Client(object):
     def get_historical_klines(self, symbol, interval, start_str, end_str=None):
         """Get Historical Klines from Binance
 
-        See dateparse docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
         If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
 
