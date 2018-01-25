@@ -571,7 +571,7 @@ class Client(object):
                 # A half a day should be fine.
                 trades = self.aggregate_trades(
                     symbol=pair, startTime=start_time,
-                    endTime=start_time + 1000 * 3600)
+                    endTime=start_time + 1000 * 86400 / 2)
             for t in trades:
                 yield t
             last_id = trades[-1][bc.AGG_ID]
