@@ -1,20 +1,19 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 import json
 import threading
 
-from autobahn.twisted.websocket import WebSocketClientFactory, \
-    WebSocketClientProtocol, \
-    connectWS
+from autobahn.twisted.websocket \
+    import WebSocketClientFactory, WebSocketClientProtocol, connectWS
 from twisted.internet import reactor, ssl
-from twisted.internet.protocol import ReconnectingClientFactory
+from twisted.internet.protocol \
+    import ReconnectingClientFactory as TReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
-from binance.client import Client
+import binance.constants as bc
 
 
-class BinanceClientProtocol(WebSocketClientProtocol):
+class ClientProtocol(WebSocketClientProtocol):
 
     def onConnect(self, response):
         # reset the delay after reconnecting
@@ -30,7 +29,7 @@ class BinanceClientProtocol(WebSocketClientProtocol):
                 self.factory.callback(payload_obj)
 
 
-class BinanceReconnectingClientFactory(ReconnectingClientFactory):
+class ReconnectingClientFactory(TReconnectingClientFactory):
 
     # set initial delay to a short time
     initialDelay = 0.1
@@ -40,9 +39,9 @@ class BinanceReconnectingClientFactory(ReconnectingClientFactory):
     maxRetries = 5
 
 
-class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFactory):
+class ClientFactory(WebSocketClientFactory, ReconnectingClientFactory):
 
-    protocol = BinanceClientProtocol
+    protocol = ClientProtocol
     _reconnect_error_payload = {
         'e': 'error',
         'm': 'Max reconnect retries reached'
@@ -59,18 +58,14 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
             self.callback(self._reconnect_error_payload)
 
 
-class BinanceSocketManager(threading.Thread):
+class SocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
-
-    WEBSOCKET_DEPTH_5 = '5'
-    WEBSOCKET_DEPTH_10 = '10'
-    WEBSOCKET_DEPTH_20 = '20'
 
     _user_timeout = 30 * 60  # 30 minutes
 
     def __init__(self, client):
-        """Initialise the BinanceSocketManager
+        """Initialise the SocketManager
 
         :param client: Binance API client
         :type client: binance.Client
@@ -88,8 +83,8 @@ class BinanceSocketManager(threading.Thread):
             return False
 
         factory_url = self.STREAM_URL + prefix + path
-        factory = BinanceClientFactory(factory_url)
-        factory.protocol = BinanceClientProtocol
+        factory = ClientFactory(factory_url)
+        factory.protocol = ClientProtocol
         factory.callback = callback
         factory.reconnect = True
         context_factory = ssl.ClientContextFactory()
@@ -107,7 +102,7 @@ class BinanceSocketManager(threading.Thread):
         :param callback: callback function to handle messages
         :type callback: function
         :param depth: optional Number of depth entries to return, default None. If passed returns a partial book instead of a diff
-        :type depth: enum
+        :type depth: str
 
         :returns: connection key string if successful, False otherwise
 
@@ -166,7 +161,7 @@ class BinanceSocketManager(threading.Thread):
             socket_name = '{}{}'.format(socket_name, depth)
         return self._start_socket(socket_name, callback)
 
-    def start_kline_socket(self, symbol, callback, interval=Client.KLINE_INTERVAL_1MINUTE):
+    def start_kline_socket(self, symbol, callback, interval=bc.KLINE_INTERVAL_1MINUTE):
         """Start a websocket for symbol kline data
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#klinecandlestick-streams
@@ -176,7 +171,7 @@ class BinanceSocketManager(threading.Thread):
         :param callback: callback function to handle messages
         :type callback: function
         :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
-        :type interval: enum
+        :type interval: str
 
         :returns: connection key string if successful, False otherwise
 
@@ -408,7 +403,7 @@ class BinanceSocketManager(threading.Thread):
                 if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
                     self.stop_socket(conn_key)
                     break
-        self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_listen_key = self._client.stream_listen_key()
         self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
@@ -423,7 +418,7 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        listen_key = self._client.stream_get_listen_key()
+        listen_key = self._client.stream_listen_key()
         # check if they key changed and
         if listen_key != self._user_listen_key:
             self.start_user_socket(self._user_callback)

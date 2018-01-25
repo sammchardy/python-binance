@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 SYMBOL_TYPE_SPOT = 'SPOT'
@@ -49,3 +48,13 @@ ORDER_RESP_TYPE_FULL = 'FULL'
 WEBSOCKET_DEPTH_5 = '5'
 WEBSOCKET_DEPTH_10 = '10'
 WEBSOCKET_DEPTH_20 = '20'
+
+# For munching upon the data returned by Client.aggregate_trades().
+AGG_ID             = 'a'  # noqa: E221
+AGG_PRICE          = 'p'  # noqa: E221
+AGG_QUANTITY       = 'q'  # noqa: E221
+AGG_FIRST_TRADE_ID = 'f'  # noqa: E221
+AGG_LAST_TRADE_ID  = 'l'  # noqa: E221
+AGG_TIME           = 'T'  # noqa: E221
+AGG_BUYER_MAKES    = 'm'  # noqa: E221
+AGG_BEST_MATCH     = 'M'  # noqa: E221
