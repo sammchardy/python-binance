@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 import hashlib
@@ -6,8 +5,9 @@ import hmac
 import requests
 import time
 from operator import itemgetter
-from .helpers import date_to_milliseconds, interval_to_milliseconds
+from .helpers import interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
+import binance.constants as bc
 
 
 class Client(object):
@@ -18,51 +18,6 @@ class Client(object):
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
-
-    SYMBOL_TYPE_SPOT = 'SPOT'
-
-    ORDER_STATUS_NEW = 'NEW'
-    ORDER_STATUS_PARTIALLY_FILLED = 'PARTIALLY_FILLED'
-    ORDER_STATUS_FILLED = 'FILLED'
-    ORDER_STATUS_CANCELED = 'CANCELED'
-    ORDER_STATUS_PENDING_CANCEL = 'PENDING_CANCEL'
-    ORDER_STATUS_REJECTED = 'REJECTED'
-    ORDER_STATUS_EXPIRED = 'EXPIRED'
-
-    KLINE_INTERVAL_1MINUTE = '1m'
-    KLINE_INTERVAL_3MINUTE = '3m'
-    KLINE_INTERVAL_5MINUTE = '5m'
-    KLINE_INTERVAL_15MINUTE = '15m'
-    KLINE_INTERVAL_30MINUTE = '30m'
-    KLINE_INTERVAL_1HOUR = '1h'
-    KLINE_INTERVAL_2HOUR = '2h'
-    KLINE_INTERVAL_4HOUR = '4h'
-    KLINE_INTERVAL_6HOUR = '6h'
-    KLINE_INTERVAL_8HOUR = '8h'
-    KLINE_INTERVAL_12HOUR = '12h'
-    KLINE_INTERVAL_1DAY = '1d'
-    KLINE_INTERVAL_3DAY = '3d'
-    KLINE_INTERVAL_1WEEK = '1w'
-    KLINE_INTERVAL_1MONTH = '1M'
-
-    SIDE_BUY = 'BUY'
-    SIDE_SELL = 'SELL'
-
-    ORDER_TYPE_LIMIT = 'LIMIT'
-    ORDER_TYPE_MARKET = 'MARKET'
-    ORDER_TYPE_STOP_LOSS = 'STOP_LOSS'
-    ORDER_TYPE_STOP_LOSS_LIMIT = 'STOP_LOSS_LIMIT'
-    ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
-    ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
-    ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
-
-    TIME_IN_FORCE_GTC = 'GTC'  # Good till cancelled
-    TIME_IN_FORCE_IOC = 'IOC'  # Immediate or cancel
-    TIME_IN_FORCE_FOK = 'FOK'  # Fill or kill
-
-    ORDER_RESP_TYPE_ACK = 'ACK'
-    ORDER_RESP_TYPE_RESULT = 'RESULT'
-    ORDER_RESP_TYPE_FULL = 'FULL'
 
     def __init__(self, api_key, api_secret, requests_params=None):
         """Binance API Client constructor
@@ -574,7 +529,7 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param interval: -
-        :type interval: enum
+        :type interval: str
         :param limit: - Default 500; max 500.
         :type limit: int
         :param startTime:
@@ -608,7 +563,7 @@ class Client(object):
         """
         return self._get('klines', data=params)
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None):
+    def get_historical_klines(self, symbol, interval, start, end=None):
         """Get Historical Klines from Binance
 
         See dateparse docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -617,12 +572,12 @@ class Client(object):
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
-        :param interval: Biannce Kline interval
+        :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format
-        :type start_str: str
-        :param end_str: optional - end date string in UTC format
-        :type end_str: str
+        :param start: Start datetime.
+        :type start: datetime
+        :param end: optional - end datetime.
+        :type end: datetime
 
         :return: list of OHLCV values
 
@@ -633,28 +588,28 @@ class Client(object):
         # setup the max limit
         limit = 500
 
-        # convert interval to useful value in seconds
+        # convert interval to useful value in milliseconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
-        start_ts = date_to_milliseconds(start_str)
+        # convert our datetimes to milliseconds
+        startTime = int(start.timestamp() * 1000)
 
         # if an end time was passed convert it
-        end_ts = None
-        if end_str:
-            end_ts = date_to_milliseconds(end_str)
+        endTime = None
+        if end:
+            endTime = int(end.timestamp() * 1000)
 
         idx = 0
         # it can be difficult to know when a symbol was listed on Binance so allow start time to be before list date
         symbol_existed = False
         while True:
-            # fetch the klines from start_ts up to max 500 entries or the end_ts if set
+            # fetch the klines from startTime up to max 500 entries or the endTime if set
             temp_data = self.get_klines(
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
-                startTime=start_ts,
-                endTime=end_ts
+                startTime=startTime,
+                endTime=endTime
             )
 
             # handle the case where our start date is before the symbol pair listed on Binance
@@ -666,10 +621,10 @@ class Client(object):
                 output_data += temp_data
 
                 # update our start timestamp using the last value in the array and add the interval timeframe
-                start_ts = temp_data[len(temp_data) - 1][0] + timeframe
+                startTime = temp_data[len(temp_data) - 1][0] + timeframe
             else:
                 # it wasn't listed yet, increment our start date
-                start_ts += timeframe
+                startTime += timeframe
 
             idx += 1
             # check if we received less than the required limit and exit the loop
@@ -839,11 +794,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -853,7 +808,7 @@ class Client(object):
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -943,7 +898,7 @@ class Client(object):
         """
         return self._post('order', True, data=params)
 
-    def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -951,19 +906,19 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -975,12 +930,12 @@ class Client(object):
 
         """
         params.update({
-            'type': self.ORDER_TYPE_LIMIT,
+            'type': bc.ORDER_TYPE_LIMIT,
             'timeInForce': timeInForce
         })
         return self.create_order(**params)
 
-    def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_buy(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -992,7 +947,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -1000,7 +955,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1012,11 +967,11 @@ class Client(object):
 
         """
         params.update({
-            'side': self.SIDE_BUY,
+            'side': bc.SIDE_BUY,
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_sell(self, timeInForce=bc.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
@@ -1026,7 +981,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -1034,7 +989,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1046,7 +1001,7 @@ class Client(object):
 
         """
         params.update({
-            'side': self.SIDE_SELL
+            'side': bc.SIDE_SELL
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
@@ -1056,13 +1011,13 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1074,7 +1029,7 @@ class Client(object):
 
         """
         params.update({
-            'type': self.ORDER_TYPE_MARKET
+            'type': bc.ORDER_TYPE_MARKET
         })
         return self.create_order(**params)
 
@@ -1088,7 +1043,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1100,7 +1055,7 @@ class Client(object):
 
         """
         params.update({
-            'side': self.SIDE_BUY
+            'side': bc.SIDE_BUY
         })
         return self.order_market(**params)
 
@@ -1114,7 +1069,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1126,7 +1081,7 @@ class Client(object):
 
         """
         params.update({
-            'side': self.SIDE_SELL
+            'side': bc.SIDE_SELL
         })
         return self.order_market(**params)
 
@@ -1138,11 +1093,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -1152,7 +1107,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 

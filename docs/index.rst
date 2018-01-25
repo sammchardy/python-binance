@@ -10,7 +10,7 @@ Contents
    :maxdepth: 2
 
    overview
-   enums
+   constants
    general
    market_data
    account

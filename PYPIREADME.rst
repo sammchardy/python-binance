@@ -20,7 +20,7 @@ Welcome to python-binance v0.6.2
 .. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
-This is an unofficial Python wrapper for the `Binance exchange REST API v1 <https://www.binance.com/restapipub.html>`_. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the `Binance exchange REST API v1 <https://www.binance.com/restapipub.html>`_. I am in no way affiliated with Binance. Use at your own risk.
 
 If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_. If you want to automate interactions with Binance stick around.
 
@@ -39,14 +39,14 @@ Features
 --------
 
 - Implementation of all General, Market Data and Account endpoints.
-- Simple handling of authentication
-- No need to generate timestamps yourself, the wrapper does it for you
-- Response exception handling
-- Websocket handling with reconnection and multiplexed connections
-- Symbol Depth Cache
-- Historical Kline/Candle fetching function
-- Withdraw functionality
-- Deposit addresses
+- Simple handling of authentication.
+- No need to generate timestamps yourself. The wrapper does it for you.
+- Response exception handling.
+- Websocket handling with reconnection and multiplexed connections.
+- Symbol Depth Cache.
+- Historical Kline/Candle fetching function.
+- Withdraw functionality.
+- Deposit addresses.
 
 Quick Start
 -----------
@@ -63,6 +63,7 @@ Quick Start
 .. code:: python
 
     from binance.client import Client
+    import binance.constants as bc
     client = Client(api_key, api_secret)
 
     # get market depth
@@ -71,8 +72,8 @@ Quick Start
     # place a test market buy order, to place an actual order use the create_order function
     order = client.create_test_order(
         symbol='BNBBTC',
-        side=Client.SIDE_BUY,
-        type=Client.ORDER_TYPE_MARKET,
+        side=bc.SIDE_BUY,
+        type=bc.ORDER_TYPE_MARKET,
         quantity=100)
 
     # get all symbol prices
@@ -115,14 +116,19 @@ Quick Start
 
     # get historical kline data from any date range
 
-    # fetch 1 minute klines for the last day up until now
-    klines = client.get_historical_klines("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+    # fetch 1 minute klines from one day ago until now
+    from datetime import datetime, timedelta
+    from time import time
+    klines = client.get_historical_klines("BNBBTC", bc.KLINE_INTERVAL_1MINUTE,
+            datetime.utcnow() - timedelta(1))
 
     # fetch 30 minute klines for the last month of 2017
-    klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+    klines = client.get_historical_klines("ETHBTC", bc.KLINE_INTERVAL_30MINUTE,
+            datetime(2017, 12, 1), datetime(2018, 1, 1))
 
     # fetch weekly klines since it listed
-    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+    klines = client.get_historical_klines("NEOBTC", bc.KLINE_INTERVAL_1WEEK,
+            datetime(2017, 1, 1))
 
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
