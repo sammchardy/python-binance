@@ -16,7 +16,7 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Ord
     ORDER_STATUS_EXPIRED = 'EXPIRED'
 
     KLINE_INTERVAL_1MINUTE = '1m'
-    KLINE_INTERVAL_2MINUTE = '3m'
+    KLINE_INTERVAL_3MINUTE = '3m'
     KLINE_INTERVAL_5MINUTE = '5m'
     KLINE_INTERVAL_15MINUTE = '15m'
     KLINE_INTERVAL_30MINUTE = '30m'
