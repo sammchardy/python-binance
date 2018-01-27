@@ -624,7 +624,7 @@ class Client(object):
                 trades = self.get_aggregate_trades(
                     symbol=symbol,
                     startTime=start_ts,
-                    endTime=start_ts + (1000 * 3600))
+                    endTime=start_ts + (1000 * 86400 / 2))
             for t in trades:
                 yield t
             last_id = trades[-1][self.AGG_ID]
