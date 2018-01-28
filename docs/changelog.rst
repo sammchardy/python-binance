@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.6.3 - 2018-01-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- mini ticker socket function `start_miniticker_socket`
+- aggregate trade iterator `aggregate_trade_iter`
+
+**Fixes**
+
+- clean up `interval_to_milliseconds` logic
+- general doc and file cleanups
+
 v0.6.2 - 2018-01-12
 ^^^^^^^^^^^^^^^^^^^
 
