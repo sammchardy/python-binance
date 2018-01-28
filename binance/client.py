@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 import hashlib
@@ -63,6 +62,16 @@ class Client(object):
     ORDER_RESP_TYPE_ACK = 'ACK'
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
+
+    # For accessing the data returned by Client.aggregate_trades().
+    AGG_ID = 'a'
+    AGG_PRICE = 'p'
+    AGG_QUANTITY = 'q'
+    AGG_FIRST_TRADE_ID = 'f'
+    AGG_LAST_TRADE_ID = 'l'
+    AGG_TIME = 'T'
+    AGG_BUYER_MAKES = 'm'
+    AGG_BEST_MATCH = 'M'
 
     def __init__(self, api_key, api_secret, requests_params=None):
         """Binance API Client constructor
@@ -566,6 +575,77 @@ class Client(object):
         """
         return self._get('aggTrades', data=params)
 
+    def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+        """Iterate over aggregate trade data from (start_time or last_id) to
+        the end of the history so far.
+
+        If start_time is specified, start with the first trade after
+        start_time. Meant to initialise a local cache of trade data.
+
+        If last_id is specified, start with the trade after it. This is meant
+        for updating a pre-existing local trade data cache.
+
+        Only allows start_str or last_id—not both. Not guaranteed to work
+        right if you're running more than one of these simultaneously. You
+        will probably hit your rate limit.
+
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+
+        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
+
+        :param symbol: Symbol string e.g. ETHBTC
+        :type symbol: str
+        :param start_str: Start date string in UTC format. The iterator will
+        return the first trade occurring later than this time.
+        :type start_str: str
+        :param last_id: aggregate trade ID of the last known aggregate trade.
+        Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+
+        :returns: an iterator of JSON objects, one per trade. The format of
+        each object is identical to Client.aggregate_trades().
+
+        :type last_id: int
+        """
+        if start_str is not None and last_id is not None:
+            raise ValueError(
+                'start_time and last_id may not be simultaneously specified.')
+
+        # If there's no last_id, get one.
+        if last_id is None:
+            # Without a last_id, we actually need the first trade.  Normally,
+            # we'd get rid of it. See the next loop.
+            if start_str is None:
+                trades = self.get_aggregate_trades(symbol=symbol, fromId=0)
+            else:
+                # It doesn't matter what the end time is, as long as it's less
+                # than a day and the result set contains at least one trade.
+                # A half a day should be fine.
+                start_ts = date_to_milliseconds(start_str)
+                trades = self.get_aggregate_trades(
+                    symbol=symbol,
+                    startTime=start_ts,
+                    endTime=start_ts + (1000 * 86400 / 2))
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
+
+        while True:
+            # There is no need to wait between queries, to avoid hitting the
+            # rate limit. We're using blocking IO, and as long as we're the
+            # only thread running calls like this, Binance will automatically
+            # add the right delay time on their end, forcing us to wait for
+            # data. That really simplifies this function's job. Binance is
+            # fucking awesome.
+            trades = self.get_aggregate_trades(symbol=symbol, fromId=last_id)
+            # fromId=n returns a set starting with id n, but we already have
+            # that one. So get rid of the first item in the result set.
+            trades = trades[1:]
+            if len(trades) == 0:
+                return
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
+
     def get_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
@@ -574,7 +654,7 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param interval: -
-        :type interval: enum
+        :type interval: str
         :param limit: - Default 500; max 500.
         :type limit: int
         :param startTime:
@@ -611,7 +691,7 @@ class Client(object):
     def get_historical_klines(self, symbol, interval, start_str, end_str=None):
         """Get Historical Klines from Binance
 
-        See dateparse docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
         If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
 
@@ -666,7 +746,7 @@ class Client(object):
                 output_data += temp_data
 
                 # update our start timestamp using the last value in the array and add the interval timeframe
-                start_ts = temp_data[len(temp_data) - 1][0] + timeframe
+                start_ts = temp_data[-1][0] + timeframe
             else:
                 # it wasn't listed yet, increment our start date
                 start_ts += timeframe
@@ -839,11 +919,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -853,7 +933,7 @@ class Client(object):
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -951,19 +1031,19 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -992,7 +1072,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -1000,7 +1080,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1026,7 +1106,7 @@ class Client(object):
         :param price: required
         :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -1034,7 +1114,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1056,13 +1136,13 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1088,7 +1168,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1114,7 +1194,7 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1138,11 +1218,11 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
@@ -1152,7 +1232,7 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 

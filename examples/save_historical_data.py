@@ -151,6 +151,6 @@ with open(
         date_to_milliseconds(start),
         date_to_milliseconds(end)
     ),
-    'w' # set file write mode
+    'w'  # set file write mode
 ) as f:
     f.write(json.dumps(klines))

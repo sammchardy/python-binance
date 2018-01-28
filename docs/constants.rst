@@ -1,7 +1,7 @@
-Enumerated Types
-================
+Binance Constants
+=================
 
-Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Order response and Kline intervals these are found on `binance.client.Client`.
+Binance requires specific string constants for Order Types, Order Side, Time in Force, Order response and Kline intervals these are found on `binance.client.Client`.
 
 .. code:: python
 
@@ -16,7 +16,7 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Ord
     ORDER_STATUS_EXPIRED = 'EXPIRED'
 
     KLINE_INTERVAL_1MINUTE = '1m'
-    KLINE_INTERVAL_2MINUTE = '3m'
+    KLINE_INTERVAL_3MINUTE = '3m'
     KLINE_INTERVAL_5MINUTE = '5m'
     KLINE_INTERVAL_15MINUTE = '15m'
     KLINE_INTERVAL_30MINUTE = '30m'
@@ -49,6 +49,16 @@ Binance defines Enumerated Types for Order Types, Order Side, Time in Force, Ord
     ORDER_RESP_TYPE_ACK = 'ACK'
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
+
+    # For accessing the data returned by Client.aggregate_trades().
+    AGG_ID             = 'a'
+    AGG_PRICE          = 'p'
+    AGG_QUANTITY       = 'q'
+    AGG_FIRST_TRADE_ID = 'f'
+    AGG_LAST_TRADE_ID  = 'l'
+    AGG_TIME           = 'T'
+    AGG_BUYER_MAKES    = 'm'
+    AGG_BEST_MATCH     = 'M'
 
 
 For Websocket Depth these are found on `binance.websockets.BinanceSocketManager`
