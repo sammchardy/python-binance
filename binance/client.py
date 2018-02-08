@@ -1505,6 +1505,25 @@ class Client(object):
         """
         return self._get('myTrades', True, data=params)
 
+    def get_system_status(self):
+        """Get system status detail.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#system-status-system
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "status": 0,        # 0: normal，1：system maintenance
+                "msg": "normal"     # normal or System maintenance.
+            }
+
+        :raises: BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'systemStatus.html')
+
     def get_account_status(self, **params):
         """Get account status detail.
 
