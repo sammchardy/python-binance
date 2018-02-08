@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.6.4 - 2018-02-09
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- system status endpoint `get_system_status`
+
 v0.6.3 - 2018-01-29
 ^^^^^^^^^^^^^^^^^^^
 
