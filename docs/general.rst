@@ -15,6 +15,22 @@ General Endpoints
 
     time_res = client.get_server_time()
 
+`Get system status <binance.html#binance.client.Client.get_system_status>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    status = client.get_system_status()
+
+Returns
+
+.. code-block:: python
+
+    {
+        "status": 0,        # 0: normal，1：system maintenance
+        "msg": "normal"     # normal or System maintenance.
+    }
+
 `Get Exchange Info <binance.html#binance.client.Client.get_exchange_info>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
