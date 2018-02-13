@@ -745,17 +745,17 @@ class Client(object):
                 # append this loops data to our output data
                 output_data += temp_data
 
-                # update our start timestamp using the last value in the array and add the interval timeframe
-                start_ts = temp_data[-1][0] + timeframe
-            else:
-                # it wasn't listed yet, increment our start date
-                start_ts += timeframe
+                # set our start timestamp using the last value in the array
+                start_ts = temp_data[-1][0]
 
             idx += 1
             # check if we received less than the required limit and exit the loop
             if len(temp_data) < limit:
                 # exit the while loop
                 break
+
+            # increment next call by our timeframe
+            start_ts += timeframe
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
