@@ -435,13 +435,21 @@ class BinanceSocketManager(threading.Thread):
 
         Message Format - see Binance API docs for all types
         """
+        # Get the user listen key
+        user_listen_key = self._client.stream_get_listen_key()
+        # and start the socket with this specific key
+        conn_key = self._start_user_socket(user_listen_key, callback)
+        return conn_key
+
+    def _start_user_socket(self, user_listen_key, callback):
+        # With this function we can start a user socket with a specific key
         if self._user_listen_key:
             # cleanup any sockets with this key
             for conn_key in self._conns:
                 if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
                     self.stop_socket(conn_key)
                     break
-        self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_listen_key = user_listen_key
         self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
@@ -456,11 +464,16 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        listen_key = self._client.stream_get_listen_key()
+        user_listen_key = self._client.stream_get_listen_key()
         # check if they key changed and
-        if listen_key != self._user_listen_key:
-            self.start_user_socket(self._user_callback)
-        self._start_user_timer()
+        if user_listen_key != self._user_listen_key:
+            # Start a new socket with the key received
+            # `_start_user_socket` automatically cleanup open sockets
+            # and starts timer to keep socket alive
+            self._start_user_socket(user_listen_key, self._user_callback)
+        else:
+            # Restart timer only if the user listen key is not changed
+            self._start_user_timer()
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key
