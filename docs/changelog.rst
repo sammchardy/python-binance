@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.6.6 - 2018-02-17
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- User stream websocket keep alive strategy updated
+
 v0.6.5 - 2018-02-13
 ^^^^^^^^^^^^^^^^^^^
 
