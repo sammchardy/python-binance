@@ -10,3 +10,4 @@ venv/
 .coverage
 pip-selfcheck.json
 include/
+*.pyc
