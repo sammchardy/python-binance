@@ -1,12 +1,11 @@
 # coding=utf-8
 
 import json
-import threading
 
 from autobahn.twisted.websocket import WebSocketClientFactory, \
     WebSocketClientProtocol, \
     connectWS
-from twisted.internet import reactor, ssl
+from twisted.internet import ssl
 from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
 
@@ -58,7 +57,7 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
             self.callback(self._reconnect_error_payload)
 
 
-class BinanceSocketManager(threading.Thread):
+class BinanceSocketManager(object):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
@@ -68,19 +67,24 @@ class BinanceSocketManager(threading.Thread):
 
     _user_timeout = 30 * 60  # 30 minutes
 
-    def __init__(self, client):
+    def __init__(self, client, reactor=None):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
         :type client: binance.Client
 
         """
-        threading.Thread.__init__(self)
         self._conns = {}
         self._user_timer = None
         self._user_listen_key = None
         self._user_callback = None
         self._client = client
+
+        if not reactor:
+            from twisted.internet import reactor
+            self._reactor = reactor
+
+        self.run()
 
     def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
@@ -459,9 +463,7 @@ class BinanceSocketManager(threading.Thread):
         return conn_key
 
     def _start_user_timer(self):
-        self._user_timer = threading.Timer(self._user_timeout, self._keepalive_user_socket)
-        self._user_timer.setDaemon(True)
-        self._user_timer.start()
+        task.deferLater(self._reactor, self._user_timeout, self._keepalive_user_socket)
 
     def _keepalive_user_socket(self):
         user_listen_key = self._client.stream_get_listen_key()
@@ -507,7 +509,7 @@ class BinanceSocketManager(threading.Thread):
 
     def run(self):
         try:
-            reactor.run(installSignalHandlers=False)
+            self._reactor.run()
         except ReactorAlreadyRunning:
             # Ignore error about reactor already running
             pass

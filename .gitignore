@@ -5,3 +5,8 @@ binance/__pycache__/
 build/
 dist/
 python_binance.egg-info/
+venv/
+.Python
+.coverage
+pip-selfcheck.json
+include/

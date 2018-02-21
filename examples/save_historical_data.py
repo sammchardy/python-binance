@@ -5,6 +5,7 @@ import json
 
 from datetime import datetime
 from binance.client import Client
+from twisted.internet.defer import inlineCallbacks
 
 
 def date_to_milliseconds(date_str):
@@ -141,16 +142,19 @@ start = "1 Dec, 2017"
 end = "1 Jan, 2018"
 interval = Client.KLINE_INTERVAL_30MINUTE
 
-klines = get_historical_klines(symbol, interval, start, end)
 
-# open a file with filename including symbol, interval and start and end converted to milliseconds
-with open(
-    "Binance_{}_{}_{}-{}.json".format(
-        symbol,
-        interval,
-        date_to_milliseconds(start),
-        date_to_milliseconds(end)
-    ),
-    'w'  # set file write mode
-) as f:
-    f.write(json.dumps(klines))
+@inlineCallbacks
+def run():
+    klines = yield get_historical_klines(symbol, interval, start, end)
+
+    # open a file with filename including symbol, interval and start and end converted to milliseconds
+    with open(
+        "Binance_{}_{}_{}-{}.json".format(
+            symbol,
+            interval,
+            date_to_milliseconds(start),
+            date_to_milliseconds(end)
+        ),
+        'w'  # set file write mode
+    ) as f:
+        f.write(json.dumps(klines))
