@@ -84,6 +84,7 @@ class BinanceSocketManager(object):
             from twisted.internet import reactor
             self._reactor = reactor
 
+    def start(self):
         self.run()
 
     def _start_socket(self, path, callback, prefix='ws/'):

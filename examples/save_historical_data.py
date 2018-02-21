@@ -3,9 +3,11 @@ import dateparser
 import pytz
 import json
 
+
 from datetime import datetime
 from binance.client import Client
-from twisted.internet.defer import inlineCallbacks
+from twisted.internet import task
+from twisted.internet.defer import inlineCallbacks, returnValue
 
 
 def date_to_milliseconds(date_str):
@@ -58,6 +60,7 @@ def interval_to_milliseconds(interval):
     return ms
 
 
+@inlineCallbacks
 def get_historical_klines(symbol, interval, start_str, end_str=None):
     """Get Historical Klines from Binance
 
@@ -102,7 +105,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
     symbol_existed = False
     while True:
         # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-        temp_data = client.get_klines(
+        temp_data = yield client.get_klines(
             symbol=symbol,
             interval=interval,
             limit=limit,
@@ -132,9 +135,9 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 
         # sleep after every 3rd call to be kind to the API
         if idx % 3 == 0:
-            time.sleep(1)
+            yield task.deferLater(reactor, 1)
 
-    return output_data
+    returnValue(output_data)
 
 
 symbol = "ETHBTC"

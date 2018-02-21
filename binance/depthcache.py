@@ -3,6 +3,8 @@
 from operator import itemgetter
 import time
 
+from twisted.internet.defer import inlineCallbacks
+
 from .websockets import BinanceSocketManager
 
 
@@ -145,6 +147,8 @@ class DepthCacheManager(object):
         self._start_socket()
         self._init_cache()
 
+
+    @inlineCallbacks
     def _init_cache(self):
         """Initialise the depth cache calling REST endpoint
 
@@ -153,13 +157,13 @@ class DepthCacheManager(object):
         self._last_update_id = None
         self._depth_message_buffer = []
 
-        res = self._client.get_order_book(symbol=self._symbol, limit=500)
+        res = yield self._client.get_order_book(symbol=self._symbol, limit=500)
 
         # process bid and asks from the order book
         for bid in res['bids']:
-            self._depth_cache.add_bid(bid)
+            yield self._depth_cache.add_bid(bid)
         for ask in res['asks']:
-            self._depth_cache.add_ask(ask)
+            yield self._depth_cache.add_ask(ask)
 
         # set first update id
         self._last_update_id = res['lastUpdateId']
@@ -170,7 +174,7 @@ class DepthCacheManager(object):
 
         # Apply any updates from the websocket
         for msg in self._depth_message_buffer:
-            self._process_depth_message(msg, buffer=True)
+            yield self._process_depth_message(msg, buffer=True)
 
         # clear the depth buffer
         del self._depth_message_buffer

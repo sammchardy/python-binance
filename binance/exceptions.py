@@ -14,7 +14,7 @@ class BinanceAPIException(Exception):
         else:
             self.code = json_res['code']
             self.message = json_res['msg']
-        self.status_code = response.status_code
+        self.status_code = response.code
         self.response = response
         self.request = getattr(response, 'request', None)
 

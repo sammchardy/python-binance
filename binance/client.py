@@ -140,6 +140,7 @@ class Client(object):
             params.append(('signature', data['signature']))
         return params
 
+    @inlineCallbacks
     def _request(self, method, uri, signed, force_params=False, **kwargs):
 
         # set default requests timeout
@@ -176,7 +177,8 @@ class Client(object):
         kwargs['headers'] = self._make_headers()
         response = yield treq.request(method=method, url=uri, **kwargs)
         # response = getattr(self.session, method)(uri, **kwargs)
-        returnValue(self._handle_response(response))
+        output = yield self._handle_response(response)
+        returnValue(output)
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
@@ -194,15 +196,17 @@ class Client(object):
 
         return self._request(method, uri, signed, **kwargs)
 
+    @inlineCallbacks
     def _handle_response(self, response):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        if not str(response.status_code).startswith('2'):
+        if not str(response.code).startswith('2'):
             raise BinanceAPIException(response)
         try:
-            return response.json()
+            result = yield response.json()
+            returnValue(result)
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % response.text)
 
