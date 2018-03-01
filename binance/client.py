@@ -151,8 +151,8 @@ class Client(object):
         if data and isinstance(data, dict):
             kwargs['data'] = data
         if signed:
-            # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000)
+            # generate signature with adjusted timestamp
+            kwargs['data']['timestamp'] = int((time.time() + self.get_server_time()['serverTime'] / 1000 - time.time())* 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
