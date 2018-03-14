@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v0.6.6 - 2018-02-17
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- User stream websocket keep alive strategy updated
+
+v0.6.5 - 2018-02-13
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- `get_historical_klines` response for month interval
+
 v0.6.4 - 2018-02-09
 ^^^^^^^^^^^^^^^^^^^
 
