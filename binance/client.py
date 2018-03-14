@@ -701,7 +701,7 @@ class Client(object):
         :type interval: str
         :param start_str: Start date string in UTC format
         :type start_str: str
-        :param end_str: optional - end date string in UTC format
+        :param end_str: optional - end date string in UTC format (default will fetch everything up to now)
         :type end_str: str
 
         :return: list of OHLCV values
