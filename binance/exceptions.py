@@ -6,7 +6,7 @@ class BinanceAPIException(Exception):
     LISTENKEY_NOT_EXIST = '-1125'
 
     def __init__(self, response):
-        self.status_code = 0
+        self.code = 0
         try:
             json_res = response.json()
         except ValueError:
