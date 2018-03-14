@@ -1,6 +1,15 @@
 Changelog
 =========
 
+v0.6.7 - 2018-03-14
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- Issue with `get_historical_klines` when response had exactly 500 results
+- Changed BinanceResponseException to BinanceRequestException
+- Set default code value in BinanceApiException properly
+
 v0.6.6 - 2018-02-17
 ^^^^^^^^^^^^^^^^^^^
 
