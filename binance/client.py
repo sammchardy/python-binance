@@ -697,7 +697,7 @@ class Client(object):
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
-        :param interval: Biannce Kline interval
+        :param interval: Binance Kline interval
         :type interval: str
         :param start_str: Start date string in UTC format
         :type start_str: str
