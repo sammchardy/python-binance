@@ -742,6 +742,11 @@ class Client(object):
                 symbol_existed = True
 
             if symbol_existed:
+
+                # handle the case where exactly the limit amount of data was returned last loop
+                if not len(temp_data):
+                    break
+
                 # append this loops data to our output data
                 output_data += temp_data
 
