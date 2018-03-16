@@ -688,6 +688,26 @@ class Client(object):
         """
         return self._get('klines', data=params)
 
+    def _get_earliest_valid_timestamp(self, symbol, interval):
+        """Get earliest valid open timestamp from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+
+        :return: first valid timestamp
+
+        """
+        kline = self.get_klines(
+            symbol=symbol,
+            interval=interval,
+            limit=1,
+            startTime=0,
+            endTime=None
+        )
+        return kline[0][0]
+
     def get_historical_klines(self, symbol, interval, start_str, end_str=None):
         """Get Historical Klines from Binance
 
@@ -719,14 +739,16 @@ class Client(object):
         # convert our date strings to milliseconds
         start_ts = date_to_milliseconds(start_str)
 
+        # establish first available start timestamp
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        start_ts = max(start_ts, first_valid_ts)
+        
         # if an end time was passed convert it
         end_ts = None
         if end_str:
             end_ts = date_to_milliseconds(end_str)
 
         idx = 0
-        # it can be difficult to know when a symbol was listed on Binance so allow start time to be before list date
-        symbol_existed = False
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             temp_data = self.get_klines(
@@ -737,21 +759,15 @@ class Client(object):
                 endTime=end_ts
             )
 
-            # handle the case where our start date is before the symbol pair listed on Binance
-            if not symbol_existed and len(temp_data):
-                symbol_existed = True
+            # handle the case where exactly the limit amount of data was returned last loop
+            if not len(temp_data):
+                break
 
-            if symbol_existed:
+            # append this loops data to our output data
+            output_data += temp_data
 
-                # handle the case where exactly the limit amount of data was returned last loop
-                if not len(temp_data):
-                    break
-
-                # append this loops data to our output data
-                output_data += temp_data
-
-                # set our start timestamp using the last value in the array
-                start_ts = temp_data[-1][0]
+            # set our start timestamp using the last value in the array
+            start_ts = temp_data[-1][0]
 
             idx += 1
             # check if we received less than the required limit and exit the loop
