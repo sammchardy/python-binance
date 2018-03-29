@@ -3,8 +3,6 @@
 
 class BinanceAPIException(Exception):
 
-    LISTENKEY_NOT_EXIST = '-1125'
-
     def __init__(self, response):
         self.code = 0
         try:
