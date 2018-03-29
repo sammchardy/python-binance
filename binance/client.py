@@ -617,14 +617,14 @@ class Client(object):
             if start_str is None:
                 trades = self.get_aggregate_trades(symbol=symbol, fromId=0)
             else:
-                # It doesn't matter what the end time is, as long as it's less
-                # than a day and the result set contains at least one trade.
-                # A half a day should be fine.
+                # The difference between startTime and endTime should be less
+                # or equal than an hour and the result set should contain at
+                # least one trade.
                 start_ts = date_to_milliseconds(start_str)
                 trades = self.get_aggregate_trades(
                     symbol=symbol,
                     startTime=start_ts,
-                    endTime=start_ts + (1000 * 86400 / 2))
+                    endTime=start_ts + (60 * 60 * 1000))
             for t in trades:
                 yield t
             last_id = trades[-1][self.AGG_ID]
