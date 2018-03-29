@@ -4,12 +4,13 @@ import hashlib
 import hmac
 import requests
 import time
+from abc import ABC, abstractmethod
 from operator import itemgetter
 from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
 
-class Client(object):
+class BaseClient(ABC):
 
     API_URL = 'https://api.binance.{}/api'
     WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
@@ -73,7 +74,7 @@ class Client(object):
     FUTURE_ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
     FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET = 'TAKE_PROFIT_MARKET'
     FUTURE_ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
-	
+
     TIME_IN_FORCE_GTC = 'GTC'  # Good till cancelled
     TIME_IN_FORCE_IOC = 'IOC'  # Immediate or cancel
     TIME_IN_FORCE_FOK = 'FOK'  # Fill or kill
@@ -144,19 +145,16 @@ class Client(object):
         self.testnet = testnet
         self.timestamp_offset = 0
 
-        # init DNS and SSL cert
-        self.ping()
-        # calculate timestamp offset between local and binance server
-        res = self.get_server_time()
-        self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
+    def _get_headers(self):
+        return {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+            'X-MBX-APIKEY': self.API_KEY
+        }
 
+    @abstractmethod
     def _init_session(self):
-
-        session = requests.session()
-        session.headers.update({'Accept': 'application/json',
-                                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
-                                'X-MBX-APIKEY': self.API_KEY})
-        return session
+        pass
 
     def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
         v = self.PRIVATE_API_VERSION if signed else version
@@ -218,7 +216,7 @@ class Client(object):
             params.append(('signature', data['signature']))
         return params
 
-    def _request(self, method, uri, signed, force_params=False, **kwargs):
+    def _get_request_kwargs(self, method, signed, force_params=False, **kwargs):
 
         # set default requests timeout
         kwargs['timeout'] = 10
@@ -231,16 +229,16 @@ class Client(object):
         if data and isinstance(data, dict):
             kwargs['data'] = data
 
+        if signed:
+            # generate signature
+            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
+            kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
+
             # find any requests params passed and apply them
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
                 kwargs.update(kwargs['data']['requests_params'])
                 del(kwargs['data']['requests_params'])
-
-        if signed:
-            # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
-            kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
         if data:
@@ -256,28 +254,32 @@ class Client(object):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
-        self.response = getattr(self.session, method)(uri, **kwargs)
-        return self._handle_response()
+        return kwargs
 
-    def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
-        uri = self._create_api_uri(path, signed, version)
 
-        return self._request(method, uri, signed, **kwargs)
+class Client(BaseClient):
 
-    def _request_withdraw_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_withdraw_api_uri(path)
+    def __init__(self, api_key, api_secret, requests_params=None):
 
-        return self._request(method, uri, signed, True, **kwargs)
+        super().__init__(api_key, api_secret, requests_params)
 
-    def _request_margin_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_margin_api_uri(path)
+        # init DNS and SSL cert
+        self.ping()
 
-        return self._request(method, uri, signed, **kwargs)
+    def _init_session(self):
 
-    def _request_website(self, method, path, signed=False, **kwargs):
-        uri = self._create_website_uri(path)
+        headers = self._get_headers()
 
-        return self._request(method, uri, signed, **kwargs)
+        session = requests.session()
+        session.headers.update(headers)
+        return session
+
+    def _request(self, method, uri, signed, force_params=False, **kwargs):
+
+        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
+
+        response = getattr(self.session, method)(uri, **kwargs)
+        return self._handle_response(response)
 
     def _request_futures_api(self, method, path, signed=False, **kwargs):
         uri = self._create_futures_api_uri(path)
@@ -310,22 +312,39 @@ class Client(object):
         response.
         """
         if not (200 <= self.response.status_code < 300):
-            raise BinanceAPIException(self.response)
+            raise BinanceAPIException(self.response, self.response.status_code, self.response.text)
         try:
             return self.response.json()
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % self.response.text)
 
-    def _get(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+        uri = self._create_api_uri(path, signed, version)
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_withdraw_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_withdraw_api_uri(path)
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_margin_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_margin_api_uri(path)
+
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_website(self, method, path, signed=False, **kwargs):
+        uri = self._create_website_uri(path)
+        return self._request(method, uri, signed, **kwargs)
+
+    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('get', path, signed, version, **kwargs)
 
-    def _post(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('post', path, signed, version, **kwargs)
 
-    def _put(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('put', path, signed, version, **kwargs)
 
-    def _delete(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
@@ -448,7 +467,7 @@ class Client(object):
 
         """
 
-        res = self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
+        res = self.get_exchange_info()
 
         for item in res['symbols']:
             if item['symbol'] == symbol.upper():
@@ -1344,7 +1363,7 @@ class Client(object):
         """
         return self._post('order', True, data=params)
 
-    def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -1381,7 +1400,7 @@ class Client(object):
         })
         return self.create_order(**params)
 
-    def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -1417,7 +1436,7 @@ class Client(object):
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
