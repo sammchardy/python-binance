@@ -63,3 +63,10 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 .. code:: python
 
     address = client.get_deposit_address(asset='BTC')
+
+`Get withdraw fee <binance.html#binance.client.Client.get_withdraw_fee>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    address = client.get_withdraw_fee(asset='BTC')
