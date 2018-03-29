@@ -1728,6 +1728,28 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
 
+    def get_withdraw_fee(self, **params):
+        """Fetch the withdrawal fee for an asset
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "withdrawFee": "0.0005",
+                "success": true
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'withdrawFee.html', True, data=params)
+
     # User Stream Endpoints
 
     def stream_get_listen_key(self):
