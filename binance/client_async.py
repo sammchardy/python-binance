@@ -1,11 +1,7 @@
 # coding=utf-8
 
-import hashlib
-import hmac
 import aiohttp
-import time
 import asyncio
-from operator import itemgetter
 from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 from .client import BaseClient
