@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.6.8 - 2018-03-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- `get_withdraw_fee` function
+
+**Fixed**
+
+- Remove unused LISTENKEY_NOT_EXISTS
+- Optimise the historical klines function to reduce requests
+- Issue with end_time in aggregate trade iterator
+
 v0.6.7 - 2018-03-14
 ^^^^^^^^^^^^^^^^^^^
 
