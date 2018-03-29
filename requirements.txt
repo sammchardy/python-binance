@@ -1,5 +1,7 @@
+aiohttp==2.3.10
 autobahn==21.3.1
 certifi==2020.12.5
+chardet==3.0.4
 cryptography==3.4.7
 dateparser==0.7.0
 pyOpenSSL==20.0.1
