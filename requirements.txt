@@ -1,3 +1,4 @@
+aiohttp==2.3.10
 autobahn==17.9.3
 certifi==2017.11.5
 chardet==3.0.4
