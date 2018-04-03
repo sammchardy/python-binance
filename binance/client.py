@@ -174,6 +174,7 @@ class BaseClient(ABC):
 
         return kwargs
 
+
 class Client(BaseClient):
 
     def __init__(self, api_key, api_secret, requests_params=None):
@@ -209,7 +210,6 @@ class Client(BaseClient):
             return response.json()
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % response.text)
-
 
     def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)

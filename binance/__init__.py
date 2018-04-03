@@ -3,3 +3,5 @@
 .. moduleauthor:: Sam McHardy
 
 """
+
+__version__ = '0.6.8'
