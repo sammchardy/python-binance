@@ -1,9 +1,24 @@
 #!/usr/bin/env python
 from setuptools import setup
+import codecs
+import os
+import re
+
+
+with codecs.open(
+        os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'binance',
+            '__init__.py'
+        ), 'r', 'latin1') as fp:
+    try:
+        version = re.findall(r"^__version__ = '([^']+)'$", fp.read(), re.M)[0]
+    except IndexError:
+        raise RuntimeError('Unable to determine version.')
 
 setup(
     name='python-binance',
-    version='0.7.11',
+    version=version,
     packages=['binance'],
     description='Binance REST API python implementation',
     url='https://github.com/sammchardy/python-binance',
