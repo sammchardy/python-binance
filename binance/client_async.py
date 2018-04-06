@@ -7,12 +7,12 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 from .client import BaseClient
 
 
-class Client(BaseClient):
+class AsyncClient(BaseClient):
 
     @classmethod
     async def create(cls, api_key, api_secret, requests_params=None):
 
-        self = Client(api_key, api_secret, requests_params)
+        self = AsyncClient(api_key, api_secret, requests_params)
 
         await self.ping()
 
@@ -28,7 +28,6 @@ class Client(BaseClient):
         session = aiohttp.ClientSession(
             loop=loop,
             headers=self._get_headers()
-
         )
         return session
 
