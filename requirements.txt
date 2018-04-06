@@ -9,3 +9,4 @@ requests==2.25.1
 service-identity==18.1.0
 Twisted==20.3.0
 ujson
+websockets==3.4
