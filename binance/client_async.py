@@ -432,7 +432,7 @@ class AsyncClient(BaseClient):
         """
         return await self._get('aggTrades', data=params)
 
-    def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+    async def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
         """Iterate over aggregate trade data from (start_time or last_id) to
         the end of the history so far.
 
@@ -472,13 +472,13 @@ class AsyncClient(BaseClient):
             # Without a last_id, we actually need the first trade.  Normally,
             # we'd get rid of it. See the next loop.
             if start_str is None:
-                trades = self.get_aggregate_trades(symbol=symbol, fromId=0)
+                trades = await self.get_aggregate_trades(symbol=symbol, fromId=0)
             else:
                 # The difference between startTime and endTime should be less
                 # or equal than an hour and the result set should contain at
                 # least one trade.
                 start_ts = date_to_milliseconds(start_str)
-                trades = self.get_aggregate_trades(
+                trades = await self.get_aggregate_trades(
                     symbol=symbol,
                     startTime=start_ts,
                     endTime=start_ts + (60 * 60 * 1000))
@@ -493,7 +493,7 @@ class AsyncClient(BaseClient):
             # add the right delay time on their end, forcing us to wait for
             # data. That really simplifies this function's job. Binance is
             # fucking awesome.
-            trades = self.get_aggregate_trades(symbol=symbol, fromId=last_id)
+            trades = await self.get_aggregate_trades(symbol=symbol, fromId=last_id)
             # fromId=n returns a set starting with id n, but we already have
             # that one. So get rid of the first item in the result set.
             trades = trades[1:]
