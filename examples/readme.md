@@ -6,6 +6,8 @@ The 'example' folder contains examples of bot's built by @BlockchainEng using py
 
 An [example Youtube Video by @BlockchainEng provides an introduction to the features of this project/bot](https://www.youtube.com/watch?v=8AAN03M8QhA). 
 
+Additional explanation is available on a [Medium post describing additional functionality/considerations is available here](https://medium.com/@BlockchainEng/how-to-build-an-automated-cryptocurrency-trading-bot-on-binance-with-python-2cd9b5874e44) . 
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
