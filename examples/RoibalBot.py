@@ -21,6 +21,7 @@ Copyright (c) 2018 by Joaquin Roibal
 from binance.client import Client
 import time
 import matplotlib
+from matplotlib import cm
 import matplotlib.pyplot as plt
 from binance.enums import *
 import save_historical_data_Roibal
@@ -72,7 +73,7 @@ def run():
     coin_tickers(list_of_symbols)
     for symbol in list_of_symbols:
         market_depth(symbol)
-
+    visualize_market_depth()
     #get recent trades
     trades = client.get_recent_trades(symbol='BNBBTC')
     print("\nRecent Trades: ", trades)
@@ -131,7 +132,7 @@ def market_depth(sym, num_entries=15):
             ask_price.append(float(ask[0]))
             ask_tot+=float(ask[1])
             ask_quantity.append(ask_tot)
-            print(ask)
+            #print(ask)
             i+=1
     j=0     #Secondary Counter for Bids
     print("\n", sym, "\nDepth     BIDS:\n")
@@ -141,19 +142,26 @@ def market_depth(sym, num_entries=15):
             bid_price.append(float(bid[0]))
             bid_tot += float(bid[1])
             bid_quantity.append(bid_tot)
-
-            print(bid)
+            #print(bid)
             j+=1
-
+    return ask_price, ask_quantity, bid_price, bid_quantity
     #Plot Data
 
+def visualize_market_depth(wait_time_sec='60', tot_time='480', sym='ETHUSDT'):
+    cycles = int(tot_time)/int(wait_time_sec)
+    start_time = time.asctime()
     fig, ax = plt.subplots()
-    print(ask_price)
-    plt.plot(ask_price, ask_quantity, color = 'red', label='asks')
-    plt.plot(bid_price, bid_quantity, color = 'blue', label = 'bids')
-    #ax.plot(depth['bids'][0], depth['bids'][1])
+    for i in range(0,int(cycles)):
+        ask_pri, ask_quan, bid_pri, bid_quan = market_depth(sym)
+
+        #print(ask_price)
+        plt.plot(ask_pri, ask_quan, color = 'red', label='asks-cycle: {}'.format(i))
+        plt.plot(bid_pri, bid_quan, color = 'blue', label = 'bids-cycle: {}'.format(i))
+        #ax.plot(depth['bids'][0], depth['bids'][1])
+        time.sleep(int(wait_time_sec))
+    end_time = time.asctime()
     ax.set(xlabel='Price', ylabel='Quantity',
-       title='Binance Order Book: {} \n {}'.format(sym, time.asctime()))
+       title='Binance Order Book: {} \n {} - {}'.format(sym, start_time, end_time))
     plt.legend()
     plt.show()
 
