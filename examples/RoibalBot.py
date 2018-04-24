@@ -7,7 +7,7 @@ V 0.01 - Updated 4/20/2018
 
 Licensed under MIT License
 
-Instructional Youtube Video:
+Instructional Youtube Video: https://www.youtube.com/watch?v=8AAN03M8QhA
 
 Did you enjoy the functionality of this bot? Tips always appreciated.
 
@@ -21,24 +21,25 @@ Copyright (c) 2018 by Joaquin Roibal
 from binance.client import Client
 import time
 import matplotlib
+import matplotlib.pyplot as plt
 from binance.enums import *
 import save_historical_data_Roibal
 from BinanceKeys import BinanceKey1
-
 
 api_key = BinanceKey1['api_key']
 api_secret = BinanceKey1['api_secret']
 
 client = Client(api_key, api_secret)
 
-
+# get a deposit address for BTC
+address = client.get_deposit_address(asset='BTC')
 
 def run():
     # get system status
     #Create List of Crypto Pairs to Watch
     list_of_symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT','BNBBTC', 'ETHBTC', 'LTCBTC']
-    time_horizon = "Short"
-    Risk = "High"
+    #time_horizon = "Short"
+    #Risk = "High"
 
     #Get Status of Exchange & Account
     try:
@@ -108,16 +109,28 @@ def convert_time_binance(gt):
     return tt
 
 
-def market_depth(sym, num_entries=10):
+def market_depth(sym, num_entries=15):
     #Get market depth
     #Retrieve and format market depth (order book) including time-stamp
     i=0     #Used as a counter for number of entries
     print("Order Book: ", convert_time_binance(client.get_server_time()))
     depth = client.get_order_book(symbol=sym)
+    print(depth)
+    print(depth['asks'][0])
+    ask_tot=0.0
+    ask_price =[]
+    ask_quantity = []
+    bid_price = []
+    bid_quantity = []
+    bid_tot = 0.0
     print("\n", sym, "\nDepth     ASKS:\n")
     print("Price     Amount")
     for ask in depth['asks']:
         if i<num_entries:
+            #ask_list.append([ask[0], ask[1]])
+            ask_price.append(float(ask[0]))
+            ask_tot+=float(ask[1])
+            ask_quantity.append(ask_tot)
             print(ask)
             i+=1
     j=0     #Secondary Counter for Bids
@@ -125,8 +138,27 @@ def market_depth(sym, num_entries=10):
     print("Price     Amount")
     for bid in depth['bids']:
         if j<num_entries:
+            bid_price.append(float(bid[0]))
+            bid_tot += float(bid[1])
+            bid_quantity.append(bid_tot)
+
             print(bid)
             j+=1
+
+    #Plot Data
+
+    fig, ax = plt.subplots()
+    print(ask_price)
+    plt.plot(ask_price, ask_quantity, color = 'red', label='asks')
+    plt.plot(bid_price, bid_quantity, color = 'blue', label = 'bids')
+    #ax.plot(depth['bids'][0], depth['bids'][1])
+    ax.set(xlabel='Price', ylabel='Quantity',
+       title='Binance Order Book: {} \n {}'.format(sym, time.asctime()))
+    plt.legend()
+    plt.show()
+
+
+
 
 
 def coin_prices(watch_list):
@@ -164,6 +196,11 @@ def Bollinger_Bands():
 def buy_sell_bot():
     pass
 
+def position_sizing():
+    pass
+
+def trailing_stop_loss():
+    pass
 
 
 #Place Limit Order
