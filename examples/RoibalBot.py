@@ -110,7 +110,7 @@ def convert_time_binance(gt):
     return tt
 
 
-def market_depth(sym, num_entries=15):
+def market_depth(sym, num_entries=20):
     #Get market depth
     #Retrieve and format market depth (order book) including time-stamp
     i=0     #Used as a counter for number of entries
@@ -124,10 +124,18 @@ def market_depth(sym, num_entries=15):
     bid_price = []
     bid_quantity = []
     bid_tot = 0.0
+    place_order_ask_price = 0
+    place_order_bid_price = 0
+    max_order_ask = 0
+    max_order_bid = 0
     print("\n", sym, "\nDepth     ASKS:\n")
     print("Price     Amount")
     for ask in depth['asks']:
         if i<num_entries:
+            if float(ask[1])>float(max_order_ask):
+                #Determine Price to place ask order based on highest volume
+                max_order_ask=ask[1]
+                place_order_ask_price=round(float(ask[0]),5)-0.0001
             #ask_list.append([ask[0], ask[1]])
             ask_price.append(float(ask[0]))
             ask_tot+=float(ask[1])
@@ -139,34 +147,51 @@ def market_depth(sym, num_entries=15):
     print("Price     Amount")
     for bid in depth['bids']:
         if j<num_entries:
+            if float(bid[1])>float(max_order_bid):
+                #Determine Price to place ask order based on highest volume
+                max_order_bid=bid[1]
+                place_order_bid_price=round(float(bid[0]),5)+0.0001
             bid_price.append(float(bid[0]))
             bid_tot += float(bid[1])
             bid_quantity.append(bid_tot)
             #print(bid)
             j+=1
-    return ask_price, ask_quantity, bid_price, bid_quantity
+    return ask_price, ask_quantity, bid_price, bid_quantity, place_order_ask_price, place_order_bid_price
     #Plot Data
 
-def visualize_market_depth(wait_time_sec='60', tot_time='480', sym='ETHUSDT'):
+def visualize_market_depth(wait_time_sec='1', tot_time='1', sym='ICXBNB'):
     cycles = int(tot_time)/int(wait_time_sec)
     start_time = time.asctime()
     fig, ax = plt.subplots()
-    for i in range(0,int(cycles)):
-        ask_pri, ask_quan, bid_pri, bid_quan = market_depth(sym)
+    for i in range(1,int(cycles)+1):
+        ask_pri, ask_quan, bid_pri, bid_quan, ask_order, bid_order = market_depth(sym)
 
         #print(ask_price)
         plt.plot(ask_pri, ask_quan, color = 'red', label='asks-cycle: {}'.format(i))
         plt.plot(bid_pri, bid_quan, color = 'blue', label = 'bids-cycle: {}'.format(i))
+
         #ax.plot(depth['bids'][0], depth['bids'][1])
-        time.sleep(int(wait_time_sec))
-    end_time = time.asctime()
+        max_bid = max(bid_pri)
+        min_ask = min(ask_pri)
+        max_quant = max(ask_quan[-1], bid_quan[-1])
+        spread = round(((min_ask-max_bid)/min_ask)*100,5)   #Spread based on market
+        proj_order_spread = round(((ask_order-bid_order)/ask_order)*100, 5)
+        price=round(((max_bid+min_ask)/2),5)
+        plt.plot([price, price],[0, max_quant], color = 'green', label = 'Price - Cycle: {}'.format(i)) #Vertical Line for Price
+        plt.plot([ask_order, ask_order],[0, max_quant], color = 'black', label = 'Ask - Cycle: {}'.format(i))
+        plt.plot([bid_order, bid_order],[0, max_quant], color = 'black', label = 'Buy - Cycle: {}'.format(i))
+        ax.annotate("Max Bid: {} \nMin Ask: {}\nSpread: {} %\nCycle: {}\nPrice: {}"
+                    "\nPlace Bid: {} \nPlace Ask: {}\n Projected Spread: {} %".format(max_bid, min_ask, spread, i, price, bid_order, ask_order, proj_order_spread),
+                    xy=(max_bid, ask_quan[-1]), xytext=(max_bid, ask_quan[0]))
+        if i==(cycles+1):
+            break
+        else:
+            time.sleep(int(wait_time_sec))
+    #end_time = time.asctime()
     ax.set(xlabel='Price', ylabel='Quantity',
-       title='Binance Order Book: {} \n {} - {}'.format(sym, start_time, end_time))
+       title='Binance Order Book: {} \n {}\n Cycle Time: {} seconds - Num Cycles: {}'.format(sym, start_time, wait_time_sec, cycles))
     plt.legend()
     plt.show()
-
-
-
 
 
 def coin_prices(watch_list):
