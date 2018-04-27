@@ -595,9 +595,9 @@ class Client(object):
 
         :param symbol: Symbol string e.g. ETHBTC
         :type symbol: str
-        :param start_str: Start date string in UTC format. The iterator will
+        :param start_str: Start date string in UTC format or timestamp in milliseconds. The iterator will
         return the first trade occurring later than this time.
-        :type start_str: str
+        :type start_str: str|int
         :param last_id: aggregate trade ID of the last known aggregate trade.
         Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
 
@@ -620,7 +620,10 @@ class Client(object):
                 # The difference between startTime and endTime should be less
                 # or equal than an hour and the result set should contain at
                 # least one trade.
-                start_ts = date_to_milliseconds(start_str)
+                if type(start_str) == int:
+                    start_ts = start_str
+                else:
+                    start_ts = date_to_milliseconds(start_str)
                 trades = self.get_aggregate_trades(
                     symbol=symbol,
                     startTime=start_ts,
@@ -719,10 +722,10 @@ class Client(object):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format
-        :type start_str: str
-        :param end_str: optional - end date string in UTC format (default will fetch everything up to now)
-        :type end_str: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
 
         :return: list of OHLCV values
 
@@ -737,7 +740,10 @@ class Client(object):
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
-        start_ts = date_to_milliseconds(start_str)
+        if type(start_str) == int:
+            start_ts = start_str
+        else:
+            start_ts = date_to_milliseconds(start_str)
 
         # establish first available start timestamp
         first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
@@ -746,7 +752,10 @@ class Client(object):
         # if an end time was passed convert it
         end_ts = None
         if end_str:
-            end_ts = date_to_milliseconds(end_str)
+            if type(end_str) == int:
+                end_ts = end_str
+            else:
+                end_ts = date_to_milliseconds(end_str)
 
         idx = 0
         while True:

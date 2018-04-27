@@ -501,8 +501,6 @@ class BinanceSocketManager(threading.Thread):
         # stop the timer
         self._user_timer.cancel()
         self._user_timer = None
-        # close the stream
-        self._client.stream_close(listenKey=self._user_listen_key)
         self._user_listen_key = None
 
     def run(self):
