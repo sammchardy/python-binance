@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v0.6.9 - 2018-04-27
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- timestamp in milliseconds to `get_historical_klines` function
+- timestamp in milliseconds to `aggregate_trade_iter` function
+
+**Fixed**
+
+- Don't close user stream listen key on socket close
+
 v0.6.8 - 2018-03-29
 ^^^^^^^^^^^^^^^^^^^
 
