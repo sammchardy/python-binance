@@ -39,9 +39,15 @@ def run():
     # get system status
     #Create List of Crypto Pairs to Watch
     list_of_symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT','BNBBTC', 'ETHBTC', 'LTCBTC']
+    micro_cap_coins = ['ICXBNB', 'BRDBNB', 'NAVBNB', 'RCNBNB']
     #time_horizon = "Short"
     #Risk = "High"
-
+    try:
+        save_historical_data_Roibal.save_historic_klines_csv('BTCUSDT', "1 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_1MINUTE)
+        save_historical_data_Roibal.save_historic_klines_csv('ETHBTC', "6 months ago UTC", "now UTC", Client.KLINE_INTERVAL_1DAY)
+        save_historical_data_Roibal.save_historic_klines_csv('BRDBNB', "8 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_3MINUTE)
+    except():
+        pass
     #Get Status of Exchange & Account
     try:
         status = client.get_system_status()
@@ -71,9 +77,14 @@ def run():
     #Get Info about Coins in Watch List
     coin_prices(list_of_symbols)
     coin_tickers(list_of_symbols)
-    for symbol in list_of_symbols:
-        market_depth(symbol)
-    visualize_market_depth()
+    #for symbol in list_of_symbols:
+    #    market_depth(symbol)
+
+    #for coin in micro_cap_coins:
+    #    visualize_market_depth(1, 1, coin)
+    for coin in micro_cap_coins:
+        scalping_orders(coin, 1, 1)
+
     #get recent trades
     trades = client.get_recent_trades(symbol='BNBBTC')
     print("\nRecent Trades: ", trades)
@@ -159,7 +170,36 @@ def market_depth(sym, num_entries=20):
     return ask_price, ask_quantity, bid_price, bid_quantity, place_order_ask_price, place_order_bid_price
     #Plot Data
 
-def visualize_market_depth(wait_time_sec='1', tot_time='1', sym='ICXBNB'):
+def scalping_orders(coin, wait=1, tot_time=1):
+    #Function for placing 'scalp orders'
+    #Calls on Visualizing Scalping Orders Function
+    ap, aq, bp, bq, place_ask_order, place_bid_order, spread, proj_spread, max_bid, min_ask = visualize_market_depth(wait, tot_time, coin)
+    print("Coin: {}\nPrice to Place Ask Order: {}\nPrice to place Bid Order: {}".format(coin, place_ask_order, place_bid_order))
+    print("Spread: {} % Projected Spread {} %".format(spread, proj_spread))
+    print("Max Bid: {} Min Ask: {}".format(max_bid, min_ask))
+    #Place Orders based on calculated bid-ask orders if projected > 0.05% (transaction fee)
+    #Documentation: http://python-binance.readthedocs.io/en/latest/account.html#orders
+    """
+    if proj_spread > 0.05:
+        quant1=100          #Determine Code Required to calculate 'minimum' quantity
+        #Place Bid Order:
+        bid_order1 = client.order_limit_buy(
+            symbol=coin,
+            quantity=quant1,
+            price=place_bid_order)
+        #Place Ask Order
+        ask_order1 = client.order_limit_sell(
+            symbol=coin,
+            quantity=quant1,
+            price=place_ask_order)
+
+
+    #Place second order if current spread > 0.05% (transaction fee)
+
+    """
+
+
+def visualize_market_depth(wait_time_sec='1', tot_time='1', sym='ICXBNB', precision=5):
     cycles = int(tot_time)/int(wait_time_sec)
     start_time = time.asctime()
     fig, ax = plt.subplots()
@@ -175,11 +215,13 @@ def visualize_market_depth(wait_time_sec='1', tot_time='1', sym='ICXBNB'):
         min_ask = min(ask_pri)
         max_quant = max(ask_quan[-1], bid_quan[-1])
         spread = round(((min_ask-max_bid)/min_ask)*100,5)   #Spread based on market
-        proj_order_spread = round(((ask_order-bid_order)/ask_order)*100, 5)
-        price=round(((max_bid+min_ask)/2),5)
+        proj_order_spread = round(((ask_order-bid_order)/ask_order)*100, precision)
+        price=round(((max_bid+min_ask)/2), precision)
         plt.plot([price, price],[0, max_quant], color = 'green', label = 'Price - Cycle: {}'.format(i)) #Vertical Line for Price
         plt.plot([ask_order, ask_order],[0, max_quant], color = 'black', label = 'Ask - Cycle: {}'.format(i))
         plt.plot([bid_order, bid_order],[0, max_quant], color = 'black', label = 'Buy - Cycle: {}'.format(i))
+        #plt.plot([min_ask, min_ask],[0, max_quant], color = 'grey', label = 'Min Ask - Cycle: {}'.format(i))
+        #plt.plot([max_bid, max_bid],[0, max_quant], color = 'grey', label = 'Max Buy - Cycle: {}'.format(i))
         ax.annotate("Max Bid: {} \nMin Ask: {}\nSpread: {} %\nCycle: {}\nPrice: {}"
                     "\nPlace Bid: {} \nPlace Ask: {}\n Projected Spread: {} %".format(max_bid, min_ask, spread, i, price, bid_order, ask_order, proj_order_spread),
                     xy=(max_bid, ask_quan[-1]), xytext=(max_bid, ask_quan[0]))
@@ -192,6 +234,7 @@ def visualize_market_depth(wait_time_sec='1', tot_time='1', sym='ICXBNB'):
        title='Binance Order Book: {} \n {}\n Cycle Time: {} seconds - Num Cycles: {}'.format(sym, start_time, wait_time_sec, cycles))
     plt.legend()
     plt.show()
+    return ask_pri, ask_quan, bid_pri, bid_quan, ask_order, bid_order, spread, proj_order_spread, max_bid, min_ask
 
 
 def coin_prices(watch_list):

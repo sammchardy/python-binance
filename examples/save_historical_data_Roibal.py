@@ -3,6 +3,10 @@ import dateparser
 import pytz
 import json
 import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import matplotlib.dates as mdates
+import mpl_finance #import candlestick_ohlc
 
 from datetime import datetime
 from binance.client import Client
@@ -236,6 +240,28 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 
     return output_data
 
+def save_historic_klines_csv(symbol, start, end, interval):
+    klines = get_historical_klines(symbol, interval, start, end)
+    ochl = []
+    with open('Binance_{}_{}-{}.txt'.format(symbol, start, end), 'w') as f:
+        f.write('Time, Open, High, Low, Close, Volume\n')
+        for kline in klines:
+            #print(kline)
+            time = int(kline[0])
+            open1 = float(kline[1])
+            Low = float(kline[2])
+            High = float(kline[3])
+            Close = float(kline[4])
+            Volume = float(kline[5])
+            format_kline = "{}, {}, {}, {}, {}, {}\n".format(time, open1, High, Low, Close, Volume)
+            ochl.append([time, open1, Close, High, Low, Volume])
+            f.write(format_kline)
+    #Matplotlib visualization how-to from: https://pythonprogramming.net/candlestick-ohlc-graph-matplotlib-tutorial/
+    fig, ax = plt.subplots()
+    mpl_finance.candlestick_ochl(ax, ochl, width=1)
+    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d-%h-%m')) #Converting to date format not working
+    ax.set(xlabel='Date', ylabel='Price', title='{} {}-{}'.format(symbol, start, end))
+    plt.show()
 
 def save_historic_klines_datafile(symbol, start, end, interval):
     #Collects kline historical data , output and saves to file
