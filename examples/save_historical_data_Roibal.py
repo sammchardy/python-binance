@@ -243,24 +243,51 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 def save_historic_klines_csv(symbol, start, end, interval):
     klines = get_historical_klines(symbol, interval, start, end)
     ochl = []
+    list_of_open = []
+    three_period_moving_ave = []
+    time3=[]
+    five_period_moving_ave = []
+    ten_period_moving_ave = []
+    time10=[]
     with open('Binance_{}_{}-{}.txt'.format(symbol, start, end), 'w') as f:
         f.write('Time, Open, High, Low, Close, Volume\n')
         for kline in klines:
             #print(kline)
-            time = int(kline[0])
+            time1 = int(kline[0])
             open1 = float(kline[1])
             Low = float(kline[2])
             High = float(kline[3])
             Close = float(kline[4])
             Volume = float(kline[5])
             format_kline = "{}, {}, {}, {}, {}, {}\n".format(time, open1, High, Low, Close, Volume)
-            ochl.append([time, open1, Close, High, Low, Volume])
+            ochl.append([time1, open1, Close, High, Low, Volume])
             f.write(format_kline)
+
+            #track opening prices, use for calculating moving averages
+            list_of_open.append(open1)
+                #Calculate three 'period' moving average - Based on Candlestick duration
+            if len(list_of_open)>2:
+                price3=0
+                for pri in list_of_open[-3:]:
+                    price3+=pri
+                three_period_moving_ave.append(float(price3/3))
+                time3.append(time1)
+            #Perform Moving Average Calculation for 10 periods
+            if len(list_of_open)>9:
+                price10=0
+                for pri in list_of_open[-10:]:
+                    price10+=pri
+                ten_period_moving_ave.append(float(price10/10))
+                time10.append(time1)
+
     #Matplotlib visualization how-to from: https://pythonprogramming.net/candlestick-ohlc-graph-matplotlib-tutorial/
     fig, ax = plt.subplots()
     mpl_finance.candlestick_ochl(ax, ochl, width=1)
+    plt.plot(time3, three_period_moving_ave, color='green', label='3 Period MA - Open')
+    plt.plot(time10, ten_period_moving_ave, color='blue', label='10 Period MA - Open')
     #ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d-%h-%m')) #Converting to date format not working
     ax.set(xlabel='Date', ylabel='Price', title='{} {}-{}'.format(symbol, start, end))
+    plt.legend()
     plt.show()
 
 def save_historic_klines_datafile(symbol, start, end, interval):

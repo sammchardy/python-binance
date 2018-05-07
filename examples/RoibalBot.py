@@ -42,10 +42,25 @@ def run():
     micro_cap_coins = ['ICXBNB', 'BRDBNB', 'NAVBNB', 'RCNBNB']
     #time_horizon = "Short"
     #Risk = "High"
+    print("\n\n---------------------------------------------------------\n\n")
+    print("Hello and Welcome to the Crypto Trader Bot Python Script\nCreated 2018 by Joaquin Roibal")
+    print("A quick 'run-through' will be performed to introduce you to the functionality of this bot")
+    print("To learn more visit medium.com/@BlockchainEng or watch introductory Youtube Videos")
+    time.sleep(5)
     try:
+        #Example Visualizations of Coins
         save_historical_data_Roibal.save_historic_klines_csv('BTCUSDT', "1 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_1MINUTE)
         save_historical_data_Roibal.save_historic_klines_csv('ETHBTC', "6 months ago UTC", "now UTC", Client.KLINE_INTERVAL_1DAY)
         save_historical_data_Roibal.save_historic_klines_csv('BRDBNB', "8 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_3MINUTE)
+        save_historical_data_Roibal.save_historic_klines_csv('BTCUSDT', "12 months ago UTC", "now UTC", Client.KLINE_INTERVAL_1WEEK)
+        save_historical_data_Roibal.save_historic_klines_csv('ETHUSDT', "8 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_15MINUTE)
+
+        #Visualize All Micro Cap Coins for 8 hour period and 3 minute Candlestick
+        for coin in micro_cap_coins:
+            save_historical_data_Roibal.save_historic_klines_csv(coin, "8 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_3MINUTE)
+            save_historical_data_Roibal.save_historic_klines_csv(coin, "24 hours ago UTC", "now UTC", Client.KLINE_INTERVAL_15MINUTE)
+            save_historical_data_Roibal.save_historic_klines_csv(coin, "1 month ago UTC", "now UTC", Client.KLINE_INTERVAL_1DAY)
+
     except():
         pass
     #Get Status of Exchange & Account
