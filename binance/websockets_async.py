@@ -438,6 +438,24 @@ class BinanceSocketManager:
         await self._start_socket(path, coro, 'stream?')
         return path
 
+    async def start_user_socket(self, coro):
+        """Start a websocket for user data
+
+        https://www.binance.com/restapipub.html#user-wss-endpoint
+
+        :param coro: callback function to handle messages
+        :type coro: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+        """
+        # Get the user listen key
+        user_listen_key = await self._client.stream_get_listen_key()
+        # and start the socket with this specific key
+        conn_key = await self._start_user_socket(user_listen_key, coro)
+        return conn_key
+
     async def _start_user_socket(self, user_listen_key, callback):
         # With this function we can start a user socket with a specific key
         if self._user_listen_key:
