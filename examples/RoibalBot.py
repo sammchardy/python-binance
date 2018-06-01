@@ -1,9 +1,11 @@
 """
 The Purpose of the RoibalBot Python Program is to create an automated trading bot (functionality) on Binance
 Utilized Python-Binance ( https://github.com/sammchardy/python-binance )
+Advanced-Version capable of all exchanges, all coins (using cctx)
 
 Created 4/14/2018 by Joaquin Roibal
 V 0.01 - Updated 4/20/2018
+v 0.02 - Updated 5/30/2018 - Converted to Advanced Version: https://github.com/Roibal/Cryptocurrency-Trading-Bots-Python-Beginner-Advance
 
 Licensed under MIT License
 
@@ -43,7 +45,7 @@ def run():
     #time_horizon = "Short"
     #Risk = "High"
     print("\n\n---------------------------------------------------------\n\n")
-    print("Hello and Welcome to the Crypto Trader Bot Python Script\nCreated 2018 by Joaquin Roibal")
+    print("Hello and Welcome to the Crypto Trader Bot Python Script\nCreated 2018 by Joaquin Roibal (@BlockchainEng)")
     print("A quick 'run-through' will be performed to introduce you to the functionality of this bot")
     print("To learn more visit medium.com/@BlockchainEng or watch introductory Youtube Videos")
     time.sleep(5)
