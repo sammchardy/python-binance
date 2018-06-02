@@ -474,7 +474,7 @@ class BinanceSocketManager:
         return conn_key
 
     def _start_user_timer(self):
-        self._loop.call_later(self._user_timeout, self._keepalive_user_socket)
+        self._user_timer = self._loop.call_later(self._user_timeout, self._keepalive_user_socket)
 
     async def _keepalive_user_socket(self):
         user_listen_key = await self._client.stream_get_listen_key()
@@ -511,7 +511,8 @@ class BinanceSocketManager:
         if not self._user_listen_key:
             return
         # stop the timer
-        self._user_timer.cancel()
+        if self._user_timer:
+            self._user_timer.cancel()
         self._user_timer = None
         # close the stream
         await self._client.stream_close(listenKey=self._user_listen_key)
