@@ -725,7 +725,7 @@ class Client(BaseClient):
             interval=interval,
             limit=1,
             startTime=0,
-            endTime=None
+            endTime=int(time.time() * 1000)
         )
         return kline[0][0]
 
