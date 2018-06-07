@@ -2,6 +2,8 @@
 
 import aiohttp
 import asyncio
+import time
+
 from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 from .client import BaseClient
@@ -565,7 +567,7 @@ class AsyncClient(BaseClient):
             interval=interval,
             limit=1,
             startTime=0,
-            endTime=None
+            endTime=int(time.time() * 1000)
         )
         return kline[0][0]
 

@@ -862,13 +862,14 @@ class Client(BaseClient):
         :return: first valid timestamp
 
         """
-        kline = self._klines(spot=spot,
-                             symbol=symbol,
-                             interval=interval,
-                             limit=1,
-                             startTime=0,
-                             endTime=None
-                             )
+        kline = self._klines(
+            spot=spot,
+            symbol=symbol,
+            interval=interval,
+            limit=1,
+            startTime=0,
+            endTime=None
+        )
         return kline[0][0]
 
     def get_historical_klines(self, symbol, interval, start_str, end_str=None,
