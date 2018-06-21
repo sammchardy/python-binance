@@ -15,6 +15,22 @@ General Endpoints
 
     time_res = client.get_server_time()
 
+`Get system status <binance.html#binance.client.Client.get_system_status>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    status = client.get_system_status()
+
+Returns
+
+.. code-block:: python
+
+    {
+        "status": 0,        # 0: normal，1：system maintenance
+        "msg": "normal"     # normal or System maintenance.
+    }
+
 `Get Exchange Info <binance.html#binance.client.Client.get_exchange_info>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -39,5 +55,3 @@ This call is deprecated, use the above Exchange Info call
 .. code:: python
 
     products = client.get_products()
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/general?pixel

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 import json
@@ -43,21 +42,26 @@ class BinanceReconnectingClientFactory(ReconnectingClientFactory):
 class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFactory):
 
     protocol = BinanceClientProtocol
+    _reconnect_error_payload = {
+        'e': 'error',
+        'm': 'Max reconnect retries reached'
+    }
 
     def clientConnectionFailed(self, connector, reason):
         self.retry(connector)
+        if self.retries > self.maxRetries:
+            self.callback(self._reconnect_error_payload)
 
     def clientConnectionLost(self, connector, reason):
-        # check if closed cleanly
-        if reason.getErrorMessage() != 'Connection was closed cleanly.':
-            self.retry(connector)
+        self.retry(connector)
+        if self.retries > self.maxRetries:
+            self.callback(self._reconnect_error_payload)
 
 
 class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
 
-    WEBSOCKET_DEPTH_1 = '1'
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
@@ -86,13 +90,14 @@ class BinanceSocketManager(threading.Thread):
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
+        factory.reconnect = True
         context_factory = ssl.ClientContextFactory()
 
         self._conns[path] = connectWS(factory, context_factory)
         return path
 
-    def start_depth_socket(self, symbol, callback, depth=WEBSOCKET_DEPTH_1):
-        """Start a websocket for symbol market depth
+    def start_depth_socket(self, symbol, callback, depth=None):
+        """Start a websocket for symbol market depth returning either a diff or a partial book
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#partial-book-depth-streams
 
@@ -100,48 +105,63 @@ class BinanceSocketManager(threading.Thread):
         :type symbol: str
         :param callback: callback function to handle messages
         :type callback: function
-        :param depth: Number of depth entries to return, default WEBSOCKET_DEPTH_1
-        :type depth: enum
+        :param depth: optional Number of depth entries to return, default None. If passed returns a partial book instead of a diff
+        :type depth: str
 
         :returns: connection key string if successful, False otherwise
 
-        Message Format
+        Partial Message Format
 
         .. code-block:: python
 
             {
-                "e": "depthUpdate",			# event type
-                "E": 1499404630606, 		# event time
-                "s": "ETHBTC", 				# symbol
-                "u": 7913455, 				# updateId to sync up with updateid in /api/v1/depth
-                "b": [						# bid depth delta
+                "lastUpdateId": 160,  # Last update ID
+                "bids": [             # Bids to be updated
                     [
-                        "0.10376590", 		# price (need to update the quantity on this price)
-                        "59.15767010", 		# quantity
-                        []					# can be ignored
-                    ],
+                        "0.0024",     # price level to be updated
+                        "10",         # quantity
+                        []            # ignore
+                    ]
                 ],
-                "a": [						# ask depth delta
+                "asks": [             # Asks to be updated
                     [
-                        "0.10376586", 		# price (need to update the quantity on this price)
-                        "159.15767010", 	# quantity
-                        []					# can be ignored
-                    ],
-                    [
-                        "0.10383109",
-                        "345.86845230",
-                        []
-                    ],
-                    [
-                        "0.10490700",
-                        "0.00000000", 		# quantity=0 means remove this level
-                        []
+                        "0.0026",     # price level to be updated
+                        "100",        # quantity
+                        []            # ignore
                     ]
                 ]
             }
+
+
+        Diff Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "depthUpdate", # Event type
+                "E": 123456789,     # Event time
+                "s": "BNBBTC",      # Symbol
+                "U": 157,           # First update ID in event
+                "u": 160,           # Final update ID in event
+                "b": [              # Bids to be updated
+                    [
+                        "0.0024",   # price level to be updated
+                        "10",       # quantity
+                        []          # ignore
+                    ]
+                ],
+                "a": [              # Asks to be updated
+                    [
+                        "0.0026",   # price level to be updated
+                        "100",      # quantity
+                        []          # ignore
+                    ]
+                ]
+            }
+
         """
         socket_name = symbol.lower() + '@depth'
-        if depth != self.WEBSOCKET_DEPTH_1:
+        if depth and depth != '1':
             socket_name = '{}{}'.format(socket_name, depth)
         return self._start_socket(socket_name, callback)
 
@@ -155,7 +175,7 @@ class BinanceSocketManager(threading.Thread):
         :param callback: callback function to handle messages
         :type callback: function
         :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
-        :type interval: enum
+        :type interval: str
 
         :returns: connection key string if successful, False otherwise
 
@@ -190,6 +210,40 @@ class BinanceSocketManager(threading.Thread):
         """
         socket_name = '{}@kline_{}'.format(symbol.lower(), interval)
         return self._start_socket(socket_name, callback)
+
+    def start_miniticker_socket(self, callback, update_time=1000):
+        """Start a miniticker websocket for all trades
+
+        This is not in the official Binance api docs, but this is what
+        feeds the right column on a ticker page on Binance.
+
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param update_time: time between callbacks in milliseconds, must be 1000 or greater
+        :type update_time: int
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            [
+                {
+                    'e': '24hrMiniTicker',  # Event type
+                    'E': 1515906156273,     # Event time
+                    's': 'QTUMETH',         # Symbol
+                    'c': '0.03836900',      # close
+                    'o': '0.03953500',      # open
+                    'h': '0.04400000',      # high
+                    'l': '0.03756000',      # low
+                    'v': '147435.80000000', # volume
+                    'q': '5903.84338533'    # quote volume
+                }
+            ]
+        """
+
+        return self._start_socket('!miniTicker@arr@{}ms'.format(update_time), callback)
 
     def start_trade_socket(self, symbol, callback):
         """Start a websocket for symbol trade data
@@ -381,13 +435,21 @@ class BinanceSocketManager(threading.Thread):
 
         Message Format - see Binance API docs for all types
         """
+        # Get the user listen key
+        user_listen_key = self._client.stream_get_listen_key()
+        # and start the socket with this specific key
+        conn_key = self._start_user_socket(user_listen_key, callback)
+        return conn_key
+
+    def _start_user_socket(self, user_listen_key, callback):
+        # With this function we can start a user socket with a specific key
         if self._user_listen_key:
             # cleanup any sockets with this key
             for conn_key in self._conns:
                 if len(conn_key) >= 60 and conn_key[:60] == self._user_listen_key:
                     self.stop_socket(conn_key)
                     break
-        self._user_listen_key = self._client.stream_get_listen_key()
+        self._user_listen_key = user_listen_key
         self._user_callback = callback
         conn_key = self._start_socket(self._user_listen_key, callback)
         if conn_key:
@@ -402,11 +464,16 @@ class BinanceSocketManager(threading.Thread):
         self._user_timer.start()
 
     def _keepalive_user_socket(self):
-        listen_key = self._client.stream_get_listen_key()
+        user_listen_key = self._client.stream_get_listen_key()
         # check if they key changed and
-        if listen_key != self._user_listen_key:
-            self.start_user_socket(self._user_callback)
-        self._start_user_timer()
+        if user_listen_key != self._user_listen_key:
+            # Start a new socket with the key received
+            # `_start_user_socket` automatically cleanup open sockets
+            # and starts timer to keep socket alive
+            self._start_user_socket(user_listen_key, self._user_callback)
+        else:
+            # Restart timer only if the user listen key is not changed
+            self._start_user_timer()
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key
@@ -419,6 +486,8 @@ class BinanceSocketManager(threading.Thread):
         if conn_key not in self._conns:
             return
 
+        # disable reconnecting if we are closing
+        self._conns[conn_key].factory = WebSocketClientFactory(self.STREAM_URL + 'tmp_path')
         self._conns[conn_key].disconnect()
         del(self._conns[conn_key])
 
@@ -432,8 +501,6 @@ class BinanceSocketManager(threading.Thread):
         # stop the timer
         self._user_timer.cancel()
         self._user_timer = None
-        # close the stream
-        self._client.stream_close(listenKey=self._user_listen_key)
         self._user_listen_key = None
 
     def run(self):

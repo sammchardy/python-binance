@@ -25,10 +25,10 @@ exceptions module
     :undoc-members:
     :show-inheritance:
 
-validation module
+helpers module
 --------------------------
 
-.. automodule:: binance.validation
+.. automodule:: binance.helpers
     :members:
     :undoc-members:
     :show-inheritance:
@@ -40,5 +40,3 @@ websockets module
     :members:
     :undoc-members:
     :show-inheritance:
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/binance?pixel

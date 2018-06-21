@@ -12,18 +12,33 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
 .. code:: python
 
-    from binance.exceptions import BinanceApiException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
     try:
+        # name parameter will be set to the asset value by the client if not passed
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceApiException as e:
+    except BinanceAPIException as e:
         print(e)
     except BinanceWithdrawException as e:
         print(e)
     else:
         print("Success")
+
+    # passing a name parameter
+    result = client.withdraw(
+        asset='ETH',
+        address='<eth_address>',
+        amount=100,
+        name='Withdraw')
+
+    # if the coin requires a extra tag or name such as XRP or XMR then pass an `addressTag` parameter.
+    result = client.withdraw(
+        asset='XRP',
+        address='<xrp_address>',
+        addressTag='<xrp_address_tag>',
+        amount=10000)
 
 `Fetch deposit history <binance.html#binance.client.Client.get_deposit_history>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -47,6 +62,11 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
 
 .. code:: python
 
-    address = client.get_deposit_address('BTC)
+    address = client.get_deposit_address(asset='BTC')
 
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/withdraw?pixel
+`Get withdraw fee <binance.html#binance.client.Client.get_withdraw_fee>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    address = client.get_withdraw_fee(asset='BTC')

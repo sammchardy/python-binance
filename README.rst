@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.5.6
+Welcome to python-binance v0.6.9
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -33,15 +33,21 @@ Documentation
 Binance API Telegram
   https://t.me/binance_api_english
 
+Blog with examples
+  https://sammchardy.github.io
+
+Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
+
 Features
 --------
 
-- Implementation of General, Market Data and Account endpoints.
+- Implementation of all General, Market Data and Account endpoints.
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
 - Symbol Depth Cache
+- Historical Kline/Candle fetching function
 - Withdraw functionality
 - Deposit addresses
 
@@ -65,8 +71,8 @@ Quick Start
     # get market depth
     depth = client.get_order_book(symbol='BNBBTC')
 
-    # place market buy order
-    order = client.create_order(
+    # place a test market buy order, to place an actual order use the create_order function
+    order = client.create_test_order(
         symbol='BNBBTC',
         side=Client.SIDE_BUY,
         type=Client.ORDER_TYPE_MARKET,
@@ -77,13 +83,13 @@ Quick Start
 
     # withdraw 100 ETH
     # check docs for assumptions around withdrawals
-    from binance.exceptions import BinanceApiException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
     try:
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
-    except BinanceApiException as e:
+    except BinanceAPIException as e:
         print(e)
     except BinanceWithdrawException as e:
         print(e)
@@ -94,12 +100,12 @@ Quick Start
     withdraws = client.get_withdraw_history()
 
     # fetch list of ETH withdrawals
-    eth_withdraws = client.get_withdraw_history('ETH)
+    eth_withdraws = client.get_withdraw_history(asset='ETH')
 
-    # get a deposit address
-    address = client.get_deposit_address('BTC)
+    # get a deposit address for BTC
+    address = client.get_deposit_address(asset='BTC')
 
-    # start trade websocket
+    # start aggregated trade websocket for BNBBTC
     def process_message(msg):
         print("message type: {}".format(msg['e']))
         print(msg)
@@ -107,8 +113,19 @@ Quick Start
 
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
-    bm.start_aggtrade_socket(symbol='BNBBTC')
+    bm.start_aggtrade_socket('BNBBTC', process_message)
     bm.start()
+
+    # get historical kline data from any date range
+
+    # fetch 1 minute klines for the last day up until now
+    klines = client.get_historical_klines("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+
+    # fetch 30 minute klines for the last month of 2017
+    klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+
+    # fetch weekly klines since it listed
+    klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 
@@ -117,7 +134,8 @@ Donate
 
 If this library helped you out feel free to donate.
 
-- ETH: 0x79c9A113d63B6AC024c1AAae6f6419721C3611A3
+- ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
+- LTC: LPC5vw9ajR1YndE1hYVeo3kJ9LdHjcRCUZ
 - NEO: AVJB4ZgN7VgSUtArCt94y7ZYT6d5NDfpBo
 - BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
 
@@ -129,6 +147,10 @@ or `Qryptos <https://accounts.qryptos.com/sign-up?affiliate=PAxghztC67615>`_ che
 
 If you use `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
 
+If you use `Allcoin <https://www.allcoin.com/Account/RegisterByPhoneNumber/?InviteCode=MTQ2OTk4MDgwMDEzNDczMQ==>`_ check out my `python-allucoin <https://github.com/sammchardy/python-allcoin>`_ library.
+
 If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
+
+If you use `BigONE <https://big.one>`_ check out my `python-bigone <https://github.com/sammchardy/python-bigone>`_ library.
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance?pixel&useReferer

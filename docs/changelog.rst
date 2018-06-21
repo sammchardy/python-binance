@@ -1,6 +1,229 @@
 Changelog
 =========
 
+v0.6.9 - 2018-04-27
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- timestamp in milliseconds to `get_historical_klines` function
+- timestamp in milliseconds to `aggregate_trade_iter` function
+
+**Fixed**
+
+- Don't close user stream listen key on socket close
+
+v0.6.8 - 2018-03-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- `get_withdraw_fee` function
+
+**Fixed**
+
+- Remove unused LISTENKEY_NOT_EXISTS
+- Optimise the historical klines function to reduce requests
+- Issue with end_time in aggregate trade iterator
+
+v0.6.7 - 2018-03-14
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- Issue with `get_historical_klines` when response had exactly 500 results
+- Changed BinanceResponseException to BinanceRequestException
+- Set default code value in BinanceApiException properly
+
+v0.6.6 - 2018-02-17
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- User stream websocket keep alive strategy updated
+
+v0.6.5 - 2018-02-13
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- `get_historical_klines` response for month interval
+
+v0.6.4 - 2018-02-09
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- system status endpoint `get_system_status`
+
+v0.6.3 - 2018-01-29
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- mini ticker socket function `start_miniticker_socket`
+- aggregate trade iterator `aggregate_trade_iter`
+
+**Fixes**
+
+- clean up `interval_to_milliseconds` logic
+- general doc and file cleanups
+
+v0.6.2 - 2018-01-12
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- fixed handling Binance errors that aren't JSON objects
+
+v0.6.1 - 2018-01-10
+^^^^^^^^^^^^^^^^^^^
+
+**Fixes**
+
+- added missing dateparser dependency to setup.py
+- documentation fixes
+
+v0.6.0 - 2018-01-09
+^^^^^^^^^^^^^^^^^^^
+
+New version because why not.
+
+**Added**
+
+- get_historical_klines function to fetch klines for any date range
+- ability to override requests parameters globally
+- error on websocket disconnect
+- example related to blog post
+
+**Fixes**
+
+- documentation fixes
+
+v0.5.17 - 2018-01-08
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- check for name parameter in withdraw, set to asset parameter if not passed
+
+**Update**
+
+- Windows install error documentation
+
+**Removed**
+
+- reference to disable_validation in documentation
+
+v0.5.16 - 2018-01-06
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- addressTag documentation to withdraw function
+- documentation about requests proxy environment variables
+
+**Update**
+
+- FAQ for signature error with solution to regenerate API key
+- change create_order to create_test_order in example
+
+**Fixed**
+
+- reference to BinanceAPIException in documentation
+
+v0.5.15 - 2018-01-03
+^^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- removed all references to WEBSOCKET_DEPTH_1 enum
+
+v0.5.14 - 2018-01-02
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Wait for depth cache socket to start
+- check for sequential depth cache messages
+
+**Updated**
+
+- documentation around depth websocket and diff and partial responses
+
+**Removed**
+
+- Removed unused WEBSOCKET_DEPTH_1 enum
+- removed unused libraries and imports
+
+v0.5.13 - 2018-01-01
+^^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- Signature invalid error
+
+v0.5.12 - 2017-12-29
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- get_asset_balance helper function to fetch an individual asset's balance
+
+**Fixed**
+
+- added timeout to requests call to prevent hanging
+- changed variable type to str for price parameter when creating an order
+- documentation fixes
+
+v0.5.11 - 2017-12-28
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- refresh interval parameter to depth cache to keep it fresh, set default at 30 minutes
+
+**Fixed**
+
+- watch depth cache socket before fetching order book to replay any messages
+
+v0.5.10 - 2017-12-28
+^^^^^^^^^^^^^^^^^^^^
+
+**Updated**
+
+- updated dependencies certifi and cryptography to help resolve signature error
+
+v0.5.9 - 2017-12-26
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- fixed websocket reconnecting, was no distinction between manual close or network error
+
+v0.5.8 - 2017-12-25
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- change symbol parameter to optional for get_open_orders function
+- added listenKey parameter to stream_close function
+
+**Added**
+
+- get_account_status function that was missed
+
+v0.5.7 - 2017-12-24
+^^^^^^^^^^^^^^^^^^^
+
+**Changed**
+
+- change depth cache callback parameter to optional
+
+**Added**
+
+- note about stopping Twisted reactor loop to exit program
+
 v0.5.6 - 2017-12-20
 ^^^^^^^^^^^^^^^^^^^
 
@@ -280,5 +503,3 @@ Initial version
 **Added**
 
 - General, Market Data and Account endpoints
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/changelog?pixel

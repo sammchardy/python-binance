@@ -1,17 +1,12 @@
-#!/usr/bin/env python
 # coding=utf-8
 
 import hashlib
 import hmac
 import requests
-import six
 import time
+from operator import itemgetter
+from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
-
-if six.PY2:
-    from urllib import urlencode
-elif six.PY3:
-    from urllib.parse import urlencode
 
 
 class Client(object):
@@ -68,19 +63,32 @@ class Client(object):
     ORDER_RESP_TYPE_RESULT = 'RESULT'
     ORDER_RESP_TYPE_FULL = 'FULL'
 
-    def __init__(self, api_key, api_secret):
+    # For accessing the data returned by Client.aggregate_trades().
+    AGG_ID = 'a'
+    AGG_PRICE = 'p'
+    AGG_QUANTITY = 'q'
+    AGG_FIRST_TRADE_ID = 'f'
+    AGG_LAST_TRADE_ID = 'l'
+    AGG_TIME = 'T'
+    AGG_BUYER_MAKES = 'm'
+    AGG_BEST_MATCH = 'M'
+
+    def __init__(self, api_key, api_secret, requests_params=None):
         """Binance API Client constructor
 
         :param api_key: Api Key
         :type api_key: str.
         :param api_secret: Api Secret
         :type api_secret: str.
+        :param requests_params: optional - Dictionary of requests params to use for all calls
+        :type requests_params: dict.
 
         """
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
+        self._requests_params = requests_params
 
         # init DNS and SSL cert
         self.ping()
@@ -105,7 +113,8 @@ class Client(object):
 
     def _generate_signature(self, data):
 
-        query_string = urlencode(data)
+        ordered_data = self._order_params(data)
+        query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
@@ -123,11 +132,20 @@ class Client(object):
                 has_signature = True
             else:
                 params.append((key, value))
+        # sort parameters by key
+        params.sort(key=itemgetter(0))
         if has_signature:
             params.append(('signature', data['signature']))
         return params
 
     def _request(self, method, uri, signed, force_params=False, **kwargs):
+
+        # set default requests timeout
+        kwargs['timeout'] = 10
+
+        # add our global requests params
+        if self._requests_params:
+            kwargs.update(self._requests_params)
 
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
@@ -137,8 +155,20 @@ class Client(object):
             kwargs['data']['timestamp'] = int(time.time() * 1000)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
+        # sort get and post params to match signature order
+        if data:
+            # find any requests params passed and apply them
+            if 'requests_params' in kwargs['data']:
+                # merge requests params into kwargs
+                kwargs.update(kwargs['data']['requests_params'])
+                del(kwargs['data']['requests_params'])
+
+            # sort post params
+            kwargs['data'] = self._order_params(kwargs['data'])
+
+        # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
-            kwargs['params'] = self._order_params(kwargs['data'])
+            kwargs['params'] = kwargs['data']
             del(kwargs['data'])
 
         response = getattr(self.session, method)(uri, **kwargs)
@@ -193,7 +223,7 @@ class Client(object):
 
         :returns: list - List of product dictionaries
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
 
@@ -258,7 +288,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
 
@@ -301,7 +331,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
 
@@ -326,7 +356,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ping')
@@ -344,7 +374,7 @@ class Client(object):
                 "serverTime": 1499827319559
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('time')
@@ -371,7 +401,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ticker/allPrices')
@@ -402,7 +432,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ticker/allBookTickers')
@@ -414,7 +444,7 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 100; max 100
+        :param limit:  Default 100; max 1000
         :type limit: int
 
         :returns: API response
@@ -439,7 +469,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('depth', data=params)
@@ -469,7 +499,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('trades', data=params)
@@ -501,7 +531,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('historicalTrades', data=params)
@@ -540,10 +570,84 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('aggTrades', data=params)
+
+    def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+        """Iterate over aggregate trade data from (start_time or last_id) to
+        the end of the history so far.
+
+        If start_time is specified, start with the first trade after
+        start_time. Meant to initialise a local cache of trade data.
+
+        If last_id is specified, start with the trade after it. This is meant
+        for updating a pre-existing local trade data cache.
+
+        Only allows start_str or last_id—not both. Not guaranteed to work
+        right if you're running more than one of these simultaneously. You
+        will probably hit your rate limit.
+
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+
+        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
+
+        :param symbol: Symbol string e.g. ETHBTC
+        :type symbol: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds. The iterator will
+        return the first trade occurring later than this time.
+        :type start_str: str|int
+        :param last_id: aggregate trade ID of the last known aggregate trade.
+        Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+
+        :returns: an iterator of JSON objects, one per trade. The format of
+        each object is identical to Client.aggregate_trades().
+
+        :type last_id: int
+        """
+        if start_str is not None and last_id is not None:
+            raise ValueError(
+                'start_time and last_id may not be simultaneously specified.')
+
+        # If there's no last_id, get one.
+        if last_id is None:
+            # Without a last_id, we actually need the first trade.  Normally,
+            # we'd get rid of it. See the next loop.
+            if start_str is None:
+                trades = self.get_aggregate_trades(symbol=symbol, fromId=0)
+            else:
+                # The difference between startTime and endTime should be less
+                # or equal than an hour and the result set should contain at
+                # least one trade.
+                if type(start_str) == int:
+                    start_ts = start_str
+                else:
+                    start_ts = date_to_milliseconds(start_str)
+                trades = self.get_aggregate_trades(
+                    symbol=symbol,
+                    startTime=start_ts,
+                    endTime=start_ts + (60 * 60 * 1000))
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
+
+        while True:
+            # There is no need to wait between queries, to avoid hitting the
+            # rate limit. We're using blocking IO, and as long as we're the
+            # only thread running calls like this, Binance will automatically
+            # add the right delay time on their end, forcing us to wait for
+            # data. That really simplifies this function's job. Binance is
+            # fucking awesome.
+            trades = self.get_aggregate_trades(symbol=symbol, fromId=last_id)
+            # fromId=n returns a set starting with id n, but we already have
+            # that one. So get rid of the first item in the result set.
+            trades = trades[1:]
+            if len(trades) == 0:
+                return
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
 
     def get_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
@@ -553,7 +657,7 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param interval: -
-        :type interval: enum
+        :type interval: str
         :param limit: - Default 500; max 500.
         :type limit: int
         :param startTime:
@@ -582,10 +686,112 @@ class Client(object):
                 ]
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('klines', data=params)
+
+    def _get_earliest_valid_timestamp(self, symbol, interval):
+        """Get earliest valid open timestamp from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+
+        :return: first valid timestamp
+
+        """
+        kline = self.get_klines(
+            symbol=symbol,
+            interval=interval,
+            limit=1,
+            startTime=0,
+            endTime=None
+        )
+        return kline[0][0]
+
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None):
+        """Get Historical Klines from Binance
+
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+
+        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+
+        :return: list of OHLCV values
+
+        """
+        # init our list
+        output_data = []
+
+        # setup the max limit
+        limit = 500
+
+        # convert interval to useful value in seconds
+        timeframe = interval_to_milliseconds(interval)
+
+        # convert our date strings to milliseconds
+        if type(start_str) == int:
+            start_ts = start_str
+        else:
+            start_ts = date_to_milliseconds(start_str)
+
+        # establish first available start timestamp
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        start_ts = max(start_ts, first_valid_ts)
+
+        # if an end time was passed convert it
+        end_ts = None
+        if end_str:
+            if type(end_str) == int:
+                end_ts = end_str
+            else:
+                end_ts = date_to_milliseconds(end_str)
+
+        idx = 0
+        while True:
+            # fetch the klines from start_ts up to max 500 entries or the end_ts if set
+            temp_data = self.get_klines(
+                symbol=symbol,
+                interval=interval,
+                limit=limit,
+                startTime=start_ts,
+                endTime=end_ts
+            )
+
+            # handle the case where exactly the limit amount of data was returned last loop
+            if not len(temp_data):
+                break
+
+            # append this loops data to our output data
+            output_data += temp_data
+
+            # set our start timestamp using the last value in the array
+            start_ts = temp_data[-1][0]
+
+            idx += 1
+            # check if we received less than the required limit and exit the loop
+            if len(temp_data) < limit:
+                # exit the while loop
+                break
+
+            # increment next call by our timeframe
+            start_ts += timeframe
+
+            # sleep after every 3rd call to be kind to the API
+            if idx % 3 == 0:
+                time.sleep(1)
+
+        return output_data
 
     def get_ticker(self, **params):
         """24 hour price change statistics.
@@ -643,7 +849,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ticker/24hr', data=params)
@@ -680,7 +886,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
@@ -726,7 +932,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('ticker/bookTicker', data=params, version=self.PRIVATE_API_VERSION)
@@ -743,21 +949,23 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
@@ -840,7 +1048,7 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         return self._post('order', True, data=params)
@@ -853,25 +1061,27 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -890,9 +1100,9 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
@@ -900,13 +1110,15 @@ class Client(object):
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -922,21 +1134,25 @@ class Client(object):
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param timeInForce: default Good till cancelled
-        :type timeInForce: enum
+        :type timeInForce: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param stopPrice: Used with stop orders
         :type stopPrice: decimal
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -950,19 +1166,21 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param quantity: required
         :type quantity: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -980,13 +1198,15 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -1004,13 +1224,15 @@ class Client(object):
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
 
         :returns: API response
 
         See order endpoint for full response options
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
         params.update({
@@ -1026,21 +1248,21 @@ class Client(object):
         :param symbol: required
         :type symbol: str
         :param side: required
-        :type side: enum
+        :type side: str
         :param type: required
-        :type type: enum
+        :type type: str
         :param timeInForce: required if limit order
-        :type timeInForce: enum
+        :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
         :param price: required
-        :type price: decimal
+        :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param icebergQty: Used with iceberg orders
         :type icebergQty: decimal
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
-        :type newOrderRespType: enum
+        :type newOrderRespType: str
         :param recvWindow: The number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1050,7 +1272,7 @@ class Client(object):
 
             {}
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
 
         """
@@ -1090,7 +1312,7 @@ class Client(object):
                 "time": 1499827319559
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('order', True, data=params)
@@ -1131,7 +1353,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('allOrders', True, data=params)
@@ -1163,7 +1385,7 @@ class Client(object):
                 "clientOrderId": "cancelMyOrder1"
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._delete('order', True, data=params)
@@ -1173,7 +1395,7 @@ class Client(object):
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
-        :param symbol: required
+        :param symbol: optional
         :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1200,7 +1422,7 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('openOrders', True, data=params)
@@ -1240,10 +1462,41 @@ class Client(object):
                 ]
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('account', True, data=params)
+
+    def get_asset_balance(self, asset, **params):
+        """Get current asset balance.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: dictionary or None if not found
+
+        .. code-block:: python
+
+            {
+                "asset": "BTC",
+                "free": "4723846.89208129",
+                "locked": "0.00000000"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        res = self.get_account(**params)
+        # find asset balance in list of balances
+        if "balances" in res:
+            for bal in res['balances']:
+                if bal['asset'].lower() == asset.lower():
+                    return bal
+        return None
 
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
@@ -1277,10 +1530,57 @@ class Client(object):
                 }
             ]
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._get('myTrades', True, data=params)
+
+    def get_system_status(self):
+        """Get system status detail.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#system-status-system
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "status": 0,        # 0: normal，1：system maintenance
+                "msg": "normal"     # normal or System maintenance.
+            }
+
+        :raises: BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'systemStatus.html')
+
+    def get_account_status(self, **params):
+        """Get account status detail.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#account-status-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "msg": "Order failed:Low Order fill rate! Will be reactivated after 5 minutes.",
+                "success": true,
+                "objs": [
+                    "5"
+                ]
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
 
     # Withdraw Endpoints
 
@@ -1298,9 +1598,11 @@ class Client(object):
         :type asset: str
         :type address: required
         :type address: str
+        :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
+        :type address: str
         :param amount: required
         :type amount: decimal
-        :param name: Description of the address - optional
+        :param name: optional - Description of the address, default asset value passed will be used
         :type name: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1311,12 +1613,16 @@ class Client(object):
 
             {
                 "msg": "success",
-                "success": true
+                "success": true,
+                "id":"7213fea8e94b4a5593d507237e5a555b"
             }
 
-        :raises: BinanceResponseException, BinanceAPIException, BinanceWithdrawException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceWithdrawException
 
         """
+        # force a name for the withdrawal if one not set
+        if 'asset' in params and 'name' not in params:
+            params['name'] = params['asset']
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
         if not res['success']:
             raise BinanceWithdrawException(res['msg'])
@@ -1354,7 +1660,7 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
@@ -1400,7 +1706,7 @@ class Client(object):
                 "success": true
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
@@ -1426,10 +1732,32 @@ class Client(object):
                 "asset": "BNB"
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
+
+    def get_withdraw_fee(self, **params):
+        """Fetch the withdrawal fee for an asset
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "withdrawFee": "0.0005",
+                "success": true
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'withdrawFee.html', True, data=params)
 
     # User Stream Endpoints
 
@@ -1450,13 +1778,13 @@ class Client(object):
                 "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
             }
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         res = self._post('userDataStream', False, data={})
         return res['listenKey']
 
-    def stream_keepalive(self, **params):
+    def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
@@ -1470,15 +1798,21 @@ class Client(object):
 
             {}
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._put('userDataStream', False, data=params)
 
-    def stream_close(self, **params):
+    def stream_close(self, listenKey):
         """Close out a user data stream.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+
+        :param listenKey: required
+        :type listenKey: str
 
         :returns: API response
 
@@ -1486,7 +1820,10 @@ class Client(object):
 
             {}
 
-        :raises: BinanceResponseException, BinanceAPIException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
+        params = {
+            'listenKey': listenKey
+        }
         return self._delete('userDataStream', False, data=params)
