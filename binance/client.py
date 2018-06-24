@@ -151,8 +151,12 @@ class Client(object):
         if data and isinstance(data, dict):
             kwargs['data'] = data
         if signed:
+            # comparing users time with binance server time
+            server_time = self.get_server_time()['serverTime']
+            offset = time.time() * 1000 - server_time
+
             # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000)
+            kwargs['data']['timestamp'] = int(time.time() * 1000 - offset)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
