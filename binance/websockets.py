@@ -66,9 +66,9 @@ class BinanceSocketManager(threading.Thread):
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-    _user_timeout = 30 * 60  # 30 minutes
+    DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
 
-    def __init__(self, client):
+    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
@@ -81,6 +81,7 @@ class BinanceSocketManager(threading.Thread):
         self._user_listen_key = None
         self._user_callback = None
         self._client = client
+        self._user_timeout = user_timeout
 
     def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
