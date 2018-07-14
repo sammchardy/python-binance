@@ -14,6 +14,9 @@ from binance.client import Client
 
 
 class BinanceClientProtocol(WebSocketClientProtocol):
+    
+    def __init__(self):
+        super().__init__()
 
     def onConnect(self, response):
         # reset the delay after reconnecting
