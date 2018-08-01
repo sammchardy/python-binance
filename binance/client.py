@@ -404,7 +404,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allPrices')
+        return self._get('ticker/price', version='v3')
 
     def get_orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
@@ -435,7 +435,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allBookTickers')
+        return self._get('ticker/bookTicker', version='v3')
 
     def get_order_book(self, **params):
         """Get the Order Book for the market
