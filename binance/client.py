@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import requests
 import time
+import os
 from operator import itemgetter
 from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
@@ -11,8 +12,8 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 
 class Client(object):
 
-    API_URL = 'https://api.binance.com/api'
-    WITHDRAW_API_URL = 'https://api.binance.com/wapi'
+    API_URL = os.getenv('BINANCE_API_URL', 'https://api.binance.com/api')
+    WITHDRAW_API_URL = os.getenv('BINANCE_WITHDRAW_API_URL', 'https://api.binance.com/wapi')
     WEBSITE_URL = 'https://www.binance.com'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
