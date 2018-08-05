@@ -1,4 +1,5 @@
 aiohttp
+cryptography
 certifi
 chardet
 dateparser
