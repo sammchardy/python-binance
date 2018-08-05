@@ -25,7 +25,7 @@ setup(
     author='Sam McHardy',
     license='MIT',
     author_email='',
-    install_requires=['aiohttp','certifi','chardet','dateparser','pyOpenSSL','websockets'],
+    install_requires=['aiohttp','certifi','chardet','dateparser','pyOpenSSL','websockets','requests'],
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[
         'Intended Audience :: Developers',
