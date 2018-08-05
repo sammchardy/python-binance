@@ -3,5 +3,4 @@ certifi
 chardet
 dateparser
 pyOpenSSL
-service-identity
 websockets
