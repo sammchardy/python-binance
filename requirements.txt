@@ -4,3 +4,4 @@ chardet
 dateparser
 pyOpenSSL
 websockets
+requests
