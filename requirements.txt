@@ -1,4 +1,3 @@
-cryptography
 aiohttp
 certifi
 chardet
