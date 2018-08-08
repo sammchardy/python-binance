@@ -485,7 +485,7 @@ class AsyncClient(BaseClient):
                     startTime=start_ts,
                     endTime=start_ts + (60 * 60 * 1000))
             for t in trades:
-                await t
+                yield t
             last_id = trades[-1][self.AGG_ID]
 
         while True:
@@ -502,7 +502,7 @@ class AsyncClient(BaseClient):
             if len(trades) == 0:
                 return
             for t in trades:
-                await t
+                yield t
             last_id = trades[-1][self.AGG_ID]
 
     async def get_klines(self, **params):
