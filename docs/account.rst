@@ -176,4 +176,4 @@ Account
 
 .. code:: python
 
-    trades = client.get_dust_log()
+    log = client.get_dust_log()
