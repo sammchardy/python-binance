@@ -1661,6 +1661,87 @@ class Client(object):
             raise BinanceWithdrawException(res['msg'])
         return res
 
+    def get_dust_log(self, **params):
+        """Get log of small amounts exchanged for BNB.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#dustlog-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success": true,
+                "results": {
+                    "total": 2,   //Total counts of exchange
+                    "rows": [
+                        {
+                            "transfered_total": "0.00132256", # Total transfered BNB amount for this exchange.
+                            "service_charge_total": "0.00002699",   # Total service charge amount for this exchange.
+                            "tran_id": 4359321,
+                            "logs": [           # Details of  this exchange.
+                                {
+                                    "tranId": 4359321,
+                                    "serviceChargeAmount": "0.000009",
+                                    "uid": "10000015",
+                                    "amount": "0.0009",
+                                    "operateTime": "2018-05-03 17:07:04",
+                                    "transferedAmount": "0.000441",
+                                    "fromAsset": "USDT"
+                                },
+                                {
+                                    "tranId": 4359321,
+                                    "serviceChargeAmount": "0.00001799",
+                                    "uid": "10000015",
+                                    "amount": "0.0009",
+                                    "operateTime": "2018-05-03 17:07:04",
+                                    "transferedAmount": "0.00088156",
+                                    "fromAsset": "ETH"
+                                }
+                            ],
+                            "operate_time": "2018-05-03 17:07:04" //The time of this exchange.
+                        },
+                        {
+                            "transfered_total": "0.00058795",
+                            "service_charge_total": "0.000012",
+                            "tran_id": 4357015,
+                            "logs": [       // Details of  this exchange.
+                                {
+                                    "tranId": 4357015,
+                                    "serviceChargeAmount": "0.00001",
+                                    "uid": "10000015",
+                                    "amount": "0.001",
+                                    "operateTime": "2018-05-02 13:52:24",
+                                    "transferedAmount": "0.00049",
+                                    "fromAsset": "USDT"
+                                },
+                                {
+                                    "tranId": 4357015,
+                                    "serviceChargeAmount": "0.000002",
+                                    "uid": "10000015",
+                                    "amount": "0.0001",
+                                    "operateTime": "2018-05-02 13:51:11",
+                                    "transferedAmount": "0.00009795",
+                                    "fromAsset": "ETH"
+                                }
+                            ],
+                            "operate_time": "2018-05-02 13:51:11"
+                        }
+                    ]
+                }
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):
