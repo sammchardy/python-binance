@@ -727,11 +727,9 @@ class Client(object):
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
 
-        :return: list of OHLCV values
+        :return: generator of OHLCV values
 
         """
-        # init our list
-        output_data = []
 
         # setup the max limit
         limit = 500
@@ -760,7 +758,7 @@ class Client(object):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            temp_data = self.get_klines(
+            output_data = self.get_klines(
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -769,18 +767,19 @@ class Client(object):
             )
 
             # handle the case where exactly the limit amount of data was returned last loop
-            if not len(temp_data):
+            if not len(output_data):
                 break
 
-            # append this loops data to our output data
-            output_data += temp_data
+            # yield data
+            for o in output_data:
+                yield o
 
             # set our start timestamp using the last value in the array
-            start_ts = temp_data[-1][0]
+            start_ts = output_data[-1][0]
 
             idx += 1
             # check if we received less than the required limit and exit the loop
-            if len(temp_data) < limit:
+            if len(output_data) < limit:
                 # exit the while loop
                 break
 
@@ -790,8 +789,6 @@ class Client(object):
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
                 time.sleep(1)
-
-        return output_data
 
     def get_ticker(self, **params):
         """24 hour price change statistics.
