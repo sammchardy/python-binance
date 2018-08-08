@@ -120,7 +120,7 @@ class DepthCacheManager(object):
 
     _default_refresh = 60 * 30  # 30 minutes
 
-    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh):
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -138,9 +138,10 @@ class DepthCacheManager(object):
         self._callback = callback
         self._last_update_id = None
         self._depth_message_buffer = []
-        self._bm = None
+        self._bm = bm
         self._depth_cache = DepthCache(self._symbol)
         self._refresh_interval = refresh_interval
+        self._conn_key = None
 
         self._start_socket()
         self._init_cache()
@@ -180,11 +181,12 @@ class DepthCacheManager(object):
 
         :return:
         """
-        self._bm = BinanceSocketManager(self._client)
+        if self._bm is None:
+            self._bm = BinanceSocketManager(self._client)
 
-        self._bm.start_depth_socket(self._symbol, self._depth_event)
-
-        self._bm.start()
+        self._conn_key = self._bm.start_depth_socket(self._symbol, self._depth_event)
+        if not self._bm.is_alive():
+            self._bm.start()
 
         # wait for some socket responses
         while not len(self._depth_message_buffer):
@@ -252,10 +254,13 @@ class DepthCacheManager(object):
         """
         return self._depth_cache
 
-    def close(self):
+    def close(self, close_socket=False):
         """Close the open socket for this manager
 
         :return:
         """
-        self._bm.close()
+        self._bm.stop_socket(self._conn_key)
+        if close_socket:
+            self._bm.close()
+        time.sleep(1)
         self._depth_cache = None

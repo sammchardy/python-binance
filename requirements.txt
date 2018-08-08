@@ -1,9 +1,9 @@
-autobahn==17.9.3
-certifi==2017.11.5
+autobahn==18.7.1
+certifi==2018.4.16
 chardet==3.0.4
-cryptography==2.1.4
-dateparser==0.6.0
+cryptography==2.3
+dateparser==0.7.0
 pyOpenSSL==17.5.0
-requests==2.18.4
+requests==2.19.1
 service-identity==17.0.0
-Twisted==17.9.0
+Twisted==18.7.0

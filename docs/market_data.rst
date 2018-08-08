@@ -77,6 +77,18 @@ Fetch klines for any date range and interval
     # fetch weekly klines since it listed
     klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
+
+`Get Historical Kline/Candlesticks using a generator <binance.html#binance.client.Client.get_historical_klines_generator>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Fetch klines using a generator
+
+.. code:: python
+
+    for kline in client.get_historical_klines_generator("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+        print(kline)
+        # do something with the kline
+
 `Get 24hr Ticker <binance.html#binance.client.Client.get_ticker>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
