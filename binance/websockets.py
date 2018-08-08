@@ -73,6 +73,8 @@ class BinanceSocketManager(threading.Thread):
 
         :param client: Binance API client
         :type client: binance.Client
+        :param user_timeout: Custom websocket timeout
+        :type user_timeout: int
 
         """
         threading.Thread.__init__(self)
