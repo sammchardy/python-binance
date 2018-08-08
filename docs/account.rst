@@ -159,3 +159,10 @@ Account
 .. code:: python
 
     trades = client.get_my_trades(symbol='BNBBTC')
+
+`Get dust log <binance.html#binance.client.Client.get_dust_log>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    trades = client.get_dust_log()
