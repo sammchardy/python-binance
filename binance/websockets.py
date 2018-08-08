@@ -14,7 +14,7 @@ from binance.client import Client
 
 
 class BinanceClientProtocol(WebSocketClientProtocol):
-    
+
     def __init__(self):
         super().__init__()
 
