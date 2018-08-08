@@ -184,8 +184,7 @@ class DepthCacheManager(object):
         if self._bm is None:
             self._bm = BinanceSocketManager(self._client)
 
-        self._conn_key = self._bm.start_depth_socket(
-            self._symbol, self._depth_event)
+        self._conn_key = self._bm.start_depth_socket(self._symbol, self._depth_event)
         if not self._bm.is_alive():
             self._bm.start()
 
