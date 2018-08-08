@@ -1,6 +1,27 @@
 Changelog
 =========
 
+v0.7.0 - 2018-08-08
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- get_asset_details endpoint
+- get_dust_log endpoint
+- get_trade_fee endpoint
+- ability for multiple DepthCacheManagers to share a BinanceSocketManager
+- get_historial_klines_generator function
+- custom socket timeout param for BinanceSocketManager
+
+**Updated**
+
+- general dependency version
+- removed support for python3.3
+
+**Fixed**
+
+- add a super init on BinanceClientProtocol
+
 v0.6.9 - 2018-04-27
 ^^^^^^^^^^^^^^^^^^^
 
