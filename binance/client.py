@@ -1742,6 +1742,43 @@ class Client(object):
             raise BinanceWithdrawException(res['msg'])
         return res
 
+    def get_trade_fee(self, **params):
+        """Get trade fee.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#trade-fee-user_data
+
+        :param symbol: optional
+        :type symbol: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tradeFee": [
+                    {
+                        "symbol": "ADABNB",
+                        "maker": 0.9000,
+                        "taker": 1.0000
+                    }, {
+                        "symbol": "BNBBTC",
+                        "maker": 0.3000,
+                        "taker": 0.3000
+                    }
+                ],
+                "success": true
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):

@@ -160,6 +160,17 @@ Account
 
     trades = client.get_my_trades(symbol='BNBBTC')
 
+`Get trade fees <binance.html#binance.client.Client.get_trade_fee>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    # get fees for all symbols
+    fees = client.get_trade_fee()
+
+    # get fee for one symbol
+    fees = client.get_trade_fee(symbol='BNBBTC')
+
 `Get dust log <binance.html#binance.client.Client.get_dust_log>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
