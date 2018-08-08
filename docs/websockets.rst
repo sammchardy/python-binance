@@ -37,6 +37,13 @@ A callback to process messages would take the format
         print(msg)
         # do something
 
+Set a custom timeout for the websocket connection
+
+.. code:: python
+
+    # set a timeout of 60 seconds
+    bm = BinanceSocketManager(client, user_timeout=60)
+
 
 Websocket Errors
 ----------------
