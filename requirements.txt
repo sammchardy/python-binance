@@ -1,7 +1,7 @@
 autobahn==17.9.3
 certifi==2017.11.5
 chardet==3.0.4
-cryptography==2.1.4
+cryptography==2.3
 dateparser==0.6.0
 pyOpenSSL==17.5.0
 requests==2.18.4
