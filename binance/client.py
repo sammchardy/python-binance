@@ -1779,6 +1779,45 @@ class Client(object):
             raise BinanceWithdrawException(res['msg'])
         return res
 
+    def get_asset_details(self, **params):
+        """Fetch details on assets.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#asset-detail-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success": true,
+                "assetDetail": {
+                    "CTR": {
+                        "minWithdrawAmount": "70.00000000", //min withdraw amount
+                        "depositStatus": false,//deposit status
+                        "withdrawFee": 35, // withdraw fee
+                        "withdrawStatus": true, //withdraw status
+                        "depositTip": "Delisted, Deposit Suspended" //reason
+                    },
+                    "SKY": {
+                        "minWithdrawAmount": "0.02000000",
+                        "depositStatus": true,
+                        "withdrawFee": 0.01,
+                        "withdrawStatus": true
+                    }
+                }
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
+        if not res['success']:
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):

@@ -171,6 +171,13 @@ Account
     # get fee for one symbol
     fees = client.get_trade_fee(symbol='BNBBTC')
 
+`Get asset details <binance.html#binance.client.Client.get_asset_details>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    details = client.get_asset_details()
+
 `Get dust log <binance.html#binance.client.Client.get_dust_log>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
