@@ -131,6 +131,8 @@ class DepthCacheManager(object):
         :type callback: function
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
+        :param limit: Optional number of orders to get from orderbook
+        :type limit: int
 
         """
         self._client = client
