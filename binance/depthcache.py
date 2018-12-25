@@ -18,6 +18,7 @@ class DepthCache(object):
         self.symbol = symbol
         self._bids = {}
         self._asks = {}
+        self.update_time: int
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -235,6 +236,9 @@ class DepthCacheManager(object):
             self._depth_cache.add_bid(bid)
         for ask in msg['a']:
             self._depth_cache.add_ask(ask)
+
+        # keeping update time
+        self.update_time = msg['E']
 
         # call the callback with the updated depth cache
         if self._callback:
