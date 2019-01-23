@@ -4,7 +4,7 @@
 
 """
 
-__version__ = '0.6.8'
+__version__ = '0.7.1-async'
 
 from binance.client import Client
 from binance.client_async import AsyncClient
