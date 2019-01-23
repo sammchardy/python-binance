@@ -67,6 +67,7 @@ Examples
             print(depth_cache.get_bids()[:5])
             print("top 5 asks")
             print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time)
         else:
             # depth cache had an error and needs to be restarted
 
@@ -81,6 +82,7 @@ At any time the current `DepthCache` object can be retrieved from the `DepthCach
         print(depth_cache.get_bids()[:5])
         print("top 5 asks")
         print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time)
     else:
         # depth cache had an error and needs to be restarted
 
