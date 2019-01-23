@@ -6,7 +6,7 @@
 
 __version__ = '0.7.1-async'
 
-from binance.client import Client
-from binance.client_async import AsyncClient
-from binance.depthcache import DepthCacheManager
-from binance.websockets import BinanceSocketManager
+from binance.client import Client  # noqa
+from binance.client_async import AsyncClient # noqa
+from binance.depthcache import DepthCacheManager  # noqa
+from binance.websockets import BinanceSocketManager  # noqa

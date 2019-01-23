@@ -45,6 +45,7 @@ class ReconnectingWebsocket:
                     else:
                         await self._coro(evt_obj)
         except ws.ConnectionClosed as e:
+            self._log.debug('ws connection closed:{}'.format(e))
             keep_waiting = False
             await self._reconnect()
         except Exception as e:
