@@ -603,7 +603,7 @@ class AsyncClient(BaseClient):
         start_ts = date_to_milliseconds(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
