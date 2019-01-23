@@ -712,7 +712,8 @@ class Client(object):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None,
+                              limit=500):
         """Get Historical Klines from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -727,6 +728,8 @@ class Client(object):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
 
         :return: list of OHLCV values
 
@@ -735,7 +738,7 @@ class Client(object):
         output_data = []
 
         # setup the max limit
-        limit = 500
+        limit = limit
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
