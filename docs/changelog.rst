@@ -1,6 +1,26 @@
 Changelog
 =========
 
+v0.7.1 - 2019-01-23
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- limit param to DepthCacheManager
+- limit param to get_historical_klines
+- update_time to DepthCache class
+
+**Updated**
+
+- test coverage
+
+**Fixed**
+
+- super init in Websocket class
+- removal of request params from signature
+- empty set issue in aggregate_trade_iter
+
+
 v0.7.0 - 2018-08-08
 ^^^^^^^^^^^^^^^^^^^
 
