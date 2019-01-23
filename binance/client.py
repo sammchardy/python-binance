@@ -150,6 +150,13 @@ class Client(object):
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
             kwargs['data'] = data
+
+            # find any requests params passed and apply them
+            if 'requests_params' in kwargs['data']:
+                # merge requests params into kwargs
+                kwargs.update(kwargs['data']['requests_params'])
+                del(kwargs['data']['requests_params'])
+
         if signed:
             # generate signature
             kwargs['data']['timestamp'] = int(time.time() * 1000)
@@ -157,12 +164,6 @@ class Client(object):
 
         # sort get and post params to match signature order
         if data:
-            # find any requests params passed and apply them
-            if 'requests_params' in kwargs['data']:
-                # merge requests params into kwargs
-                kwargs.update(kwargs['data']['requests_params'])
-                del(kwargs['data']['requests_params'])
-
             # sort post params
             kwargs['data'] = self._order_params(kwargs['data'])
 
