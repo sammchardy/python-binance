@@ -625,10 +625,22 @@ class Client(object):
                     start_ts = start_str
                 else:
                     start_ts = date_to_milliseconds(start_str)
-                trades = self.get_aggregate_trades(
-                    symbol=symbol,
-                    startTime=start_ts,
-                    endTime=start_ts + (60 * 60 * 1000))
+                # If the resulting set is empty (i.e. no trades in that interval)
+                # then we just move forward hour by hour until we find at least one
+                # trade or reach present moment
+                while True:
+                    end_ts = start_ts + (60 * 60 * 1000)
+                    trades = self.get_aggregate_trades(
+                        symbol=symbol,
+                        startTime=start_ts,
+                        endTime=end_ts)
+                    if len(trades) > 0:
+                        break
+                    # If we reach present moment and find no trades then there is
+                    # nothing to iterate, so we're done
+                    if end_ts > int(time.time()*1000):
+                        return
+                    start_ts = end_ts
             for t in trades:
                 yield t
             last_id = trades[-1][self.AGG_ID]
