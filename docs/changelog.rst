@@ -1,6 +1,59 @@
 Changelog
 =========
 
+v0.7.1 - 2019-01-23
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- limit param to DepthCacheManager
+- limit param to get_historical_klines
+- update_time to DepthCache class
+
+**Updated**
+
+- test coverage
+
+**Fixed**
+
+- super init in Websocket class
+- removal of request params from signature
+- empty set issue in aggregate_trade_iter
+
+
+v0.7.0 - 2018-08-08
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- get_asset_details endpoint
+- get_dust_log endpoint
+- get_trade_fee endpoint
+- ability for multiple DepthCacheManagers to share a BinanceSocketManager
+- get_historial_klines_generator function
+- custom socket timeout param for BinanceSocketManager
+
+**Updated**
+
+- general dependency version
+- removed support for python3.3
+
+**Fixed**
+
+- add a super init on BinanceClientProtocol
+
+v0.6.9 - 2018-04-27
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- timestamp in milliseconds to `get_historical_klines` function
+- timestamp in milliseconds to `aggregate_trade_iter` function
+
+**Fixed**
+
+- Don't close user stream listen key on socket close
+
 v0.6.8 - 2018-03-29
 ^^^^^^^^^^^^^^^^^^^
 

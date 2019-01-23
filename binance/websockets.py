@@ -15,6 +15,9 @@ from binance.client import Client
 
 class BinanceClientProtocol(WebSocketClientProtocol):
 
+    def __init__(self):
+        super(WebSocketClientProtocol, self).__init__()
+
     def onConnect(self, response):
         # reset the delay after reconnecting
         self.factory.resetDelay()
@@ -66,13 +69,15 @@ class BinanceSocketManager(threading.Thread):
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-    _user_timeout = 30 * 60  # 30 minutes
+    DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
 
-    def __init__(self, client):
+    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
         :type client: binance.Client
+        :param user_timeout: Custom websocket timeout
+        :type user_timeout: int
 
         """
         threading.Thread.__init__(self)
@@ -81,6 +86,7 @@ class BinanceSocketManager(threading.Thread):
         self._user_listen_key = None
         self._user_callback = None
         self._client = client
+        self._user_timeout = user_timeout
 
     def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
@@ -426,7 +432,7 @@ class BinanceSocketManager(threading.Thread):
     def start_user_socket(self, callback):
         """Start a websocket for user data
 
-        https://www.binance.com/restapipub.html#user-wss-endpoint
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
 
         :param callback: callback function to handle messages
         :type callback: function
@@ -501,8 +507,6 @@ class BinanceSocketManager(threading.Thread):
         # stop the timer
         self._user_timer.cancel()
         self._user_timer = None
-        # close the stream
-        self._client.stream_close(listenKey=self._user_listen_key)
         self._user_listen_key = None
 
     def run(self):

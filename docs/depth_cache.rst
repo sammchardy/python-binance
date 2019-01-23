@@ -19,6 +19,29 @@ By default the depth cache will fetch the order book via REST request every 30 m
 This duration can be changed by using the `refresh_interval` parameter. To disable the refresh pass 0 or None.
 The socket connection will stay open receiving updates to be replayed once the full order book is received.
 
+Share a Socket Manager
+----------------------
+
+Here dcm1 and dcm2 share the same instance of BinanceSocketManager
+
+.. code:: python
+
+    from binance.websockets import BinanceSocketManager
+    from binance.depthcache import DepthCacheManager
+    bm = BinanceSocketManager(client)
+    dcm1 = DepthCacheManager(client, 'BNBBTC', callback=process_depth1, bm=bm)
+    dcm2 = DepthCacheManager(client, 'ETHBTC', callback=process_depth2, bm=bm)
+
+Because they both share the same BinanceSocketManager calling close can close both message streams.
+
+.. code:: python
+
+    # close just dcm1 stream
+    dcm1.close()
+
+    # close the underlying socket manager as well
+    dcm1.close(close_socket=True)
+
 Websocket Errors
 ----------------
 
@@ -44,6 +67,7 @@ Examples
             print(depth_cache.get_bids()[:5])
             print("top 5 asks")
             print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time)
         else:
             # depth cache had an error and needs to be restarted
 
@@ -58,6 +82,7 @@ At any time the current `DepthCache` object can be retrieved from the `DepthCach
         print(depth_cache.get_bids()[:5])
         print("top 5 asks")
         print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time)
     else:
         # depth cache had an error and needs to be restarted
 
