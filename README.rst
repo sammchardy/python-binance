@@ -1,11 +1,6 @@
-=================================
-Welcome to python-binance v0.7.11
-=================================
-
-Note
-----
-
-this library is not under active development by sammchardy. however, the community has been actively contributing lots of PRs. If you find missing features please submit a PR. please keep PRs small and non-breaking.
+=======================================
+Welcome to python-binance v0.7.11-async
+=======================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
