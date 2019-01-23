@@ -95,7 +95,7 @@ class BinanceSocketManager:
         if path in self._conns:
             return False
 
-        self._conns[path] = ReconnectingWebsocket(self._loop, path, coro)
+        self._conns[path] = ReconnectingWebsocket(self._loop, path, coro, prefix)
 
         return path
 
