@@ -120,7 +120,7 @@ class DepthCacheManager(object):
 
     _default_refresh = 60 * 30  # 30 minutes
 
-    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None):
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=500):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -131,10 +131,13 @@ class DepthCacheManager(object):
         :type callback: function
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
+        :param limit: Optional number of orders to get from orderbook
+        :type limit: int
 
         """
         self._client = client
         self._symbol = symbol
+        self._limit = limit
         self._callback = callback
         self._last_update_id = None
         self._depth_message_buffer = []
@@ -154,7 +157,7 @@ class DepthCacheManager(object):
         self._last_update_id = None
         self._depth_message_buffer = []
 
-        res = self._client.get_order_book(symbol=self._symbol, limit=500)
+        res = self._client.get_order_book(symbol=self._symbol, limit=self._limit)
 
         # process bid and asks from the order book
         for bid in res['bids']:
