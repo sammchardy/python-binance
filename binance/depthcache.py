@@ -18,7 +18,7 @@ class DepthCache(object):
         self.symbol = symbol
         self._bids = {}
         self._asks = {}
-        self.update_time: int
+        self.update_time = None
 
     def add_bid(self, bid):
         """Add a bid to the cache
