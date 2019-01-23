@@ -281,6 +281,18 @@ class Client(BaseClient):
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
+    def _handle_response(self, response):
+        """Internal helper for handling API responses from the Binance server.
+        Raises the appropriate exceptions when necessary; otherwise, returns the
+        response.
+        """
+        if not (200 <= response.status_code < 300):
+            raise BinanceAPIException(response, response.status_code, response.text)
+        try:
+            return response.json()
+        except ValueError:
+            raise BinanceRequestException('Invalid Response: %s' % response.text)
+
     def _request_futures_api(self, method, path, signed=False, **kwargs):
         uri = self._create_futures_api_uri(path)
 
@@ -305,18 +317,6 @@ class Client(BaseClient):
         uri = self._create_options_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
-
-    def _handle_response(self):
-        """Internal helper for handling API responses from the Binance server.
-        Raises the appropriate exceptions when necessary; otherwise, returns the
-        response.
-        """
-        if not (200 <= self.response.status_code < 300):
-            raise BinanceAPIException(self.response, self.response.status_code, self.response.text)
-        try:
-            return self.response.json()
-        except ValueError:
-            raise BinanceRequestException('Invalid Response: %s' % self.response.text)
 
     def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
