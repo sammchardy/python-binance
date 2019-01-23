@@ -9,7 +9,7 @@ from .websockets import BinanceSocketManager
 class DepthCache(object):
 
     def __init__(self, symbol):
-        """Intialise the DepthCache
+        """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
         :type symbol: string
