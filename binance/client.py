@@ -150,6 +150,13 @@ class Client(object):
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
             kwargs['data'] = data
+
+            # find any requests params passed and apply them
+            if 'requests_params' in kwargs['data']:
+                # merge requests params into kwargs
+                kwargs.update(kwargs['data']['requests_params'])
+                del(kwargs['data']['requests_params'])
+
         if signed:
             # generate signature
             kwargs['data']['timestamp'] = int(time.time() * 1000)
@@ -157,12 +164,6 @@ class Client(object):
 
         # sort get and post params to match signature order
         if data:
-            # find any requests params passed and apply them
-            if 'requests_params' in kwargs['data']:
-                # merge requests params into kwargs
-                kwargs.update(kwargs['data']['requests_params'])
-                del(kwargs['data']['requests_params'])
-
             # sort post params
             kwargs['data'] = self._order_params(kwargs['data'])
 
@@ -624,10 +625,22 @@ class Client(object):
                     start_ts = start_str
                 else:
                     start_ts = date_to_milliseconds(start_str)
-                trades = self.get_aggregate_trades(
-                    symbol=symbol,
-                    startTime=start_ts,
-                    endTime=start_ts + (60 * 60 * 1000))
+                # If the resulting set is empty (i.e. no trades in that interval)
+                # then we just move forward hour by hour until we find at least one
+                # trade or reach present moment
+                while True:
+                    end_ts = start_ts + (60 * 60 * 1000)
+                    trades = self.get_aggregate_trades(
+                        symbol=symbol,
+                        startTime=start_ts,
+                        endTime=end_ts)
+                    if len(trades) > 0:
+                        break
+                    # If we reach present moment and find no trades then there is
+                    # nothing to iterate, so we're done
+                    if end_ts > int(time.time() * 1000):
+                        return
+                    start_ts = end_ts
             for t in trades:
                 yield t
             last_id = trades[-1][self.AGG_ID]
@@ -711,7 +724,8 @@ class Client(object):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None,
+                              limit=500):
         """Get Historical Klines from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -726,6 +740,8 @@ class Client(object):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
 
         :return: list of OHLCV values
 
@@ -734,7 +750,7 @@ class Client(object):
         output_data = []
 
         # setup the max limit
-        limit = 500
+        limit = limit
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)

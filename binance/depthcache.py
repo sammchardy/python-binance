@@ -9,7 +9,7 @@ from .websockets import BinanceSocketManager
 class DepthCache(object):
 
     def __init__(self, symbol):
-        """Intialise the DepthCache
+        """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
         :type symbol: string
@@ -18,6 +18,7 @@ class DepthCache(object):
         self.symbol = symbol
         self._bids = {}
         self._asks = {}
+        self.update_time = None
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -120,7 +121,7 @@ class DepthCacheManager(object):
 
     _default_refresh = 60 * 30  # 30 minutes
 
-    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None):
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=500):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -131,10 +132,13 @@ class DepthCacheManager(object):
         :type callback: function
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
+        :param limit: Optional number of orders to get from orderbook
+        :type limit: int
 
         """
         self._client = client
         self._symbol = symbol
+        self._limit = limit
         self._callback = callback
         self._last_update_id = None
         self._depth_message_buffer = []
@@ -154,7 +158,7 @@ class DepthCacheManager(object):
         self._last_update_id = None
         self._depth_message_buffer = []
 
-        res = self._client.get_order_book(symbol=self._symbol, limit=500)
+        res = self._client.get_order_book(symbol=self._symbol, limit=self._limit)
 
         # process bid and asks from the order book
         for bid in res['bids']:
@@ -235,6 +239,9 @@ class DepthCacheManager(object):
             self._depth_cache.add_bid(bid)
         for ask in msg['a']:
             self._depth_cache.add_ask(ask)
+
+        # keeping update time
+        self._depth_cache.update_time = msg['E']
 
         # call the callback with the updated depth cache
         if self._callback:
