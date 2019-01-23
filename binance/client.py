@@ -638,7 +638,7 @@ class Client(object):
                         break
                     # If we reach present moment and find no trades then there is
                     # nothing to iterate, so we're done
-                    if end_ts > int(time.time()*1000):
+                    if end_ts > int(time.time() * 1000):
                         return
                     start_ts = end_ts
             for t in trades:
