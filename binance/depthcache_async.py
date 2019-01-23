@@ -127,6 +127,9 @@ class DepthCacheManager(object):
         for ask in msg['a']:
             self._depth_cache.add_ask(ask)
 
+        # keeping update time
+        self._depth_cache.update_time = msg['E']
+
         # call the callback with the updated depth cache
         if self._coro:
             await self._coro(self._depth_cache)
