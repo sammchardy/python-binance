@@ -164,8 +164,10 @@ class BinanceSocketManager:
             }
 
         """
-        path = symbol.lower() + '@depth'
-        await self._start_socket(path, coro)
+        socket_name = symbol.lower() + '@depth'
+        if depth and depth != '1':
+            socket_name = '{}{}'.format(socket_name, depth)
+        await self._start_socket(socket_name, coro)
 
     async def start_kline_socket(self, symbol, coro, interval=Client.KLINE_INTERVAL_1MINUTE):
         """Start a websocket for symbol kline data
