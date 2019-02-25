@@ -75,7 +75,7 @@ Fetch klines for any date range and interval
     klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
 
     # fetch weekly klines since it listed
-    klines = client.get_historical_klines("NEOBTC", KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+    klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
 
 `Get Historical Kline/Candlesticks using a generator <binance.html#binance.client.Client.get_historical_klines_generator>`_
