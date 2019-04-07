@@ -1,6 +1,8 @@
 # coding=utf-8
-
-import json
+try:
+    import ujson as json
+except ModuleNotFoundError:
+    import json
 import threading
 
 from autobahn.twisted.websocket import WebSocketClientFactory, \
