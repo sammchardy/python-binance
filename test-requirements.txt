@@ -2,6 +2,7 @@ coverage
 flake8
 pytest
 pytest-cov
+pytest-mock
 pytest-pep8
 python-coveralls
 requests-mock
