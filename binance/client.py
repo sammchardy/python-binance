@@ -720,7 +720,6 @@ class Client(object):
             interval=interval,
             limit=1,
             startTime=0,
-            endTime=None
         )
         return kline[0][0]
 
