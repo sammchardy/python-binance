@@ -91,17 +91,8 @@ def generate_pairs(buy_prices, sell_prices, _range=100):
     buy_from_sell = [x - _range for x in sell_prices]
     sell_from_buy = [x + _range for x in buy_prices]
 
-    if len(buy_prices) >= len(buy_from_sell):
-        result1, indexes1 = build_list(buy_prices, buy_from_sell)
-    else:
-        result1, indexes1 = build_list(buy_from_sell, buy_prices)
-        indexes1 = (indexes1[1], indexes1[0])
-
-    if len(sell_prices) >= len(sell_from_buy):
-        result2, indexes2 = build_list(sell_prices, sell_from_buy)
-        indexes2 = (indexes2[1], indexes2[0])
-    else:
-        result2, indexes2 = build_list(sell_from_buy, sell_prices)
+    result1, indexes1 = build_list(buy_prices, buy_from_sell)
+    result2, indexes2 = build_list(sell_from_buy, sell_prices)
     return result1, (indexes1[0], indexes2[1])
 
 
@@ -110,62 +101,33 @@ def get_index(arr, index):
         result = arr[index]
     except IndexError:
         result = -1
+    except KeyError:
+        result = -1
     else:
         return result
 
 
-def sold_items(arr2, arr1):
-    not_sold = []
-    result = sorted(arr2)
-    indexes = [i for i, j in enumerate(sorted(arr1)) if j in set(arr2)]
-    sold = []
-    counter1 = Counter(arr1[:])
-    counter2 = Counter(arr2[:])
-    merged = set(counter1.keys()).intersection(counter2.keys())
-    for i in merged:
-        r = min(counter1[i], counter2[i])
-        for o in range(r):
-            sold.append(i)
-    sold = sorted(sold)
-    zipped = [o for o in zip_longest(result, sold) if o[0] != o[1]]
-    not_sold = [x[0] for x in zipped]
-    print(sold)
-    print(zipped)
-    return sold, indexes, not_sold
-
-
 def build_list(arr1, arr2):
     sold = []
-    sold_index = []
-    not_sold_2 = []
-    is_subset = False
-    if set(arr2).issubset(set(arr1)):
-        is_subset = True
-        if len(set(arr2)) == 1:
-            is_subset = False
+    shared = set(arr1).intersection(arr2)
+    not_sold_2 = [x for x in arr2 if x not in shared]
+    not_sold_arr1 = [x for x in arr1 if x not in shared]
 
-    if is_subset:
-
-        sold, indexes, not_sold_2 = sold_items(arr2, arr1)
-        storage = []
-
-        for i in indexes:
-            ds = sorted(arr1)[i]
-            if ds in arr2:
-                if ds in storage and i < len(arr2):
-                    if ds == sorted(arr2)[i]:
-                        sold_index.append(i)
-                if ds not in storage:
-                    sold_index.append(i)
-                    storage.append(ds)
-    else:
-        sold, indexes, _ = sold_items(arr2, arr1)
-        for i, v in enumerate(sorted(arr2)):
-            if v == sorted(arr1)[i]:
-                # sold.append(v)
-                sold_index.append(i)
+    c_arr1 = Counter(arr1)
+    c_arr2 = Counter(arr2)
+    for i in shared:
+        v = c_arr2[i]
+        u = c_arr1[i]
+        diff = v - u
+        for j in range(diff):
+            not_sold_2.append(i)
+        if diff < 0:
+            if u == len(arr1):
+                for o in range(abs(diff)):
+                    not_sold_arr1.append(i)
             else:
-                not_sold_2.append(v)
-    not_sold_arr1 = [j for i, j in enumerate(sorted(arr1)) if i not in sold_index]
-    return sold, (not_sold_arr1, not_sold_2)
+                not_sold_arr1.append(i)
+        for j in range(min(u, v)):
+            sold.append(i)
+    return sorted(sold), (sorted(not_sold_arr1), sorted(not_sold_2))
 
