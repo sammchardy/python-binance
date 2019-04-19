@@ -169,7 +169,7 @@ class Client(object):
 
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
-            kwargs['params'] = kwargs['data']
+            kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
         response = getattr(self.session, method)(uri, **kwargs)
@@ -2079,3 +2079,71 @@ class Client(object):
             'listenKey': listenKey
         }
         return self._delete('userDataStream', False, data=params)
+
+    def get_sub_account_list(self, **params):
+        """Query Sub-account List.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-listfor-master-account
+
+        :param email: optional
+        :type email: str
+
+        :param startTime: optional
+        :type startTime: int
+
+        :param endTime: optional
+        :type endTime: int
+
+        :param page: optional
+        :type page: int
+
+        :param limit: optional
+        :type limit: int
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'sub-account/list.html', True, data=params)
+
+    def get_sub_account_transfer_history(self, **params):
+        """Query Sub-account Transfer History.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-transfer-historyfor-master-account
+
+        :param email: required
+        :type email: str
+
+        :param startTime: optional
+        :type startTime: int
+
+        :param endTime: optional
+        :type endTime: int
+
+        :param page: optional
+        :type page: int
+
+        :param limit: optional
+        :type limit: int
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'sub-account/transfer/history.html', True, data=params)
