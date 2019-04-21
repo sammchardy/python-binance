@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from binance.helpers2 import (
+from exchanges.binance.helpers2 import (
     clean_orders,
     trade_pairs,
     generate_pairs,

@@ -2,15 +2,24 @@
 from setuptools import setup
 
 setup(
-    name="python-binance-async",
+    name="python-bitcoin-exchanges",
     version="0.7.2",
-    packages=["binance"],
+    packages=["exchanges"],
     description="Binance REST API python implementation that using asyncio",
     url="https://github.com/gbozee/python-binance-async",
     author="Sam McHardy / Biola Oyeniyi",
     license="MIT",
     author_email="",
-    install_requires=["requests_async", "dateparser","twisted","autobahn","pyOpenSSL"],
+    install_requires=[
+        "requests_async",
+        "dateparser",
+        "twisted",
+        "autobahn",
+        "pyOpenSSL",
+        "liquidtap",
+        "pyJWT",
+        "six",
+    ],
     keywords="binance exchange rest api bitcoin ethereum btc eth neo",
     classifiers=[
         "Intended Audience :: Developers",

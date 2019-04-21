@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from binance.client import Client
-from binance.exceptions import (
+from exchanges.binance.client import Client
+from exchanges.binance.exceptions import (
     BinanceAPIException,
     BinanceRequestException,
     BinanceWithdrawException,

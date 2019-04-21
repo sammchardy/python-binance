@@ -1,6 +1,6 @@
 import pytest
 from requests_async import ASGISession, Session
-from binance.client import Client
+from exchanges.binance.client import Client
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse, JSONResponse
 import requests_mock
