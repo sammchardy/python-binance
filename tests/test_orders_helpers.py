@@ -1,6 +1,11 @@
 from datetime import datetime
 
-from binance.helpers2 import clean_orders, trade_pairs, generate_pairs
+from binance.helpers2 import (
+    clean_orders,
+    trade_pairs,
+    generate_pairs,
+    generate_completed_trades,
+)
 import scenarios
 
 data = [
@@ -91,4 +96,14 @@ def test_pair_trades():
         assert result[0] == sorted(i["result"][0])
         assert result[1][0] == sorted(i["result"][1][0])
         assert result[1][1] == sorted(i["result"][1][1])
+
+
+# def test_determine_pending_and_completed_trades():
+#     for i in scenarios.batches_with_different_rates:
+#         result = generate_completed_trades(i["data"])
+#         assert result == sorted(i["final_result"][0])
+#         # import ipdb
+
+#         # ipdb.set_trace()
+#         # assert result[1] == i["final_result"][1]
 

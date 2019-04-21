@@ -96,6 +96,53 @@ def generate_pairs(buy_prices, sell_prices, _range=100):
     return result1, (indexes1[0], indexes2[1])
 
 
+def new_trade_check_based_on_range(trade_pairs, _range):
+    buy_sales, sell_sales = list(zip(*trade_pairs))
+    buy_sales = [o for a in buy_sales for o in a]
+    sell_sales = [o for a in sell_sales for o in a]
+    result = generate_pairs(buy_sales, sell_sales, _range=_range)
+    return [result[0], result[1][0], result[1][1]], _range
+
+
+def trade_check(arr, index):
+    if index == 0:
+        return arr[0]
+    previous_check = trade_check(arr, index - 1)
+    value = arr[index]
+    result = set(previous_check).intersection(value)
+    shared, not_shared = remove_single_duplicate(value, previous_check, result)
+    new_result = [x for x in value if x not in result] + not_shared
+    return new_result
+
+
+def generate_completed_trades(trade_pairs):
+    results = [generate_pairs(x[0], x[1], _range=x[2]) for x in trade_pairs]
+    new_array_to_check = [x[1] for x in results]
+    _range_array = [x[-1] for x in trade_pairs]
+    successful_trades = []
+    for i in results:
+        successful_trades += i[0]
+    second_trades = [
+        new_trade_check_based_on_range(new_array_to_check, x) for x in set(_range_array)
+    ]
+    second_successful_trades = [x[0][0] for x in second_trades]
+    new_trades = [
+        a
+        for o in [
+            trade_check(second_successful_trades, index)
+            for index in range(len(second_successful_trades))
+        ]
+        for a in o
+    ]
+    import ipdb
+
+    ipdb.set_trace()
+    new_trades += successful_trades
+    t_trade_groups = [[[x[0][1], x[0][2], x[1]] for x in second_trades]]
+    unsuccessful_trade_group = [a for o in t_trade_groups for a in o]
+    return sorted(new_trades)
+
+
 def get_index(arr, index):
     try:
         result = arr[index]
@@ -131,3 +178,25 @@ def build_list(arr1, arr2):
             sold.append(i)
     return sorted(sold), (sorted(not_sold_arr1), sorted(not_sold_2))
 
+
+def remove_single_duplicate(arr1, arr2, shared):
+    not_sold_2 = []
+    sold = []
+    not_sold_arr1 = []
+    c_arr1 = Counter(arr1)
+    c_arr2 = Counter(arr2)
+    for i in shared:
+        v = c_arr2[i]
+        u = c_arr1[i]
+        diff = v - u
+        for j in range(diff):
+            not_sold_2.append(i)
+        if diff < 0:
+            if u == len(arr1):
+                for o in range(abs(diff)):
+                    not_sold_arr1.append(i)
+            else:
+                not_sold_arr1.append(i)
+        for j in range(min(u, v)):
+            sold.append(i)
+    return sold, not_sold_arr1

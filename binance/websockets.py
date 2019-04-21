@@ -430,11 +430,11 @@ class BinanceSocketManager(threading.Thread):
         stream_path = "streams={}".format("/".join(streams))
         return self._start_socket(stream_path, callback, "stream?")
 
-    def get_stream_listen_key():
-        result = asyncio.run(self._client.stream_get_listen_key())
+    async def get_stream_listen_key(self):
+        result = await self._client.stream_get_listen_key()
         return result
 
-    def start_user_socket(self, callback):
+    async def start_user_socket(self, callback):
         """Start a websocket for user data
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
@@ -447,7 +447,7 @@ class BinanceSocketManager(threading.Thread):
         Message Format - see Binance API docs for all types
         """
         # Get the user listen key
-        user_listen_key = self.stream_get_listen_key()
+        user_listen_key = await self.get_stream_listen_key()
         # and start the socket with this specific key
         conn_key = self._start_user_socket(user_listen_key, callback)
         return conn_key
@@ -475,9 +475,13 @@ class BinanceSocketManager(threading.Thread):
         )
         self._user_timer.setDaemon(True)
         self._user_timer.start()
+    
+    def sync_stream_get_listen_key(self):
+        result = asyncio.run(self.get_stream_listen_key())
+        return result
 
     def _keepalive_user_socket(self):
-        user_listen_key = self.stream_get_listen_key()
+        user_listen_key = self.sync_stream_get_listen_key()
         # check if they key changed and
         if user_listen_key != self._user_listen_key:
             # Start a new socket with the key received

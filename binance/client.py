@@ -189,7 +189,6 @@ class Client(object):
         if data and (method == "get" or force_params):
             kwargs["params"] = kwargs["data"]
             del kwargs["data"]
-        print(kwargs)
         response = await getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
@@ -1318,6 +1317,7 @@ class Client(object):
 
         """
         params.update({"side": self.SIDE_BUY})
+        params.pop("price", None)
         return await self.order_market(**params)
 
     async def order_market_sell(self, **params):
@@ -1342,6 +1342,7 @@ class Client(object):
 
         """
         params.update({"side": self.SIDE_SELL})
+        params.pop("price", None)
         return await self.order_market(**params)
 
     async def create_test_order(self, **params):

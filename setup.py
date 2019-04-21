@@ -10,7 +10,7 @@ setup(
     author="Sam McHardy / Biola Oyeniyi",
     license="MIT",
     author_email="",
-    install_requires=["requests_async", "dateparser","twisted","autobahn"],
+    install_requires=["requests_async", "dateparser","twisted","autobahn","pyOpenSSL"],
     keywords="binance exchange rest api bitcoin ethereum btc eth neo",
     classifiers=[
         "Intended Audience :: Developers",
