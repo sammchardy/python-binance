@@ -143,8 +143,7 @@ Async Example
     import asyncio
     import json
 
-    from binance import AsyncClient
-    from binance import DepthCacheManager
+    from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
 
 
     dcm1 = None
@@ -161,6 +160,19 @@ Async Example
         print(json.dumps(await client.get_exchange_info(), indent=2))
 
         print(json.dumps(await client.get_symbol_ticker(symbol="BTCUSDT"), indent=2))
+
+
+        # initialise socket manager
+        bsm = BinanceSocketManager(client, loop)
+
+        # setup async callback handler for socket messages
+        async def handle_evt(msg):
+            pair = msg['s']
+            print(f'{pair} : {msg}')
+
+        # create listener, can use the `ethkey` value to close the socket later
+        trxkey = await bsm.start_trade_socket('TRXBTC', handle_evt)
+
 
         # setup an async callback for the Depth Cache
         async def process_depth(depth_cache):
