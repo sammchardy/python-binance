@@ -50,3 +50,11 @@ def interval_to_milliseconds(interval):
         return int(interval[:-1]) * seconds_per_unit[interval[-1]] * 1000
     except (ValueError, KeyError):
         return None
+
+
+def convert_ts_str(ts_str):
+    if ts_str is None:
+        return ts_str
+    if type(ts_str) == int:
+        return ts_str
+    return  date_to_milliseconds(ts_str)

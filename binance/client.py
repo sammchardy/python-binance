@@ -6,7 +6,7 @@ import requests
 import time
 from abc import ABC, abstractmethod
 from operator import itemgetter
-from .helpers import date_to_milliseconds, interval_to_milliseconds
+from .helpers import date_to_milliseconds, interval_to_milliseconds, convert_ts_str
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
 
@@ -644,10 +644,7 @@ class Client(BaseClient):
                 # The difference between startTime and endTime should be less
                 # or equal than an hour and the result set should contain at
                 # least one trade.
-                if type(start_str) == int:
-                    start_ts = start_str
-                else:
-                    start_ts = date_to_milliseconds(start_str)
+                start_ts = convert_ts_str(start_str)
                 # If the resulting set is empty (i.e. no trades in that interval)
                 # then we just move forward hour by hour until we find at least one
                 # trade or reach present moment
@@ -747,8 +744,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None,
-                              limit=500):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
         """Get Historical Klines from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -772,29 +768,17 @@ class Client(BaseClient):
         # init our list
         output_data = []
 
-        # setup the max limit
-        limit = limit
-
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
         first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
-        end_ts = None
-        if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+        end_ts = convert_ts_str(end_str)
 
         idx = 0
         while True:
@@ -832,7 +816,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
+    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, limit=500):
         """Get Historical Klines from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -847,34 +831,25 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
 
         :return: generator of OHLCV values
 
         """
 
-        # setup the max limit
-        limit = 500
-
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
         first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
-        end_ts = None
-        if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+        end_ts = convert_ts_str(end_str)
 
         idx = 0
         while True:
