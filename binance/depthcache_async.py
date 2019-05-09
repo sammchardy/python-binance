@@ -1,4 +1,5 @@
-
+import asyncio
+import time
 
 from .websockets_async import BinanceSocketManager
 from .depthcache import DepthCache
@@ -9,7 +10,7 @@ class DepthCacheManager(object):
     _default_refresh = 60 * 30  # 30 minutes
 
     @classmethod
-    async def create(cls, client, loop, symbol, coro=None, refresh_interval=_default_refresh):
+    async def create(cls, client, loop, symbol, coro=None, refresh_interval=_default_refresh, bm=None, limit=500):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -22,17 +23,21 @@ class DepthCacheManager(object):
         :type coro: async coroutine
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
+        :param bm: Optional BinanceSocketManager
+        :type bm: BinanceSocketManager
+        :param limit: Optional number of orders to get from orderbook
+        :type limit: int
 
         """
         self = DepthCacheManager()
         self._client = client
         self._loop = loop
         self._symbol = symbol
+        self._limit = limit
         self._coro = coro
         self._last_update_id = None
         self._depth_message_buffer = []
-        self._bm = None
-        self._depth_cache = DepthCache(self._symbol)
+        self._bm = bm
         self._refresh_interval = refresh_interval
 
         await self._start_socket()
@@ -48,7 +53,7 @@ class DepthCacheManager(object):
         self._last_update_id = None
         self._depth_message_buffer = []
 
-        res = await self._client.get_order_book(symbol=self._symbol, limit='500')
+        res = await self._client.get_order_book(symbol=self._symbol, limit=self._limit)
 
         # process bid and asks from the order book
         for bid in res['bids']:
@@ -75,7 +80,9 @@ class DepthCacheManager(object):
 
         :return:
         """
-        self._bm = BinanceSocketManager(self._client, self._loop)
+        if self._bm is None:
+            self._bm = BinanceSocketManager.create(self._client, self._loop)
+
         await self._bm.start_depth_socket(self._symbol, self._depth_event)
 
         # wait for some socket responses
@@ -95,8 +102,8 @@ class DepthCacheManager(object):
             await self.close()
 
             # notify the user by returning a None value
-            if self._callback:
-                self._callback(None)
+            if self._coro:
+                await self._coro(None)
 
         if self._last_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
@@ -153,4 +160,5 @@ class DepthCacheManager(object):
         :return:
         """
         await self._bm.close()
+        await asyncio.sleep(1)
         self._depth_cache = None

@@ -132,6 +132,8 @@ class DepthCacheManager(object):
         :type callback: function
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
+        :param bm: Optional BinanceSocketManager
+        :type bm: BinanceSocketManager
         :param limit: Optional number of orders to get from orderbook
         :type limit: int
 
