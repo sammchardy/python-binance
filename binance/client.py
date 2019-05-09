@@ -2203,60 +2203,6 @@ class AsyncClient(BaseClient):
         return await self._get('aggTrades', data=params)
     get_aggregate_trades.__doc__ = Client.get_aggregate_trades.__doc__
 
-    async def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
-        if start_str is not None and last_id is not None:
-            raise ValueError(
-                'start_time and last_id may not be simultaneously specified.')
-
-        # If there's no last_id, get one.
-        if last_id is None:
-            # Without a last_id, we actually need the first trade.  Normally,
-            # we'd get rid of it. See the next loop.
-            if start_str is None:
-                trades = await self.get_aggregate_trades(symbol=symbol, fromId=0)
-            else:
-                # The difference between startTime and endTime should be less
-                # or equal than an hour and the result set should contain at
-                # least one trade.
-                start_ts = convert_ts_str(start_str)
-                # If the resulting set is empty (i.e. no trades in that interval)
-                # then we just move forward hour by hour until we find at least one
-                # trade or reach present moment
-                while True:
-                    end_ts = start_ts + (60 * 60 * 1000)
-                    trades = await self.get_aggregate_trades(
-                        symbol=symbol,
-                        startTime=start_ts,
-                        endTime=end_ts)
-                    if len(trades) > 0:
-                        break
-                    # If we reach present moment and find no trades then there is
-                    # nothing to iterate, so we're done
-                    if end_ts > int(time.time() * 1000):
-                        return
-                    start_ts = end_ts
-            for t in trades:
-                yield t
-            last_id = trades[-1][self.AGG_ID]
-
-        while True:
-            # There is no need to wait between queries, to avoid hitting the
-            # rate limit. We're using blocking IO, and as long as we're the
-            # only thread running calls like this, Binance will automatically
-            # add the right delay time on their end, forcing us to wait for
-            # data. That really simplifies this function's job. Binance is
-            # fucking awesome.
-            trades = await self.get_aggregate_trades(symbol=symbol, fromId=last_id)
-            # fromId=n returns a set starting with id n, but we already have
-            # that one. So get rid of the first item in the result set.
-            trades = trades[1:]
-            if len(trades) == 0:
-                return
-            for t in trades:
-                yield t
-            last_id = trades[-1][self.AGG_ID]
-    aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
-
     async def get_klines(self, **params):
         return await self._get('klines', data=params)
     get_klines.__doc__ = Client.get_klines.__doc__
@@ -2327,7 +2273,7 @@ class AsyncClient(BaseClient):
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
     async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, limit=500):
-         # convert interval to useful value in seconds
+        # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
