@@ -2,6 +2,14 @@
 Welcome to python-binance v0.7.1
 ================================
 
+Note
+----
+
+I am working on a python3 version with async support to remove legacy dependencies and their related issues.
+
+I would appreciate if you could try out the `feature/asyncio <https://github.com/sammchardy/python-binance/tree/feature/asyncio>`_ branch and give your feedback.
+
+
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
