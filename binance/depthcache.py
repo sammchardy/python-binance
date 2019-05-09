@@ -195,7 +195,7 @@ class DepthCacheManager(object):
         :return:
         """
         if self._bm is None:
-            self._bm = AsyncBinanceSocketManager.create(self._client, self._loop)
+            self._bm = BinanceSocketManager(self._client, self._loop)
 
         await self._bm.start_depth_socket(self._symbol, self._depth_event)
 
