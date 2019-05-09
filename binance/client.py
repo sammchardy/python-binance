@@ -6350,7 +6350,7 @@ class Client(BaseClient):
 class AsyncClient(BaseClient):
 
     @classmethod
-    async def create(cls, api_key, api_secret, requests_params=None):
+    async def create(cls, api_key='', api_secret='', requests_params=None):
 
         self = AsyncClient(api_key, api_secret, requests_params)
 
@@ -6508,7 +6508,7 @@ class AsyncClient(BaseClient):
                         return
                     start_ts = end_ts
             for t in trades:
-                await t
+                yield t
             last_id = trades[-1][self.AGG_ID]
 
         while True:
@@ -6525,7 +6525,7 @@ class AsyncClient(BaseClient):
             if len(trades) == 0:
                 return
             for t in trades:
-                await t
+                yield t
             last_id = trades[-1][self.AGG_ID]
     aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
 
@@ -6629,7 +6629,7 @@ class AsyncClient(BaseClient):
 
             # yield data
             for o in output_data:
-                await o
+                yield o
 
             # set our start timestamp using the last value in the array
             start_ts = output_data[-1][0]
