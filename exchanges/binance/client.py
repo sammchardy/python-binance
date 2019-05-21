@@ -214,7 +214,6 @@ class Client(object):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        import ipdb; ipdb.set_trace()
         if not str(response.status_code.value).startswith("2"):
             raise BinanceAPIException(response)
         try:
