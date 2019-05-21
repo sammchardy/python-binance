@@ -92,6 +92,7 @@ class BinanceSocketManager(threading.Thread):
             return False
 
         factory_url = self.STREAM_URL + prefix + path
+        print(f"factor_url: {factory_url}")
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
