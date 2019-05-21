@@ -11,7 +11,7 @@ setup(
     license="MIT",
     author_email="",
     install_requires=[
-        "requests_async==0.5.0",
+        "requests_async==0.4.1",
         "dateparser",
         "twisted",
         "autobahn",
