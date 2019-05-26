@@ -3,4 +3,5 @@ aiohttp==3.5.4
 # test packages
 starlette==0.12.0b1
 pytest
-twisted
+websockets==7.0
+# twisted
