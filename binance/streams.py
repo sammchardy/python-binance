@@ -2,6 +2,7 @@ import asyncio
 import gzip
 import json
 import logging
+from random import random
 
 import websockets as ws
 
@@ -10,8 +11,10 @@ from .client import Client
 
 class ReconnectingWebsocket:
 
-    MAX_RECONNECTS = 3
+    MAX_RECONNECTS = 5
+    MAX_RECONNECT_SECONDS = 60
     MIN_RECONNECT_WAIT = 0.1
+    TIMEOUT = 10
 
     def __init__(self, loop, path, coro, url, prefix='ws/', is_binary=False):
         self._loop = loop
@@ -21,14 +24,14 @@ class ReconnectingWebsocket:
         self._coro = coro
         self._prefix = prefix
         self._reconnects = 0
-        self._reconnect_wait = 0.1
         self._is_binary = is_binary
         self._conn = None
+        self._socket = None
 
         self._connect()
 
     def _connect(self):
-        self._conn = asyncio.ensure_future(self._run())
+        self._conn = asyncio.ensure_future(self._run(), loop=self._loop)
 
     def _handle_message(self, evt):
         if self._is_binary:
@@ -36,44 +39,63 @@ class ReconnectingWebsocket:
                 evt = gzip.decompress(evt)
             except:
                 return None
-
         try:
             return json.loads(evt)
         except ValueError:
+            self._log.debug('error parsing evt json:{}'.format(evt))
             return None
 
     async def _run(self):
 
         keep_waiting = True
-        try:
-            ws_url = self._url + self._prefix + self._path
-            async with ws.connect(ws_url) as socket:
-                self._reconnect_wait = self.MIN_RECONNECT_WAIT
+        ws_url = self._url + self._prefix + self._path
+        async with ws.connect(ws_url) as socket:
+            self._socket = socket
+            self._reconnects = 0
+
+            try:
                 while keep_waiting:
-                    evt_obj = self._handle_message(await socket.recv())
+                    evt_obj = None
+                    try:
+                        evt_obj = self._handle_message(await asyncio.wait_for(socket.recv(), timeout=self.TIMEOUT))
+                    except asyncio.TimeoutError:
+                        self._log.debug("no message in {} seconds".format(self.TIMEOUT))
+                        await self.send_ping()
+                    except asyncio.CancelledError:
+                        self._log.debug("cancelled error")
+                        await self.send_ping()
+
                     if evt_obj:
                         await self._coro(evt_obj)
-        except ws.ConnectionClosed as e:
-            self._log.debug('ws connection closed:{}'.format(e))
-            keep_waiting = False
-            await self._reconnect()
-        except Exception as e:
-            self._log.debug('ws exception:{}'.format(e))
-            keep_waiting = False
-        #    await self._reconnect()
+
+            except ws.ConnectionClosed as e:
+                self._log.debug('ws connection closed:{}'.format(e))
+                await self._reconnect()
+            except Exception as e:
+                self._log.debug('ws exception:{}'.format(e))
+                await self._reconnect()
+
+    def _get_reconnect_wait(self, attempts: int) -> int:
+        expo = 2 ** attempts
+        return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def _reconnect(self):
         await self.cancel()
         self._reconnects += 1
         if self._reconnects < self.MAX_RECONNECTS:
 
-            self._log.debug("websocket {} reconnecting {} reconnects left".format(self._path, self.MAX_RECONNECTS - self._reconnects))
-            await asyncio.sleep(self._reconnect_wait)
-            self._reconnect_wait *= 3
+            self._log.debug("websocket {} reconnecting {} reconnects left".format(
+                self._path, self.MAX_RECONNECTS - self._reconnects)
+            )
+            reconnect_wait = self._get_reconnect_wait(self._reconnects)
+            await asyncio.sleep(reconnect_wait)
             self._connect()
         else:
-            # maybe raise an exception
-            pass
+            self._log.error('Max reconnections {} reached:'.format(self.MAX_RECONNECTS))
+
+    async def send_ping(self):
+        if self._socket:
+            await self._socket.ping()
 
     async def cancel(self):
         self._conn.cancel()
