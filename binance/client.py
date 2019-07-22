@@ -12,11 +12,13 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 class Client(object):
 
     API_URL = 'https://api.binance.com/api'
+    MARGIN_API_URL = 'https://api.binance.com/sapi'
     WITHDRAW_API_URL = 'https://api.binance.com/wapi'
     WEBSITE_URL = 'https://www.binance.com'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
+    MARGIN_API_VERSION = 'v1'
 
     SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -108,6 +110,9 @@ class Client(object):
     def _create_withdraw_api_uri(self, path):
         return self.WITHDRAW_API_URL + '/' + self.WITHDRAW_API_VERSION + '/' + path
 
+    def _create_margin_api_uri(self, path):
+        return self.MARGIN_API_URL + '/' + self.MARGIN_API_VERSION + '/' + path
+
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
 
@@ -185,6 +190,11 @@ class Client(object):
 
         return self._request(method, uri, signed, True, **kwargs)
 
+    def _request_margin_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_margin_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
     def _request_website(self, method, path, signed=False, **kwargs):
 
         uri = self._create_website_uri(path)
@@ -196,6 +206,10 @@ class Client(object):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
+        print("\nRESPONSE\n")
+        print("response status", response.status_code)
+        print(response.text)
+
         if not str(response.status_code).startswith('2'):
             raise BinanceAPIException(response)
         try:
@@ -1561,6 +1575,67 @@ class Client(object):
 
         """
         return self._get('account', True, data=params)
+
+    def get_margin_account(self, **params):
+        """Get current margin account information.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-margin
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+        {
+          "borrowEnabled": true,
+          "marginLevel": "11.64405625",
+          "totalAssetOfBtc": "6.82728457",
+          "totalLiabilityOfBtc": "0.58633215",
+          "totalNetAssetOfBtc": "6.24095242",
+          "tradeEnabled": true,
+          "transferEnabled": true,
+          "userAssets": [
+              {
+                  "asset": "BTC",
+                  "borrowed": "0.00000000",
+                  "free": "0.00499500",
+                  "interest": "0.00000000",
+                  "locked": "0.00000000",
+                  "netAsset": "0.00499500"
+              },
+              {
+                  "asset": "BNB",
+                  "borrowed": "201.66666672",
+                  "free": "2346.50000000",
+                  "interest": "0.00000000",
+                  "locked": "0.00000000",
+                  "netAsset": "2144.83333328"
+              },
+              {
+                  "asset": "ETH",
+                  "borrowed": "0.00000000",
+                  "free": "0.00000000",
+                  "interest": "0.00000000",
+                  "locked": "0.00000000",
+                  "netAsset": "0.00000000"
+              },
+              {
+                  "asset": "USDT",
+                  "borrowed": "0.00000000",
+                  "free": "0.00000000",
+                  "interest": "0.00000000",
+                  "locked": "0.00000000",
+                  "netAsset": "0.00000000"
+              }
+          ]
+        }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/query/account', True, data=params)
 
     def get_asset_balance(self, asset, **params):
         """Get current asset balance.
