@@ -19,6 +19,7 @@ setup(
         "liquidtap",
         "pyJWT",
         "six",
+        "bitmex-ws"
     ],
     keywords="binance exchange rest api bitcoin ethereum btc eth neo",
     classifiers=[
