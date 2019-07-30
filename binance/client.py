@@ -193,7 +193,7 @@ class Client(object):
     def _request_margin_api(self, method, path, signed=False, **kwargs):
         uri = self._create_margin_api_uri(path)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        return self._request(method, uri, signed, **kwargs)
 
     def _request_website(self, method, path, signed=False, **kwargs):
 
@@ -208,7 +208,8 @@ class Client(object):
         """
         print("\nRESPONSE\n")
         print("response status", response.status_code)
-        print(response.text)
+        print(response.url)
+        print("\n\n")
 
         if not str(response.status_code).startswith('2'):
             raise BinanceAPIException(response)
@@ -1162,6 +1163,16 @@ class Client(object):
         """
         return self._post('order', True, data=params)
 
+    def create_order_margin(self, **params):
+        """Send in a new margin order
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-new-order-margin
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
+        """
+        return self._request_margin_api('post', 'margin/order', True, data=params)
+
     def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
@@ -1297,8 +1308,50 @@ class Client(object):
         })
         return self.create_order(**params)
 
+    def order_market_margin(self, **params):
+        """Send in a new margin market order
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        See order endpoint for full response options
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
+        """
+        params.update({
+            'type': self.ORDER_TYPE_MARKET
+        })
+        return self.create_order_margin(**params)
+
     def order_market_buy(self, **params):
         """Send in a new market buy order
+        :returns: API response
+
+        See order endpoint for full response options
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
+        """
+        params.update({
+            'side': self.SIDE_BUY
+        })
+        return self.order_market(**params)
+
+    def order_market_buy_margin(self, **params):
+        """Send in a new margin market buy order
 
         :param symbol: required
         :type symbol: str
@@ -1321,7 +1374,7 @@ class Client(object):
         params.update({
             'side': self.SIDE_BUY
         })
-        return self.order_market(**params)
+        return self.order_market_margin(**params)
 
     def order_market_sell(self, **params):
         """Send in a new market sell order
@@ -1348,6 +1401,32 @@ class Client(object):
             'side': self.SIDE_SELL
         })
         return self.order_market(**params)
+
+    def order_market_sell_margin(self, **params):
+        """Send in a new margin market sell order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        See order endpoint for full response options
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+
+        """
+        params.update({
+            'side': self.SIDE_SELL
+        })
+        return self.order_market_margin(**params)
 
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
@@ -1536,6 +1615,42 @@ class Client(object):
         """
         return self._get('openOrders', True, data=params)
 
+    def loan_asset(self, **params):
+        """
+        Loan asset from Binance exchange.
+
+        parameters
+        - asset, string
+        - amount, decimal
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+        """
+        return self._request_margin_api('post', 'margin/loan', True, data=params)
+
+    def loan_record(self, **params):
+        """
+        Get details on a single loan record
+
+        parameters
+        - asset, string
+        - loan_id, integer
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-loan-record-user_data
+        """
+        return self._request_margin_api('get', 'margin/loan', True, data=params)
+
+    def repay_asset(self, **params):
+        """
+        Repay loan on Binance exchange
+
+        parameters
+        - asset, string
+        - amount, decimal
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+        """
+        return self._request_margin_api('post', 'margin/repay', True, data=params)
+
     # User Stream Endpoints
     def get_account(self, **params):
         """Get current account information.
@@ -1635,7 +1750,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'margin/query/account', True, data=params)
+        return self._request_margin_api('get', 'margin/account', True, data=params)
 
     def get_asset_balance(self, asset, **params):
         """Get current asset balance.
@@ -2154,3 +2269,48 @@ class Client(object):
             'listenKey': listenKey
         }
         return self._delete('userDataStream', False, data=params)
+
+    def stream_get_listen_key_margin(self):
+        """Start a new user data stream and return the listen key
+        If a stream already exists it should return the same key.
+        If the stream becomes invalid a new key is returned.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#start-user-data-stream-for-margin-account-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        res = self._request_margin_api('post', 'userDataStream', True, data={})
+        return res['listenKey']
+
+    def stream_keepalive_margin(self, listenKey):
+        """PING a user data stream to prevent a time out.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#ping-user-data-stream-for-margin-account--user_data
+
+        :param listenKey: required
+        :type listenKey: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'listenKey': listenKey
+        }
+        res = self._request_margin_api('put', 'userDataStream', True, data=params)
+        return res['listenKey']
+
