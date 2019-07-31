@@ -206,11 +206,6 @@ class Client(object):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        print("\nRESPONSE\n")
-        print("response status", response.status_code)
-        print(response.url)
-        print("\n\n")
-
         if not str(response.status_code).startswith('2'):
             raise BinanceAPIException(response)
         try:
