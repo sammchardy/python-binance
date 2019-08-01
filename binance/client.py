@@ -13,10 +13,12 @@ class Client(object):
 
     API_URL = 'https://api.binance.com/api'
     WITHDRAW_API_URL = 'https://api.binance.com/wapi'
+    MARGIN_API_URL = 'https://api.binance.com/sapi'
     WEBSITE_URL = 'https://www.binance.com'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
+    MARGIN_API_VERSION = 'v1'
 
     SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -108,6 +110,9 @@ class Client(object):
     def _create_withdraw_api_uri(self, path):
         return self.WITHDRAW_API_URL + '/' + self.WITHDRAW_API_VERSION + '/' + path
 
+    def _create_margin_api_uri(self, path):
+        return self.MARGIN_API_URL + '/' + self.MARGIN_API_VERSION + '/' + path
+
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
 
@@ -184,6 +189,11 @@ class Client(object):
         uri = self._create_withdraw_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_margin_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_margin_api_uri(path)
+
+        return self._request(method, uri, signed, **kwargs)
 
     def _request_website(self, method, path, signed=False, **kwargs):
 
@@ -2079,3 +2089,829 @@ class Client(object):
             'listenKey': listenKey
         }
         return self._delete('userDataStream', False, data=params)
+
+    # Margin Trading Endpoints
+
+    def get_margin_account(self):
+        """Query margin account details
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "borrowEnabled": true,
+                "marginLevel": "11.64405625",
+                "totalAssetOfBtc": "6.82728457",
+                "totalLiabilityOfBtc": "0.58633215",
+                "totalNetAssetOfBtc": "6.24095242",
+                "tradeEnabled": true,
+                "transferEnabled": true,
+                "userAssets": [
+                    {
+                        "asset": "BTC",
+                        "borrowed": "0.00000000",
+                        "free": "0.00499500",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00499500"
+                    },
+                    {
+                        "asset": "BNB",
+                        "borrowed": "201.66666672",
+                        "free": "2346.50000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "2144.83333328"
+                    },
+                    {
+                        "asset": "ETH",
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000"
+                    },
+                    {
+                        "asset": "USDT",
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/account', True)
+
+    def get_margin_asset(self, **params):
+        """Query margin asset
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-asset-market_data
+
+        :param asset: name of the asset
+        :type asset: str
+
+        .. code:: python
+
+            asset_details = client.get_margin_asset(asset='BNB')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "assetFullName": "Binance Coin",
+                "assetName": "BNB",
+                "isBorrowable": false,
+                "isMortgageable": true,
+                "userMinBorrow": "0.00000000",
+                "userMinRepay": "0.00000000"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/asset', data=params)
+
+    def get_margin_symbol(self, **params):
+        """Query margin symbol info
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-pair-market_data
+
+        :param symbol: name of the symbol pair
+        :type symbol: str
+
+        .. code:: python
+
+            pair_details = client.get_margin_symbol(symbol='BTCUSDT')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "id":323355778339572400,
+                "symbol":"BTCUSDT",
+                "base":"BTC",
+                "quote":"USDT",
+                "isMarginTrade":true,
+                "isBuyAllowed":true,
+                "isSellAllowed":true
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/pair', data=params)
+
+    def get_margin_price_index(self, **params):
+        """Query margin priceIndex
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-priceindex-market_data
+
+        :param symbol: name of the symbol pair
+        :type symbol: str
+
+        .. code:: python
+
+            price_index_details = client.get_margin_pair(symbol='BTCUSDT')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "calcTime": 1562046418000,
+                "price": "0.00333930",
+                "symbol": "BNBBTC"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/priceIndex', data=params)
+
+    def transfer_margin_to_spot(self, **params):
+        """Execute transfer between margin account and spot account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_margin_to_spot(asset='BTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['type'] = 2
+        return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+
+    def transfer_spot_to_margin(self, **params):
+        """Execute transfer between spot account and margin account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_margin(asset='BTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['type'] = 1
+        return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+
+    def create_margin_loan(self, **params):
+        """Apply for a loan.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transaction = client.margin_create_loan(asset='BTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'margin/loan', signed=True, data=params)
+
+    def repay_margin_loan(self, **params):
+        """Repay loan for margin account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-repay-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transaction = client.margin_repay_loan(asset='BTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'margin/repay', signed=True, data=params)
+
+    def create_margin_order(self, **params):
+        """Post a new order for margin account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-new-order-trade
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param type: required
+        :type type: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param stopPrice: Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+        :type stopPrice: str
+        :param timeInForce: required if limit order GTC,IOC,FOK
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+        :type icebergQty: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to
+            FULL, all other orders default to ACK.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        Response ACK:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595
+            }
+
+        Response RESULT:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "1.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "cummulativeQuoteQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL"
+            }
+
+        Response FULL:
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 28,
+                "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+                "transactTime": 1507725176595,
+                "price": "1.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "10.00000000",
+                "cummulativeQuoteQty": "10.00000000",
+                "status": "FILLED",
+                "timeInForce": "GTC",
+                "type": "MARKET",
+                "side": "SELL",
+                "fills": [
+                    {
+                        "price": "4000.00000000",
+                        "qty": "1.00000000",
+                        "commission": "4.00000000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3999.00000000",
+                        "qty": "5.00000000",
+                        "commission": "19.99500000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3998.00000000",
+                        "qty": "2.00000000",
+                        "commission": "7.99600000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3997.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99700000",
+                        "commissionAsset": "USDT"
+                    },
+                    {
+                        "price": "3995.00000000",
+                        "qty": "1.00000000",
+                        "commission": "3.99500000",
+                        "commissionAsset": "USDT"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException,
+            BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException,
+            BinanceOrderInactiveSymbolException
+
+        """
+        return self._request_margin_api('post', 'margin/order', signed=True, data=params)
+
+    def cancel_margin_order(self, **params):
+        """Cancel an active order for margin account.
+
+        Either orderId or origClientOrderId must be sent.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+
+        :param symbol: required
+        :type symbol: str
+        :param orderId:
+        :type orderId: str
+        :param origClientOrderId:
+        :type origClientOrderId: str
+        :param newClientOrderId: Used to uniquely identify this cancel. Automatically generated by default.
+        :type newClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "symbol": "LTCBTC",
+                "orderId": 28,
+                "origClientOrderId": "myOrder1",
+                "clientOrderId": "cancelMyOrder1",
+                "transactTime": 1507725176595,
+                "price": "1.00000000",
+                "origQty": "10.00000000",
+                "executedQty": "8.00000000",
+                "cummulativeQuoteQty": "8.00000000",
+                "status": "CANCELED",
+                "timeInForce": "GTC",
+                "type": "LIMIT",
+                "side": "SELL"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('delete', 'margin/order', signed=True, data=params)
+
+    def get_margin_loan_details(self, **params):
+        """Query loan record
+
+        txId or startTime must be sent. txId takes precedence.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+
+        :param asset: required
+        :type asset: str
+        :param txId: the tranId in of the created loan
+        :type txId: str
+        :param startTime:
+        :type startTime: str
+        :param endTime: Used to uniquely identify this cancel. Automatically generated by default.
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        "asset": "BNB",
+                        "principal": "0.84624403",
+                        "timestamp": 1555056425000,
+                        //one of PENDING (pending to execution), CONFIRMED (successfully loaned), FAILED (execution failed, nothing happened to your account);
+                        "status": "CONFIRMED"
+                    }
+                ],
+                "total": 1
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/loan', signed=True, data=params)
+
+    def get_margin_repay_details(self, **params):
+        """Query repay record
+
+        txId or startTime must be sent. txId takes precedence.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+
+        :param asset: required
+        :type asset: str
+        :param txId: the tranId in of the created loan
+        :type txId: str
+        :param startTime:
+        :type startTime: str
+        :param endTime: Used to uniquely identify this cancel. Automatically generated by default.
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        //Total amount repaid
+                        "amount": "14.00000000",
+                        "asset": "BNB",
+                        //Interest repaid
+                        "interest": "0.01866667",
+                        //Principal repaid
+                        "principal": "13.98133333",
+                        //one of PENDING (pending to execution), CONFIRMED (successfully loaned), FAILED (execution failed, nothing happened to your account);
+                        "status": "CONFIRMED",
+                        "timestamp": 1563438204000,
+                        "txId": 2970933056
+                    }
+                ],
+                "total": 1
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
+
+    def get_margin_order(self, **params):
+        """Query margin accounts order
+
+        Either orderId or origClientOrderId must be sent.
+
+        For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-order-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param orderId:
+        :type orderId: str
+        :param origClientOrderId:
+        :type origClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "clientOrderId": "ZwfQzuDIGpceVhKW5DvCmO",
+                "cummulativeQuoteQty": "0.00000000",
+                "executedQty": "0.00000000",
+                "icebergQty": "0.00000000",
+                "isWorking": true,
+                "orderId": 213205622,
+                "origQty": "0.30000000",
+                "price": "0.00493630",
+                "side": "SELL",
+                "status": "NEW",
+                "stopPrice": "0.00000000",
+                "symbol": "BNBBTC",
+                "time": 1562133008725,
+                "timeInForce": "GTC",
+                "type": "LIMIT",
+                "updateTime": 1562133008725
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/order', signed=True, data=params)
+
+    def get_open_margin_orders(self, **params):
+        """Query margin accounts open orders
+
+        If the symbol is not sent, orders for all symbols will be returned in an array.
+
+        When all symbols are returned, the number of requests counted against the rate limiter is equal to the number
+        of symbols currently trading on the exchange.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-open-order-user_data
+
+        :param symbol: optional
+        :type symbol: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            [
+                {
+                    "clientOrderId": "qhcZw71gAkCCTv0t0k8LUK",
+                    "cummulativeQuoteQty": "0.00000000",
+                    "executedQty": "0.00000000",
+                    "icebergQty": "0.00000000",
+                    "isWorking": true,
+                    "orderId": 211842552,
+                    "origQty": "0.30000000",
+                    "price": "0.00475010",
+                    "side": "SELL",
+                    "status": "NEW",
+                    "stopPrice": "0.00000000",
+                    "symbol": "BNBBTC",
+                    "time": 1562040170089,
+                    "timeInForce": "GTC",
+                    "type": "LIMIT",
+                    "updateTime": 1562040170089
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/openOrders', signed=True, data=params)
+
+    def get_all_margin_orders(self, **params):
+        """Query all margin accounts orders
+
+        If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+
+        For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-open-order-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param orderId: optional
+        :type orderId: str
+        :param startTime: optional
+        :type startTime: str
+        :param endTime: optional
+        :type endTime: str
+        :param limit: Default 500; max 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            [
+                {
+                    "id": 43123876,
+                    "price": "0.00395740",
+                    "qty": "4.06000000",
+                    "quoteQty": "0.01606704",
+                    "symbol": "BNBBTC",
+                    "time": 1556089977693
+                },
+                {
+                    "id": 43123877,
+                    "price": "0.00395740",
+                    "qty": "0.77000000",
+                    "quoteQty": "0.00304719",
+                    "symbol": "BNBBTC",
+                    "time": 1556089977693
+                },
+                {
+                    "id": 43253549,
+                    "price": "0.00428930",
+                    "qty": "23.30000000",
+                    "quoteQty": "0.09994069",
+                    "symbol": "BNBBTC",
+                    "time": 1556163963504
+                }
+            ]
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allOrders', signed=True, data=params)
+
+    def get_margin_trades(self, **params):
+        """Query margin accounts trades
+
+        If fromId is set, it will get orders >= that fromId. Otherwise most recent orders are returned.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-trade-list-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param fromId: optional
+        :type fromId: str
+        :param startTime: optional
+        :type startTime: str
+        :param endTime: optional
+        :type endTime: str
+        :param limit: Default 500; max 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            [
+                {
+                    "commission": "0.00006000",
+                    "commissionAsset": "BTC",
+                    "id": 34,
+                    "isBestMatch": true,
+                    "isBuyer": false,
+                    "isMaker": false,
+                    "orderId": 39324,
+                    "price": "0.02000000",
+                    "qty": "3.00000000",
+                    "symbol": "BNBBTC",
+                    "time": 1561973357171
+                }, {
+                    "commission": "0.00002950",
+                    "commissionAsset": "BTC",
+                    "id": 32,
+                    "isBestMatch": true,
+                    "isBuyer": false,
+                    "isMaker": true,
+                    "orderId": 39319,
+                    "price": "0.00590000",
+                    "qty": "5.00000000",
+                    "symbol": "BNBBTC",
+                    "time": 1561964645345
+                }
+            ]
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/myTrades', signed=True, data=params)
+
+    def get_max_margin_loan(self, **params):
+        """Query max borrow amount for an asset
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-max-borrow-user_data
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "amount": "1.69248805"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/maxBorrowable', signed=True, data=params)
+
+    def get_max_margin_transfer(self, **params):
+        """Query max transfer-out amount
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-max-transfer-out-amount-user_data
+
+        :param asset: required
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "amount": "3.59498107"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    def margin_stream_get_listen_key(self):
+        """Start a new margin data stream and return the listen key
+        If a stream already exists it should return the same key.
+        If the stream becomes invalid a new key is returned.
+
+        Can be used to keep the user stream alive.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#start-user-data-stream-for-margin-account-user_stream
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        res = self._request_margin_api('post', 'userDataStream', signed=True)
+        return res['listenKey']
+
+    def margin_stream_keepalive(self, listenKey):
+        """PING a margin data stream to prevent a time out.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#ping-user-data-stream-for-margin-account--user_stream
+
+        :param listenKey: required
+        :type listenKey: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_margin_api('put', 'userDataStream', signed=True, data=params)
+
+    def margin_stream_close(self, listenKey):
+        """Close out a margin data stream.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#delete-user-data-stream-for-margin-account--user_stream
+
+        :param listenKey: required
+        :type listenKey: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_margin_api('delete', 'userDataStream', signed=True, data=params)
