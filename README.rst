@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.7.1
+Welcome to python-binance v0.7.2
 ================================
 
 Note
@@ -60,6 +60,7 @@ Features
 - Historical Kline/Candle fetching function
 - Withdraw functionality
 - Deposit addresses
+- Margin Trading
 
 Quick Start
 -----------

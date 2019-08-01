@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v0.7.2 - 2019-08-01
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- margin trading endpoints
+
+**Fixed**
+
+- depth cache clearing bug
+
 v0.7.1 - 2019-01-23
 ^^^^^^^^^^^^^^^^^^^
 
