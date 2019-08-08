@@ -2,30 +2,42 @@ import asyncio
 import json
 import logging
 import websockets as ws
-
+from random import random
 from .client import Client
 
 
 class ReconnectingWebsocket:
 
     STREAM_URL = "wss://stream.binance.com:9443/"
-    MAX_RECONNECTS = 3
+    MAX_RECONNECTS = 5
+    MAX_RECONNECT_SECONDS = 60
     MIN_RECONNECT_WAIT = 0.1
+    TIMEOUT = 10
 
     def __init__(self, loop, path, coro, prefix="ws/"):
+        # self._loop = loop
+        # self._log = logging.getLogger(__name__)
+        # self._path = path
+        # self._coro = coro
+        # self._prefix = prefix
+        # self._reconnects = 0
+        # self._reconnect_wait = 0.1
+        # self._conn = None
+
+        # self._connect()
         self._loop = loop
         self._log = logging.getLogger(__name__)
         self._path = path
         self._coro = coro
         self._prefix = prefix
         self._reconnects = 0
-        self._reconnect_wait = 0.1
         self._conn = None
+        self._socket = None
 
         self._connect()
 
     def _connect(self):
-        self._conn = asyncio.ensure_future(self._run())
+        self._conn = asyncio.ensure_future(self._run(), loop=self._loop)
 
     def start(self):
         self._connect()
@@ -33,28 +45,46 @@ class ReconnectingWebsocket:
     async def _run(self):
 
         keep_waiting = True
-        try:
-            ws_url = self.STREAM_URL + self._prefix + self._path
-            async with ws.connect(ws_url) as socket:
-                self._reconnect_wait = self.MIN_RECONNECT_WAIT
+        ws_url = self.STREAM_URL + self._prefix + self._path
+        async with ws.connect(ws_url) as socket:
+            self._socket = socket
+            self._reconnects = 0
+            try:
+                # self._reconnect_wait = self.MIN_RECONNECT_WAIT
                 while keep_waiting:
-                    evt = await socket.recv()
-
                     try:
-                        evt_obj = json.loads(evt)
-                    except ValueError:
-                        pass
+                        evt = await asyncio.wait_for(
+                            self._socket.recv(), timeout=self.TIMEOUT
+                        )
+                    except asyncio.TimeoutError:
+                        self._log.debug("no message in {} seconds".format(self.TIMEOUT))
+                        await self.send_ping()
+                    except asyncio.CancelledError:
+                        self._log.debug("cancelled error")
+                        await self.send_ping()
                     else:
-                        await self._coro(evt_obj)
-        except ws.ConnectionClosed as e:
-            self._log.debug("ws connection closed:{}".format(e))
-            keep_waiting = False
-            await self._reconnect()
-        except Exception as e:
-            
-            self._log.debug("ws exception:{}".format(e))
-            keep_waiting = False
-        #    await self._reconnect()
+
+                        # evt = await socket.recv()
+
+                        try:
+                            evt_obj = json.loads(evt)
+                        except ValueError:
+                            self._log.debug("error parsing evt json:{}".format(evt))
+                        else:
+                            await self._coro(evt_obj)
+            except ws.ConnectionClosed as e:
+                self._log.debug("ws connection closed:{}".format(e))
+                # keep_waiting = False
+                await self._reconnect()
+            except Exception as e:
+
+                self._log.debug("ws exception:{}".format(e))
+                # keep_waiting = False
+                await self._reconnect()
+
+    def _get_reconnect_wait(self, attempts: int) -> int:
+        expo = 2 ** attempts
+        return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def _reconnect(self):
         await self.cancel()
@@ -66,15 +96,36 @@ class ReconnectingWebsocket:
                     self._path, self.MAX_RECONNECTS - self._reconnects
                 )
             )
-            await asyncio.sleep(self._reconnect_wait)
-            self._reconnect_wait *= 3
+            reconnect_wait = self._get_reconnect_wait(self._reconnects)
+            await asyncio.sleep(reconnect_wait)
             self._connect()
         else:
-            # maybe raise an exception
-            pass
+            self._log.error("Max reconnections {} reached:".format(self.MAX_RECONNECTS))
+
+    async def send_ping(self):
+        if self._socket:
+            await self._socket.ping()
+
+    # async def _reconnect(self):
+    #     await self.cancel()
+    #     self._reconnects += 1
+    #     if self._reconnects < self.MAX_RECONNECTS:
+
+    #         self._log.debug(
+    #             "websocket {} reconnecting {} reconnects left".format(
+    #                 self._path, self.MAX_RECONNECTS - self._reconnects
+    #             )
+    #         )
+    #         await asyncio.sleep(self._reconnect_wait)
+    #         self._reconnect_wait *= 3
+    #         self._connect()
+    #     else:
+    #         # maybe raise an exception
+    #         pass
 
     async def cancel(self):
         self._conn.cancel()
+        self._socket = None
 
 
 class BinanceSocketManager:
@@ -96,6 +147,7 @@ class BinanceSocketManager:
         self._user_callback = None
         self._client = client
         self._loop = loop
+        self._log = logging.getLogger(__name__)
 
     async def _start_socket(self, path, coro, prefix="ws/"):
         if path in self._conns:
@@ -426,17 +478,36 @@ class BinanceSocketManager:
             self._user_timeout, self._keepalive_user_socket
         )
 
-    async def _keepalive_user_socket(self):
-        user_listen_key = await self._client.stream_get_listen_key()
-        # check if they key changed and
-        if user_listen_key != self._user_listen_key:
-            # Start a new socket with the key received
-            # `_start_user_socket` automatically cleanup open sockets
-            # and starts timer to keep socket alive
-            await self._start_user_socket(user_listen_key, self._user_callback)
-        else:
-            # Restart timer only if the user listen key is not changed
-            self._start_user_timer()
+    def _keepalive_user_socket(self):
+        async def _run():
+            user_listen_key = await self._client.stream_get_listen_key()
+            self._log.debug(
+                "new key {} old key {}".format(user_listen_key, self._user_listen_key)
+            )
+            # check if they key changed and reconnect
+            if user_listen_key != self._user_listen_key:
+                # Start a new socket with the key received
+                # `_start_user_socket` automatically cleanup open sockets
+                # and starts timer to keep socket alive
+                await self._start_user_socket(user_listen_key, self._user_callback)
+            else:
+                # Restart timer only if the user listen key is not changed
+                self._start_user_timer()
+
+        # this allows execution to keep going
+        asyncio.ensure_future(_run())
+
+    # async def _keepalive_user_socket(self):
+    #     user_listen_key = await self._client.stream_get_listen_key()
+    #     # check if they key changed and
+    #     if user_listen_key != self._user_listen_key:
+    #         # Start a new socket with the key received
+    #         # `_start_user_socket` automatically cleanup open sockets
+    #         # and starts timer to keep socket alive
+    #         await self._start_user_socket(user_listen_key, self._user_callback)
+    #     else:
+    #         # Restart timer only if the user listen key is not changed
+    #         self._start_user_timer()
 
     async def stop_socket(self, conn_key):
         """Stop a websocket given the connection key
