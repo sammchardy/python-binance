@@ -76,6 +76,7 @@ class Client(object):
     AGG_TIME = "T"
     AGG_BUYER_MAKES = "m"
     AGG_BEST_MATCH = "M"
+    TIMEOUT = 50
 
     def __init__(self, api_key, api_secret, session=None, requests_params=None):
         """Binance API Client constructor
@@ -159,7 +160,7 @@ class Client(object):
     async def _request(self, method, uri, signed, force_params=False, **kwargs):
 
         # set default requests timeout
-        kwargs["timeout"] = 10
+        kwargs["timeout"] = self.TIMEOUT
 
         # add our global requests params
         if self._requests_params:

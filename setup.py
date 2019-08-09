@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="python-bitcoin-exchanges",
-    version="0.7.4",
+    version="0.7.5",
     packages=["exchanges"],
     description="Binance REST API python implementation that using asyncio",
     url="https://github.com/gbozee/python-binance-async",
@@ -11,7 +11,7 @@ setup(
     license="MIT",
     author_email="",
     install_requires=[
-        "requests_async==0.4.1",
+        "requests_async==0.6.2",
         "dateparser",
         "websockets==7.0",
         # "autobahn",
