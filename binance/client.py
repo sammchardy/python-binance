@@ -174,7 +174,7 @@ class Client(object):
 
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
-            kwargs['params'] = kwargs['data']
+            kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
         response = getattr(self.session, method)(uri, **kwargs)
@@ -2915,3 +2915,185 @@ class Client(object):
             'listenKey': listenKey
         }
         return self._request_margin_api('delete', 'userDataStream', signed=True, data=params)
+
+    # Sub Accounts
+
+    def get_sub_account_list(self, **params):
+        """Query Sub-account List.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-listfor-master-account
+
+        :param email: optional
+        :type email: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional
+        :type page: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success":true,
+                "subAccounts":[
+                    {
+                        "email":"123@test.com",
+                        "status":"enabled",
+                        "activated":true,
+                        "mobile":"91605290",
+                        "gAuth":true,
+                        "createTime":1544433328000
+                    },
+                    {
+                        "email":"321@test.com",
+                        "status":"disabled",
+                        "activated":true,
+                        "mobile":"22501238",
+                        "gAuth":true,
+                        "createTime":1544433328000
+                    }
+                ]
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'sub-account/list.html', True, data=params)
+
+    def get_sub_account_transfer_history(self, **params):
+        """Query Sub-account Transfer History.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-transfer-historyfor-master-account
+
+        :param email: required
+        :type email: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional
+        :type page: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success":true,
+                "transfers":[
+                    {
+                        "from":"aaa@test.com",
+                        "to":"bbb@test.com",
+                        "asset":"BTC",
+                        "qty":"1",
+                        "time":1544433328000
+                    },
+                    {
+                        "from":"bbb@test.com",
+                        "to":"ccc@test.com",
+                        "asset":"ETH",
+                        "qty":"2",
+                        "time":1544433328000
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'sub-account/transfer/history.html', True, data=params)
+
+    def create_sub_account_transfer(self, **params):
+        """Execute sub-account transfer
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#sub-account-transferfor-master-account
+
+        :param fromEmail: required - Sender email
+        :type fromEmail: str
+        :param toEmail: required - Recipient email
+        :type ftoEmail: str
+        :param asset: required
+        :type asset: str
+        :param amount: required
+        :type amount: decimal
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success":true,
+                "txnId":"2966662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
+
+
+    def get_sub_account_assets(self, **params):
+        """Fetch sub-account assets
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#query-sub-account-assetsfor-master-account
+
+        :param email: required
+        :type email: str
+        :param symbol: required
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success":true,
+                "balances":[
+                    {
+                        "asset":"ADA",
+                        "free":10000,
+                        "locked":0
+                    },
+                    {
+                        "asset":"BNB",
+                        "free":10003,
+                        "locked":0
+                    },
+                    {
+                        "asset":"BTC",
+                        "free":11467.6399,
+                        "locked":0
+                    },
+                    {
+                        "asset":"ETH",
+                        "free":10004.995,
+                        "locked":0
+                    },
+                    {
+                        "asset":"USDT",
+                        "free":11652.14213,
+                        "locked":0
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
