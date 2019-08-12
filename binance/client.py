@@ -2092,7 +2092,7 @@ class Client(object):
 
     # Margin Trading Endpoints
 
-    def get_margin_account(self):
+    def get_margin_account(self, **params):
         """Query margin account details
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-user_data
@@ -2148,7 +2148,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'margin/account', True)
+        return self._request_margin_api('get', 'margin/account', True, data=params)
 
     def get_margin_asset(self, **params):
         """Query margin asset
