@@ -184,3 +184,18 @@ Account
 .. code:: python
 
     log = client.get_dust_log()
+
+`Transfer dust <binance.html#binance.client.Client.transfer_dust>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transfer = client.transfer_dust(asset='BNZ')
+
+
+`Get Asset Dividend History <binance.html#binance.client.Client.get_asset_dividend_history>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    history = client.get_asset_dividend_history()

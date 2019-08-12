@@ -1811,7 +1811,7 @@ class Client(object):
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#asset-dividend-record-user_data
 
-        :param asset: The asset being converted. e.g: 'ONE
+        :param asset: optional
         :type asset: str
         :param startTime: optional
         :type startTime: long
@@ -1822,7 +1822,7 @@ class Client(object):
 
         .. code:: python
 
-            result = client.transfer_dust(asset='ONE')
+            result = client.get_asset_dividend_history()
 
         :returns: API response
 
@@ -3086,7 +3086,7 @@ class Client(object):
         :param fromEmail: required - Sender email
         :type fromEmail: str
         :param toEmail: required - Recipient email
-        :type ftoEmail: str
+        :type toEmail: str
         :param asset: required
         :type asset: str
         :param amount: required
@@ -3108,7 +3108,6 @@ class Client(object):
         """
         return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
 
-
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
@@ -3116,7 +3115,7 @@ class Client(object):
 
         :param email: required
         :type email: str
-        :param symbol: required
+        :param symbol: optional
         :type symbol: str
         :param recvWindow: optional
         :type recvWindow: int
