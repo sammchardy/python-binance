@@ -1,6 +1,19 @@
 Changelog
 =========
 
+v0.7.3 - 2019-08-12
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- sub account endpoints
+- dust transfer endpoint
+- asset divident history endpoint
+
+**Removed**
+
+- deprecated withdraw fee endpoint
+
 v0.7.2 - 2019-08-01
 ^^^^^^^^^^^^^^^^^^^
 
