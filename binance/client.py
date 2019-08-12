@@ -1768,6 +1768,91 @@ class Client(object):
             raise BinanceWithdrawException(res['msg'])
         return res
 
+    def transfer_dust(self, **params):
+        """Convert dust assets to BNB.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#dust-transfer-user_data
+
+        :param asset: The asset being converted. e.g: 'ONE'
+        :type asset: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            result = client.transfer_dust(asset='ONE')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "totalServiceCharge":"0.02102542",
+                "totalTransfered":"1.05127099",
+                "transferResult":[
+                    {
+                        "amount":"0.03000000",
+                        "fromAsset":"ETH",
+                        "operateTime":1563368549307,
+                        "serviceChargeAmount":"0.00500000",
+                        "tranId":2970932918,
+                        "transferedAmount":"0.25000000"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'asset/dust', True, data=params)
+
+    def get_asset_dividend_history(self, **params):
+        """Query asset dividend record.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#asset-dividend-record-user_data
+
+        :param asset: The asset being converted. e.g: 'ONE
+        :type asset: str
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            result = client.transfer_dust(asset='ONE')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "rows":[
+                    {
+                        "amount":"10.00000000",
+                        "asset":"BHFT",
+                        "divTime":1563189166000,
+                        "enInfo":"BHFT distribution",
+                        "tranId":2968885920
+                    },
+                    {
+                        "amount":"10.00000000",
+                        "asset":"BHFT",
+                        "divTime":1563189165000,
+                        "enInfo":"BHFT distribution",
+                        "tranId":2968885920
+                    }
+                ],
+                "total":2
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'asset/assetDividend', True, data=params)
+
     def get_trade_fee(self, **params):
         """Get trade fee.
 
