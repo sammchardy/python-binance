@@ -1,5 +1,5 @@
 ======================================
-Welcome to python-binance v0.7.1-async
+Welcome to python-binance v0.7.3-async
 ======================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
