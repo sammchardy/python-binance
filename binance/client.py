@@ -2087,7 +2087,7 @@ class AsyncClient(BaseClient):
     @classmethod
     async def create(cls, api_key='', api_secret='', requests_params=None):
 
-        self = AsyncClient(api_key, api_secret, requests_params)
+        self = cls(api_key, api_secret, requests_params)
 
         await self.ping()
 
