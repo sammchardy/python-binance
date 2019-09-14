@@ -406,6 +406,55 @@ class BinanceSocketManager(threading.Thread):
         """
         return self._start_socket('!ticker@arr', callback)
 
+    def start_symbol_book_ticker_socket(self, symbol, callback):
+        """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#individual-symbol-book-ticker-streams
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "u":400900217,     // order book updateId
+                "s":"BNBUSDT",     // symbol
+                "b":"25.35190000", // best bid price
+                "B":"31.21000000", // best bid qty
+                "a":"25.36520000", // best ask price
+                "A":"40.66000000"  // best ask qty
+            }
+
+        """
+        return self._start_socket(symbol.lower() + '@bookTicker', callback)
+
+    def start_book_ticker_socket(self, callback):
+        """Start a websocket for the best bid or ask's price or quantity for all symbols.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#all-book-tickers-stream
+
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                // Same as <symbol>@bookTicker payload
+            }
+
+        """
+        return self._start_socket('!bookTicker', callback)
+
     def start_multiplex_socket(self, streams, callback):
         """Start a multiplexed socket using a list of socket names.
         User stream sockets can not be included.
