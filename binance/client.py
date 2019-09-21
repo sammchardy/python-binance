@@ -2936,7 +2936,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        res = self._request_margin_api('post', 'userDataStream', signed=True)
+        res = self._request_margin_api('post', 'userDataStream', signed=True, data={})
         return res['listenKey']
 
     def margin_stream_keepalive(self, listenKey):
