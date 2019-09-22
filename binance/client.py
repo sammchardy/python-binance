@@ -75,7 +75,7 @@ class Client(object):
     AGG_BUYER_MAKES = 'm'
     AGG_BEST_MATCH = 'M'
 
-    def __init__(self, api_key, api_secret, requests_params=None):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -91,6 +91,7 @@ class Client(object):
         self.API_SECRET = api_secret
         self.session = self._init_session()
         self._requests_params = requests_params
+        self.response = None
 
         # init DNS and SSL cert
         self.ping()
@@ -181,8 +182,8 @@ class Client(object):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
-        response = getattr(self.session, method)(uri, **kwargs)
-        return self._handle_response(response)
+        self.response = getattr(self.session, method)(uri, **kwargs)
+        return self._handle_response()
 
     def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
@@ -205,17 +206,17 @@ class Client(object):
 
         return self._request(method, uri, signed, **kwargs)
 
-    def _handle_response(self, response):
+    def _handle_response(self):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        if not str(response.status_code).startswith('2'):
-            raise BinanceAPIException(response)
+        if not str(self.response.status_code).startswith('2'):
+            raise BinanceAPIException(self.response)
         try:
-            return response.json()
+            return self.response.json()
         except ValueError:
-            raise BinanceRequestException('Invalid Response: %s' % response.text)
+            raise BinanceRequestException('Invalid Response: %s' % self.response.text)
 
     def _get(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
         return self._request_api('get', path, signed, version, **kwargs)
