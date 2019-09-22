@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v0.7.3
+Welcome to python-binance v0.7.4
 ================================
 
 Note

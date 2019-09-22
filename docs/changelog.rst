@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v0.7.4 - 2019-09-22
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- symbol book ticker websocket streams
+- margin websocket stream
+
+**Updated**
+
+- can call Client without any params
+- make response a property of the Client class so you can access response properties after a request
+
+**Fixed**
+
+- issue with None value params causing errors
+
 v0.7.3 - 2019-08-12
 ^^^^^^^^^^^^^^^^^^^
 
