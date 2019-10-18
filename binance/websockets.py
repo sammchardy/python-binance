@@ -20,7 +20,8 @@ class RepeatTimer(threading.Timer):
     """Source: https://stackoverflow.com/a/48741004/304209."""
     def run(self):
         while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
+            if not self.finished.is_set():
+                self.function(*self.args, **self.kwargs)
 
 
 class BinanceClientProtocol(WebSocketClientProtocol):
