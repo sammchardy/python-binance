@@ -89,10 +89,10 @@ class Client(object):
 
 
         ### Offers support for both binance.com and binance.us
-        self.API_URL = 'https://api.binance.{}/api'.format(tld)
-        self.WITHDRAW_API_URL = 'https://api.binance.{}/wapi'.format(tld)
-        self.MARGIN_API_URL = 'https://api.binance.{}/sapi'.format(tld)
-        self.WEBSITE_URL = 'https://www.binance.{}'.format(tld)
+        self.API_URL = self.API_URL.format(tld)
+        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
+        self.MARGIN_API_URL = .self.MARGIN_API_URL.format(tld)
+        self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
 
 
         self.API_KEY = api_key
