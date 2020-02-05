@@ -17,9 +17,17 @@ class DepthCache(object):
 
         """
         self.symbol = symbol
+        self.reset()
+        self.update_time = None
+
+    def reset(self, snapshot_bids=list(), snapshot_asks=list()):
         self._bids = {}
         self._asks = {}
-        self.update_time = None
+        for bid in snapshot_bids:
+            self.add_bid(bid)
+        for ask in snapshot_asks:
+            self.add_ask(ask)
+
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -170,10 +178,7 @@ class DepthCacheManager(object):
         res = await self._client.get_order_book(symbol=self._symbol, limit=self._limit)
 
         # process bid and asks from the order book
-        for bid in res['bids']:
-            self._depth_cache.add_bid(bid)
-        for ask in res['asks']:
-            self._depth_cache.add_ask(ask)
+        self._depth_cache.reset(snapshot_bids=res['bids'], snapshot_asks=res['asks'])
 
         # set first update id
         self._last_update_id = res['lastUpdateId']
