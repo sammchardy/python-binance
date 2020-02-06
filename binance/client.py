@@ -11,10 +11,10 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 
 class Client(object):
 
-    API_URL = 'https://api.binance.com/api'
-    WITHDRAW_API_URL = 'https://api.binance.com/wapi'
-    MARGIN_API_URL = 'https://api.binance.com/sapi'
-    WEBSITE_URL = 'https://www.binance.com'
+    API_URL = 'https://api.binance.{}/api'
+    WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
+    MARGIN_API_URL = 'https://api.binance.{}/sapi'
+    WEBSITE_URL = 'https://www.binance.{}'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -75,7 +75,7 @@ class Client(object):
     AGG_BUYER_MAKES = 'm'
     AGG_BEST_MATCH = 'M'
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -86,6 +86,14 @@ class Client(object):
         :type requests_params: dict.
 
         """
+
+
+        ### Offers support for both binance.com and binance.us
+        self.API_URL = self.API_URL.format(tld)
+        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
+        self.MARGIN_API_URL = .self.MARGIN_API_URL.format(tld)
+        self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
+
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
