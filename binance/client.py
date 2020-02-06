@@ -3174,6 +3174,88 @@ class Client(object):
         }
         return self._request_margin_api('delete', 'userDataStream', signed=True, data=params)
 
+    # Lending Endpoints
+
+    def get_lending_product_list(self, **params):
+        """Query Sub-account List.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-flexible-product-list-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/daily/product/list ', signed=True, data=params)
+
+    def get_lending_daily_quota_left(self, **params):
+        """Get Left Daily Purchase Quota of Flexible Product.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-left-daily-purchase-quota-of-flexible-product-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/daily/userLeftQuota', signed=True, data=params)
+
+    def purchase_lending_product(self, **params):
+        """Purchase Flexible Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#purchase-flexible-product-user_data
+
+        """
+        return self._request_margin_api('post', 'lending/daily/purchase', signed=True, data=params)
+
+    def get_lending_daily_redemption_quota(self, **params):
+        """Get Left Daily Redemption Quota of Flexible Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-left-daily-redemption-quota-of-flexible-product-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/daily/userRedemptionQuota', signed=True, data=params)
+
+    def redeem_lending_product(self, **params):
+        """Redeem Flexible Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#redeem-flexible-product-user_data
+
+        """
+        return self._request_margin_api('post', 'lending/daily/redeem', signed=True, data=params)
+
+    def get_lending_position(self, **params):
+        """Get Flexible Product Position
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-flexible-product-position-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/daily/token/position', signed=True, data=params)
+
+    def get_lending_account(self, **params):
+        """Get Lending Account Details
+
+        https://binance-docs.github.io/apidocs/spot/en/#lending-account-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/union/account', signed=True, data=params)
+
+    def get_lending_purchase_history(self, **params):
+        """Get Lending Purchase History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-purchase-record-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/union/purchaseRecord', signed=True, data=params)
+
+    def get_lending_redemption_history(self, **params):
+        """Get Lending Redemption History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-redemption-record-user_data
+
+        """
+        return self._request_margin_api('get', 'lending/union/redemptionRecord', signed=True, data=params)
+
+    def get_lending_interest_history(self, **params):
+        """Get Lending Interest History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data-2
+
+        """
+        return self._request_margin_api('get', 'lending/union/interestHistory', signed=True, data=params)
+
     # Sub Accounts
 
     def get_sub_account_list(self, **params):
