@@ -1,6 +1,25 @@
 Changelog
 =========
 
+v0.7.5 - 2020-02-06
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Futures REST endpoints
+- Lending REST endpoints
+- OCO Orders function `create_oco_order`, `order_oco_buy`, `order_oco_sell`
+- Average Price function `get_avg_price`
+- Support for other domains (.us, .jp, etc)
+
+**Updated**
+
+- dependencies
+
+**Fixed**
+
+- websocket keepalive callback not found
+
 v0.7.4 - 2019-09-22
 ^^^^^^^^^^^^^^^^^^^
 
