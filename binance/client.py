@@ -3177,7 +3177,7 @@ class Client(object):
     # Lending Endpoints
 
     def get_lending_product_list(self, **params):
-        """Query Sub-account List.
+        """Get Lending Product List
 
         https://binance-docs.github.io/apidocs/spot/en/#get-flexible-product-list-user_data
 
@@ -3301,7 +3301,6 @@ class Client(object):
                     }
                 ]
             }
-
 
         :raises: BinanceRequestException, BinanceAPIException
 
