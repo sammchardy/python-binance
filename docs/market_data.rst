@@ -89,6 +89,13 @@ Fetch klines using a generator
         print(kline)
         # do something with the kline
 
+`Get average price for a symbol <binance.html#binance.client.Client.get_avg_price>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    avg_price = client.get_avg_price(symbol='BNBBTC')
+
 `Get 24hr Ticker <binance.html#binance.client.Client.get_ticker>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
