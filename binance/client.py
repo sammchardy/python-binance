@@ -566,6 +566,19 @@ class Client(object):
 
         """
         return self._get('historicalTrades', data=params)
+    
+    def get_historical_trades_generator(min_number_trades, market):
+        last_id = api.get_historical_trades(symbol=market, limit=1)[0]['id']
+        trades = []
+        counter = 1
+        while len(trades) < min_number_trades:
+            trade_batch = self.get_historical_trades(symbol=market, fromId=last_id - (500 * counter))
+            for trade in trade_batch:
+                trades.append(trade)
+            counter += 1
+            time.sleep(0.1)
+        trades.sort(key=lambda x: x.time, reverse=False)
+        return trades
 
     def get_aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time,
