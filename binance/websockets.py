@@ -541,10 +541,10 @@ class BinanceSocketManager(threading.Thread):
     def _keepalive_account_socket(self, socket_type):
         if socket_type == 'user':
             listen_key_func = self._client.stream_get_listen_key
-            callback = self._user_callback
+            callback = self._account_callbacks[socket_type]
         else:
             listen_key_func = self._client.margin_stream_get_listen_key
-            callback = self._margin_callback
+            callback = self._account_callbacks[socket_type]
         listen_key = listen_key_func()
         if listen_key != self._listen_keys[socket_type]:
             self._start_account_socket(socket_type, listen_key, callback)
