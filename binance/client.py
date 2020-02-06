@@ -1093,6 +1093,9 @@ class Client(object):
         :type timeInForce: str
         :param quantity: required
         :type quantity: decimal
+        :param quoteOrderQty: amount the user wants to spend (when buying) or receive (when selling)
+            of the quote asset, applicable to MARKET orders
+        :type quoteOrderQty: decimal
         :param price: required
         :type price: str
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
@@ -1306,6 +1309,9 @@ class Client(object):
         :type side: str
         :param quantity: required
         :type quantity: decimal
+        :param quoteOrderQty: amount the user wants to spend (when buying) or receive (when selling)
+            of the quote asset
+        :type quoteOrderQty: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
@@ -1332,6 +1338,8 @@ class Client(object):
         :type symbol: str
         :param quantity: required
         :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to spend of the quote asset
+        :type quoteOrderQty: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
@@ -1358,6 +1366,8 @@ class Client(object):
         :type symbol: str
         :param quantity: required
         :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to receive of the quote asset
+        :type quoteOrderQty: decimal
         :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
         :type newClientOrderId: str
         :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
