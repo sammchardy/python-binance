@@ -6,3 +6,4 @@ pyOpenSSL==19.0.0
 requests==2.22.0
 service-identity==17.0.0
 Twisted==19.7.0
+ujson
