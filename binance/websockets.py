@@ -168,9 +168,10 @@ class BinanceSocketManager(threading.Thread):
         """
         assert freq in [100, 1000], 'Depth freq can only be 100ms or 1000ms'
 
-        socket_name = symbol.lower() + '@depth@' + str(freq) + 'ms'
+        socket_name = symbol.lower() + '@depth'
         if depth and depth != '1':
-            socket_name = '{}{}'.format(socket_name, depth)
+            socket_name += depth
+        socket_name += '@' + str(freq) + 'ms'
         return self._start_socket(socket_name, callback)
 
     def start_kline_socket(self, symbol, callback, interval=Client.KLINE_INTERVAL_1MINUTE):
