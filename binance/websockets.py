@@ -170,7 +170,7 @@ class BinanceSocketManager(threading.Thread):
 
         socket_name = symbol.lower() + '@depth'
         if depth and depth != '1':
-            socket_name += depth
+            socket_name += str(depth)
         socket_name += '@' + str(freq) + 'ms'
         return self._start_socket(socket_name, callback)
 
