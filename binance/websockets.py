@@ -71,7 +71,7 @@ class BinanceSocketManager(threading.Thread):
 
     DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
 
-    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT):
+    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT, test_account=False):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
@@ -81,6 +81,9 @@ class BinanceSocketManager(threading.Thread):
 
         """
         threading.Thread.__init__(self)
+
+        if test_account:
+            self.STREAM_URL = 'wss://testnet.binance.vision/ws'
         self._conns = {}
         self._client = client
         self._user_timeout = user_timeout

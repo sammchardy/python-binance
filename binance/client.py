@@ -12,6 +12,7 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 class Client(object):
 
     API_URL = 'https://api.binance.{}/api'
+    TEST_API_URL = 'https://testnet.binance.vision/api'
     WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
@@ -77,7 +78,7 @@ class Client(object):
     AGG_BUYER_MAKES = 'm'
     AGG_BEST_MATCH = 'M'
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com', test_account=False):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -89,7 +90,10 @@ class Client(object):
 
         """
 
-        self.API_URL = self.API_URL.format(tld)
+        if test_account:
+            self.API_URL = self.TEST_API_URL
+        else:
+            self.API_URL = self.API_URL.format(tld)
         self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
