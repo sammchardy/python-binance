@@ -6370,6 +6370,10 @@ class AsyncClient(BaseClient):
             headers=self._get_headers()
         )
         return session
+    
+    async def close_connection(self):
+        await self.session.close()
+        return
 
     async def _request(self, method, uri, signed, force_params=False, **kwargs):
 
