@@ -8,24 +8,13 @@ import pytest
 client = Client()
 
 
-def test_invalid_json():
-    """Test Invalid response Exception"""
-
+def test_run_get_products():
     client.get_products()
 
 
-def test_api_exception():
-    """Test API response Exception"""
-
+def test_run_get_server_time():
     client.get_server_time()
 
 
-def test_api_exception_invalid_json():
-    """Test API response Exception"""
-
-    client.get_server_time()
-
-def test_api_open_interest():
-    """Test API open interest"""
-
+def test_run_futures_open_interest():
     client.futures_open_interest(symbol="BTCUSDT")
