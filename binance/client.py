@@ -435,7 +435,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allPrices')
+        return self._get('allPrices')
 
     def get_orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
@@ -466,7 +466,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allBookTickers')
+        return self._get('allBookTickers')
 
     def get_order_book(self, **params):
         """Get the Order Book for the market
@@ -996,7 +996,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/24hr', data=params)
+        return self._get('24hr', data=params)
 
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
@@ -1033,7 +1033,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
+        return self._get('price', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
@@ -1079,7 +1079,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/bookTicker', data=params, version=self.PRIVATE_API_VERSION)
+        return self._get('bookTicker', data=params, version=self.PRIVATE_API_VERSION)
 
     # Account Endpoints
 
@@ -3549,7 +3549,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders
 
         """
-        return self._request_futures_api('get', 'ticker/allForceOrders', data=params)
+        return self._request_futures_api('get', 'allForceOrders', data=params)
 
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
@@ -3557,7 +3557,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/futures/en/#open-interest-statistics-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/openInterest', data=params)
+        return self._request_futures_api('get', 'openInterest', data=params)
 
     def futures_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
@@ -3565,7 +3565,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/futures/en/#notional-and-leverage-brackets-user_data
 
         """
-        return self._request_futures_api('get', 'ticker/leverageBracket', data=params)
+        return self._request_futures_api('get', 'leverageBracket', data=params)
 
     def transfer_history(self, **params):
         """Get future account transaction history list
