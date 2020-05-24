@@ -64,6 +64,7 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
 class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
+    FSTREAM_URL = 'wss://fstream.binance.com/'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -93,6 +94,20 @@ class BinanceSocketManager(threading.Thread):
             return False
 
         factory_url = self.STREAM_URL + prefix + path
+        factory = BinanceClientFactory(factory_url)
+        factory.protocol = BinanceClientProtocol
+        factory.callback = callback
+        factory.reconnect = True
+        context_factory = ssl.ClientContextFactory()
+
+        self._conns[path] = connectWS(factory, context_factory)
+        return path
+
+    def _start_futures_socket(self, path, callback, prefix='stream?streams='):
+        if path in self._conns:
+            return False
+
+        factory_url = self.FSTREAM_URL + prefix + path
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
@@ -405,6 +420,65 @@ class BinanceSocketManager(threading.Thread):
             ]
         """
         return self._start_socket('!ticker@arr', callback)
+
+    def start_symbol_mark_price_socket(self, symbol, callback):
+        """Start a websocket for a symbol's futures mark price
+
+        https://binance-docs.github.io/apidocs/futures/en/#mark-price-stream
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "markPriceUpdate",  // Event type
+                "E": 1562305380000,      // Event time
+                "s": "BTCUSDT",          // Symbol
+                "p": "11185.87786614",   // Mark price
+                "r": "0.00030000",       // Funding rate
+                "T": 1562306400000       // Next funding time
+            }
+
+        """
+        return self._start_futures_socket(symbol.lower() + '@markPrice', callback)
+
+    def start_mark_price_socket(self, callback):
+        """Start a websocket for all futures mark price data
+
+        By default all symbols are included in an array.
+
+        https://binance-docs.github.io/apidocs/futures/en/#mark-price-stream-for-all-market
+
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            
+            [ 
+                {
+                    "e": "markPriceUpdate",  // Event type
+                    "E": 1562305380000,      // Event time
+                    "s": "BTCUSDT",          // Symbol
+                    "p": "11185.87786614",   // Mark price
+                    "r": "0.00030000",       // Funding rate
+                    "T": 1562306400000       // Next funding time
+                }
+            ]
+
+        """
+        return self._start_futures_socket('!markPrice@arr', callback)
 
     def start_symbol_book_ticker_socket(self, symbol, callback):
         """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
