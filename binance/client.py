@@ -257,8 +257,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-
-        products = self._request_website('get', 'exchange/public/product')
+        products = self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
         return products
 
     def get_exchange_info(self):
