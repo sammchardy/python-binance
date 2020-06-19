@@ -1,50 +1,30 @@
 ================================
-Welcome to python-binance v0.7.5
+Welcome to python-binance-us v0.1
 ================================
-
-Note
+# Forked from Sam McHardy's Python-Binance API
+## Please show him some love
 ----
+Notes from Sam McHardy in upstream repo:
 
 I am working on a python3 version with async support to remove legacy dependencies and their related issues.
 
 I would appreciate if you could try out the `feature/asyncio <https://github.com/sammchardy/python-binance/tree/feature/asyncio>`_ branch and give your feedback.
 
 
-.. image:: https://img.shields.io/pypi/v/python-binance.svg
-    :target: https://pypi.python.org/pypi/python-binance
-
-.. image:: https://img.shields.io/pypi/l/python-binance.svg
-    :target: https://pypi.python.org/pypi/python-binance
-
-.. image:: https://img.shields.io/travis/sammchardy/python-binance.svg
-    :target: https://travis-ci.org/sammchardy/python-binance
-
-.. image:: https://img.shields.io/coveralls/sammchardy/python-binance.svg
-    :target: https://coveralls.io/github/sammchardy/python-binance
-
-.. image:: https://img.shields.io/pypi/wheel/python-binance.svg
-    :target: https://pypi.python.org/pypi/python-binance
-
-.. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
-    :target: https://pypi.python.org/pypi/python-binance
-
-This is an unofficial Python wrapper for the `Binance exchange REST API v1/3 <https://github.com/binance-exchange/binance-official-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the `Binance US exchange REST API v1/3 <https://github.com/binance-us/binance-official-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
 
 If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_. If you want to automate interactions with Binance stick around.
 
-If you're interested in Binance's new DEX Binance Chain see my `python-binance-chain library <https://github.com/sammchardy/python-binance-chain>`_
+If you're interested in Binance's new DEX Binance Chain see Sam McHardy's `python-binance-chain library <https://github.com/sammchardy/python-binance-chain>`_
 
-Source code
+Upstream Repo Source code
   https://github.com/sammchardy/python-binance
+  
+This Repo's code
+https://github.com/ArcadiaMediaGroup/python-binance-us
 
 Documentation
-  https://python-binance.readthedocs.io/en/latest/
-
-Binance API Telegram
-  https://t.me/binance_api_english
-
-Blog with examples
-  https://sammchardy.github.io
+https://github.com/binance-us/binance-official-api-docs
 
 Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
 
@@ -145,7 +125,7 @@ For more `check out the documentation <https://python-binance.readthedocs.io/en/
 Donate
 ------
 
-If this library helped you out feel free to donate.
+If this library helped you out feel free to donate to the upstream developer who built this all out Sam McHardy.
 
 - ETH: 0xD7a7fDdCfA687073d7cC93E9E51829a727f9fE70
 - LTC: LPC5vw9ajR1YndE1hYVeo3kJ9LdHjcRCUZ
@@ -161,4 +141,3 @@ If you use `Kucoin <https://www.kucoin.com/?rcode=E42cWB>`_ check out my `python
 
 If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
 
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance?pixel&useReferer
