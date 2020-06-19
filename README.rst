@@ -1,8 +1,9 @@
 ================================
 Welcome to python-binance-us v0.1
 ================================
-# Forked from Sam McHardy's Python-Binance API
-## Please show him some love
+**Forked from Sam McHardy's Python-Binance API**
+
+**Please show him some love!**
 ----
 Notes from Sam McHardy in upstream repo:
 
