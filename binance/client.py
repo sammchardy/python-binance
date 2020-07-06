@@ -5,8 +5,23 @@ import hmac
 import requests
 import time
 from operator import itemgetter
+from datetime import datetime
 from .helpers import date_to_milliseconds, interval_to_milliseconds
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
+
+
+def _date_str_to_milliseconds(start_str):
+    # Allow start_str to be parsed from
+    # - a string describing a date
+    # - a datetime object
+    # - a millisecond timestamp
+
+    if isinstance(start_str, int):
+        return start_str
+    elif isinstance(start_str, datetime):
+        return int(start_str.timestamp() * 1000)
+    else:
+        return date_to_milliseconds(start_str)
 
 
 class Client(object):
@@ -626,9 +641,9 @@ class Client(object):
 
         :param symbol: Symbol string e.g. ETHBTC
         :type symbol: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds. The iterator will
+        :param start_str: Start date string in UTC format, timestamp in milliseconds or datetime object. The iterator will
         return the first trade occurring later than this time.
-        :type start_str: str|int
+        :type start_str: str|int|datetime
         :param last_id: aggregate trade ID of the last known aggregate trade.
         Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
 
@@ -651,10 +666,8 @@ class Client(object):
                 # The difference between startTime and endTime should be less
                 # or equal than an hour and the result set should contain at
                 # least one trade.
-                if type(start_str) == int:
-                    start_ts = start_str
-                else:
-                    start_ts = date_to_milliseconds(start_str)
+                start_ts = _date_str_to_milliseconds(start_str)
+
                 # If the resulting set is empty (i.e. no trades in that interval)
                 # then we just move forward hour by hour until we find at least one
                 # trade or reach present moment
@@ -766,10 +779,10 @@ class Client(object):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
-        :type start_str: str|int
-        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
-        :type end_str: str|int
+        :param start_str: Start date string in UTC format, timestamp in milliseconds or datetime object
+        :type start_str: str|int|datetime
+        :param end_str: optional - end date string in UTC format, timestamp in milliseconds or datetime object (default will fetch everything up to now)
+        :type end_str: str|int|datetime
         :param limit: Default 500; max 1000.
         :type limit: int
 
@@ -786,10 +799,7 @@ class Client(object):
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = _date_str_to_milliseconds(start_str)
 
         # establish first available start timestamp
         first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
@@ -798,10 +808,7 @@ class Client(object):
         # if an end time was passed convert it
         end_ts = None
         if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+            end_ts = _date_str_to_milliseconds(end_str)
 
         idx = 0
         while True:
@@ -850,10 +857,10 @@ class Client(object):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
-        :type start_str: str|int
-        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
-        :type end_str: str|int
+        :param start_str: Start date string in UTC format, timestamp in milliseconds or datetime object
+        :type start_str: str|int|datetime
+        :param end_str: optional - end date string in UTC format, timestamp in milliseconds or datetime object (default will fetch everything up to now)
+        :type end_str: str|int|datetime
 
         :return: generator of OHLCV values
 
@@ -866,10 +873,7 @@ class Client(object):
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = _date_str_to_milliseconds(start_str)
 
         # establish first available start timestamp
         first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
@@ -878,10 +882,7 @@ class Client(object):
         # if an end time was passed convert it
         end_ts = None
         if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+            end_ts = _date_str_to_milliseconds(end_str)
 
         idx = 0
         while True:
