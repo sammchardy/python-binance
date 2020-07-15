@@ -2046,7 +2046,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('post', 'asset/assetDividend', True, data=params)
+        return self._request_margin_api('get', 'asset/assetDividend', True, data=params)
 
     def get_trade_fee(self, **params):
         """Get trade fee.
