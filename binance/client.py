@@ -226,7 +226,7 @@ class Client(object):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        if not str(self.response.status_code).startswith('2'):
+        if not (200 <= self.response.status_code < 300):
             raise BinanceAPIException(self.response)
         try:
             return self.response.json()
