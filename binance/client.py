@@ -431,7 +431,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allPrices')
+        return self._get('ticker/price')
 
     def get_orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
