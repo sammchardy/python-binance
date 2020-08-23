@@ -4,6 +4,8 @@ import pytz
 import json
 
 from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
 from binance.client import Client
 
 
@@ -55,6 +57,23 @@ def interval_to_milliseconds(interval):
         except ValueError:
             pass
     return ms
+
+
+def increment_month(origin_ts):
+    """Increment a given timestamp by one month
+
+    :param origin_ts: original timestamp, e.g.: 1501545600000, 1504224000000, ...
+    :type origin_ts: int
+
+    :return:
+         Timestamp incremented by one month from a given timestamp
+    """
+    d = datetime.fromtimestamp(origin_ts/1000) + relativedelta(months=1)
+    # if the date is not timezone aware apply UTC timezone
+    if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
+        d = d.replace(tzinfo=pytz.utc)
+
+    return int(datetime.timestamp(d))
 
 
 def get_historical_klines(symbol, interval, start_str, end_str=None):
@@ -118,10 +137,16 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
             output_data += temp_data
 
             # update our start timestamp using the last value in the array and add the interval timeframe
-            start_ts = temp_data[len(temp_data) - 1][0] + timeframe
+            if interval == Client.KLINE_INTERVAL_1MONTH:
+                start_ts = increment_month(temp_data[len(temp_data) - 1][0])
+            else:
+                start_ts = temp_data[len(temp_data) - 1][0] + timeframe
         else:
             # it wasn't listed yet, increment our start date
-            start_ts += timeframe
+            if interval == Client.KLINE_INTERVAL_1MONTH:
+                start_ts = increment_month(start_ts)
+            else:
+                start_ts += timeframe
 
         idx += 1
         # check if we received less than the required limit and exit the loop
