@@ -3469,7 +3469,7 @@ class Client(object):
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#query-sub-account-assetsfor-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#sub-account-futures-asset-transfer-for-master-account
 
         :param email: required
         :type email: str
