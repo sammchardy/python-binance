@@ -15,7 +15,8 @@ class Client(object):
     WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
-    FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    USDT_FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    COIN_FUTURES_URL = 'https://dapi.binance.{}/dapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -93,7 +94,8 @@ class Client(object):
         self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
-        self.FUTURES_URL = self.FUTURES_URL.format(tld)
+        self.USDT_FUTURES_URL = self.USDT_FUTURES_URL.format(tld)
+        self.COIN_FUTURES_URL = self.COIN_FUTURES_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
@@ -125,8 +127,11 @@ class Client(object):
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
 
-    def _create_futures_api_uri(self, path):
-        return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
+    def _create_usdt_futures_api_uri(self, path):
+        return self.USDT_FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
+
+    def _create_coin_futures_api_uri(self, path):
+        return self.COIN_FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
 
     def _generate_signature(self, data):
 
@@ -216,8 +221,13 @@ class Client(object):
 
         return self._request(method, uri, signed, **kwargs)
 
-    def _request_futures_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_futures_api_uri(path)
+    def _request_usdt_futures_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_usdt_futures_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_coin_futures_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_coin_futures_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
 
@@ -3436,136 +3446,136 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
 
-    # Futures API
+    # USDT Futures API
 
-    def futures_ping(self):
+    def usdt_futures_ping(self):
         """Test connectivity to the Rest API
 
         https://binance-docs.github.io/apidocs/futures/en/#test-connectivity
 
         """
-        return self._request_futures_api('get', 'ping')
+        return self._request_usdt_futures_api('get', 'ping')
 
-    def futures_time(self):
+    def usdt_futures_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
         https://binance-docs.github.io/apidocs/futures/en/#check-server-time
 
         """
-        return self._request_futures_api('get', 'time')
+        return self._request_usdt_futures_api('get', 'time')
 
-    def futures_exchange_info(self):
+    def usdt_futures_exchange_info(self):
         """Current exchange trading rules and symbol information
 
         https://binance-docs.github.io/apidocs/futures/en/#exchange-information-market_data
 
         """
-        return self._request_futures_api('get', 'exchangeInfo')
+        return self._request_usdt_futures_api('get', 'exchangeInfo')
 
-    def futures_order_book(self, **params):
+    def usdt_futures_order_book(self, **params):
         """Get the Order Book for the market
 
         https://binance-docs.github.io/apidocs/futures/en/#order-book-market_data
 
         """
-        return self._request_futures_api('get', 'depth', data=params)
+        return self._request_usdt_futures_api('get', 'depth', data=params)
 
-    def futures_recent_trades(self, **params):
+    def usdt_futures_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
         https://binance-docs.github.io/apidocs/futures/en/#recent-trades-list-market_data
 
         """
-        return self._request_futures_api('get', 'trades', data=params)
+        return self._request_usdt_futures_api('get', 'trades', data=params)
 
-    def futures_historical_trades(self, **params):
+    def usdt_futures_historical_trades(self, **params):
         """Get older market historical trades.
 
         https://binance-docs.github.io/apidocs/futures/en/#old-trades-lookup-market_data
 
         """
-        return self._request_futures_api('get', 'historicalTrades', data=params)
+        return self._request_usdt_futures_api('get', 'historicalTrades', data=params)
 
-    def futures_aggregate_trades(self, **params):
+    def usdt_futures_aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same
         price will have the quantity aggregated.
 
         https://binance-docs.github.io/apidocs/futures/en/#compressed-aggregate-trades-list-market_data
 
         """
-        return self._request_futures_api('get', 'aggTrades', data=params)
+        return self._request_usdt_futures_api('get', 'aggTrades', data=params)
 
-    def futures_klines(self, **params):
+    def usdt_futures_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
         https://binance-docs.github.io/apidocs/futures/en/#kline-candlestick-data-market_data
 
         """
-        return self._request_futures_api('get', 'klines', data=params)
+        return self._request_usdt_futures_api('get', 'klines', data=params)
 
-    def futures_mark_price(self, **params):
+    def usdt_futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
 
         https://binance-docs.github.io/apidocs/futures/en/#mark-price-market_data
 
         """
-        return self._request_futures_api('get', 'premiumIndex', data=params)
+        return self._request_usdt_futures_api('get', 'premiumIndex', data=params)
 
-    def futures_funding_rate(self, **params):
+    def usdt_futures_funding_rate(self, **params):
         """Get funding rate history
 
         https://binance-docs.github.io/apidocs/futures/en/#get-funding-rate-history-market_data
 
         """
-        return self._request_futures_api('get', 'fundingRate', data=params)
+        return self._request_usdt_futures_api('get', 'fundingRate', data=params)
 
-    def futures_ticker(self, **params):
+    def usdt_futures_ticker(self, **params):
         """24 hour rolling window price change statistics.
 
         https://binance-docs.github.io/apidocs/futures/en/#24hr-ticker-price-change-statistics-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/24hr', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/24hr', data=params)
 
-    def futures_symbol_ticker(self, **params):
+    def usdt_futures_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
         https://binance-docs.github.io/apidocs/futures/en/#symbol-price-ticker-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/price', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/price', data=params)
 
-    def futures_orderbook_ticker(self, **params):
+    def usdt_futures_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
 
         https://binance-docs.github.io/apidocs/futures/en/#symbol-order-book-ticker-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/bookTicker', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/bookTicker', data=params)
 
-    def futures_liquidation_orders(self, **params):
+    def usdt_futures_liquidation_orders(self, **params):
         """Get all liquidation orders
 
         https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/allForceOrders', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/allForceOrders', data=params)
 
-    def futures_open_interest(self, **params):
+    def usdt_futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
         https://binance-docs.github.io/apidocs/futures/en/#open-interest-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/openInterest', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/openInterest', data=params)
 
-    def futures_leverage_bracket(self, **params):
+    def usdt_futures_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
         https://binance-docs.github.io/apidocs/futures/en/#notional-and-leverage-brackets-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/leverageBracket', data=params)
+        return self._request_usdt_futures_api('get', 'ticker/leverageBracket', data=params)
 
     def transfer_history(self, **params):
         """Get future account transaction history list
@@ -3575,130 +3585,390 @@ class Client(object):
         """
         return self._request_margin_api('get', 'futures/transfer', True, data=params)
 
-    def futures_create_order(self, **params):
+    def usdt_futures_create_order(self, **params):
         """Send in a new order.
 
         https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
 
         """
-        return self._request_futures_api('post', 'order', True, data=params)
+        return self._request_usdt_futures_api('post', 'order', True, data=params)
 
-    def futures_get_order(self, **params):
+    def usdt_futures_get_order(self, **params):
         """Check an order's status.
 
         https://binance-docs.github.io/apidocs/futures/en/#query-order-user_data
 
         """
-        return self._request_futures_api('get', 'order', True, data=params)
+        return self._request_usdt_futures_api('get', 'order', True, data=params)
 
-    def futures_get_open_orders(self, **params):
+    def usdt_futures_get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
         https://binance-docs.github.io/apidocs/futures/en/#current-open-orders-user_data
 
         """
-        return self._request_futures_api('get', 'openOrders', True, data=params)
+        return self._request_usdt_futures_api('get', 'openOrders', True, data=params)
 
-    def futures_get_all_orders(self, **params):
+    def usdt_futures_get_all_orders(self, **params):
         """Get all futures account orders; active, canceled, or filled.
 
         https://binance-docs.github.io/apidocs/futures/en/#all-orders-user_data
 
         """
-        return self._request_futures_api('get', 'allOrders', True, data=params)
+        return self._request_usdt_futures_api('get', 'allOrders', True, data=params)
 
-    def futures_cancel_order(self, **params):
+    def usdt_futures_cancel_order(self, **params):
         """Cancel an active futures order.
 
         https://binance-docs.github.io/apidocs/futures/en/#cancel-order-trade
 
         """
-        return self._request_futures_api('delete', 'order', True, data=params)
+        return self._request_usdt_futures_api('delete', 'order', True, data=params)
 
-    def futures_cancel_all_open_orders(self, **params):
+    def usdt_futures_cancel_all_open_orders(self, **params):
         """Cancel all open futures orders
 
         https://binance-docs.github.io/apidocs/futures/en/#cancel-all-open-orders-trade
 
         """
-        return self._request_futures_api('delete', 'allOpenOrders', True, data=params)
+        return self._request_usdt_futures_api('delete', 'allOpenOrders', True, data=params)
 
-    def futures_cancel_orders(self, **params):
+    def usdt_futures_cancel_orders(self, **params):
         """Cancel multiple futures orders
 
         https://binance-docs.github.io/apidocs/futures/en/#cancel-multiple-orders-trade
 
         """
-        return self._request_futures_api('delete', 'batchOrders', True, data=params)
+        return self._request_usdt_futures_api('delete', 'batchOrders', True, data=params)
 
-    def futures_account_balance(self, **params):
+    def usdt_futures_account_balance(self, **params):
         """Get futures account balance
 
         https://binance-docs.github.io/apidocs/futures/en/#future-account-balance-user_data
 
         """
-        return self._request_futures_api('get', 'balance', True, data=params)
+        return self._request_usdt_futures_api('get', 'balance', True, data=params)
 
-    def futures_account(self, **params):
+    def usdt_futures_account(self, **params):
         """Get current account information.
 
         https://binance-docs.github.io/apidocs/futures/en/#account-information-user_data
 
         """
-        return self._request_futures_api('get', 'account', True, data=params)
+        return self._request_usdt_futures_api('get', 'account', True, data=params)
 
-    def futures_change_leverage(self, **params):
+    def usdt_futures_change_leverage(self, **params):
         """Change user's initial leverage of specific symbol market
 
         https://binance-docs.github.io/apidocs/futures/en/#change-initial-leverage-trade
 
         """
-        return self._request_futures_api('post', 'leverage', True, data=params)
+        return self._request_usdt_futures_api('post', 'leverage', True, data=params)
 
-    def futures_change_margin_type(self, **params):
+    def usdt_futures_change_margin_type(self, **params):
         """Change the margin type for a symbol
 
         https://binance-docs.github.io/apidocs/futures/en/#change-margin-type-trade
 
         """
-        return self._request_futures_api('post', 'marginType', True, data=params)
+        return self._request_usdt_futures_api('post', 'marginType', True, data=params)
 
-    def futures_change_position_margin(self, **params):
+    def usdt_futures_change_position_margin(self, **params):
         """Change the position margin for a symbol
 
         https://binance-docs.github.io/apidocs/futures/en/#modify-isolated-position-margin-trade
 
         """
-        return self._request_futures_api('post', 'positionMargin', True, data=params)
+        return self._request_usdt_futures_api('post', 'positionMargin', True, data=params)
 
-    def futures_position_margin_history(self, **params):
+    def usdt_futures_position_margin_history(self, **params):
         """Get position margin change history
 
         https://binance-docs.github.io/apidocs/futures/en/#get-postion-margin-change-history-trade
 
         """
-        return self._request_futures_api('get', 'positionMargin/history', True, data=params)
+        return self._request_usdt_futures_api('get', 'positionMargin/history', True, data=params)
 
-    def futures_position_information(self, **params):
+    def usdt_futures_position_information(self, **params):
         """Get position information
 
         https://binance-docs.github.io/apidocs/futures/en/#position-information-user_data
 
         """
-        return self._request_futures_api('get', 'positionRisk', True, data=params)
+        return self._request_usdt_futures_api('get', 'positionRisk', True, data=params)
 
-    def futures_account_trades(self, **params):
+    def usdt_futures_account_trades(self, **params):
         """Get trades for the authenticated account and symbol.
 
         https://binance-docs.github.io/apidocs/futures/en/#account-trade-list-user_data
 
         """
-        return self._request_futures_api('get', 'userTrades', True, data=params)
+        return self._request_usdt_futures_api('get', 'userTrades', True, data=params)
 
-    def futures_income_history(self, **params):
+    def usdt_futures_income_history(self, **params):
         """Get income history for authenticated account
 
         https://binance-docs.github.io/apidocs/futures/en/#get-income-history-user_data
 
         """
-        return self._request_futures_api('get', 'income', True, data=params)
+        return self._request_usdt_futures_api('get', 'income', True, data=params)
+
+
+    # Coin Futures API
+
+    def coin_futures_ping(self):
+        """Test connectivity to the Rest API
+
+        https://binance-docs.github.io/apidocs/futures/en/#test-connectivity
+
+        """
+        return self._request_coin_futures_api('get', 'ping')
+
+    def coin_futures_time(self):
+        """Test connectivity to the Rest API and get the current server time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#check-server-time
+
+        """
+        return self._request_coin_futures_api('get', 'time')
+
+    def coin_futures_exchange_info(self):
+        """Current exchange trading rules and symbol information
+
+        https://binance-docs.github.io/apidocs/futures/en/#exchange-information-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'exchangeInfo')
+
+    def coin_futures_order_book(self, **params):
+        """Get the Order Book for the market
+
+        https://binance-docs.github.io/apidocs/futures/en/#order-book-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'depth', data=params)
+
+    def coin_futures_recent_trades(self, **params):
+        """Get recent trades (up to last 500).
+
+        https://binance-docs.github.io/apidocs/futures/en/#recent-trades-list-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'trades', data=params)
+
+    def coin_futures_historical_trades(self, **params):
+        """Get older market historical trades.
+
+        https://binance-docs.github.io/apidocs/futures/en/#old-trades-lookup-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'historicalTrades', data=params)
+
+    def coin_futures_aggregate_trades(self, **params):
+        """Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same
+        price will have the quantity aggregated.
+
+        https://binance-docs.github.io/apidocs/futures/en/#compressed-aggregate-trades-list-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'aggTrades', data=params)
+
+    def coin_futures_klines(self, **params):
+        """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#kline-candlestick-data-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'klines', data=params)
+
+    def coin_futures_mark_price(self, **params):
+        """Get Mark Price and Funding Rate
+
+        https://binance-docs.github.io/apidocs/futures/en/#mark-price-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'premiumIndex', data=params)
+
+    def coin_futures_funding_rate(self, **params):
+        """Get funding rate history
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-funding-rate-history-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'fundingRate', data=params)
+
+    def coin_futures_ticker(self, **params):
+        """24 hour rolling window price change statistics.
+
+        https://binance-docs.github.io/apidocs/futures/en/#24hr-ticker-price-change-statistics-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/24hr', data=params)
+
+    def coin_futures_symbol_ticker(self, **params):
+        """Latest price for a symbol or symbols.
+
+        https://binance-docs.github.io/apidocs/futures/en/#symbol-price-ticker-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/price', data=params)
+
+    def coin_futures_orderbook_ticker(self, **params):
+        """Best price/qty on the order book for a symbol or symbols.
+
+        https://binance-docs.github.io/apidocs/futures/en/#symbol-order-book-ticker-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/bookTicker', data=params)
+
+    def coin_futures_liquidation_orders(self, **params):
+        """Get all liquidation orders
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/allForceOrders', data=params)
+
+    def coin_futures_open_interest(self, **params):
+        """Get present open interest of a specific symbol.
+
+        https://binance-docs.github.io/apidocs/futures/en/#open-interest-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/openInterest', data=params)
+
+    def coin_futures_leverage_bracket(self, **params):
+        """Notional and Leverage Brackets
+
+        https://binance-docs.github.io/apidocs/futures/en/#notional-and-leverage-brackets-market_data
+
+        """
+        return self._request_coin_futures_api('get', 'ticker/leverageBracket', data=params)
+
+    def coin_futures_create_order(self, **params):
+        """Send in a new order.
+
+        https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
+
+        """
+        return self._request_coin_futures_api('post', 'order', True, data=params)
+
+    def coin_futures_get_order(self, **params):
+        """Check an order's status.
+
+        https://binance-docs.github.io/apidocs/futures/en/#query-order-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'order', True, data=params)
+
+    def coin_futures_get_open_orders(self, **params):
+        """Get all open orders on a symbol.
+
+        https://binance-docs.github.io/apidocs/futures/en/#current-open-orders-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'openOrders', True, data=params)
+
+    def coin_futures_get_all_orders(self, **params):
+        """Get all futures account orders; active, canceled, or filled.
+
+        https://binance-docs.github.io/apidocs/futures/en/#all-orders-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'allOrders', True, data=params)
+
+    def coin_futures_cancel_order(self, **params):
+        """Cancel an active futures order.
+
+        https://binance-docs.github.io/apidocs/futures/en/#cancel-order-trade
+
+        """
+        return self._request_coin_futures_api('delete', 'order', True, data=params)
+
+    def coin_futures_cancel_all_open_orders(self, **params):
+        """Cancel all open futures orders
+
+        https://binance-docs.github.io/apidocs/futures/en/#cancel-all-open-orders-trade
+
+        """
+        return self._request_coin_futures_api('delete', 'allOpenOrders', True, data=params)
+
+    def coin_futures_cancel_orders(self, **params):
+        """Cancel multiple futures orders
+
+        https://binance-docs.github.io/apidocs/futures/en/#cancel-multiple-orders-trade
+
+        """
+        return self._request_coin_futures_api('delete', 'batchOrders', True, data=params)
+
+    def coin_futures_account_balance(self, **params):
+        """Get futures account balance
+
+        https://binance-docs.github.io/apidocs/futures/en/#future-account-balance-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'balance', True, data=params)
+
+    def coin_futures_account(self, **params):
+        """Get current account information.
+
+        https://binance-docs.github.io/apidocs/futures/en/#account-information-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'account', True, data=params)
+
+    def coin_futures_change_leverage(self, **params):
+        """Change user's initial leverage of specific symbol market
+
+        https://binance-docs.github.io/apidocs/futures/en/#change-initial-leverage-trade
+
+        """
+        return self._request_coin_futures_api('post', 'leverage', True, data=params)
+
+    def coin_futures_change_margin_type(self, **params):
+        """Change the margin type for a symbol
+
+        https://binance-docs.github.io/apidocs/futures/en/#change-margin-type-trade
+
+        """
+        return self._request_coin_futures_api('post', 'marginType', True, data=params)
+
+    def coin_futures_change_position_margin(self, **params):
+        """Change the position margin for a symbol
+
+        https://binance-docs.github.io/apidocs/futures/en/#modify-isolated-position-margin-trade
+
+        """
+        return self._request_coin_futures_api('post', 'positionMargin', True, data=params)
+
+    def coin_futures_position_margin_history(self, **params):
+        """Get position margin change history
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-postion-margin-change-history-trade
+
+        """
+        return self._request_coin_futures_api('get', 'positionMargin/history', True, data=params)
+
+    def coin_futures_position_information(self, **params):
+        """Get position information
+
+        https://binance-docs.github.io/apidocs/futures/en/#position-information-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'positionRisk', True, data=params)
+
+    def coin_futures_account_trades(self, **params):
+        """Get trades for the authenticated account and symbol.
+
+        https://binance-docs.github.io/apidocs/futures/en/#account-trade-list-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'userTrades', True, data=params)
+
+    def coin_futures_income_history(self, **params):
+        """Get income history for authenticated account
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-income-history-user_data
+
+        """
+        return self._request_coin_futures_api('get', 'income', True, data=params)
