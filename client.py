@@ -1,9 +1,50 @@
-import socket
 import pickle
-from datetime import timezone, datetime
-import binance
+import socket
+import time
+from marketMaker.OrderManager import *
+import pandas as pd
+
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
+from marketMaker.PortfolioManager import  *
+
+
+class Signal:
+
+    def __init__(self):
+        self.seqNum = 0
+        self.action = Action.NOACTION
+        self.signalPrice = 0.0
+
+    def update(self, action, price):
+        self.action = action
+        self.seqNum += 1
+        self.price = price
+
+signal = Signal()
+
+
+def order_handling():
+    lastSeqNum = -1
+    while True:
+        if lastSeqNum < signal.seqNum:
+            lastSeqNum = signal.seqNum
+            if signal.action == Action.NOACTION:
+                continue
+            if signal.action == Action.BUY:
+                if pm.getPosition('BNB') >= 1.0:
+                    continue
+
+
+
+
+
+
+
+
+keys = pd.read_csv('./tradingkey.csv')
+print(keys)
+print(keys['key'][0],keys['key'][1])
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) # UDP
 
@@ -18,15 +59,38 @@ client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 
-api_key = '94V1LhT5WYbX8c991G5BWufZn0xLaIgA1qovZPScuXbisVNnqSCnV3qvkcscDG4I';
-api_secret = 'Rbjo7QGS4Wnt3wFdygLcPaCqlRin3iGwAtxybVNRsb7NJyDZyR4QuAomgCeNddnc';
-tc = Client(api_key, api_secret,tld = 'us')
 
+tc = Client(keys['key'][0], keys['key'][1],tld = 'us')
+
+pm = PortfolioManager()
 bm = BinanceSocketManager(tc)
-def processmymsg(msg):
-    print(msg)
+om = OrderManager()
 
-print(bm.start_user_socket(processmymsg))
+def processmymsg(msg: dict):
+    print(msg)
+    if msg.get('e','') == 'outboundAccountPosition':
+        pm.processPositionUpdate(msg)
+        return
+    if msg.get('e','') == 'executionReport':
+        om.processOrderUpdate(msg)
+        return
+    return
+
+
+
+bm.start_user_socket(processmymsg)
+bm.start()
+
+time.sleep(10)
+
+tc.order_limit_buy(symbol='BNBUSD', quantity = 0.5, price = 22,recvWindow=10000)
+
+print("step1")
+
+tc.order_limit_sell(symbol='BNBUSD', quantity = 0.5, price = 40, recvWindow=10000)
+
+print("step2")
+
 import numpy as np
 
 class ewma:
@@ -71,7 +135,7 @@ class EwmaManager:
 
     def getValue(self, symbol, period):
         return self.ewmapool[symbol][period].value
- 
+
 ewmaManager = EwmaManager()
 ewmaManager.register('ETHUSDT',100)
 ewmaManager.register('ETHUSDT',500)
@@ -85,8 +149,23 @@ ewmaManager.register('BNBUSDT',1000)
 
 ewmaManager.register('BNBUSDT',500)
 ewmaManager.register('LTCUSDT',1)
+
+
+time.sleep(10000);
+
+
+
 print(ewmaManager.ewmapool)
 lastTradeManager = LastTradeManager();
+print(tc.get_account_status())
+print(tc.get_asset_details())
+pos = tc.get_asset_balance(asset='BNB')
+pm.positions['BNB'] = float(pos['free'])+float(pos['locked'])
+
+def aftertrade():
+    print("trade")
+
+
 def getReturn(symbol, period):
     return np.log(lastTradeManager.get(symbol)/ewmaManager.getValue(symbol,period))
 
@@ -94,6 +173,7 @@ client.bind(("", 37020))
 print(tc.get_asset_balance(asset='ETH',recvWindow=10000))
 print(tc.get_account_status(recvWindow=10000))
 noExistingOrder = True
+lastorder = {}
 while True:
     # Thanks @seym45 for a fix
     data, addr = client.recvfrom(1024)
@@ -120,11 +200,18 @@ while True:
             signal = 100*(0.008*getReturn('BNBUSDT',100) - 0.2863*getReturn('BNBUSDT',500)-0.0177*getReturn('BNBUSDT',1000)
                   -0.3832*getReturn('ETHUSDT',100) + 0.9956*getReturn('ETHUSDT',500)-0.4885*getReturn('ETHUSDT',1000))
             print('{:.2f}'.format(signal))
-            if signal > -0.80 and noExistingOrder:
-             #   print(tc.get_asset_balance('BNB'))
-                print(tc.order_limit_buy(symbol='BNBUSD', quantity=1.0, price=10.0, recvWindow=10000))
 
-                noExistingOrder = False
+            if signal > 0.10 and pm.getPosition('BNB') < 4:
+             #   print(tc.get_asset_balance('BNB'))
+                lastorder = tc.order_limit_buy(symbol='BNBUSD', price = bid, quantity=1.0, recvWindow=10000)
+                aftertrade()
+                time.sleep(5)
+            if signal < -0.10 and pm.getPosition('BNB') > 1.0:
+                lastorder = tc.order_market_sell(symbol = 'BNBUSD', quantity = 1.0, recvWindow = 10000)
+                aftertrade()
+                time.sleep(5)
+
+
 
         except Exception as e:
             print(str(e))

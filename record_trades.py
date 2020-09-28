@@ -1,11 +1,12 @@
 from binance.client import Client
 from datetime import timezone, datetime
+import pandas as pd
 
-
-api_key = '7Pq5uub6PBZKShPBLJOJTnRKbR8DpbBsGh7iG0pCu3GyBDCJmALelyzmWiYEE8yA';
-api_secret = 'OZMbRNtDzRqX7dthbwFDLWCHZLwW2fH0mNpREXg4iuCbkXStVlVMtH8mN0BgubUo';
-client = Client(api_key, api_secret)
-
+keys = pd.read_csv('./tradingkey.csv')
+print(keys)
+print(keys['key'][0],keys['key'][1])
+client = Client(keys['key'][0], keys['key'][1],tld = 'us')
+print(client.get_asset_balance(asset = 'ETH', recvWindow=10000))
 from binance.websockets import BinanceSocketManager
 
 import socket
@@ -26,15 +27,15 @@ bm = BinanceSocketManager(client)
 
 
 def process_message(msg):
-#    print(msg)
+    print(msg)
 
     server.sendto(pickle.dumps(msg), ('<broadcast>', 37020))
-
 
 bm.start_aggtrade_socket('BTCUSDT', process_message)
 bm.start_aggtrade_socket('ETHUSDT', process_message)
 bm.start_aggtrade_socket('LTCUSDT', process_message)
 bm.start_aggtrade_socket('BNBUSDT', process_message)
 bm.start_depth_socket('BNBUSDT',process_message,5)
-
+#print(bm.start_user_socket(process_message))
+#print(bm._conns)
 bm.start()
