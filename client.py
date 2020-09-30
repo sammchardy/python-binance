@@ -64,7 +64,7 @@ tc = Client(keys['key'][0], keys['key'][1],tld = 'us')
 
 pm = PortfolioManager()
 bm = BinanceSocketManager(tc)
-om = OrderManager()
+om = OrderManager(tc)
 
 def processmymsg(msg: dict):
     print(msg)
@@ -83,14 +83,22 @@ bm.start()
 
 time.sleep(10)
 
-tc.order_limit_buy(symbol='BNBUSD', quantity = 0.5, price = 22,recvWindow=10000)
+
+
+
+#tc.order_limit_buy(symbol='BNBUSD', quantity = 0.5, price = 22,recvWindow=10000)
+
+print("step3")
+
+
 
 print("step1")
 
-tc.order_limit_sell(symbol='BNBUSD', quantity = 0.5, price = 40, recvWindow=10000)
+#tc.order_limit_sell(symbol='BNBUSD', quantity = 0.5, price = 40, recvWindow=10000)
 
 print("step2")
 
+om.cancelOrder(Action.BUY, 'BNBUSD')
 import numpy as np
 
 class ewma:
@@ -151,7 +159,7 @@ ewmaManager.register('BNBUSDT',500)
 ewmaManager.register('LTCUSDT',1)
 
 
-time.sleep(10000);
+#time.sleep(10000);
 
 
 
@@ -201,15 +209,19 @@ while True:
                   -0.3832*getReturn('ETHUSDT',100) + 0.9956*getReturn('ETHUSDT',500)-0.4885*getReturn('ETHUSDT',1000))
             print('{:.2f}'.format(signal))
 
-            if signal > 0.10 and pm.getPosition('BNB') < 4:
+            if  pm.getPosition('BNB') < 4:
              #   print(tc.get_asset_balance('BNB'))
-                lastorder = tc.order_limit_buy(symbol='BNBUSD', price = bid, quantity=1.0, recvWindow=10000)
-                aftertrade()
-                time.sleep(5)
-            if signal < -0.10 and pm.getPosition('BNB') > 1.0:
-                lastorder = tc.order_market_sell(symbol = 'BNBUSD', quantity = 1.0, recvWindow = 10000)
-                aftertrade()
-                time.sleep(5)
+                mybid = bid - 0.05
+                om.cancelOrder(Action.BUY, 'BNBUSD')
+                tc.order_limit_buy(symbol='BNBUSD', price = mybid, quantity=1.0, recvWindow=10000)
+
+            if  pm.getPosition('BNB') > 10.0:
+                myask = ask + 0.2
+                om.cancelOrder(Action.SELL,'BNBUSD')
+                tc.order_limit_sell(symbol = 'BNBUSD', price = myask, quantity = 1.0, recvWindow = 10000)
+
+            prevbid = bid
+            prevask = ask
 
 
 
