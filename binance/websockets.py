@@ -63,7 +63,8 @@ class BinanceClientFactory(WebSocketClientFactory, BinanceReconnectingClientFact
 
 class BinanceSocketManager(threading.Thread):
 
-    STREAM_URL = 'wss://stream.binance.us:9443/'
+    STREAM_URL = 'wss://stream.binance.com:9443/'
+    STREAM_URL_US = 'wss://stream.binance.us:9443/'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -71,7 +72,7 @@ class BinanceSocketManager(threading.Thread):
 
     DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
 
-    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT):
+    def __init__(self, client, user_timeout=DEFAULT_USER_TIMEOUT, context=''):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
@@ -81,6 +82,7 @@ class BinanceSocketManager(threading.Thread):
 
         """
         threading.Thread.__init__(self)
+        self._stream_url = self.STREAM_URL_US if context == 'us' else self.STREAM_URL
         self._conns = {}
         self._client = client
         self._user_timeout = user_timeout
@@ -92,7 +94,7 @@ class BinanceSocketManager(threading.Thread):
         if path in self._conns:
             return False
 
-        factory_url = self.STREAM_URL + prefix + path
+        factory_url = self._stream_url + prefix + path
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
@@ -561,7 +563,7 @@ class BinanceSocketManager(threading.Thread):
             return
 
         # disable reconnecting if we are closing
-        self._conns[conn_key].factory = WebSocketClientFactory(self.STREAM_URL + 'tmp_path')
+        self._conns[conn_key].factory = WebSocketClientFactory(self._stream_url + 'tmp_path')
         self._conns[conn_key].disconnect()
         del(self._conns[conn_key])
 
