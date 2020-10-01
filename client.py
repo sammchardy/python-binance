@@ -1,5 +1,3 @@
-import pickle
-import socket
 import time
 from marketMaker.OrderManager import *
 import pandas as pd
@@ -7,7 +5,10 @@ import pandas as pd
 from binance.client import Client
 from binance.websockets import BinanceSocketManager
 from marketMaker.PortfolioManager import  *
-
+import zmq
+import json
+from datetime import datetime
+from util import *
 
 class Signal:
 
@@ -46,25 +47,16 @@ keys = pd.read_csv('./tradingkey.csv')
 print(keys)
 print(keys['key'][0],keys['key'][1])
 
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP) # UDP
-
-# Enable port reusage so we will be able to run multiple clients and servers on single (host, port).
-# Do not use socket.SO_REUSEADDR except you using linux(kernel<3.9): goto https://stackoverflow.com/questions/14388706/how-do-so-reuseaddr-and-so-reuseport-differ for more information.
-# For linux hosts all sockets that want to share the same address and port combination must belong to processes that share the same effective user ID!
-# So, on linux(kernel>=3.9) you have to run multiple servers and clients under one user to share the same (host, port).
-# Thanks to @stevenreddie
-client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-
-# Enable broadcasting mode
-client.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-
-
+context = zmq.Context()
+client = context.socket(zmq.SUB)
+client.connect(connEndPoint)
+client.setsockopt_string(zmq.SUBSCRIBE, connTopic)
 
 tc = Client(keys['key'][0], keys['key'][1],tld = 'us')
 
 pm = PortfolioManager()
 bm = BinanceSocketManager(tc)
-om = OrderManager(tc)
+om = OrderManager()
 
 def processmymsg(msg: dict):
     print(msg)
@@ -81,7 +73,7 @@ def processmymsg(msg: dict):
 bm.start_user_socket(processmymsg)
 bm.start()
 
-time.sleep(10)
+time.sleep(3)
 
 
 
@@ -98,7 +90,6 @@ print("step1")
 
 print("step2")
 
-om.cancelOrder(Action.BUY, 'BNBUSD')
 import numpy as np
 
 class ewma:
@@ -177,15 +168,25 @@ def aftertrade():
 def getReturn(symbol, period):
     return np.log(lastTradeManager.get(symbol)/ewmaManager.getValue(symbol,period))
 
-client.bind(("", 37020))
 print(tc.get_asset_balance(asset='ETH',recvWindow=10000))
 print(tc.get_account_status(recvWindow=10000))
 noExistingOrder = True
 lastorder = {}
 while True:
-    # Thanks @seym45 for a fix
-    data, addr = client.recvfrom(1024)
-    res = pickle.loads(data)
+    # Thanks @seym45 for a fix    
+    try:
+        str = client.recv_string()
+        _, data = str.split(connTopic)
+        res = json.loads(data)
+    except zmq.ZMQError as error:
+        print(error)
+        continue
+    
+    if 'T' in res.keys():
+        updateTime = datetime.fromtimestamp(res['T']/1000)
+        if updateTime.second == 0:
+            print("updateTime:", updateTime) #prints periodly
+
   #  print(res.keys())
     if 'p' in res.keys():
         lastTradeManager.update(res['s'], float(res['p']))
@@ -223,13 +224,6 @@ while True:
             prevbid = bid
             prevask = ask
 
-
-
         except Exception as e:
-            print(str(e))
+            print(e)
             pass
-
-
-    #print(type(res))
-    
-    #print(int(datetime.now(tz=timezone.utc).timestamp() * 1000))
