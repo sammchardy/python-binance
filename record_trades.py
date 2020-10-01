@@ -22,14 +22,14 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 # indefinitely when trying to receive data.
 server.settimeout(0.2)
 
-bm = BinanceSocketManager(client)
+bm = BinanceSocketManager(client,context='global')
 
 
 
 def process_message(msg):
     print(msg)
 
-    server.sendto(pickle.dumps(msg), ('<broadcast>', 37020))
+    server.sendto(pickle.dumps(msg), ('<broadcast>', 37021))
 
 bm.start_aggtrade_socket('BTCUSDT', process_message)
 bm.start_aggtrade_socket('ETHUSDT', process_message)
