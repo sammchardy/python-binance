@@ -57,7 +57,10 @@ class OrderManager:
             return # nothing to cancel
         ordersToCancel = list(self.openOrders[sym][side])
         for orderId in ordersToCancel:
-            self.tc.cancel_order(symbol=sym, orderId = orderId, recvWindow = 2000)
+            try:
+                self.tc.cancel_order(symbol=sym, orderId = orderId, recvWindow = 2000)
+            except:
+                pass
 
 
 
