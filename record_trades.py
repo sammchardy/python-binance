@@ -14,7 +14,6 @@ import json
 from util import *
 
 
-
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 socket.bind(connEndPoint)
