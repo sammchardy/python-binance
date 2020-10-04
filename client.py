@@ -101,6 +101,7 @@ def processmymsg(msg: dict):
 
 bm.start_user_socket(processmymsg)
 bm.start()
+# wait for binance user data feed to ready
 time.sleep(20)
 
 time.sleep(3)
