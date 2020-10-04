@@ -26,7 +26,6 @@ def createZmqPublisher():
     publisher.bind(commandEndPoint)
     return publisher
 
-
 def valueSetter(value, name):
     params[name] = value
     print(params)
