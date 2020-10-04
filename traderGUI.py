@@ -26,7 +26,6 @@ def createZmqPublisher():
 print(os.getpid())
 pub = createZmqPublisher()
 if __name__ == '__main__':
-    page_content = [html.Div(id='state')]
     print(len("{:<15}".format("123")))
 
     app = dash.Dash(__name__)
