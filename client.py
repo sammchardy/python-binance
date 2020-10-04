@@ -81,7 +81,7 @@ om = OrderManager(tc)
 params = {'ready': 0,
           'posUpperLimit': 0,
           'posLowerLimit': 0,
-          'spread': 0.1,
+          'spread': 10.1,
           'buysellSkew': 0.0,
           'alphaMultiplier': 0.0,
           'positionSkew': 0.0}
@@ -93,6 +93,7 @@ def processmymsg(msg: dict):
         pm.processPositionUpdate(msg)
         return
     if msg.get('e', '') == 'executionReport':
+        print(msg['x'], msg['s'], msg['S'])
         om.processOrderUpdate(msg)
         return
     return
@@ -100,6 +101,7 @@ def processmymsg(msg: dict):
 
 bm.start_user_socket(processmymsg)
 bm.start()
+time.sleep(20)
 
 time.sleep(3)
 
@@ -267,11 +269,11 @@ while True:
                     om.cancelOrder(Action.BUY, 'BNBUSD')
                     tc.order_limit_buy(symbol='BNBUSD', price=round(mybid, 4), quantity=1.0, recvWindow=10000)
                     lubp = mybid
-                else:
-                    om.cancelOrder(Action.BUY, 'BNBUSD')
+            else:
+                om.cancelOrder(Action.BUY, 'BNBUSD')
 
             if pm.getPosition('BNB') > params['posLowerLimit'] and params['ready'] == 1:
-                if abs(luap - myask) > 0.01:
+                if abs(luap - myask) > 0.01 :
                     om.cancelOrder(Action.SELL, 'BNBUSD')
                     tc.order_limit_sell(symbol='BNBUSD', price=round(myask, 4), quantity=1.0, recvWindow=10000)
                     luap = myask

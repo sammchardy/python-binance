@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     for key in params:
         page_content.append(html.Div([html.Div(["{:<20}:".format(key)]), dcc.Input(id=key, type='float', value=params[key]),
-                                      html.Div(id=key+"state", children='ready')]))
+                                      html.Div(id=key+"state", children='ready',style = {'display':'none'})]))
 
     page_content.append(html.Button('Submit', id='submit-val', n_clicks=0))
     page_content.append(html.Div(id='state'))
@@ -59,4 +59,4 @@ if __name__ == '__main__':
         pub.send_string(commandTopic + json.dumps(params))
         print(os.getpid())
         return str(params)
-    app.run_server(debug=False,threaded=True)
+    app.run_server(debug=False,threaded=True,host= '0.0.0.0')
