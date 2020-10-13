@@ -1,4 +1,3 @@
-return self._request_futures_api('get', 'ticker/leverageBracket', data=params)
 # coding=utf-8
 
 import hashlib
@@ -3566,7 +3565,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/futures/en/#notional-and-leverage-brackets-market_data
 
         """
-        return self._request_futures_api('get', 'leverageBracket', True, data=params)
+        return self._request_futures_api('get', 'ticker/leverageBracket', data=params)
 
     def transfer_history(self, **params):
         """Get future account transaction history list
