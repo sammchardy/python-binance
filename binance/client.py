@@ -2408,6 +2408,109 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/account', True, data=params)
 
+    def get_isolated_margin_account(self, **params):
+        """Query isolated margin account details
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+
+        If "symbols" is not sent:
+
+            {
+               "assets":[
+                  {
+                    "baseAsset": 
+                    {
+                      "asset": "BTC",
+                      "borrowEnabled": true,
+                      "borrowed": "0.00000000",
+                      "free": "0.00000000",
+                      "interest": "0.00000000",
+                      "locked": "0.00000000",
+                      "netAsset": "0.00000000",
+                      "netAssetOfBtc": "0.00000000",
+                      "repayEnabled": true,
+                      "totalAsset": "0.00000000"
+                    },
+                    "quoteAsset": 
+                    {
+                      "asset": "USDT",
+                      "borrowEnabled": true,
+                      "borrowed": "0.00000000",
+                      "free": "0.00000000",
+                      "interest": "0.00000000",
+                      "locked": "0.00000000",
+                      "netAsset": "0.00000000",
+                      "netAssetOfBtc": "0.00000000",
+                      "repayEnabled": true,
+                      "totalAsset": "0.00000000"
+                    },
+                    "symbol": "BTCUSDT"
+                    "isolatedCreated": true, 
+                    "marginLevel": "0.00000000", 
+                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                    "marginRatio": "0.00000000",
+                    "indexPrice": "10000.00000000"
+                    "liquidatePrice": "1000.00000000",
+                    "liquidateRate": "1.00000000"
+                    "tradeEnabled": true
+                  }
+                ],
+                "totalAssetOfBtc": "0.00000000",
+                "totalLiabilityOfBtc": "0.00000000",
+                "totalNetAssetOfBtc": "0.00000000" 
+            }
+
+        If "symbols" is sent:
+
+            {
+               "assets":[
+                  {
+                    "baseAsset": 
+                    {
+                      "asset": "BTC",
+                      "borrowEnabled": true,
+                      "borrowed": "0.00000000",
+                      "free": "0.00000000",
+                      "interest": "0.00000000",
+                      "locked": "0.00000000",
+                      "netAsset": "0.00000000",
+                      "netAssetOfBtc": "0.00000000",
+                      "repayEnabled": true,
+                      "totalAsset": "0.00000000"
+                    },
+                    "quoteAsset": 
+                    {
+                      "asset": "USDT",
+                      "borrowEnabled": true,
+                      "borrowed": "0.00000000",
+                      "free": "0.00000000",
+                      "interest": "0.00000000",
+                      "locked": "0.00000000",
+                      "netAsset": "0.00000000",
+                      "netAssetOfBtc": "0.00000000",
+                      "repayEnabled": true,
+                      "totalAsset": "0.00000000"
+                    },
+                    "symbol": "BTCUSDT"
+                    "isolatedCreated": true, 
+                    "marginLevel": "0.00000000", 
+                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                    "marginRatio": "0.00000000",
+                    "indexPrice": "10000.00000000"
+                    "liquidatePrice": "1000.00000000",
+                    "liquidateRate": "1.00000000"
+                    "tradeEnabled": true
+                  }
+                ]
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/account', True, data=params)
+
     def get_margin_asset(self, **params):
         """Query margin asset
 
