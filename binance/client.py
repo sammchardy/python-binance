@@ -3327,6 +3327,56 @@ class Client(object):
         """
         return self._request_margin_api('get', 'lending/daily/token/position', signed=True, data=params)
 
+    def get_fixed_activity_project_list(self, **params):
+        """Get Fixed and Activity Project List
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-fixed-and-activity-project-list-user_data
+
+        :param asset: optional
+        :type asset: str
+		:param type: required - "ACTIVITY", "CUSTOMIZED_FIXED"
+		:type type: str
+		:param status: optional - "ALL", "SUBSCRIBABLE", "UNSUBSCRIBABLE"; default "ALL"
+		:type status: str
+		:param sortBy: optional - "START_TIME", "LOT_SIZE", "INTEREST_RATE", "DURATION"; default "START_TIME"
+		:type sortBy: str
+		:param current: optional - Currently querying page. Start from 1. Default:1
+		:type current: int
+		:param size: optional - Default:10, Max:100
+		:type size: int
+	    :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "asset": "USDT",
+                    "displayPriority": 1,
+                    "duration": 90,
+                    "interestPerLot": "1.35810000",
+                    "interestRate": "0.05510000",
+                    "lotSize": "100.00000000",
+                    "lotsLowLimit": 1,
+                    "lotsPurchased": 74155,
+                    "lotsUpLimit": 80000,
+                    "maxLotsPerUser": 2000,
+                    "needKyc": False,
+                    "projectId": "CUSDT90DAYSS001",
+                    "projectName": "USDT",
+                    "status": "PURCHASING",
+                    "type": "CUSTOMIZED_FIXED",
+                    "withAreaLimitation": False
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+        
+        """
+        return self._request_margin_api('get', 'lending/project/list', signed=True, data=params)
+
     def get_lending_account(self, **params):
         """Get Lending Account Details
 
