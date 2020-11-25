@@ -2581,6 +2581,105 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/pair', data=params)
 
+    def create_isolated_margin_account(self, **params):
+        """Create isolated margin account for symbol
+
+        https://binance-docs.github.io/apidocs/spot/en/#create-isolated-margin-account-margin
+
+        :param base: Base asset of symbol
+        :type base: str
+        :param quote: Quote asset of symbol
+        :type quote: str
+
+        .. code:: python
+
+            pair_details = client.create_isolated_margin_account(base='USDT', quote='BTC')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success": true,
+                "symbol": "BTCUSDT"
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
+
+
+    def get_isolated_margin_symbol(self, **params):
+        """Query isolated margin symbol info
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-symbol-user_data
+
+        :param symbol: name of the symbol pair
+        :type symbol: str
+
+        .. code:: python
+
+            pair_details = client.get_isolated_margin_symbol(symbol='BTCUSDT')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+            "symbol":"BTCUSDT",
+            "base":"BTC",
+            "quote":"USDT",
+            "isMarginTrade":true,
+            "isBuyAllowed":true,
+            "isSellAllowed":true      
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/pair', signed=True, data=params)
+
+    def get_all_isolated_margin_symbols(self, **params):
+        """Query isolated margin symbol info for all pairs
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-isolated-margin-symbol-user_data
+
+        .. code:: python
+
+            pair_details = client.get_all_isolated_margin_symbols()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "base": "BNB",
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "BNBBTC"     
+                },
+                {
+                    "base": "TRX",
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "TRXBTC"    
+                }
+            ]
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
+
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
@@ -2672,7 +2771,7 @@ class Client(object):
     def transfer_isolated_margin_to_spot(self, **params):
         """Execute transfer between isolated margin account and spot account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+        https://binance-docs.github.io/apidocs/spot/en/#isolated-margin-account-transfer-margin
 
         :param asset: name of the asset
         :type asset: str
@@ -2706,7 +2805,7 @@ class Client(object):
     def transfer_spot_to_isolated_margin(self, **params):
         """Execute transfer between spot account and isolated margin account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+        https://binance-docs.github.io/apidocs/spot/en/#isolated-margin-account-transfer-margin
 
         :param asset: name of the asset
         :type asset: str
