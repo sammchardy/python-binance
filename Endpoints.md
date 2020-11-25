@@ -430,8 +430,10 @@
   
     > :warning: Not yet implemented
   - **POST /sapi/v1/margin/isolated/transfer (HMAC SHA256)** (Isolated Margin Account Transfer (MARGIN).)
-  
-    > :warning: Not yet implemented
+    ```python
+    client.transfer_spot_to_isolated_margin(asset, symbol, amount, recvWindow)
+    client.transfer_isolated_margin_to_spot(asset, symbol, amount, recvWindow)
+    ```
   - **GET /sapi/v1/margin/isolated/transfer (HMAC SHA256)** (Get Isolated Margin Transfer History (USER_DATA).)
   
     > :warning: Not yet implemented

@@ -154,6 +154,22 @@ Account
 
     transaction = client.transfer_margin_to_spot(asset='BTC', amount='1.1')
 
+`Transfer spot to isolated margin account <binance.html#binance.client.Client.transfer_spot_to_isolated_margin>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transaction = client.transfer_spot_to_isolated_margin(asset='BTC', 
+                                                            symbol='ETHBTC', amount='1.1')
+
+`Transfer isolated margin account to spot <binance.html#binance.client.Client.transfer_isolated_margin_to_spot>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transaction = client.transfer_isolated_margin_to_spot(asset='BTC', 
+                                                            symbol='ETHBTC', amount='1.1')
+
 `Get max transfer amount <binance.html#binance.client.Client.get_max_margin_transfer>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

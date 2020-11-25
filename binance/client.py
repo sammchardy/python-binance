@@ -2668,6 +2668,75 @@ class Client(object):
         params['type'] = 1
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
+
+    def transfer_isolated_margin_to_spot(self, **params):
+        """Execute transfer between isolated margin account and spot account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param symbol: pair symbol
+        :type symbol: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_isolated_margin_to_spot(asset='BTC', 
+                                                                symbol='ETHBTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['transFrom'] = "ISOLATED_MARGIN"
+        params['transTo'] = "SPOT"
+        return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
+    def transfer_spot_to_isolated_margin(self, **params):
+        """Execute transfer between spot account and isolated margin account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param symbol: pair symbol
+        :type symbol: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_isolated_margin(asset='BTC', 
+                                                                symbol='ETHBTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['transFrom'] = "SPOT"
+        params['transTo'] = "ISOLATED_MARGIN"
+        return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
     def create_margin_loan(self, **params):
         """Apply for a loan in cross-margin or isolated-margin account.
 
