@@ -132,14 +132,14 @@ Account
 
     info = client.get_isolated_margin_account()
 
-`Transfer spot to margin <binance.html#binance.client.Client.transfer_spot_to_margin>`_
+`Transfer spot to cross-margin <binance.html#binance.client.Client.transfer_spot_to_margin>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     transaction = client.transfer_spot_to_margin(asset='BTC', amount='1.1')
 
-`Transfer margin to spot <binance.html#binance.client.Client.transfer_margin_to_spot>`_
+`Transfer cross-margin to spot <binance.html#binance.client.Client.transfer_margin_to_spot>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
@@ -171,16 +171,34 @@ Loans
 `Create loan <binance.html#binance.client.Client.create_margin_loan>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Cross-margin
+
 .. code:: python
 
     transaction = client.create_margin_loan(asset='BTC', amount='1.1')
 
+Isolated margin
+
+.. code:: python
+
+    transaction = client.create_margin_loan(asset='BTC', amount='1.1', 
+                                            isIsolated='TRUE', symbol='ETHBTC')
+
 `Repay loan <binance.html#binance.client.Client.repay_margin_loan>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cross-margin
 
 .. code:: python
 
     transaction = client.repay_margin_loan(asset='BTC', amount='1.1')
+
+Isolated margin 
+
+.. code:: python
+
+    transaction = client.repay_margin_loan(asset='BTC', amount='1.1', 
+                                            isIsolated='TRUE', symbol='ETHBTC')
 
 `Get loan details <binance.html#binance.client.Client.get_margin_loan_details>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

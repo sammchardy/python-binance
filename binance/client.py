@@ -2609,7 +2609,7 @@ class Client(object):
         return self._request_margin_api('get', 'margin/priceIndex', data=params)
 
     def transfer_margin_to_spot(self, **params):
-        """Execute transfer between margin account and spot account.
+        """Execute transfer between cross-margin account and spot account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
 
@@ -2639,7 +2639,7 @@ class Client(object):
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
     def transfer_spot_to_margin(self, **params):
-        """Execute transfer between spot account and margin account.
+        """Execute transfer between spot account and cross-margin account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
 
@@ -2669,7 +2669,7 @@ class Client(object):
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
     def create_margin_loan(self, **params):
-        """Apply for a loan.
+        """Apply for a loan in cross-margin or isolated-margin account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
 
@@ -2677,12 +2677,19 @@ class Client(object):
         :type asset: str
         :param amount: amount to transfer
         :type amount: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param symbol: Isolated margin symbol (default blank for cross-margin)
+        :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
         .. code:: python
 
             transaction = client.margin_create_loan(asset='BTC', amount='1.1')
+
+            transaction = client.margin_create_loan(asset='BTC', amount='1.1', 
+                                                    isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
 
@@ -2698,7 +2705,7 @@ class Client(object):
         return self._request_margin_api('post', 'margin/loan', signed=True, data=params)
 
     def repay_margin_loan(self, **params):
-        """Repay loan for margin account.
+        """Repay loan in cross-margin or isolated-margin account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-repay-margin
 
@@ -2706,12 +2713,19 @@ class Client(object):
         :type asset: str
         :param amount: amount to transfer
         :type amount: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param symbol: Isolated margin symbol (default blank for cross-margin)
+        :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
         .. code:: python
 
             transaction = client.margin_repay_loan(asset='BTC', amount='1.1')
+
+            transaction = client.margin_repay_loan(asset='BTC', amount='1.1', 
+                                                    isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
 
