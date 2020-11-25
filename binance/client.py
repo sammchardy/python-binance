@@ -2875,6 +2875,8 @@ class Client(object):
     def repay_margin_loan(self, **params):
         """Repay loan in cross-margin or isolated-margin account.
 
+        If amount is more than the amount borrowed, the full loan will be repaid. 
+
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-repay-margin
 
         :param asset: name of the asset
