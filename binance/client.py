@@ -2351,7 +2351,7 @@ class Client(object):
     # Margin Trading Endpoints
 
     def get_margin_account(self, **params):
-        """Query margin account details
+        """Query cross-margin account details
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-user_data
 
@@ -2413,106 +2413,114 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
 
+        :param symbols: optional up to 5 margin pairs as a comma separated string
+        :type asset: str
+
+        .. code:: python
+
+            account_info = client.get_isolated_margin_account()
+            account_info = client.get_isolated_margin_account(symbols="BTCUSDT,ETHUSDT")
+
         :returns: API response
 
         .. code-block:: python
 
-        If "symbols" is not sent:
+            If "symbols" is not sent:
 
-            {
-               "assets":[
-                  {
-                    "baseAsset": 
+                {
+                "assets":[
                     {
-                      "asset": "BTC",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "quoteAsset": 
-                    {
-                      "asset": "USDT",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "symbol": "BTCUSDT"
-                    "isolatedCreated": true, 
-                    "marginLevel": "0.00000000", 
-                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
-                    "marginRatio": "0.00000000",
-                    "indexPrice": "10000.00000000"
-                    "liquidatePrice": "1000.00000000",
-                    "liquidateRate": "1.00000000"
-                    "tradeEnabled": true
-                  }
-                ],
-                "totalAssetOfBtc": "0.00000000",
-                "totalLiabilityOfBtc": "0.00000000",
-                "totalNetAssetOfBtc": "0.00000000" 
-            }
+                        "baseAsset": 
+                        {
+                        "asset": "BTC",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "quoteAsset": 
+                        {
+                        "asset": "USDT",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "symbol": "BTCUSDT"
+                        "isolatedCreated": true, 
+                        "marginLevel": "0.00000000", 
+                        "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                        "marginRatio": "0.00000000",
+                        "indexPrice": "10000.00000000"
+                        "liquidatePrice": "1000.00000000",
+                        "liquidateRate": "1.00000000"
+                        "tradeEnabled": true
+                    }
+                    ],
+                    "totalAssetOfBtc": "0.00000000",
+                    "totalLiabilityOfBtc": "0.00000000",
+                    "totalNetAssetOfBtc": "0.00000000" 
+                }
 
-        If "symbols" is sent:
+            If "symbols" is sent:
 
-            {
-               "assets":[
-                  {
-                    "baseAsset": 
+                {
+                "assets":[
                     {
-                      "asset": "BTC",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "quoteAsset": 
-                    {
-                      "asset": "USDT",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "symbol": "BTCUSDT"
-                    "isolatedCreated": true, 
-                    "marginLevel": "0.00000000", 
-                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
-                    "marginRatio": "0.00000000",
-                    "indexPrice": "10000.00000000"
-                    "liquidatePrice": "1000.00000000",
-                    "liquidateRate": "1.00000000"
-                    "tradeEnabled": true
-                  }
-                ]
-            }
+                        "baseAsset": 
+                        {
+                        "asset": "BTC",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "quoteAsset": 
+                        {
+                        "asset": "USDT",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "symbol": "BTCUSDT"
+                        "isolatedCreated": true, 
+                        "marginLevel": "0.00000000", 
+                        "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                        "marginRatio": "0.00000000",
+                        "indexPrice": "10000.00000000"
+                        "liquidatePrice": "1000.00000000",
+                        "liquidateRate": "1.00000000"
+                        "tradeEnabled": true
+                    }
+                    ]
+                }
 
         """
         return self._request_margin_api('get', 'margin/isolated/account', True, data=params)
 
     def get_margin_asset(self, **params):
-        """Query margin asset
+        """Query cross-margin asset
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-asset-market_data
 
@@ -2542,7 +2550,7 @@ class Client(object):
         return self._request_margin_api('get', 'margin/asset', data=params)
 
     def get_margin_symbol(self, **params):
-        """Query margin symbol info
+        """Query cross-margin symbol info
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-pair-market_data
 
@@ -2583,7 +2591,7 @@ class Client(object):
 
         .. code:: python
 
-            price_index_details = client.get_margin_pair(symbol='BTCUSDT')
+            price_index_details = client.get_margin_price_index(symbol='BTCUSDT')
 
         :returns: API response
 

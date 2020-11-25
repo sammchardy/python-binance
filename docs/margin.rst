@@ -1,17 +1,25 @@
 Margin Trading Endpoints
 ========================
 
+.. note ::  
+
+    **Cross-margin vs isolated margin trading**
+
+    Binance offers both *cross-margin* trading (where all margin is in one account) and *isolated margin* trading (where each pair is a separate margin account).  Make sure you are interacting with the right one.
+
+    Some of the API endpoints apply to the cross-margin or isolated margin accounts only.  Other endpoints, such as the trade execution endpoints, are used for the cross-margin account trades by default, but you can use your isolated margin accounts by using the ``isIsolated`` or ``isolatedSymbol`` parameters.  See the documentation below.
+
 Market Data
 -----------
 
-`Get margin asset info <binance.html#binance.client.Client.get_margin_asset>`_
+`Get cross-margin asset info <binance.html#binance.client.Client.get_margin_asset>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     info = client.get_margin_asset(asset='BNB')
 
-`Get margin symbol info <binance.html#binance.client.Client.get_margin_symbol>`_
+`Get cross-margin symbol info <binance.html#binance.client.Client.get_margin_symbol>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
@@ -110,12 +118,19 @@ Use the `create_margin_order` function to have full control over creating an ord
 Account
 -------
 
-`Get margin account info <binance.html#binance.client.Client.get_margin_account>`_
+`Get cross-margin account info <binance.html#binance.client.Client.get_margin_account>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     info = client.get_margin_account()
+
+`Get isolated-margin account info <binance.html#binance.client.Client.get_isolated_margin_account>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    info = client.get_isolated_margin_account()
 
 `Transfer spot to margin <binance.html#binance.client.Client.transfer_spot_to_margin>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
