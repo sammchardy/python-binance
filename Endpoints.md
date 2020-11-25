@@ -451,14 +451,17 @@
     ```
 - *User Data Streams*
   - **POST /api/v3/userDataStream** (Create a ListenKey (Spot) (USER_STREAM): Start a new user data stream.)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_get_listen_key()
+    ```
   - **PUT /api/v3/userDataStream** (Ping/Keep-alive a ListenKey (Spot) (USER_STREAM).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_keepalive(listenKey)
+    ```
   - **DELETE /api/v3/userDataStream** (Close a ListenKey (Spot) (USER_STREAM).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_close(listenKey)
+    ```
   - **POST /sapi/v1/userDataStream** (Create a ListenKey (Margin).)
     ```python 
     client.margin_stream_get_listen_key()
