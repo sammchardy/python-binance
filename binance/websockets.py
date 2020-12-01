@@ -85,9 +85,10 @@ class BinanceSocketManager(threading.Thread):
         self._conns = {}
         self._client = client
         self._user_timeout = user_timeout
-        self._timers = {'user': None, 'margin': None}
+        self._timers = {'user': None, 'margin': None} 
         self._listen_keys = {'user': None, 'margin': None}
         self._account_callbacks = {'user': None, 'margin': None}
+        # Isolated margin sockets will be opened under the 'symbol' name
 
     def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
@@ -590,6 +591,7 @@ class BinanceSocketManager(threading.Thread):
         """Start a websocket for user data
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :param callback: callback function to handle messages
         :type callback: function
@@ -604,9 +606,9 @@ class BinanceSocketManager(threading.Thread):
         return self._start_account_socket('user', user_listen_key, callback)
 
     def start_margin_socket(self, callback):
-        """Start a websocket for margin data
+        """Start a websocket for cross-margin data
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
 
         :param callback: callback function to handle messages
         :type callback: function
@@ -619,6 +621,25 @@ class BinanceSocketManager(threading.Thread):
         margin_listen_key = self._client.margin_stream_get_listen_key()
         # and start the socket with this specific key
         return self._start_account_socket('margin', margin_listen_key, callback)
+
+    def start_isolated_margin_socket(self, symbol, callback):
+        """Start a websocket for isolated margin data
+
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+
+        :param symbol: required - symbol for the isolated margin account
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+        """
+        # Get the isolated margin listen key
+        isolated_margin_listen_key = self._client.isolated_margin_stream_get_listen_key(symbol)
+        # and start the socket with this specific kek
+        return self._start_account_socket(symbol, isolated_margin_listen_key, callback)
 
     def _start_account_socket(self, socket_type, listen_key, callback):
         """Starts one of user or margin socket"""
@@ -650,10 +671,15 @@ class BinanceSocketManager(threading.Thread):
         if socket_type == 'user':
             listen_key_func = self._client.stream_get_listen_key
             callback = self._account_callbacks[socket_type]
-        else:
+            listen_key = listen_key_func()
+        elif socket_type == 'margin':  # cross-margin
             listen_key_func = self._client.margin_stream_get_listen_key
             callback = self._account_callbacks[socket_type]
-        listen_key = listen_key_func()
+            listen_key = listen_key_func()
+        else:  # isolated margin
+            listen_key_func = self._client.isolated_margin_stream_get_listen_key
+            callback = self._account_callbacks.get(socket_type, None)       
+            listen_key = listen_key_func(socket_type)  # Passing symbol for islation margin
         if listen_key != self._listen_keys[socket_type]:
             self._start_account_socket(socket_type, listen_key, callback)
 
@@ -673,18 +699,26 @@ class BinanceSocketManager(threading.Thread):
         self._conns[conn_key].disconnect()
         del(self._conns[conn_key])
 
-        # check if we have a user stream socket
-        if len(conn_key) >= 60 and conn_key[:60] == self._listen_keys['user']:
-            self._stop_account_socket('user')
+        # OBSOLETE - removed when adding isolated margin.  Loop over keys instead
+        # # check if we have a user stream socket
+        # if len(conn_key) >= 60 and conn_key[:60] == self._listen_keys['user']:
+        #     self._stop_account_socket('user')
 
-        # or a margin stream socket
-        if len(conn_key) >= 60 and conn_key[:60] == self._listen_keys['margin']:
-            self._stop_account_socket('margin')
+        # # or a margin stream socket
+        # if len(conn_key) >= 60 and conn_key[:60] == self._listen_keys['margin']:
+        #     self._stop_account_socket('margin')
+
+        # NEW - Loop over keys in _listen_keys dictionary to find a match on 
+        # user, cross-margin and isolated margin:
+        for key, value in self._listen_keys.items():
+            if len(conn_key) >= 60 and conn_key[:60] == value:
+                self._stop_account_socket(key)
+
 
     def _stop_account_socket(self, socket_type):
-        if not self._listen_keys[socket_type]:
+        if not self._listen_keys.get(socket_type, None):
             return
-        if self._timers[socket_type]:
+        if self._timers.get(socket_type, None):
             self._timers[socket_type].cancel()
             self._timers[socket_type] = None
         self._listen_keys[socket_type] = None

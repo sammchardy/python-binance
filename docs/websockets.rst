@@ -153,8 +153,8 @@ Valid interval values are `defined as enums <enums.html>`_.
     # set as 5000 to receive updates every 5 seconds
     conn_key = bm.start_miniticker_socket(process_message, 5000)
 
-`User Socket <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+User Socket
++++++++++++
 
 This watches for 3 different user events
 
@@ -164,9 +164,31 @@ This watches for 3 different user events
 
 The Manager handles keeping the socket alive.
 
+There are separate sockets for Spot, Cross-margin and separate Isolated margin accounts.
+
+`Spot trading <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. code:: python
 
     bm.start_user_socket(process_message)
+
+
+`Cross-margin <binance.html#binance.websockets.BinanceSocketManager.start_margin_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    bm.start_margin_socket(process_message)
+
+
+`Isolated margin <binance.html#binance.websockets.BinanceSocketManager.start_isolated_margin_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: python
+
+    bm.start_isolated_margin_socket(symbol, process_message)
+
 
 
 `Close a Socket <binance.html#binance.websockets.BinanceSocketManager.stop_socket>`_
