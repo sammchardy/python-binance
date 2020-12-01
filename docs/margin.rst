@@ -1,22 +1,44 @@
 Margin Trading Endpoints
 ========================
 
+.. note ::  
+
+    **Cross-margin vs isolated margin trading**
+
+    Binance offers both *cross-margin* trading (where all margin is in one account) and *isolated margin* trading (where each pair is a separate margin account).  Make sure you are interacting with the right one.
+
+    Some of the API endpoints apply to the cross-margin or isolated margin accounts only.  Other endpoints, such as the trade execution endpoints, are used for the cross-margin account trades by default, but you can use your isolated margin accounts by using the ``isIsolated`` or ``isolatedSymbol`` parameters.  See the documentation below.
+
 Market Data
 -----------
 
-`Get margin asset info <binance.html#binance.client.Client.get_margin_asset>`_
+`Get cross-margin asset info <binance.html#binance.client.Client.get_margin_asset>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     info = client.get_margin_asset(asset='BNB')
 
-`Get margin symbol info <binance.html#binance.client.Client.get_margin_symbol>`_
+`Get cross-margin symbol info <binance.html#binance.client.Client.get_margin_symbol>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     info = client.get_margin_symbol(symbol='BTCUSDT')
+
+`Get isolated margin symbol info <binance.html#binance.client.Client.get_isolated_margin_symbol>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    info = client.get_isolated_margin_symbol(symbol='BTCUSDT')
+
+`Get all isolated margin symbols <binance.html#binance.client.Client.get_all_isolated_margin_symbols>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    info = client.get_all_isolated_margin_symbols()
 
 `Get margin price index <binance.html#binance.client.Client.get_margin_price_index>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -27,6 +49,13 @@ Market Data
 
 Orders
 ------
+
+Cross-margin vs isolated margin orders
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, these trade execution endpoints will create an order using the *cross-margin* account. 
+
+To use the *isolated margin* account for the ``symbol`` you have specified, simply add the ``isIsolated='TRUE'`` parameter to the API calls below in this 'Orders' section.
 
 Order Validation
 ^^^^^^^^^^^^^^^^
@@ -55,8 +84,6 @@ It can be helpful to format the output using the following snippet
 
 `Place a margin order <binance.html#binance.client.Client.create_margin_order>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Place an order**
 
 Use the `create_margin_order` function to have full control over creating an order
 
@@ -99,6 +126,8 @@ Use the `create_margin_order` function to have full control over creating an ord
 
     orders = client.get_open_margin_orders(symbol='BNBBTC')
 
+For isolated margin, add the ``isIsolated='TRUE'`` parameter.
+
 `Get all margin orders <binance.html#binance.client.Client.get_all_margin_orders>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -106,30 +135,61 @@ Use the `create_margin_order` function to have full control over creating an ord
 
     orders = client.get_all_margin_orders(symbol='BNBBTC')
 
+For isolated margin, add the ``isIsolated='TRUE'`` parameter.
 
 Account
 -------
 
-`Get margin account info <binance.html#binance.client.Client.get_margin_account>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Get cross-margin account info <binance.html#binance.client.Client.get_margin_account>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     info = client.get_margin_account()
 
-`Transfer spot to margin <binance.html#binance.client.Client.transfer_spot_to_margin>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Create isolated margin account <binance.html#binance.client.Client.create_isolated_margin_account>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    account = client.create_isolated_margin_account(base='BTC', quote='ETH')
+
+`Get isolated margin account info <binance.html#binance.client.Client.get_isolated_margin_account>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    info = client.get_isolated_margin_account()
+
+`Transfer spot to cross-margin account <binance.html#binance.client.Client.transfer_spot_to_margin>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     transaction = client.transfer_spot_to_margin(asset='BTC', amount='1.1')
 
-`Transfer margin to spot <binance.html#binance.client.Client.transfer_margin_to_spot>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+`Transfer cross-margin account to spot <binance.html#binance.client.Client.transfer_margin_to_spot>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     transaction = client.transfer_margin_to_spot(asset='BTC', amount='1.1')
+
+`Transfer spot to isolated margin account <binance.html#binance.client.Client.transfer_spot_to_isolated_margin>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transaction = client.transfer_spot_to_isolated_margin(asset='BTC', 
+                                                            symbol='ETHBTC', amount='1.1')
+
+`Transfer isolated margin account to spot <binance.html#binance.client.Client.transfer_isolated_margin_to_spot>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transaction = client.transfer_isolated_margin_to_spot(asset='BTC', 
+                                                            symbol='ETHBTC', amount='1.1')
 
 `Get max transfer amount <binance.html#binance.client.Client.get_max_margin_transfer>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -138,6 +198,7 @@ Account
 
     details = client.get_max_margin_transfer(asset='BTC')
 
+This max transfer is for the cross-margin account by default.  For isolated margin records, add the ``isolatedSymbol=symbol_name`` parameter.
 
 Trades
 -----
@@ -149,9 +210,11 @@ Trades
 
     trades = client.get_margin_trades(symbol='BNBBTC')
 
+For isolated margin trades, add the ``isIsolated='TRUE'`` parameter.
+
+
 Loans
 -----
-
 
 `Create loan <binance.html#binance.client.Client.create_margin_loan>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -160,12 +223,16 @@ Loans
 
     transaction = client.create_margin_loan(asset='BTC', amount='1.1')
 
+This for the cross-margin account by default.  For isolated margin, add the ``isIsolated='TRUE'`` and the ``symbol=symbol_name`` parameters.
+
 `Repay loan <binance.html#binance.client.Client.repay_margin_loan>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     transaction = client.repay_margin_loan(asset='BTC', amount='1.1')
+
+This for the cross-margin account by default.  For isolated margin, add the ``isIsolated='TRUE'`` and the ``symbol=symbol_name`` parameters.
 
 `Get loan details <binance.html#binance.client.Client.get_margin_loan_details>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -174,6 +241,8 @@ Loans
 
     details = client.get_margin_loan_details(asset='BTC', txId='100001')
 
+This for the cross-margin account by default.  For isolated margin records, add the ``isolatedSymbol=symbol_name`` parameter.
+
 `Get repay details <binance.html#binance.client.Client.get_margin_repay_details>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -181,9 +250,13 @@ Loans
 
     details = client.get_margin_repay_details(asset='BTC', txId='100001')
 
+This for the cross-margin account by default.  For isolated margin records, add the ``isolatedSymbol=symbol_name`` parameter.
+
 `Get max loan amount <binance.html#binance.client.Client.get_max_margin_loan>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: python
 
     details = client.get_max_margin_loan(asset='BTC')
+
+The max loan is for the cross-margin account by default.  For isolated margin records, add the ``isolatedSymbol=symbol_name`` parameter.

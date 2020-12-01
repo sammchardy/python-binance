@@ -427,11 +427,14 @@
     client.get_max_margin_transfer(asset, isolatedSymbol, recvWindow)
     ```
   - **POST /sapi/v1/margin/isolated/create (HMAC SHA256)** (Create Isolated Margin Account (MARGIN).)
-  
-    > :warning: Not yet implemented
+    ```python
+    client.create_isolated_margin_account(base, quote, recvWindow)
+    ```
   - **POST /sapi/v1/margin/isolated/transfer (HMAC SHA256)** (Isolated Margin Account Transfer (MARGIN).)
-  
-    > :warning: Not yet implemented
+    ```python
+    client.transfer_spot_to_isolated_margin(asset, symbol, amount, recvWindow)
+    client.transfer_isolated_margin_to_spot(asset, symbol, amount, recvWindow)
+    ```
   - **GET /sapi/v1/margin/isolated/transfer (HMAC SHA256)** (Get Isolated Margin Transfer History (USER_DATA).)
   
     > :warning: Not yet implemented
@@ -439,21 +442,26 @@
   
     > :warning: Not yet implemented
   - **GET /sapi/v1/margin/isolated/pair (HMAC SHA256)** (Query Isolated Margin Symbol (USER_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python
+    client.get_isolated_margin_symbol(symbol, recvWindow)
+    ```
   - **GET /sapi/v1/margin/isolated/allPairs (HMAC SHA256)** (Get All Isolated Margin Symbol (USER_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python
+    client.get_all_isolated_margin_symbols(recvWindow)
+    ```
 - *User Data Streams*
   - **POST /api/v3/userDataStream** (Create a ListenKey (Spot) (USER_STREAM): Start a new user data stream.)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_get_listen_key()
+    ```
   - **PUT /api/v3/userDataStream** (Ping/Keep-alive a ListenKey (Spot) (USER_STREAM).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_keepalive(listenKey)
+    ```
   - **DELETE /api/v3/userDataStream** (Close a ListenKey (Spot) (USER_STREAM).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.stream_close(listenKey)
+    ```
   - **POST /sapi/v1/userDataStream** (Create a ListenKey (Margin).)
     ```python 
     client.margin_stream_get_listen_key()

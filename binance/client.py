@@ -2351,7 +2351,7 @@ class Client(object):
     # Margin Trading Endpoints
 
     def get_margin_account(self, **params):
-        """Query margin account details
+        """Query cross-margin account details
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-user_data
 
@@ -2413,106 +2413,114 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
 
+        :param symbols: optional up to 5 margin pairs as a comma separated string
+        :type asset: str
+
+        .. code:: python
+
+            account_info = client.get_isolated_margin_account()
+            account_info = client.get_isolated_margin_account(symbols="BTCUSDT,ETHUSDT")
+
         :returns: API response
 
         .. code-block:: python
 
-        If "symbols" is not sent:
+            If "symbols" is not sent:
 
-            {
-               "assets":[
-                  {
-                    "baseAsset": 
+                {
+                "assets":[
                     {
-                      "asset": "BTC",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "quoteAsset": 
-                    {
-                      "asset": "USDT",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "symbol": "BTCUSDT"
-                    "isolatedCreated": true, 
-                    "marginLevel": "0.00000000", 
-                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
-                    "marginRatio": "0.00000000",
-                    "indexPrice": "10000.00000000"
-                    "liquidatePrice": "1000.00000000",
-                    "liquidateRate": "1.00000000"
-                    "tradeEnabled": true
-                  }
-                ],
-                "totalAssetOfBtc": "0.00000000",
-                "totalLiabilityOfBtc": "0.00000000",
-                "totalNetAssetOfBtc": "0.00000000" 
-            }
+                        "baseAsset": 
+                        {
+                        "asset": "BTC",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "quoteAsset": 
+                        {
+                        "asset": "USDT",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "symbol": "BTCUSDT"
+                        "isolatedCreated": true, 
+                        "marginLevel": "0.00000000", 
+                        "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                        "marginRatio": "0.00000000",
+                        "indexPrice": "10000.00000000"
+                        "liquidatePrice": "1000.00000000",
+                        "liquidateRate": "1.00000000"
+                        "tradeEnabled": true
+                    }
+                    ],
+                    "totalAssetOfBtc": "0.00000000",
+                    "totalLiabilityOfBtc": "0.00000000",
+                    "totalNetAssetOfBtc": "0.00000000" 
+                }
 
-        If "symbols" is sent:
+            If "symbols" is sent:
 
-            {
-               "assets":[
-                  {
-                    "baseAsset": 
+                {
+                "assets":[
                     {
-                      "asset": "BTC",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "quoteAsset": 
-                    {
-                      "asset": "USDT",
-                      "borrowEnabled": true,
-                      "borrowed": "0.00000000",
-                      "free": "0.00000000",
-                      "interest": "0.00000000",
-                      "locked": "0.00000000",
-                      "netAsset": "0.00000000",
-                      "netAssetOfBtc": "0.00000000",
-                      "repayEnabled": true,
-                      "totalAsset": "0.00000000"
-                    },
-                    "symbol": "BTCUSDT"
-                    "isolatedCreated": true, 
-                    "marginLevel": "0.00000000", 
-                    "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
-                    "marginRatio": "0.00000000",
-                    "indexPrice": "10000.00000000"
-                    "liquidatePrice": "1000.00000000",
-                    "liquidateRate": "1.00000000"
-                    "tradeEnabled": true
-                  }
-                ]
-            }
+                        "baseAsset": 
+                        {
+                        "asset": "BTC",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "quoteAsset": 
+                        {
+                        "asset": "USDT",
+                        "borrowEnabled": true,
+                        "borrowed": "0.00000000",
+                        "free": "0.00000000",
+                        "interest": "0.00000000",
+                        "locked": "0.00000000",
+                        "netAsset": "0.00000000",
+                        "netAssetOfBtc": "0.00000000",
+                        "repayEnabled": true,
+                        "totalAsset": "0.00000000"
+                        },
+                        "symbol": "BTCUSDT"
+                        "isolatedCreated": true, 
+                        "marginLevel": "0.00000000", 
+                        "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
+                        "marginRatio": "0.00000000",
+                        "indexPrice": "10000.00000000"
+                        "liquidatePrice": "1000.00000000",
+                        "liquidateRate": "1.00000000"
+                        "tradeEnabled": true
+                    }
+                    ]
+                }
 
         """
         return self._request_margin_api('get', 'margin/isolated/account', True, data=params)
 
     def get_margin_asset(self, **params):
-        """Query margin asset
+        """Query cross-margin asset
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-asset-market_data
 
@@ -2542,7 +2550,7 @@ class Client(object):
         return self._request_margin_api('get', 'margin/asset', data=params)
 
     def get_margin_symbol(self, **params):
-        """Query margin symbol info
+        """Query cross-margin symbol info
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-pair-market_data
 
@@ -2573,6 +2581,105 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/pair', data=params)
 
+    def create_isolated_margin_account(self, **params):
+        """Create isolated margin account for symbol
+
+        https://binance-docs.github.io/apidocs/spot/en/#create-isolated-margin-account-margin
+
+        :param base: Base asset of symbol
+        :type base: str
+        :param quote: Quote asset of symbol
+        :type quote: str
+
+        .. code:: python
+
+            pair_details = client.create_isolated_margin_account(base='USDT', quote='BTC')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success": true,
+                "symbol": "BTCUSDT"
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
+
+
+    def get_isolated_margin_symbol(self, **params):
+        """Query isolated margin symbol info
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-symbol-user_data
+
+        :param symbol: name of the symbol pair
+        :type symbol: str
+
+        .. code:: python
+
+            pair_details = client.get_isolated_margin_symbol(symbol='BTCUSDT')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+            "symbol":"BTCUSDT",
+            "base":"BTC",
+            "quote":"USDT",
+            "isMarginTrade":true,
+            "isBuyAllowed":true,
+            "isSellAllowed":true      
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/pair', signed=True, data=params)
+
+    def get_all_isolated_margin_symbols(self, **params):
+        """Query isolated margin symbol info for all pairs
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-isolated-margin-symbol-user_data
+
+        .. code:: python
+
+            pair_details = client.get_all_isolated_margin_symbols()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "base": "BNB",
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "BNBBTC"     
+                },
+                {
+                    "base": "TRX",
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "TRXBTC"    
+                }
+            ]
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
+
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
@@ -2583,7 +2690,7 @@ class Client(object):
 
         .. code:: python
 
-            price_index_details = client.get_margin_pair(symbol='BTCUSDT')
+            price_index_details = client.get_margin_price_index(symbol='BTCUSDT')
 
         :returns: API response
 
@@ -2601,7 +2708,7 @@ class Client(object):
         return self._request_margin_api('get', 'margin/priceIndex', data=params)
 
     def transfer_margin_to_spot(self, **params):
-        """Execute transfer between margin account and spot account.
+        """Execute transfer between cross-margin account and spot account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
 
@@ -2631,7 +2738,7 @@ class Client(object):
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
     def transfer_spot_to_margin(self, **params):
-        """Execute transfer between spot account and margin account.
+        """Execute transfer between spot account and cross-margin account.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
 
@@ -2660,13 +2767,16 @@ class Client(object):
         params['type'] = 1
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
-    def create_margin_loan(self, **params):
-        """Apply for a loan.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+    def transfer_isolated_margin_to_spot(self, **params):
+        """Execute transfer between isolated margin account and spot account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#isolated-margin-account-transfer-margin
 
         :param asset: name of the asset
         :type asset: str
+        :param symbol: pair symbol
+        :type symbol: str
         :param amount: amount to transfer
         :type amount: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -2674,7 +2784,80 @@ class Client(object):
 
         .. code:: python
 
+            transfer = client.transfer_isolated_margin_to_spot(asset='BTC', 
+                                                                symbol='ETHBTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['transFrom'] = "ISOLATED_MARGIN"
+        params['transTo'] = "SPOT"
+        return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
+    def transfer_spot_to_isolated_margin(self, **params):
+        """Execute transfer between spot account and isolated margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#isolated-margin-account-transfer-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param symbol: pair symbol
+        :type symbol: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_isolated_margin(asset='BTC', 
+                                                                symbol='ETHBTC', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['transFrom'] = "SPOT"
+        params['transTo'] = "ISOLATED_MARGIN"
+        return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
+    def create_margin_loan(self, **params):
+        """Apply for a loan in cross-margin or isolated-margin account.
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param symbol: Isolated margin symbol (default blank for cross-margin)
+        :type symbol: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
             transaction = client.margin_create_loan(asset='BTC', amount='1.1')
+
+            transaction = client.margin_create_loan(asset='BTC', amount='1.1', 
+                                                    isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
 
@@ -2690,7 +2873,9 @@ class Client(object):
         return self._request_margin_api('post', 'margin/loan', signed=True, data=params)
 
     def repay_margin_loan(self, **params):
-        """Repay loan for margin account.
+        """Repay loan in cross-margin or isolated-margin account.
+
+        If amount is more than the amount borrowed, the full loan will be repaid. 
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-repay-margin
 
@@ -2698,12 +2883,19 @@ class Client(object):
         :type asset: str
         :param amount: amount to transfer
         :type amount: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param symbol: Isolated margin symbol (default blank for cross-margin)
+        :type symbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
         .. code:: python
 
             transaction = client.margin_repay_loan(asset='BTC', amount='1.1')
+
+            transaction = client.margin_repay_loan(asset='BTC', amount='1.1', 
+                                                    isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
 
@@ -2725,6 +2917,8 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param side: required
         :type side: str
         :param type: required
@@ -2846,6 +3040,8 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param orderId:
         :type orderId: str
         :param origClientOrderId:
@@ -2887,9 +3083,11 @@ class Client(object):
 
         :param asset: required
         :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
         :param txId: the tranId in of the created loan
         :type txId: str
-        :param startTime:
+        :param startTime: earliest timestamp to filter transactions
         :type startTime: str
         :param endTime: Used to uniquely identify this cancel. Automatically generated by default.
         :type endTime: str
@@ -2929,6 +3127,8 @@ class Client(object):
 
         :param asset: required
         :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
         :param txId: the tranId in of the created loan
         :type txId: str
         :param startTime:
@@ -2979,6 +3179,8 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param orderId:
         :type orderId: str
         :param origClientOrderId:
@@ -3015,7 +3217,9 @@ class Client(object):
     def get_open_margin_orders(self, **params):
         """Query margin accounts open orders
 
-        If the symbol is not sent, orders for all symbols will be returned in an array.
+        If the symbol is not sent, orders for all symbols will be returned in an array (cross-margin only).
+
+        If querying isolated margin orders, both the isIsolated='TRUE' and symbol=symbol_name must be set.
 
         When all symbols are returned, the number of requests counted against the rate limiter is equal to the number
         of symbols currently trading on the exchange.
@@ -3024,6 +3228,8 @@ class Client(object):
 
         :param symbol: optional
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -3066,6 +3272,8 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param orderId: optional
         :type orderId: str
         :param startTime: optional
@@ -3121,6 +3329,8 @@ class Client(object):
 
         :param symbol: required
         :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
         :param fromId: optional
         :type fromId: str
         :param startTime: optional
@@ -3175,6 +3385,8 @@ class Client(object):
 
         :param asset: required
         :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -3196,6 +3408,8 @@ class Client(object):
 
         :param asset: required
         :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
