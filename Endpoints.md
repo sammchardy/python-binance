@@ -475,12 +475,17 @@
     client.margin_stream_close(listenKey)
     ```
   - **POST /sapi/v1/userDataStream/isolated** (Create a ListenKey (Isolated).)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.isolated_margin_stream_get_listen_key(symbol)
+    ```
   - **PUT /sapi/v1/userDataStream/isolated** (Ping/Keep-alive a ListenKey (Isolated).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.isolated_margin_stream_keepalive(symbol, listenKey)
+    ```
   - **DELETE /sapi/v1/userDataStream/isolated** (Close a ListenKey (Isolated).)
+    ```python 
+    client.isolated_margin_stream_close(symbol, listenKey)
+    ```
 - *Savings Endpoints*
   - **GET /sapi/v1/lending/daily/product/list (HMAC SHA256)** (Get Flexible Product List (USER_DATA).)
     ```python 

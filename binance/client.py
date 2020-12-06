@@ -3424,12 +3424,14 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
+    # Cross-margin 
+
     def margin_stream_get_listen_key(self):
-        """Start a new margin data stream and return the listen key
+        """Start a new cross-margin data stream and return the listen key
         If a stream already exists it should return the same key.
         If the stream becomes invalid a new key is returned.
 
-        Can be used to keep the user stream alive.
+        Can be used to keep the stream alive.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#start-user-data-stream-for-margin-account-user_stream
 
@@ -3444,11 +3446,11 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        res = self._request_margin_api('post', 'userDataStream', signed=True, data={})
+        res = self._request_margin_api('post', 'userDataStream', signed=False, data={})
         return res['listenKey']
 
     def margin_stream_keepalive(self, listenKey):
-        """PING a margin data stream to prevent a time out.
+        """PING a cross-margin data stream to prevent a time out.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#ping-user-data-stream-for-margin-account--user_stream
 
@@ -3467,10 +3469,10 @@ class Client(object):
         params = {
             'listenKey': listenKey
         }
-        return self._request_margin_api('put', 'userDataStream', signed=True, data=params)
+        return self._request_margin_api('put', 'userDataStream', signed=False, data=params)
 
     def margin_stream_close(self, listenKey):
-        """Close out a margin data stream.
+        """Close out a cross-margin data stream.
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#delete-user-data-stream-for-margin-account--user_stream
 
@@ -3489,7 +3491,88 @@ class Client(object):
         params = {
             'listenKey': listenKey
         }
-        return self._request_margin_api('delete', 'userDataStream', signed=True, data=params)
+        return self._request_margin_api('delete', 'userDataStream', signed=False, data=params)
+
+    # Isolated margin 
+
+    def isolated_margin_stream_get_listen_key(self, symbol):
+        """Start a new isolated margin data stream and return the listen key
+        If a stream already exists it should return the same key.
+        If the stream becomes invalid a new key is returned.
+
+        Can be used to keep the stream alive.
+
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+
+        :param symbol: required - symbol for the isolated margin account
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "listenKey":  "T3ee22BIYuWqmvne0HNq2A2WsFlEtLhvWCtItw6ffhhdmjifQ2tRbuKkTHhr"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'symbol': symbol
+        }
+        res = self._request_margin_api('post', 'userDataStream/isolated', signed=False, data=params)
+        return res['listenKey']
+
+    def isolated_margin_stream_keepalive(self, symbol, listenKey):
+        """PING an isolated margin data stream to prevent a time out.
+
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+
+        :param symbol: required - symbol for the isolated margin account
+        :type symbol: str
+        :param listenKey: required
+        :type listenKey: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'symbol': symbol,
+            'listenKey': listenKey
+        }
+        return self._request_margin_api('put', 'userDataStream/isolated', signed=False, data=params)
+
+    def isolated_margin_stream_close(self, symbol, listenKey):
+        """Close out an isolated margin data stream.
+
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+
+        :param symbol: required - symbol for the isolated margin account
+        :type symbol: str
+        :param listenKey: required
+        :type listenKey: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {
+            'symbol': symbol,
+            'listenKey': listenKey
+        }
+        return self._request_margin_api('delete', 'userDataStream/isolated', signed=False, data=params)
 
     # Lending Endpoints
 
