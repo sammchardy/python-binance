@@ -379,7 +379,7 @@ class Client(object):
     def ping(self):
         """Test connectivity to the Rest API.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-connectivity
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-connectivity
 
         :returns: Empty array
 
@@ -395,7 +395,7 @@ class Client(object):
     def get_server_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#check-server-time
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#check-server-time
 
         :returns: Current server time
 
@@ -471,7 +471,7 @@ class Client(object):
     def get_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#order-book
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#order-book
 
         :param symbol: required
         :type symbol: str
@@ -508,7 +508,7 @@ class Client(object):
     def get_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -538,7 +538,7 @@ class Client(object):
     def get_historical_trades(self, **params):
         """Get older trades.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -571,7 +571,7 @@ class Client(object):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -630,7 +630,7 @@ class Client(object):
         return the first trade occurring later than this time.
         :type start_str: str|int
         :param last_id: aggregate trade ID of the last known aggregate trade.
-        Not a regular trade ID. See https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+        Not a regular trade ID. See https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
 
         :returns: an iterator of JSON objects, one per trade. The format of
         each object is identical to Client.aggregate_trades().
@@ -695,7 +695,7 @@ class Client(object):
     def get_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data
 
         :param symbol: required
         :type symbol: str
@@ -921,7 +921,7 @@ class Client(object):
     def get_avg_price(self, **params):
         """Current average price for a symbol.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-average-price
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-average-price
 
         :param symbol:
         :type symbol: str
@@ -940,7 +940,7 @@ class Client(object):
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1001,7 +1001,7 @@ class Client(object):
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1038,7 +1038,7 @@ class Client(object):
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
 
         :param symbol:
         :type symbol: str
@@ -1088,7 +1088,7 @@ class Client(object):
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#new-order--trade
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-order--trade
 
         :param symbol: required
         :type symbol: str
@@ -1397,7 +1397,7 @@ class Client(object):
     def create_oco_order(self, **params):
         """Send in a new OCO order
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#new-oco-trade
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-oco-trade
 
         :param symbol: required
         :type symbol: str
@@ -1543,7 +1543,7 @@ class Client(object):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#test-new-order-trade
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1581,7 +1581,7 @@ class Client(object):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#query-order-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1620,7 +1620,7 @@ class Client(object):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#all-orders-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1661,7 +1661,7 @@ class Client(object):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#cancel-order-trade
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1693,7 +1693,7 @@ class Client(object):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#current-open-orders-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-open-orders-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -1731,7 +1731,7 @@ class Client(object):
     def get_account(self, **params):
         """Get current account information.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1770,7 +1770,7 @@ class Client(object):
     def get_asset_balance(self, asset, **params):
         """Get current asset balance.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-information-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
 
         :param asset: required
         :type asset: str
@@ -1801,7 +1801,7 @@ class Client(object):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#account-trade-list-user_data
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1838,7 +1838,7 @@ class Client(object):
     def get_system_status(self):
         """Get system status detail.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#system-status-system
+        https://binance-docs.github.io/apidocs/spot/en/#system-status-system
 
         :returns: API response
 
@@ -1857,7 +1857,7 @@ class Client(object):
     def get_account_status(self, **params):
         """Get account status detail.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#account-status-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-status-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1885,7 +1885,7 @@ class Client(object):
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#dustlog-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#dustlog-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1966,7 +1966,7 @@ class Client(object):
     def transfer_dust(self, **params):
         """Convert dust assets to BNB.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#dust-transfer-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#dust-transfer-user_data
 
         :param asset: The asset being converted. e.g: 'ONE'
         :type asset: str
@@ -2004,7 +2004,7 @@ class Client(object):
     def get_asset_dividend_history(self, **params):
         """Query asset dividend record.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#asset-dividend-record-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#asset-dividend-record-user_data
 
         :param asset: optional
         :type asset: str
@@ -2051,7 +2051,7 @@ class Client(object):
     def get_trade_fee(self, **params):
         """Get trade fee.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#trade-fee-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -2088,7 +2088,7 @@ class Client(object):
     def get_asset_details(self, **params):
         """Fetch details on assets.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#asset-detail-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2288,7 +2288,7 @@ class Client(object):
 
         Can be used to keep the user stream alive.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
 
         :returns: API response
 
@@ -2307,7 +2307,7 @@ class Client(object):
     def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
 
         :param listenKey: required
         :type listenKey: str
@@ -2329,7 +2329,7 @@ class Client(object):
     def stream_close(self, listenKey):
         """Close out a user data stream.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
 
         :param listenKey: required
         :type listenKey: str
@@ -2353,7 +2353,7 @@ class Client(object):
     def get_margin_account(self, **params):
         """Query cross-margin account details
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-account-details-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-account-details-user_data
 
         :returns: API response
 
@@ -2522,7 +2522,7 @@ class Client(object):
     def get_margin_asset(self, **params):
         """Query cross-margin asset
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-asset-market_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-asset-market_data
 
         :param asset: name of the asset
         :type asset: str
@@ -2552,7 +2552,7 @@ class Client(object):
     def get_margin_symbol(self, **params):
         """Query cross-margin symbol info
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-pair-market_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-pair-market_data
 
         :param symbol: name of the symbol pair
         :type symbol: str
@@ -2683,7 +2683,7 @@ class Client(object):
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-priceindex-market_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-priceindex-market_data
 
         :param symbol: name of the symbol pair
         :type symbol: str
@@ -2710,7 +2710,7 @@ class Client(object):
     def transfer_margin_to_spot(self, **params):
         """Execute transfer between cross-margin account and spot account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-account-transfer-margin
 
         :param asset: name of the asset
         :type asset: str
@@ -2740,7 +2740,7 @@ class Client(object):
     def transfer_spot_to_margin(self, **params):
         """Execute transfer between spot account and cross-margin account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-transfer-margin
+        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-account-transfer-margin
 
         :param asset: name of the asset
         :type asset: str
@@ -2839,7 +2839,7 @@ class Client(object):
     def create_margin_loan(self, **params):
         """Apply for a loan in cross-margin or isolated-margin account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-borrow-margin
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-borrow-margin
 
         :param asset: name of the asset
         :type asset: str
@@ -2877,7 +2877,7 @@ class Client(object):
 
         If amount is more than the amount borrowed, the full loan will be repaid. 
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-repay-margin
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-repay-margin
 
         :param asset: name of the asset
         :type asset: str
@@ -2913,7 +2913,7 @@ class Client(object):
     def create_margin_order(self, **params):
         """Post a new order for margin account.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-new-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -3036,7 +3036,7 @@ class Client(object):
 
         Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -3079,7 +3079,7 @@ class Client(object):
 
         txId or startTime must be sent. txId takes precedence.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#query-loan-record-user_data
 
         :param asset: required
         :type asset: str
@@ -3123,7 +3123,7 @@ class Client(object):
 
         txId or startTime must be sent. txId takes precedence.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#margin-account-cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#query-repay-record-user_data
 
         :param asset: required
         :type asset: str
@@ -3175,7 +3175,7 @@ class Client(object):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-order-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -3224,7 +3224,7 @@ class Client(object):
         When all symbols are returned, the number of requests counted against the rate limiter is equal to the number
         of symbols currently trading on the exchange.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-open-order-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-order-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -3268,7 +3268,7 @@ class Client(object):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-open-order-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-all-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -3325,7 +3325,7 @@ class Client(object):
 
         If fromId is set, it will get orders >= that fromId. Otherwise most recent orders are returned.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-margin-accounts-trade-list-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
@@ -3381,7 +3381,7 @@ class Client(object):
     def get_max_margin_loan(self, **params):
         """Query max borrow amount for an asset
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-max-borrow-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-max-borrow-user_data
 
         :param asset: required
         :type asset: str
@@ -3404,7 +3404,7 @@ class Client(object):
     def get_max_margin_transfer(self, **params):
         """Query max transfer-out amount
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#query-max-transfer-out-amount-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-max-transfer-out-amount-user_data
 
         :param asset: required
         :type asset: str
@@ -3433,7 +3433,7 @@ class Client(object):
 
         Can be used to keep the stream alive.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#start-user-data-stream-for-margin-account-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
 
         :returns: API response
 
@@ -3452,7 +3452,7 @@ class Client(object):
     def margin_stream_keepalive(self, listenKey):
         """PING a cross-margin data stream to prevent a time out.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#ping-user-data-stream-for-margin-account--user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
 
         :param listenKey: required
         :type listenKey: str
@@ -3474,7 +3474,7 @@ class Client(object):
     def margin_stream_close(self, listenKey):
         """Close out a cross-margin data stream.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/margin-api.md#delete-user-data-stream-for-margin-account--user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
 
         :param listenKey: required
         :type listenKey: str
@@ -3711,7 +3711,7 @@ class Client(object):
     def get_sub_account_list(self, **params):
         """Query Sub-account List.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-listfor-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-for-master-account
 
         :param email: optional
         :type email: str
@@ -3760,7 +3760,7 @@ class Client(object):
     def get_sub_account_transfer_history(self, **params):
         """Query Sub-account Transfer History.
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/master/wapi-api.md#query-sub-account-transfer-historyfor-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-for-master-account
 
         :param email: required
         :type email: str
@@ -3807,7 +3807,7 @@ class Client(object):
     def create_sub_account_transfer(self, **params):
         """Execute sub-account transfer
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#sub-account-transferfor-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#sub-account-spot-asset-transfer-for-master-account
 
         :param fromEmail: required - Sender email
         :type fromEmail: str
@@ -3837,7 +3837,7 @@ class Client(object):
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#query-sub-account-assetsfor-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-for-master-account
 
         :param email: required
         :type email: str

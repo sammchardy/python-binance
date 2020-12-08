@@ -62,7 +62,7 @@ Order Validation
 
 Binance has a number of rules around symbol pair orders with validation on minimum price, quantity and total order value.
 
-Read more about their specifics in the `Filters <https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#filters>`_
+Read more about their specifics in the `Filters <https://binance-docs.github.io/apidocs/spot/en/#filters>`_
 section of the official API.
 
 It can be helpful to format the output using the following snippet
