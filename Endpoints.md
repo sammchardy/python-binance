@@ -2,7 +2,7 @@
 
  > * Before using the endpoints, please check the [API documentation](https://binance-docs.github.io/apidocs/#change-log) to be informed about the latest changes or possible bugs/problems. 
 
- > * Not all parameters are mendatory. Some parameters are only mendatory in specific conditions/types. Check the official documentation the type of each parameter and to know if a parameter is mendatory or optional. 
+ > * Not all parameters are mandatory. Some parameters are only mandatory in specific conditions/types. Check the official documentation the type of each parameter and to know if a parameter is mandatory or optional. 
 
  > * This documentation only includes methods in client.py file. Websocket methods haven't (yet) been covered.
  
