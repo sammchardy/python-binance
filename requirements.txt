@@ -1,6 +1,6 @@
 autobahn==18.7.1
 certifi==2019.11.28
-cryptography==2.3
+cryptography==3.2
 dateparser==0.7.0
 pyOpenSSL==19.0.0
 requests==2.22.0
