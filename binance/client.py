@@ -3582,7 +3582,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/spot/en/#get-flexible-product-list-user_data
 
         """
-        return self._request_margin_api('get', 'lending/daily/product/list ', signed=True, data=params)
+        return self._request_margin_api('get', 'lending/daily/product/list', signed=True, data=params)
 
     def get_lending_daily_quota_left(self, **params):
         """Get Left Daily Purchase Quota of Flexible Product.
