@@ -4,6 +4,7 @@ import dateparser
 import pytz
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def date_to_milliseconds(date_str):
@@ -50,3 +51,20 @@ def interval_to_milliseconds(interval):
         return int(interval[:-1]) * seconds_per_unit[interval[-1]] * 1000
     except (ValueError, KeyError):
         return None
+
+
+def increment_month(origin_ts):
+    """Increment a given timestamp by one month
+
+    :param origin_ts: original timestamp, e.g.: 1501545600000, 1504224000000, ...
+    :type origin_ts: int
+
+    :return:
+         Timestamp incremented by one month from a given timestamp
+    """
+    d = datetime.fromtimestamp(origin_ts/1000) + relativedelta(months=1)
+    # if the date is not timezone aware apply UTC timezone
+    if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
+        d = d.replace(tzinfo=pytz.utc)
+
+    return int(datetime.timestamp(d))

@@ -245,3 +245,120 @@ def test_historical_kline_generator_empty_response():
 
         with pytest.raises(StopIteration):
             next(klines)
+
+
+def test_historical_kline_with_month_interval():
+    """Test historical klines with one month interval"""
+
+    first_available_res = [
+        [
+            1498867200000,
+            "0.00005000",
+            "0.00005480",
+            "0.00001000",
+            "0.00003654",
+            "61059068.00000000",
+            1501545599999,
+            "2572.23205388",
+            33297,
+            "33906053.00000000",
+            "1442.17447471",
+            "100206524.84393587"
+        ]
+    ]
+    first_res = []
+    row = [
+        1519862400000,
+        "0.00101270",
+        "0.00167650",
+        "0.00083250",
+        "0.00159650",
+        "122814213.69000000",
+        1522540799999,
+        "142681.39725065",
+        3242765,
+        "68994444.35000000",
+        "79545.22096745",
+        "0"
+    ]
+
+    for i in range(0, 8):
+        first_res.append(row)
+
+    with requests_mock.mock() as m:
+        m.get(
+            "https://api.binance.com/api/v1/klines?interval=1M&limit=1&startTime=0&symbol=BNBBTC",
+            json=first_available_res,
+        )
+        m.get(
+            "https://api.binance.com/api/v1/klines?interval=1M&limit=500&startTime=1519862400000&endTime=1539234000000&symbol=BNBBTC",
+            json=first_res,
+        )
+        klines = client.get_historical_klines(
+            symbol="BNBBTC",
+            interval=Client.KLINE_INTERVAL_1MONTH,
+            start_str="1st March 2018",
+            end_str="11st Oct 2018 05:00:00",
+        )
+        assert len(klines) == 8
+
+
+def test_historical_kline_generator_with_month_interval():
+    """Test historical klines generator with one month interval"""
+
+    first_available_res = [
+        [
+            1498867200000,
+            "0.00005000",
+            "0.00005480",
+            "0.00001000",
+            "0.00003654",
+            "61059068.00000000",
+            1501545599999,
+            "2572.23205388",
+            33297,
+            "33906053.00000000",
+            "1442.17447471",
+            "100206524.84393587"
+        ]
+    ]
+    first_res = []
+    row = [
+        1519862400000,
+        "0.00101270",
+        "0.00167650",
+        "0.00083250",
+        "0.00159650",
+        "122814213.69000000",
+        1522540799999,
+        "142681.39725065",
+        3242765,
+        "68994444.35000000",
+        "79545.22096745",
+        "0"
+    ]
+
+    for i in range(0, 8):
+        first_res.append(row)
+
+    with requests_mock.mock() as m:
+        m.get(
+            "https://api.binance.com/api/v1/klines?interval=1M&limit=1&startTime=0&symbol=BNBBTC",
+            json=first_available_res,
+        )
+        m.get(
+            "https://api.binance.com/api/v1/klines?interval=1M&limit=500&startTime=1519862400000&endTime=1539234000000&symbol=BNBBTC",
+            json=first_res,
+        )
+        klines = client.get_historical_klines_generator(
+            symbol="BNBBTC",
+            interval=Client.KLINE_INTERVAL_1MONTH,
+            start_str=1519862400000,
+            end_str=1539234000000,
+        )
+
+        for i in range(8):
+            assert len(next(klines)) > 0
+
+        with pytest.raises(StopIteration):
+            next(klines)
