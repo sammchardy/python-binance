@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.7.5.dev
+^^^^^^^^^^
+**Changed**
+- Stock json lib to ujson (https://github.com/sammchardy/python-binance/pull/383)
+
 v0.7.5 - 2020-02-06
 ^^^^^^^^^^^^^^^^^^^
 
