@@ -323,7 +323,7 @@ class Client(object):
 
         """
 
-        return self._get('exchangeInfo')
+        return self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
 
     def get_symbol_info(self, symbol):
         """Return information about a symbol
@@ -366,7 +366,7 @@ class Client(object):
 
         """
 
-        res = self._get('exchangeInfo')
+        res = self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
 
         for item in res['symbols']:
             if item['symbol'] == symbol.upper():
@@ -390,7 +390,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ping')
+        return self._get('ping', version=self.PRIVATE_API_VERSION)
 
     def get_server_time(self):
         """Test connectivity to the Rest API and get the current server time.
@@ -408,7 +408,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('time')
+        return self._get('time', version=self.PRIVATE_API_VERSION)
 
     # Market Data Endpoints
 
@@ -435,7 +435,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allPrices')
+        return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
 
     def get_orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
@@ -466,7 +466,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/allBookTickers')
+        return self._get('ticker/bookTicker', version=self.PRIVATE_API_VERSION)
 
     def get_order_book(self, **params):
         """Get the Order Book for the market
@@ -503,7 +503,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('depth', data=params)
+        return self._get('depth', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_recent_trades(self, **params):
         """Get recent trades (up to last 500).
@@ -565,7 +565,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('historicalTrades', data=params)
+        return self._get('historicalTrades', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_aggregate_trades(self, **params):
         """Get compressed, aggregate trades. Trades that fill at the time,
@@ -604,7 +604,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('aggTrades', data=params)
+        return self._get('aggTrades', data=params, version=self.PRIVATE_API_VERSION)
 
     def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
         """Iterate over aggregate trade data from (start_time or last_id) to
@@ -732,7 +732,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('klines', data=params)
+        return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
     def _get_earliest_valid_timestamp(self, symbol, interval):
         """Get earliest valid open timestamp from Binance
@@ -996,7 +996,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/24hr', data=params)
+        return self._get('ticker/24hr', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
@@ -2301,7 +2301,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        res = self._post('userDataStream', False, data={})
+        res = self._post('userDataStream', False, data={}, version=self.PRIVATE_API_VERSION)
         return res['listenKey']
 
     def stream_keepalive(self, listenKey):
@@ -2324,7 +2324,7 @@ class Client(object):
         params = {
             'listenKey': listenKey
         }
-        return self._put('userDataStream', False, data=params)
+        return self._put('userDataStream', False, data=params, version=self.PRIVATE_API_VERSION)
 
     def stream_close(self, listenKey):
         """Close out a user data stream.
@@ -2346,7 +2346,7 @@ class Client(object):
         params = {
             'listenKey': listenKey
         }
-        return self._delete('userDataStream', False, data=params)
+        return self._delete('userDataStream', False, data=params, version=self.PRIVATE_API_VERSION)
 
     # Margin Trading Endpoints
 
