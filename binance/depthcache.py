@@ -271,3 +271,10 @@ class DepthCacheManager(object):
             self._bm.close()
         time.sleep(1)
         self._depth_cache = None
+    
+    def get_symbol(self):
+        """Get the symbol
+        
+        :return: symbol
+        """
+        return self._symbol
