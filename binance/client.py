@@ -3833,6 +3833,88 @@ class Client(object):
 
         """
         return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
+    
+        def get_sub_account_futures_transfer_history(self, **params):
+        """Query Sub-account Futures Transfer History.
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-futures-asset-transfer-history-for-master-account
+
+        :param email: required
+        :type email: str
+        :param futuresType: required
+        :type futuresType: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional
+        :type page: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "success":true,
+                "futuresType": 2,
+                "transfers":[
+                    {
+                        "from":"aaa@test.com",
+                        "to":"bbb@test.com",
+                        "asset":"BTC",
+                        "qty":"1",
+                        "time":1544433328000
+                    },
+                    {
+                        "from":"bbb@test.com",
+                        "to":"ccc@test.com",
+                        "asset":"ETH",
+                        "qty":"2",
+                        "time":1544433328000
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/futures/internalTransfer', True, data=params)
+
+    def create_sub_account_futures_transfer(self, **params):
+        """Execute sub-account Futures transfer
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#sub-account-transferfor-master-account
+
+        :param fromEmail: required - Sender email
+        :type fromEmail: str
+        :param toEmail: required - Recipient email
+        :type toEmail: str
+        :param futuresType: required
+        :type futuresType: int
+        :param asset: required
+        :type asset: str
+        :param amount: required
+        :type amount: decimal
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           {
+                "success":true,
+                "txnId":"2934662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/futures/internalTransfer', True, data=params)
 
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
