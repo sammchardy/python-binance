@@ -4234,3 +4234,19 @@ class Client(object):
 
         """
         return self._request_futures_api('get', 'income', True, data=params)
+
+    def futures_change_position_mode(self, **params):
+        """Change position mode for authenticated account
+
+        https://binance-docs.github.io/apidocs/futures/en/#change-position-mode-trade
+        
+        """
+        return self._request_futures_api('post', 'positionSide/dual', True, data=params)
+
+    def futures_get_position_mode(self, **params):
+        """Get position mode for authenticated account
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-current-position-mode-user_data
+        
+        """
+        return self._request_futures_api('get', 'positionSide/dual', True, data=params)
