@@ -2679,6 +2679,59 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
+    def toggle_bnb_burn_spot_margin(self, **params):
+        """Toggle BNB Burn On Spot Trade And Margin Interest
+
+        https://binance-docs.github.io/apidocs/spot/en/#toggle-bnb-burn-on-spot-trade-and-margin-interest-user_data
+
+        :param spotBNBBurn: Determines whether to use BNB to pay for trading fees on SPOT
+        :type spotBNBBurn: bool
+        :param interestBNBBurn: Determines whether to use BNB to pay for margin loan's interest
+        :type interestBNBBurn: bool
+
+        .. code:: python
+
+            response = client.toggle_bnb_burn_spot_margin()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "spotBNBBurn":true,
+               "interestBNBBurn": false
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
+
+    def get_bnb_burn_spot_margin(self, **params):
+        """Get BNB Burn Status
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
+
+        .. code:: python
+
+            status = client.get_bnb_burn_spot_margin()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "spotBNBBurn":true,
+               "interestBNBBurn": false
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'bnbBurn', signed=True, data=params)
+
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
