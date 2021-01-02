@@ -4576,6 +4576,93 @@ class Client(object):
         """
         return self._request_margin_api('get', 'sub-account/transfer/subUserHistory', True, data=params)
 
+    def make_universal_transfer(self, **params):
+        """Universal Transfer (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#universal-transfer-for-master-account
+
+        :param fromEmail: optional
+        :type fromEmail: str
+        :param toEmail: optional
+        :type toEmail: str
+        :param fromAccountType: required
+        :type fromAccountType: str
+        :param toAccountType: required
+        :type toAccountType: str
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param amount: required
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId":11945860693
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/universalTransfer', True, data=params)
+
+    def get_universal_transfer_history(self, **params):
+        """Universal Transfer (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-universal-transfer-history
+
+        :param fromEmail: optional
+        :type fromEmail: str
+        :param toEmail: optional
+        :type toEmail: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional
+        :type page: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+              {
+                "tranId":11945860693,
+                "fromEmail":"master@test.com",
+                "toEmail":"subaccount1@test.com",
+                "asset":"BTC",
+                "amount":"0.1",
+                "fromAccountType":"SPOT",
+                "toAccountType":"COIN_FUTURE",
+                "status":"SUCCESS",
+                "createTimeStamp":1544433325000
+              },
+              {
+                "tranId":11945857955,
+                "fromEmail":"master@test.com",
+                "toEmail":"subaccount2@test.com",
+                "asset":"ETH",
+                "amount":"0.2",
+                "fromAccountType":"SPOT",
+                "toAccountType":"USDT_FUTURE",
+                "status":"SUCCESS",
+                "createTimeStamp":1544433326000
+              }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/universalTransfer', True, data=params)
+
     # Futures API
 
     def futures_ping(self):
