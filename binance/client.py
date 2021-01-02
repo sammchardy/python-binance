@@ -3967,6 +3967,322 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
 
+    def query_subaccount_spot_summary(self, **params):
+        """Query Sub-account Spot Assets Summary (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-assets-summary-for-master-account
+
+        :param email: optional - Sub account email
+        :type email: str
+        :param page: optional - default 1
+        :type page: int
+        :param size: optional - default 10, max 20
+        :type size: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           {
+                "totalCount":2,
+                "masterAccountTotalAsset": "0.23231201",
+                "spotSubUserAssetBtcVoList":[
+                    {
+                        "email":"sub123@test.com",
+                        "totalAsset":"9999.00000000"
+                    },
+                    {
+                        "email":"test456@test.com",
+                        "totalAsset":"0.00000000"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/spotSummary', True, data=params)
+
+    def get_subaccount_deposit_address(self, **params):
+        """Get Sub-account Deposit Address (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-deposit-address-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param coin: required
+        :type coin: str
+        :param network: optional
+        :type network: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           {
+                "address":"TDunhSa7jkTNuKrusUTU1MUHtqXoBPKETV",
+                "coin":"USDT",
+                "tag":"",
+                "url":"https://tronscan.org/#/address/TDunhSa7jkTNuKrusUTU1MUHtqXoBPKETV"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'capital/deposit/subAddress', True, data=params)
+
+    def get_subaccount_deposit_history(self, **params):
+        """Get Sub-account Deposit History (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-deposit-address-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param coin: optional
+        :type coin: str
+        :param status: optional - (0:pending,6: credited but cannot withdraw, 1:success)
+        :type status: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param offset: optional - default:0
+        :type offset: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           [
+                {
+                    "amount":"0.00999800",
+                    "coin":"PAXG",
+                    "network":"ETH",
+                    "status":1,
+                    "address":"0x788cabe9236ce061e5a892e1a59395a81fc8d62c",
+                    "addressTag":"",
+                    "txId":"0xaad4654a3234aa6118af9b4b335f5ae81c360b2394721c019b5d1e75328b09f3",
+                    "insertTime":1599621997000,
+                    "transferType":0,
+                    "confirmTimes":"12/12"
+                },
+                {
+                    "amount":"0.50000000",
+                    "coin":"IOTA",
+                    "network":"IOTA",
+                    "status":1,
+                    "address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW",
+                    "addressTag":"",
+                    "txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999",
+                    "insertTime":1599620082000,
+                    "transferType":0,
+                    "confirmTimes":"1/1"
+                }
+           ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'capital/deposit/subHisrec', True, data=params)
+
+    def get_subaccount_futures_margin_status(self, **params):
+        """Get Sub-account's Status on Margin/Futures (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-39-s-status-on-margin-futures-for-master-account
+
+        :param email: optional - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           [
+                {
+                    "email":"123@test.com",      // user email
+                    "isSubUserEnabled": true,    // true or false
+                    "isUserActive": true,        // true or false
+                    "insertTime": 1570791523523  // sub account create time
+                    "isMarginEnabled": true,     // true or false for margin
+                    "isFutureEnabled": true      // true or false for futures.
+                    "mobile": 1570791523523      // user mobile number
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/status', True, data=params)
+
+    def enable_subaccount_margin(self, **params):
+        """Enable Margin for Sub-account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#enable-margin-for-sub-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+           {
+
+                "email":"123@test.com",
+
+                "isMarginEnabled": true
+
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/margin/enable', True, data=params)
+
+    def get_subaccount_margin_details(self, **params):
+        """Get Detail on Sub-account's Margin Account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-detail-on-sub-account-39-s-margin-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                  "email":"123@test.com",
+                  "marginLevel": "11.64405625",
+                  "totalAssetOfBtc": "6.82728457",
+                  "totalLiabilityOfBtc": "0.58633215",
+                  "totalNetAssetOfBtc": "6.24095242",
+                  "marginTradeCoeffVo":
+                        {
+                            "forceLiquidationBar": "1.10000000",  // Liquidation margin ratio
+                            "marginCallBar": "1.50000000",        // Margin call margin ratio
+                            "normalBar": "2.00000000"             // Initial margin ratio
+                        },
+                  "marginUserAssetVoList": [
+                      {
+                          "asset": "BTC",
+                          "borrowed": "0.00000000",
+                          "free": "0.00499500",
+                          "interest": "0.00000000",
+                          "locked": "0.00000000",
+                          "netAsset": "0.00499500"
+                      },
+                      {
+                          "asset": "BNB",
+                          "borrowed": "201.66666672",
+                          "free": "2346.50000000",
+                          "interest": "0.00000000",
+                          "locked": "0.00000000",
+                          "netAsset": "2144.83333328"
+                      },
+                      {
+                          "asset": "ETH",
+                          "borrowed": "0.00000000",
+                          "free": "0.00000000",
+                          "interest": "0.00000000",
+                          "locked": "0.00000000",
+                          "netAsset": "0.00000000"
+                      },
+                      {
+                          "asset": "USDT",
+                          "borrowed": "0.00000000",
+                          "free": "0.00000000",
+                          "interest": "0.00000000",
+                          "locked": "0.00000000",
+                          "netAsset": "0.00000000"
+                      }
+                  ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/margin/account', True, data=params)
+
+    def get_subaccount_margin_summary(self, **params):
+        """Get Summary of Sub-account's Margin Account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-summary-of-sub-account-39-s-margin-account-for-master-account
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "totalAssetOfBtc": "4.33333333",
+                "totalLiabilityOfBtc": "2.11111112",
+                "totalNetAssetOfBtc": "2.22222221",
+                "subAccountList":[
+                    {
+                        "email":"123@test.com",
+                        "totalAssetOfBtc": "2.11111111",
+                        "totalLiabilityOfBtc": "1.11111111",
+                        "totalNetAssetOfBtc": "1.00000000"
+                    },
+                    {
+                        "email":"345@test.com",
+                        "totalAssetOfBtc": "2.22222222",
+                        "totalLiabilityOfBtc": "1.00000001",
+                        "totalNetAssetOfBtc": "1.22222221"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/margin/accountSummary', True, data=params)
+
+    def enable_subaccount_futures(self, **params):
+        """Enable Futures for Sub-account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#enable-futures-for-sub-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+
+                "email":"123@test.com",
+
+                "isFuturesEnabled": true  // true or false
+
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/futures/enable', True, data=params)
+
+
     # Futures API
 
     def futures_ping(self):
