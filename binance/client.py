@@ -3705,6 +3705,14 @@ class Client(object):
         """
         return self._request_margin_api('get', 'lending/union/interestHistory', signed=True, data=params)
 
+    def change_fixed_activity_to_daily_position(self, **params):
+        """Change Fixed/Activity Position to Daily Position
+
+        https://binance-docs.github.io/apidocs/spot/en/#change-fixed-activity-position-to-daily-position-user_data
+
+        """
+        return self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
+
     # Sub Accounts
 
     def get_sub_account_list(self, **params):
