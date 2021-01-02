@@ -2047,6 +2047,92 @@ class Client(object):
         """
         return self._request_margin_api('post', 'asset/assetDividend', True, data=params)
 
+    def make_universal_transfer(self, **params):
+        """User Universal Transfer
+
+        https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer
+
+        :param type: required
+        :type type: str (ENUM)
+        :param asset: required
+        :type asset: str
+        :param amount: required
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer_status = client.make_universal_transfer(params)
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId":13526853623
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'asset/transfer', signed=True, data=params)
+
+    def query_universal_transfer_history(self, **params):
+        """Query User Universal Transfer History
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-user-universal-transfer-history
+
+        :param type: required
+        :type type: str (ENUM)
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: optional - Default 1
+        :type current: int
+        :param size: required - Default 10, Max 100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer_status = client.query_universal_transfer_history(params)
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "total":2,
+                "rows":[
+                    {
+                        "asset":"USDT",
+                        "amount":"1",
+                        "type":"MAIN_UMFUTURE"
+                        "status": "CONFIRMED",
+                        "tranId": 11415955596,
+                        "timestamp":1544433328000
+                    },
+                    {
+                        "asset":"USDT",
+                        "amount":"2",
+                        "type":"MAIN_UMFUTURE",
+                        "status": "CONFIRMED",
+                        "tranId": 11366865406,
+                        "timestamp":1544433328000
+                    }
+                ]
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'asset/transfer', signed=True, data=params)
+
     def get_trade_fee(self, **params):
         """Get trade fee.
 
