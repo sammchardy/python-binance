@@ -3833,7 +3833,7 @@ class Client(object):
         """
         return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
     
-        def get_sub_account_futures_transfer_history(self, **params):
+    def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
         https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-futures-asset-transfer-history-for-master-account
