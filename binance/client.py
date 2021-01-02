@@ -4282,6 +4282,299 @@ class Client(object):
         """
         return self._request_margin_api('post', 'sub-account/futures/enable', True, data=params)
 
+    def get_subaccount_futures_details(self, **params):
+        """Get Detail on Sub-account's Futures Account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-detail-on-sub-account-39-s-futures-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "email": "abc@test.com",
+                "asset": "USDT",
+                "assets":[
+                    {
+                        "asset": "USDT",
+                        "initialMargin": "0.00000000",
+                        "maintenanceMargin": "0.00000000",
+                        "marginBalance": "0.88308000",
+                        "maxWithdrawAmount": "0.88308000",
+                        "openOrderInitialMargin": "0.00000000",
+                        "positionInitialMargin": "0.00000000",
+                        "unrealizedProfit": "0.00000000",
+                        "walletBalance": "0.88308000"
+                     }
+                ],
+                "canDeposit": true,
+                "canTrade": true,
+                "canWithdraw": true,
+                "feeTier": 2,
+                "maxWithdrawAmount": "0.88308000",
+                "totalInitialMargin": "0.00000000",
+                "totalMaintenanceMargin": "0.00000000",
+                "totalMarginBalance": "0.88308000",
+                "totalOpenOrderInitialMargin": "0.00000000",
+                "totalPositionInitialMargin": "0.00000000",
+                "totalUnrealizedProfit": "0.00000000",
+                "totalWalletBalance": "0.88308000",
+                "updateTime": 1576756674610
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/futures/account', True, data=params)
+
+    def get_subaccount_futures_summary(self, **params):
+        """Get Summary of Sub-account's Futures Account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-summary-of-sub-account-39-s-futures-account-for-master-account
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "totalInitialMargin": "9.83137400",
+                "totalMaintenanceMargin": "0.41568700",
+                "totalMarginBalance": "23.03235621",
+                "totalOpenOrderInitialMargin": "9.00000000",
+                "totalPositionInitialMargin": "0.83137400",
+                "totalUnrealizedProfit": "0.03219710",
+                "totalWalletBalance": "22.15879444",
+                "asset": "USDT",
+                "subAccountList":[
+                    {
+                        "email": "123@test.com",
+                        "totalInitialMargin": "9.00000000",
+                        "totalMaintenanceMargin": "0.00000000",
+                        "totalMarginBalance": "22.12659734",
+                        "totalOpenOrderInitialMargin": "9.00000000",
+                        "totalPositionInitialMargin": "0.00000000",
+                        "totalUnrealizedProfit": "0.00000000",
+                        "totalWalletBalance": "22.12659734",
+                        "asset": "USDT"
+                    },
+                    {
+                        "email": "345@test.com",
+                        "totalInitialMargin": "0.83137400",
+                        "totalMaintenanceMargin": "0.41568700",
+                        "totalMarginBalance": "0.90575887",
+                        "totalOpenOrderInitialMargin": "0.00000000",
+                        "totalPositionInitialMargin": "0.83137400",
+                        "totalUnrealizedProfit": "0.03219710",
+                        "totalWalletBalance": "0.87356177",
+                        "asset": "USDT"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params)
+
+    def get_subaccount_futures_positionrisk(self, **params):
+        """Get Futures Position-Risk of Sub-account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-futures-position-risk-of-sub-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "entryPrice": "9975.12000",
+                    "leverage": "50",              // current initial leverage
+                    "maxNotional": "1000000",      // notional value limit of current initial leverage
+                    "liquidationPrice": "7963.54",
+                    "markPrice": "9973.50770517",
+                    "positionAmount": "0.010",
+                    "symbol": "BTCUSDT",
+                    "unrealizedProfit": "-0.01612295"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params)
+
+    def make_subaccount_futures_transfer(self, **params):
+        """Futures Transfer for Sub-account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#futures-transfer-for-sub-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param amount: required - The amount to be transferred
+        :type amount: float
+        :param type: required - 1: transfer from subaccount's spot account to its USDT-margined futures account
+                                2: transfer from subaccount's USDT-margined futures account to its spot account
+                                3: transfer from subaccount's spot account to its COIN-margined futures account
+                                4: transfer from subaccount's COIN-margined futures account to its spot account
+        :type type: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "txnId":"2966662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/futures/transfer', True, data=params)
+
+    def make_subaccount_margin_transfer(self, **params):
+        """Margin Transfer for Sub-account (For Master Account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-transfer-for-sub-account-for-master-account
+
+        :param email: required - Sub account email
+        :type email: str
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param amount: required - The amount to be transferred
+        :type amount: float
+        :param type: required - 1: transfer from subaccount's spot account to margin account
+                                2: transfer from subaccount's margin account to its spot account
+        :type type: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "txnId":"2966662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/margin/transfer', True, data=params)
+
+    def make_subaccount_to_subaccount_transfer(self, **params):
+        """Transfer to Sub-account of Same Master (For Sub-account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-sub-account-of-same-master-for-sub-account
+
+        :param toEmail: required - Sub account email
+        :type toEmail: str
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param amount: required - The amount to be transferred
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "txnId":"2966662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/transfer/subToSub', True, data=params)
+
+    def make_subaccount_to_master_transfer(self, **params):
+        """Transfer to Master (For Sub-account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-master-for-sub-account
+
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param amount: required - The amount to be transferred
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "txnId":"2966662589"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'sub-account/transfer/subToMaster', True, data=params)
+
+    def get_subaccount_transfer_history(self, **params):
+        """Sub-account Transfer History (For Sub-account)
+
+        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-master-for-sub-account
+
+        :param asset: required - The asset being transferred, e.g., USDT
+        :type asset: str
+        :param type: optional - 1: transfer in, 2: transfer out
+        :type type: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional - Default 500
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+              {
+                "counterParty":"master",
+                "email":"master@test.com",
+                "type":1,  // 1 for transfer in, 2 for transfer out
+                "asset":"BTC",
+                "qty":"1",
+                "status":"SUCCESS",
+                "tranId":11798835829,
+                "time":1544433325000
+              },
+              {
+                "counterParty":"subAccount",
+                "email":"sub2@test.com",
+                "type":2,
+                "asset":"ETH",
+                "qty":"2",
+                "status":"SUCCESS",
+                "tranId":11798829519,
+                "time":1544433326000
+              }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'sub-account/transfer/subUserHistory', True, data=params)
 
     # Futures API
 
