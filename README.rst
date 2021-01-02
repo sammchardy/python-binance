@@ -7,11 +7,6 @@ Note
 
 this library is not under active development by sammchardy. however, the community has been actively contributing lots of PRs. If you find missing features please submit a PR. please keep PRs small and non-breaking.
 
-~~I am working on a python3 version with async support to remove legacy dependencies and their related issues.~~
-
-~~I would appreciate if you could try out the `feature/asyncio <https://github.com/sammchardy/python-binance/tree/feature/asyncio>`_ branch and give your feedback.~~
-
-
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
