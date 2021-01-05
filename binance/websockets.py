@@ -1,6 +1,4 @@
 # coding=utf-8
-
-import json
 import threading
 
 from autobahn.twisted.websocket import WebSocketClientFactory, \
@@ -9,6 +7,7 @@ from autobahn.twisted.websocket import WebSocketClientFactory, \
 from twisted.internet import reactor, ssl
 from twisted.internet.protocol import ReconnectingClientFactory
 from twisted.internet.error import ReactorAlreadyRunning
+import ujson as json
 
 from binance.client import Client
 
