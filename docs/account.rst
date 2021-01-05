@@ -9,7 +9,7 @@ Order Validation
 
 Binance has a number of rules around symbol pair orders with validation on minimum price, quantity and total order value.
 
-Read more about their specifics in the `Filters <https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#filters>`_
+Read more about their specifics in the `Filters <https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#filters>`_
 section of the official API.
 
 It can be helpful to format the output using the following snippet
@@ -77,6 +77,22 @@ Use the helper functions to easily place a market buy or sell order
     order = client.order_market_sell(
         symbol='BNBBTC',
         quantity=100)
+
+**Place an OCO order**
+
+Use the `create_oco_order` function to have full control over creating an OCO order
+
+.. code:: python
+
+    from binance.enums import *
+    order = client.create_oco_order(
+        symbol='BNBBTC',
+        side=SIDE_SELL,
+        stopLimitTimeInForce=TIME_IN_FORCE_GTC,
+        quantity=100,
+        stopPrice='0.00001'
+        price='0.00002')
+
 
 `Place a test order <binance.html#binance.client.Client.create_test_order>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -184,3 +200,18 @@ Account
 .. code:: python
 
     log = client.get_dust_log()
+
+`Transfer dust <binance.html#binance.client.Client.transfer_dust>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    transfer = client.transfer_dust(asset='BNZ')
+
+
+`Get Asset Dividend History <binance.html#binance.client.Client.get_asset_dividend_history>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    history = client.get_asset_dividend_history()

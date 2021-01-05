@@ -14,6 +14,8 @@ Contents
    general
    market_data
    account
+   sub_accounts
+   margin
    websockets
    depth_cache
    withdraw

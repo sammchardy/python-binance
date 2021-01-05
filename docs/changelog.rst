@@ -1,6 +1,71 @@
 Changelog
 =========
 
+v0.7.5.dev
+^^^^^^^^^^
+**Changed**
+- Stock json lib to ujson (https://github.com/sammchardy/python-binance/pull/383)
+
+v0.7.5 - 2020-02-06
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Futures REST endpoints
+- Lending REST endpoints
+- OCO Orders function `create_oco_order`, `order_oco_buy`, `order_oco_sell`
+- Average Price function `get_avg_price`
+- Support for other domains (.us, .jp, etc)
+
+**Updated**
+
+- dependencies
+
+**Fixed**
+
+- websocket keepalive callback not found
+
+v0.7.4 - 2019-09-22
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- symbol book ticker websocket streams
+- margin websocket stream
+
+**Updated**
+
+- can call Client without any params
+- make response a property of the Client class so you can access response properties after a request
+
+**Fixed**
+
+- issue with None value params causing errors
+
+v0.7.3 - 2019-08-12
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- sub account endpoints
+- dust transfer endpoint
+- asset divident history endpoint
+
+**Removed**
+
+- deprecated withdraw fee endpoint
+
+v0.7.2 - 2019-08-01
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- margin trading endpoints
+
+**Fixed**
+
+- depth cache clearing bug
+
 v0.7.1 - 2019-01-23
 ^^^^^^^^^^^^^^^^^^^
 

@@ -121,7 +121,7 @@ class DepthCacheManager(object):
 
     _default_refresh = 60 * 30  # 30 minutes
 
-    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=500):
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=500, ws_interval=None):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -134,6 +134,8 @@ class DepthCacheManager(object):
         :type refresh_interval: int
         :param limit: Optional number of orders to get from orderbook
         :type limit: int
+        :param ws_interval: Optional interval for updates on websocket, default None. If not set, updates happen every second. Must be 0, None (1s) or 100 (100ms).
+        :type ws_interval: int
 
         """
         self._client = client
@@ -146,6 +148,7 @@ class DepthCacheManager(object):
         self._depth_cache = DepthCache(self._symbol)
         self._refresh_interval = refresh_interval
         self._conn_key = None
+        self._ws_interval = ws_interval
 
         self._start_socket()
         self._init_cache()
@@ -178,7 +181,7 @@ class DepthCacheManager(object):
             self._process_depth_message(msg, buffer=True)
 
         # clear the depth buffer
-        del self._depth_message_buffer
+        self._depth_message_buffer = []
 
     def _start_socket(self):
         """Start the depth cache socket
@@ -188,7 +191,7 @@ class DepthCacheManager(object):
         if self._bm is None:
             self._bm = BinanceSocketManager(self._client)
 
-        self._conn_key = self._bm.start_depth_socket(self._symbol, self._depth_event)
+        self._conn_key = self._bm.start_depth_socket(self._symbol, self._depth_event, interval=self._ws_interval)
         if not self._bm.is_alive():
             self._bm.start()
 
@@ -271,3 +274,10 @@ class DepthCacheManager(object):
             self._bm.close()
         time.sleep(1)
         self._depth_cache = None
+    
+    def get_symbol(self):
+        """Get the symbol
+        
+        :return: symbol
+        """
+        return self._symbol
