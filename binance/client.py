@@ -2765,6 +2765,59 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
+    def toggle_bnb_burn_spot_margin(self, **params):
+        """Toggle BNB Burn On Spot Trade And Margin Interest
+
+        https://binance-docs.github.io/apidocs/spot/en/#toggle-bnb-burn-on-spot-trade-and-margin-interest-user_data
+
+        :param spotBNBBurn: Determines whether to use BNB to pay for trading fees on SPOT
+        :type spotBNBBurn: bool
+        :param interestBNBBurn: Determines whether to use BNB to pay for margin loan's interest
+        :type interestBNBBurn: bool
+
+        .. code:: python
+
+            response = client.toggle_bnb_burn_spot_margin()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "spotBNBBurn":true,
+               "interestBNBBurn": false
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
+
+    def get_bnb_burn_spot_margin(self, **params):
+        """Get BNB Burn Status
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
+
+        .. code:: python
+
+            status = client.get_bnb_burn_spot_margin()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "spotBNBBurn":true,
+               "interestBNBBurn": false
+            }
+
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'bnbBurn', signed=True, data=params)
+
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
@@ -3790,6 +3843,14 @@ class Client(object):
 
         """
         return self._request_margin_api('get', 'lending/union/interestHistory', signed=True, data=params)
+
+    def change_fixed_activity_to_daily_position(self, **params):
+        """Change Fixed/Activity Position to Daily Position
+
+        https://binance-docs.github.io/apidocs/spot/en/#change-fixed-activity-position-to-daily-position-user_data
+
+        """
+        return self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
 
     # Sub Accounts
 
