@@ -84,7 +84,7 @@ class BinanceSocketManager(threading.Thread):
         self._conns = {}
         self._client = client
         self._user_timeout = user_timeout
-        self._timers = {'user': None, 'margin': None} 
+        self._timers = {'user': None, 'margin': None}
         self._listen_keys = {'user': None, 'margin': None}
         self._account_callbacks = {'user': None, 'margin': None}
         # Isolated margin sockets will be opened under the 'symbol' name
@@ -338,6 +338,36 @@ class BinanceSocketManager(threading.Thread):
 
         """
         return self._start_socket(symbol.lower() + '@aggTrade', callback)
+
+    def start_aggtrade_futures_socket(self, symbol, callback):
+        """Start a websocket for aggregate symbol trade data for the futures stream
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            {
+                "e": "aggTrade",  // Event type
+                "E": 123456789,   // Event time
+                "s": "BTCUSDT",    // Symbol
+                "a": 5933014,     // Aggregate trade ID
+                "p": "0.001",     // Price
+                "q": "100",       // Quantity
+                "f": 100,         // First trade ID
+                "l": 105,         // Last trade ID
+                "T": 123456785,   // Trade time
+                "m": true,        // Is the buyer the market maker?
+            }
+
+        """
+        return self._start_futures_socket(symbol.lower() + '@aggTrade', callback)
 
     def start_symbol_ticker_socket(self, symbol, callback):
         """Start a websocket for a symbol's ticker data
@@ -684,7 +714,7 @@ class BinanceSocketManager(threading.Thread):
             listen_key = listen_key_func()
         else:  # isolated margin
             listen_key_func = self._client.isolated_margin_stream_get_listen_key
-            callback = self._account_callbacks.get(socket_type, None)       
+            callback = self._account_callbacks.get(socket_type, None)
             listen_key = listen_key_func(socket_type)  # Passing symbol for islation margin
         if listen_key != self._listen_keys[socket_type]:
             self._start_account_socket(socket_type, listen_key, callback)
@@ -714,7 +744,7 @@ class BinanceSocketManager(threading.Thread):
         # if len(conn_key) >= 60 and conn_key[:60] == self._listen_keys['margin']:
         #     self._stop_account_socket('margin')
 
-        # NEW - Loop over keys in _listen_keys dictionary to find a match on 
+        # NEW - Loop over keys in _listen_keys dictionary to find a match on
         # user, cross-margin and isolated margin:
         for key, value in self._listen_keys.items():
             if len(conn_key) >= 60 and conn_key[:60] == value:
