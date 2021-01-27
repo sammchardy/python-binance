@@ -3979,7 +3979,7 @@ class Client(object):
 
         """
         return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
-    
+
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
@@ -5100,3 +5100,11 @@ class Client(object):
         
         """
         return self._request_futures_api('get', 'positionSide/dual', True, data=params)
+
+    def futures_get_listen_key(self):
+        """Get futures listen key
+        https://binance-docs.github.io/apidocs/futures/cn/#listenkey-user_stream
+
+        """
+        res = self._request_futures_api('post', 'listenKey', False)
+        return res['listenKey']
