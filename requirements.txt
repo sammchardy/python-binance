@@ -1,7 +1,9 @@
-requests-async==0.2.0
-aiohttp==3.5.4
-# test packages
-starlette==0.12.0b1
-pytest
-websockets==7.0
-# twisted
+autobahn==18.7.1
+certifi==2019.11.28
+cryptography==2.3
+dateparser==0.7.0
+pyOpenSSL==19.0.0
+requests==2.22.0
+service-identity==17.0.0
+Twisted==19.7.0
+ujson

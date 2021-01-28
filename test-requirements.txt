@@ -1,0 +1,9 @@
+coverage
+flake8
+pytest
+pytest-cov
+pytest-pep8
+python-coveralls
+requests-mock
+tox
+setuptools
