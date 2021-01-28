@@ -704,6 +704,10 @@ class BinanceSocketManager(threading.Thread):
             listen_key_func = self._client.margin_stream_get_listen_key
             callback = self._account_callbacks[socket_type]
             listen_key = listen_key_func()
+        elif socket_type == 'futures':
+            listen_key_func = self._client.futures_get_listen_key
+            callback = self._account_callbacks[socket_type]
+            listen_key = listen_key_func()
         else:  # isolated margin
             listen_key_func = self._client.isolated_margin_stream_get_listen_key
             callback = self._account_callbacks.get(socket_type, None)
