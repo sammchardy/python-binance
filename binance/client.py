@@ -100,9 +100,13 @@ class Client(object):
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.timestamp_offset = 0
 
         # init DNS and SSL cert
         self.ping()
+        # calculate timestamp offset between local and binance server
+        res = self.get_server_time()
+        self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
 
     def _init_session(self):
 
@@ -176,7 +180,7 @@ class Client(object):
 
         if signed:
             # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000)
+            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
