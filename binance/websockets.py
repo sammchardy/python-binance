@@ -98,7 +98,10 @@ class BinanceSocketManager(threading.Thread):
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
         factory.reconnect = True
-        context_factory = ssl.ClientContextFactory()
+        if factory.host.startswith('testnet.binance'):
+            context_factory = ssl.optionsForClientTLS(factory.host)
+        else:
+            context_factory = ssl.ClientContextFactory()
 
         self._conns[path] = connectWS(factory, context_factory)
         return path
