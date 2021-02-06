@@ -90,7 +90,7 @@ Use the `create_oco_order` function to have full control over creating an OCO or
         side=SIDE_SELL,
         stopLimitTimeInForce=TIME_IN_FORCE_GTC,
         quantity=100,
-        stopPrice='0.00001'
+        stopPrice='0.00001',
         price='0.00002')
 
 
