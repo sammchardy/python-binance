@@ -3008,6 +3008,66 @@ class Client(object):
         params['transTo'] = "ISOLATED_MARGIN"
         return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
 
+    def transfer_spot_to_futures(self, **params):
+        """Execute transfer between spot account and futures account.
+
+        https://binance-docs.github.io/apidocs/futures/en/#new-future-account-transfer
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_margin(asset='USDT', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['type'] = 1
+        return self._request_margin_api('post', 'futures/transfer', signed=True, data=params)
+
+    def transfer_futures_to_spot(self, **params):
+        """Execute transfer between spot account and futures account.
+
+        https://binance-docs.github.io/apidocs/futures/en/#new-future-account-transfer
+
+        :param asset: name of the asset
+        :type asset: str
+        :param amount: amount to transfer
+        :type amount: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_margin(asset='USDT', amount='1.1')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "tranId": 100000001
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params['type'] = 2
+        return self._request_margin_api('post', 'futures/transfer', signed=True, data=params)
+
     def create_margin_loan(self, **params):
         """Apply for a loan in cross-margin or isolated-margin account.
 
