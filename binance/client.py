@@ -16,7 +16,9 @@ class Client(object):
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
+    FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -115,7 +117,9 @@ class Client(object):
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
+        self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
+        self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
@@ -150,9 +154,15 @@ class Client(object):
     def _create_futures_api_uri(self, path):
         return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
 
+    def _create_futures_data_api_uri(self, path):
+        return self.FUTURES_DATA_URL + '/' + path
+
     def _create_futures_coin_api_url(self, path, version=1):
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
         return self.FUTURES_COIN_URL + "/" + options[version] + "/" + path
+
+    def _create_futures_coin_data_api_url(self, path, version=1):
+        return self.FUTURES_COIN_DATA_URL + "/" + path
 
     def _generate_signature(self, data):
 
@@ -247,13 +257,20 @@ class Client(object):
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_futures_coin_api(
-        self, method, path, signed=False, version=1, **kwargs
-    ):
+    def _request_futures_data_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_futures_data_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs):
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
+    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
+        uri = self._create_futures_coin_data_api_url(path, version=version)
+
+        return self._request(method, uri, signed, True, **kwargs)
 
     def _handle_response(self):
         """Internal helper for handling API responses from the Binance server.
@@ -4967,6 +4984,14 @@ class Client(object):
         """
         return self._request_futures_api('get', 'ticker/openInterest', data=params)
 
+    def futures_open_interest_hist(self, **params):
+        """Get open interest statistics of a specific symbol.
+
+        https://binance-docs.github.io/apidocs/futures/en/#open-interest-statistics
+
+        """
+        return self._request_futures_data_api('get', 'openInterestHist', data=params)
+
     def futures_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
@@ -5280,6 +5305,14 @@ class Client(object):
 
         """
         return self._request_futures_coin_api("get", "openInterest", data=params)
+
+    def futures_coin_open_interest_hist(self, **params):
+        """Get open interest statistics of a specific symbol.
+
+        https://binance-docs.github.io/apidocs/delivery/en/#open-interest-statistics-market-data
+
+        """
+        return self._request_futures_coin_data_api("get", "openInterestHist", data=params)
 
     def futures_coin_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
