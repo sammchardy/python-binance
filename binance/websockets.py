@@ -721,6 +721,8 @@ class BinanceSocketManager(threading.Thread):
             listen_key = listen_key_func(socket_type)  # Passing symbol for islation margin
         if listen_key != self._listen_keys[socket_type]:
             self._start_account_socket(socket_type, listen_key, callback)
+        else:
+            self._start_socket_timer(socket_type)
 
     def stop_socket(self, conn_key):
         """Stop a websocket given the connection key
