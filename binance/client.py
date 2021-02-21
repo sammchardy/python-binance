@@ -5471,4 +5471,12 @@ class Client(object):
 
         """
         return self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
+    
+    def fetch_all_coins_information(self, **params):
+        """Get information of coins (available for deposit and withdraw) for user.
+        https://binance-docs.github.io/apidocs/spot/en/#system-status-system
+        """
+        return self._request_margin_api(
+            "get", "capital/config/getall", signed=True, data=params
+        )
 
