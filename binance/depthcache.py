@@ -8,17 +8,20 @@ from .websockets import BinanceSocketManager
 
 class DepthCache(object):
 
-    def __init__(self, symbol):
+    def __init__(self, symbol, conv_type = float):
         """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
         :type symbol: string
+        :param conv_type: Optional type to represent price, and amount, default is float.
+        :type conv_type: function.
 
         """
         self.symbol = symbol
         self._bids = {}
         self._asks = {}
         self.update_time = None
+        self.conv_type = conv_type
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -27,7 +30,7 @@ class DepthCache(object):
         :return:
 
         """
-        self._bids[bid[0]] = float(bid[1])
+        self._bids[bid[0]] = self.conv_type(bid[1])
         if bid[1] == "0.00000000":
             del self._bids[bid[0]]
 
@@ -38,14 +41,14 @@ class DepthCache(object):
         :return:
 
         """
-        self._asks[ask[0]] = float(ask[1])
+        self._asks[ask[0]] = self.conv_type(ask[1])
         if ask[1] == "0.00000000":
             del self._asks[ask[0]]
 
     def get_bids(self):
         """Get the current bids
 
-        :return: list of bids with price and quantity as floats
+        :return: list of bids with price and quantity as conv_type
 
         .. code-block:: python
 
@@ -73,12 +76,12 @@ class DepthCache(object):
             ]
 
         """
-        return DepthCache.sort_depth(self._bids, reverse=True)
+        return DepthCache.sort_depth(self._bids, reverse=True, conv_type=self.conv_type)
 
     def get_asks(self):
         """Get the current asks
 
-        :return: list of asks with price and quantity as floats
+        :return: list of asks with price and quantity as conv_type.
 
         .. code-block:: python
 
@@ -106,13 +109,13 @@ class DepthCache(object):
             ]
 
         """
-        return DepthCache.sort_depth(self._asks, reverse=False)
+        return DepthCache.sort_depth(self._asks, reverse=False, conv_type=self.conv_type)
 
     @staticmethod
-    def sort_depth(vals, reverse=False):
+    def sort_depth(vals, reverse=False, conv_type = float):
         """Sort bids or asks by price
         """
-        lst = [[float(price), quantity] for price, quantity in vals.items()]
+        lst = [[conv_type(price), quantity] for price, quantity in vals.items()]
         lst = sorted(lst, key=itemgetter(0), reverse=reverse)
         return lst
 
@@ -121,7 +124,7 @@ class DepthCacheManager(object):
     _default_refresh = 60 * 30  # 30 minutes
 
     def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=500,
-                 ws_interval=None):
+                 ws_interval=None, conv_type=float):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -136,6 +139,8 @@ class DepthCacheManager(object):
         :type limit: int
         :param ws_interval: Optional interval for updates on websocket, default None. If not set, updates happen every second. Must be 0, None (1s) or 100 (100ms).
         :type ws_interval: int
+        :param conv_type: Optional type to represent price, and amount, default is float.
+        :type conv_type: function.
 
         """
         self._client = client
@@ -148,6 +153,7 @@ class DepthCacheManager(object):
         self._refresh_interval = refresh_interval
         self._conn_key = None
         self._ws_interval = ws_interval
+        self._conv_type = conv_type
 
         self._start_socket()
         self._init_cache()
@@ -163,7 +169,7 @@ class DepthCacheManager(object):
         res = self._client.get_order_book(symbol=self._symbol, limit=self._limit)
 
         # initialise or clear depth cache
-        self._depth_cache = DepthCache(self._symbol)
+        self._depth_cache = DepthCache(self._symbol, conv_type=self._conv_type)
 
         # process bid and asks from the order book
         for bid in res['bids']:
@@ -279,7 +285,7 @@ class DepthCacheManager(object):
 
     def get_symbol(self):
         """Get the symbol
-        
+
         :return: symbol
         """
         return self._symbol
