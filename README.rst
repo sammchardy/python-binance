@@ -64,9 +64,9 @@ Features
 Quick Start
 -----------
 
-`Register an account with Binance <https://www.binance.com/register.html?ref=10099792>`_.
+`Register an account with Binance <https://accounts.binance.com/en/register?ref=10099792>`_.
 
-`Generate an API Key <https://www.binance.com/userCenter/createApi.html>`_ and assign relevant permissions.
+`Generate an API Key <https://www.binance.com/en/my/settings/api-management>`_ and assign relevant permissions.
 
 .. code:: bash
 
@@ -158,4 +158,4 @@ If you use `Kucoin <https://www.kucoin.com/?rcode=E42cWB>`_ check out my `python
 
 If you use `IDEX <https://idex.market>`_ check out my `python-idex <https://github.com/sammchardy/python-idex>`_ library.
 
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance?pixel&useReferer
+.. image:: https://ga-beacon.appspot.com/UA-111417213-1/github/python-binance?pixel&useReferer
