@@ -5472,3 +5472,77 @@ class Client(object):
         """
         return self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
 
+    def get_all_coins_info(self, **params):
+        """Get information of coins (available for deposit and withdraw) for user.
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "coin": "BTC",
+                "depositAllEnable": true,
+                "withdrawAllEnable": true,
+                "name": "Bitcoin",
+                "free": "0",
+                "locked": "0",
+                "freeze": "0",
+                "withdrawing": "0",
+                "ipoing": "0",
+                "ipoable": "0",
+                "storage": "0",
+                "isLegalMoney": false,
+                "trading": true,
+                "networkList": [
+                    {
+                        "network": "BNB",
+                        "coin": "BTC",
+                        "withdrawIntegerMultiple": "0.00000001",
+                        "isDefault": false,
+                        "depositEnable": true,
+                        "withdrawEnable": true,
+                        "depositDesc": "",
+                        "withdrawDesc": "",
+                        "specialTips": "Both a MEMO and an Address are required to successfully deposit your BEP2-BTCB tokens to Binance.",
+                        "name": "BEP2",
+                        "resetAddressStatus": false,
+                        "addressRegex": "^(bnb1)[0-9a-z]{38}$",
+                        "memoRegex": "^[0-9A-Za-z-_]{1,120}$",
+                        "withdrawFee": "0.0000026",
+                        "withdrawMin": "0.0000052",
+                        "withdrawMax": "0",
+                        "minConfirm": 1,
+                        "unLockConfirm": 0
+                    },
+                    {
+                        "network": "BTC",
+                        "coin": "BTC",
+                        "withdrawIntegerMultiple": "0.00000001",
+                        "isDefault": true,
+                        "depositEnable": true,
+                        "withdrawEnable": true,
+                        "depositDesc": "",
+                        "withdrawDesc": "",
+                        "specialTips": "",
+                        "name": "BTC",
+                        "resetAddressStatus": false,
+                        "addressRegex": "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^(bc1)[0-9A-Za-z]{39,59}$",
+                        "memoRegex": "",
+                        "withdrawFee": "0.0005",
+                        "withdrawMin": "0.001",
+                        "withdrawMax": "0",
+                        "minConfirm": 1,
+                        "unLockConfirm": 2
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'capital/config/getall', True, data=params)
