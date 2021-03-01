@@ -1911,7 +1911,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
-        if not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
