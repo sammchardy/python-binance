@@ -5583,3 +5583,111 @@ class Client(object):
 
         """
         return self._request_margin_api('get', 'capital/config/getall', True, data=params)
+
+    def get_account_snapshot(self, **params):
+        """Get daily account snapshot of specific type.
+
+        https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
+
+        :param type: required. Valid values are SPOT/MARGIN/FUTURES.
+        :type type: string
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+        :param timestamp: requred
+        :type timestamp: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "balances":[
+                           {
+                              "asset":"BTC",
+                              "free":"0.09905021",
+                              "locked":"0.00000000"
+                           },
+                           {
+                              "asset":"USDT",
+                              "free":"1.89109409",
+                              "locked":"0.00000000"
+                           }
+                        ],
+                        "totalAssetOfBtc":"0.09942700"
+                     },
+                     "type":"spot",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+        OR
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "marginLevel":"2748.02909813",
+                        "totalAssetOfBtc":"0.00274803",
+                        "totalLiabilityOfBtc":"0.00000100",
+                        "totalNetAssetOfBtc":"0.00274750",
+                        "userAssets":[
+                           {
+                              "asset":"XRP",
+                              "borrowed":"0.00000000",
+                              "free":"1.00000000",
+                              "interest":"0.00000000",
+                              "locked":"0.00000000",
+                              "netAsset":"1.00000000"
+                           }
+                        ]
+                     },
+                     "type":"margin",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+        OR
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "assets":[
+                           {
+                              "asset":"USDT",
+                              "marginBalance":"118.99782335",
+                              "walletBalance":"120.23811389"
+                           }
+                        ],
+                        "position":[
+                           {
+                              "entryPrice":"7130.41000000",
+                              "markPrice":"7257.66239673",
+                              "positionAmt":"0.01000000",
+                              "symbol":"BTCUSDT",
+                              "unRealizedProfit":"1.24029054"
+                           }
+                        ]
+                     },
+                     "type":"futures",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'accountSnapshot', True, data=params)
