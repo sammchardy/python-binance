@@ -14,9 +14,11 @@
     ```
   - **GET /sapi/v1/capital/config/getall (HMAC SHA256)** (Get information of coins (available for deposit and withdraw) for user.)
    
-    > :warning: Not yet implemented
   - **GET /sapi/v1/accountSnapshot (HMAC SHA256)** (Daily Account Snapshot (USER_DATA).)
-  
+    ```python 
+    client.get_account_snapshot(type='SPOT')
+    ```
+
     > :warning: Not yet implemented 
   - **POST /sapi/v1/account/disableFastWithdrawSwitch (HMAC SHA256)** (Disable Fast Withdraw Switch (USER_DATA).)
   
