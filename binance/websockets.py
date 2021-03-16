@@ -507,7 +507,7 @@ class BinanceSocketManager(threading.Thread):
         stream_name = '!markPrice@arr@1s' if fast else '!markPrice@arr'
         return self._start_futures_socket(stream_name, callback)
 
-    def start_symbol_book_ticker_futures_socket(self, symbol, callback):
+    def start_symbol_ticker_futures_socket(self, symbol, callback):
         """Start a websocket for a symbol's ticker data
         By default all markets are included in an array.
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-book-ticker-streams
@@ -530,7 +530,7 @@ class BinanceSocketManager(threading.Thread):
         """
         return self._start_futures_socket(symbol.lower() + '@bookTicker', callback)
     
-    def start_symbol_ticker_futures_socket(self, symbol, callback):
+    def start_individual_symbol_ticker_futures_socket(self, symbol, callback):
         """Start a futures websocket for a single symbol's ticker data
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-ticker-streams
         :param symbol: required
