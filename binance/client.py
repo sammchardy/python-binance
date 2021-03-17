@@ -2102,7 +2102,7 @@ class Client(object):
         """
         return self._request_margin_api('get', 'asset/assetDividend', True, data=params)
 
-    def make_universal_transfer(self, **params):
+    def universal_transfer(self, **params):
         """User Universal Transfer
 
         https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer
