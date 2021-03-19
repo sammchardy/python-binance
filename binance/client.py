@@ -1936,6 +1936,83 @@ class Client(object):
             raise BinanceWithdrawException(res['msg'])
         return res
 
+    def get_account_api_trading_status(self, **params):
+        """Fetch account api trading status detail.
+
+        https://binance-docs.github.io/apidocs/spot/en/#account-api-trading-status-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+        {
+            "success": true,     // Query result
+            "status": {          // API trading status detail
+                "isLocked": false,   // API trading function is locked or not
+                "plannedRecoverTime": 0,  // If API trading function is locked, this is the planned recover time
+                "triggerCondition": {
+                        "gcr": 150,  // Number of GTC orders
+                        "ifer": 150, // Number of FOK/IOC orders
+                        "ufr": 300   // Number of orders
+                },
+                "indicators": {  // The indicators updated every 30 seconds
+                     "BTCUSDT": [  // The symbol
+                        {
+                            "i": "UFR",  // Unfilled Ratio (UFR)
+                            "c": 20,     // Count of all orders
+                            "v": 0.05,   // Current UFR value
+                            "t": 0.995   // Trigger UFR value
+                        },
+                        {
+                            "i": "IFER", // IOC/FOK Expiration Ratio (IFER)
+                            "c": 20,     // Count of FOK/IOC orders
+                            "v": 0.99,   // Current IFER value
+                            "t": 0.99    // Trigger IFER value
+                        },
+                        {
+                            "i": "GCR",  // GTC Cancellation Ratio (GCR)
+                            "c": 20,     // Count of GTC orders
+                            "v": 0.99,   // Current GCR value
+                            "t": 0.99    // Trigger GCR value
+                        }
+                    ],
+                    "ETHUSDT": [
+                        {
+                            "i": "UFR",
+                            "c": 20,
+                            "v": 0.05,
+                            "t": 0.995
+                        },
+                        {
+                            "i": "IFER",
+                            "c": 20,
+                            "v": 0.99,
+                            "t": 0.99
+                        },
+                        {
+                            "i": "GCR",
+                            "c": 20,
+                            "v": 0.99,
+                            "t": 0.99
+                        }
+                    ]
+                },
+                "updateTime": 1547630471725   // The query result return time
+            }
+        }
+
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_withdraw_api('get', 'apiTradingStatus.html', True, data=params)
+        if not res.get('success'):
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
