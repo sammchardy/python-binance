@@ -1911,7 +1911,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
-        if not res['success']:
+        if 'success' in res and not res['success']:
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -1992,7 +1992,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
-        if not res['success']:
+        if 'success' in res and not res['success']:
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2200,7 +2200,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
-        if not res['success']:
+        if 'success' in res and not res['success']:
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2239,7 +2239,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
-        if not res['success']:
+        if 'success' in res and not res['success']:
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2258,9 +2258,7 @@ class Client(object):
         :param asset: required
         :type asset: str
         :type address: required
-        :type address: str
         :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
-        :type address: str
         :param amount: required
         :type amount: decimal
         :param name: optional - Description of the address, default asset value passed will be used
@@ -2285,7 +2283,7 @@ class Client(object):
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
-        if not res['success']:
+        if 'success' in res and not res['success']:
             raise BinanceWithdrawException(res['msg'])
         return res
 
