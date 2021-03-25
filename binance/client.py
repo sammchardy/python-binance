@@ -2391,6 +2391,58 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
+    def get_withdraw_history(self, withdraw_id, **params):
+        """Fetch withdraw history.
+
+        https://www.binance.com/restapipub.html
+
+        :param asset: optional
+        :type asset: str
+        :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
+        :type status: int
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "withdrawList": [
+                    {
+                        "amount": 1,
+                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                        "asset": "ETH",
+                        "applyTime": 1508198532000
+                        "status": 4
+                    },
+                    {
+                        "amount": 0.005,
+                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                        "txId": "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1",
+                        "asset": "ETH",
+                        "applyTime": 1508198532000,
+                        "status": 4
+                    }
+                ],
+                "success": true
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        result = self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+
+        for entry in result:
+            if 'id' in entry and entry['id'] == withdraw_id:
+                return entry
+        
+        return None
+
     def get_deposit_address(self, **params):
         """Fetch a deposit address for a symbol
 
