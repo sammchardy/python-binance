@@ -2437,7 +2437,7 @@ class Client(object):
         """
         result = self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
-        for entry in result:
+        for entry in result['withdrawList']:
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
         
