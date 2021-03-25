@@ -2391,7 +2391,7 @@ class Client(object):
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
 
-    def get_withdraw_history(self, withdraw_id, **params):
+    def get_withdraw_history_id(self, withdraw_id, **params):
         """Fetch withdraw history.
 
         https://www.binance.com/restapipub.html
