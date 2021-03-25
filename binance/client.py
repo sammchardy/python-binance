@@ -16,7 +16,9 @@ class Client(object):
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
+    FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -115,16 +117,22 @@ class Client(object):
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
+        self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
+        self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.timestamp_offset = 0
 
         # init DNS and SSL cert
         self.ping()
+        # calculate timestamp offset between local and binance server
+        res = self.get_server_time()
+        self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
 
     def _init_session(self):
 
@@ -150,9 +158,15 @@ class Client(object):
     def _create_futures_api_uri(self, path):
         return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
 
+    def _create_futures_data_api_uri(self, path):
+        return self.FUTURES_DATA_URL + '/' + path
+
     def _create_futures_coin_api_url(self, path, version=1):
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
         return self.FUTURES_COIN_URL + "/" + options[version] + "/" + path
+
+    def _create_futures_coin_data_api_url(self, path, version=1):
+        return self.FUTURES_COIN_DATA_URL + "/" + path
 
     def _generate_signature(self, data):
 
@@ -202,7 +216,7 @@ class Client(object):
 
         if signed:
             # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000)
+            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
             kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
@@ -247,13 +261,20 @@ class Client(object):
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_futures_coin_api(
-        self, method, path, signed=False, version=1, **kwargs
-    ):
+    def _request_futures_data_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_futures_data_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs):
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
+    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
+        uri = self._create_futures_coin_data_api_url(path, version=version)
+
+        return self._request(method, uri, signed, True, **kwargs)
 
     def _handle_response(self):
         """Internal helper for handling API responses from the Binance server.
@@ -2079,7 +2100,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('post', 'asset/assetDividend', True, data=params)
+        return self._request_margin_api('get', 'asset/assetDividend', True, data=params)
 
     def make_universal_transfer(self, **params):
         """User Universal Transfer
@@ -4965,6 +4986,14 @@ class Client(object):
         """
         return self._request_futures_api('get', 'ticker/openInterest', data=params)
 
+    def futures_open_interest_hist(self, **params):
+        """Get open interest statistics of a specific symbol.
+
+        https://binance-docs.github.io/apidocs/futures/en/#open-interest-statistics
+
+        """
+        return self._request_futures_data_api('get', 'openInterestHist', data=params)
+
     def futures_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
@@ -5279,6 +5308,14 @@ class Client(object):
         """
         return self._request_futures_coin_api("get", "openInterest", data=params)
 
+    def futures_coin_open_interest_hist(self, **params):
+        """Get open interest statistics of a specific symbol.
+
+        https://binance-docs.github.io/apidocs/delivery/en/#open-interest-statistics-market-data
+
+        """
+        return self._request_futures_coin_data_api("get", "openInterestHist", data=params)
+
     def futures_coin_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
@@ -5478,3 +5515,185 @@ class Client(object):
             "get", "capital/config/getall", signed=True, data=params
         )
 
+    def get_all_coins_info(self, **params):
+        """Get information of coins (available for deposit and withdraw) for user.
+
+        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "coin": "BTC",
+                "depositAllEnable": true,
+                "withdrawAllEnable": true,
+                "name": "Bitcoin",
+                "free": "0",
+                "locked": "0",
+                "freeze": "0",
+                "withdrawing": "0",
+                "ipoing": "0",
+                "ipoable": "0",
+                "storage": "0",
+                "isLegalMoney": false,
+                "trading": true,
+                "networkList": [
+                    {
+                        "network": "BNB",
+                        "coin": "BTC",
+                        "withdrawIntegerMultiple": "0.00000001",
+                        "isDefault": false,
+                        "depositEnable": true,
+                        "withdrawEnable": true,
+                        "depositDesc": "",
+                        "withdrawDesc": "",
+                        "specialTips": "Both a MEMO and an Address are required to successfully deposit your BEP2-BTCB tokens to Binance.",
+                        "name": "BEP2",
+                        "resetAddressStatus": false,
+                        "addressRegex": "^(bnb1)[0-9a-z]{38}$",
+                        "memoRegex": "^[0-9A-Za-z-_]{1,120}$",
+                        "withdrawFee": "0.0000026",
+                        "withdrawMin": "0.0000052",
+                        "withdrawMax": "0",
+                        "minConfirm": 1,
+                        "unLockConfirm": 0
+                    },
+                    {
+                        "network": "BTC",
+                        "coin": "BTC",
+                        "withdrawIntegerMultiple": "0.00000001",
+                        "isDefault": true,
+                        "depositEnable": true,
+                        "withdrawEnable": true,
+                        "depositDesc": "",
+                        "withdrawDesc": "",
+                        "specialTips": "",
+                        "name": "BTC",
+                        "resetAddressStatus": false,
+                        "addressRegex": "^[13][a-km-zA-HJ-NP-Z1-9]{25,34}$|^(bc1)[0-9A-Za-z]{39,59}$",
+                        "memoRegex": "",
+                        "withdrawFee": "0.0005",
+                        "withdrawMin": "0.001",
+                        "withdrawMax": "0",
+                        "minConfirm": 1,
+                        "unLockConfirm": 2
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'capital/config/getall', True, data=params)
+
+    def get_account_snapshot(self, **params):
+        """Get daily account snapshot of specific type.
+
+        https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
+
+        :param type: required. Valid values are SPOT/MARGIN/FUTURES.
+        :type type: string
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+        :param timestamp: requred
+        :type timestamp: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "balances":[
+                           {
+                              "asset":"BTC",
+                              "free":"0.09905021",
+                              "locked":"0.00000000"
+                           },
+                           {
+                              "asset":"USDT",
+                              "free":"1.89109409",
+                              "locked":"0.00000000"
+                           }
+                        ],
+                        "totalAssetOfBtc":"0.09942700"
+                     },
+                     "type":"spot",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+        OR
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "marginLevel":"2748.02909813",
+                        "totalAssetOfBtc":"0.00274803",
+                        "totalLiabilityOfBtc":"0.00000100",
+                        "totalNetAssetOfBtc":"0.00274750",
+                        "userAssets":[
+                           {
+                              "asset":"XRP",
+                              "borrowed":"0.00000000",
+                              "free":"1.00000000",
+                              "interest":"0.00000000",
+                              "locked":"0.00000000",
+                              "netAsset":"1.00000000"
+                           }
+                        ]
+                     },
+                     "type":"margin",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+        OR
+            {
+               "code":200, // 200 for success; others are error codes
+               "msg":"", // error message
+               "snapshotVos":[
+                  {
+                     "data":{
+                        "assets":[
+                           {
+                              "asset":"USDT",
+                              "marginBalance":"118.99782335",
+                              "walletBalance":"120.23811389"
+                           }
+                        ],
+                        "position":[
+                           {
+                              "entryPrice":"7130.41000000",
+                              "markPrice":"7257.66239673",
+                              "positionAmt":"0.01000000",
+                              "symbol":"BTCUSDT",
+                              "unRealizedProfit":"1.24029054"
+                           }
+                        ]
+                     },
+                     "type":"futures",
+                     "updateTime":1576281599000
+                  }
+               ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'accountSnapshot', True, data=params)
