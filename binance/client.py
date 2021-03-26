@@ -2279,6 +2279,7 @@ class Client(object):
         :param asset: required
         :type asset: str
         :type address: required
+        :type address: str
         :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
         :param amount: required
         :type amount: decimal
@@ -5558,14 +5559,6 @@ class Client(object):
 
         """
         return self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
-    
-    def fetch_all_coins_information(self, **params):
-        """Get information of coins (available for deposit and withdraw) for user.
-        https://binance-docs.github.io/apidocs/spot/en/#system-status-system
-        """
-        return self._request_margin_api(
-            "get", "capital/config/getall", signed=True, data=params
-        )
 
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
