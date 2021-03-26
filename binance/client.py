@@ -1932,7 +1932,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
-        if 'success' in res and not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2013,7 +2013,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
-        if 'success' in res and not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2221,7 +2221,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
-        if 'success' in res and not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2260,7 +2260,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
-        if 'success' in res and not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2304,7 +2304,7 @@ class Client(object):
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
-        if 'success' in res and not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
