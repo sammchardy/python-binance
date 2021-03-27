@@ -2396,7 +2396,8 @@ class Client(object):
         """Fetch withdraw history.
 
         https://www.binance.com/restapipub.html
-
+        :param withdraw_id: required
+        :type withdraw_id: str
         :param asset: optional
         :type asset: str
         :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
@@ -2413,24 +2414,11 @@ class Client(object):
         .. code-block:: python
 
             {
-                "withdrawList": [
-                    {
-                        "amount": 1,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000
-                        "status": 4
-                    },
-                    {
-                        "amount": 0.005,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "txId": "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000,
-                        "status": 4
-                    }
-                ],
-                "success": true
+                "amount": 1,
+                "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                "asset": "ETH",
+                "applyTime": 1508198532000
+                "status": 4
             }
 
         :raises: BinanceRequestException, BinanceAPIException
