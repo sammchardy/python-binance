@@ -2013,7 +2013,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
-        if not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2221,7 +2221,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
-        if not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2260,7 +2260,7 @@ class Client(object):
 
         """
         res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
-        if not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2281,7 +2281,6 @@ class Client(object):
         :type address: required
         :type address: str
         :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
-        :type address: str
         :param amount: required
         :type amount: decimal
         :param name: optional - Description of the address, default asset value passed will be used
@@ -2306,7 +2305,7 @@ class Client(object):
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
         res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
-        if not res['success']:
+        if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
 
@@ -2392,6 +2391,46 @@ class Client(object):
 
         """
         return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+
+    def get_withdraw_history_id(self, withdraw_id, **params):
+        """Fetch withdraw history.
+
+        https://www.binance.com/restapipub.html
+        :param withdraw_id: required
+        :type withdraw_id: str
+        :param asset: optional
+        :type asset: str
+        :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
+        :type status: int
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "amount": 1,
+                "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
+                "asset": "ETH",
+                "applyTime": 1508198532000
+                "status": 4
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        result = self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+
+        for entry in result['withdrawList']:
+            if 'id' in entry and entry['id'] == withdraw_id:
+                return entry
+        
+        raise Exception("There is no entry with withdraw id", result)
 
     def get_deposit_address(self, **params):
         """Fetch a deposit address for a symbol
