@@ -988,7 +988,7 @@ class Client(object):
                 "mins": 5,
                 "price": "9.35751834"
             }
-"""
+        """
         return self._get('avgPrice', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_ticker(self, **params):
@@ -5715,12 +5715,11 @@ class Client(object):
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
-        :param timestamp: requred
-        :type timestamp: int
 
         :returns: API response
 
         .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message
@@ -5746,7 +5745,11 @@ class Client(object):
                   }
                ]
             }
+
         OR
+
+        .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message
@@ -5773,7 +5776,11 @@ class Client(object):
                   }
                ]
             }
+
         OR
+
+        .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message

@@ -57,11 +57,12 @@ Get information of coins (available for deposit and withdraw) for user
     info = client.get_all_coins_info()
 
 `Get Get Daily Account Snapshot <binance.html#binance.client.Client.get_account_snapshot>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Get daily account snapshot of specific type. Valid types: SPOT/MARGIN/FUTURES.
 
 .. code:: python
+
     info = client.get_account_snapshot(type='SPOT')
 
 `Get Current Products <binance.html#binance.client.Client.get_products>`_
