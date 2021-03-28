@@ -169,6 +169,13 @@ Account
 
     status = client.get_account_status()
 
+`Get account API trading status <binance.html#binance.client.Client.get_account_api_trading_status>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    status = client.get_account_api_trading_status()
+
 `Get trades <binance.html#binance.client.Client.get_my_trades>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

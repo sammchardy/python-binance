@@ -67,8 +67,9 @@
     client.get_account_status(recvWindow)
     ```
   - **GET /wapi/v3/apiTradingStatus.html** (Fetch account api trading status detail.)
-  
-    > :warning: Not yet implemented  
+    ```python 
+    client.get_account_api_trading_status(recvWindow)
+    ```
   - **GET /wapi/v3/userAssetDribbletLog.html (HMAC SHA256)** (DustLog: Fetch small amounts of assets exchanged BNB records.)
     ```python 
     client.get_dust_log(recvWindow)
