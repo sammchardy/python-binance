@@ -2430,7 +2430,7 @@ class Client(object):
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
         
-        return None
+        raise Exception("There is no entry with withdraw id", result)
 
     def get_deposit_address(self, **params):
         """Fetch a deposit address for a symbol
