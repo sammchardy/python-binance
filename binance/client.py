@@ -5807,3 +5807,33 @@ class Client(object):
 
         """
         return self._request_margin_api('get', 'accountSnapshot', True, data=params)
+
+    def disable_fast_withdraw_switch(self, **params):
+        """Disable Fast Withdraw Switch
+
+        https://binance-docs.github.io/apidocs/spot/en/#disable-fast-withdraw-switch-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'disableFastWithdrawSwitch', True, data=params)
+
+    def enable_fast_withdraw_switch(self, **params):
+        """Enable Fast Withdraw Switch
+
+        https://binance-docs.github.io/apidocs/spot/en/#enable-fast-withdraw-switch-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'enableFastWithdrawSwitch', True, data=params)

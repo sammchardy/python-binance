@@ -222,3 +222,19 @@ Account
 .. code:: python
 
     history = client.get_asset_dividend_history()
+
+
+`Disable Fast Withdraw Switch <binance.html#binance.client.Client.disable_fast_withdraw_switch>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    client.disable_fast_withdraw_switch()
+
+
+`Enable Fast Withdraw Switch <binance.html#binance.client.Client.enable_fast_withdraw_switch>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    client.enable_fast_withdraw_switch()

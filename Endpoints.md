@@ -21,11 +21,13 @@
     client.get_account_snapshot(type='SPOT')
     ```
   - **POST /sapi/v1/account/disableFastWithdrawSwitch (HMAC SHA256)** (Disable Fast Withdraw Switch (USER_DATA).)
-  
-    > :warning: Not yet implemented  
+    ```python 
+    client.disable_fast_withdraw_switch(type='SPOT')
+    ``` 
   - **POST /sapi/v1/account/enableFastWithdrawSwitch (HMAC SHA256)** (Enable Fast Withdraw Switch (USER_DATA).)
-  
-    > :warning: Not yet implemented  
+    ```python 
+    client.enable_fast_withdraw_switch(type='SPOT')
+    ```
   - **POST /sapi/v1/capital/withdraw/apply (HMAC SHA256)** (Withdraw [SAPI]: Submit a withdraw request.)
   
     > :warning: Not yet implemented  
