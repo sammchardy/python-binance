@@ -529,6 +529,24 @@ class BinanceSocketManager(threading.Thread):
             ]
         """
         return self._start_futures_socket(symbol.lower() + '@bookTicker', callback)
+    
+    def start_individual_symbol_ticker_futures_socket(self, symbol, callback):
+        """Start a futures websocket for a single symbol's ticker data
+        https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-ticker-streams
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        :returns: connection key string if successful, False otherwise
+        .. code-block:: python
+            {
+                "e": "24hrTicker",  // Event type
+                "E": 123456789,     // Event time
+                "s": "BTCUSDT",     // Symbol
+                "p": "0.0015",      // Price change
+            }
+        """
+        return self._start_futures_socket(symbol.lower() + '@ticker', callback)
 
     def start_all_ticker_futures_socket(self, callback):
         """Start a websocket for all ticker data
