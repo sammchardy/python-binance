@@ -282,6 +282,11 @@ class Client(object):
 
         return self._request(method, uri, signed, True, **kwargs)
 
+    def _request_options_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_options_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
     def _handle_response(self):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
