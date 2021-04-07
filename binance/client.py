@@ -19,12 +19,14 @@ class Client(object):
     FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
+    OPTIONS_URL = 'https://vapi.binance.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
+    OPTIONS_API_VERSION = 'v1'
 
     SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -120,6 +122,7 @@ class Client(object):
         self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
         self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
+        self.OPTIONS_URL = self.OPTIONS_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
