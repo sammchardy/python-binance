@@ -5855,3 +5855,13 @@ class Client(object):
 
         """
         return self._request_margin_api('post', 'enableFastWithdrawSwitch', True, data=params)
+
+    # Options API
+
+    def options_ping(self):
+        """Test connectivity to the REST API
+
+        https://binance-docs.github.io/apidocs/voptions/en/#test-connectivity
+
+        """
+        return self._request_options_api('get', 'ping')
