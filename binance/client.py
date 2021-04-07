@@ -5900,7 +5900,7 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/voptions/en/#get-the-spot-index-price
 
-        :param underlying: mandatory - Spot pair（Option contract underlying asset）- BTCUSDT
+        :param underlying: required - Spot pair（Option contract underlying asset）- BTCUSDT
         :type underlying: str
 
         """
@@ -5933,7 +5933,7 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/voptions/en/#depth-information
 
-        :param symbol: mandatory - Option trading pair - BTC-200730-9000-C
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
         :param limit: optional - Default:100 Max:1000.Optional value:[10, 20, 50, 100, 500, 1000] - 100
         :type limit: int
@@ -5946,9 +5946,9 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/voptions/en/#candle-data
 
-        :param symbol: mandatory - Option trading pair - BTC-200730-9000-C
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
-        :param interval: mandatory - Time interval - 5m
+        :param interval: required - Time interval - 5m
         :type interval: str
         :param startTime: optional - Start Time - 1592317127349
         :type startTime: int
@@ -5965,7 +5965,7 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/voptions/en/#recently-completed-option-trades
 
-        :param symbol: mandatory - Option trading pair - BTC-200730-9000-C
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
         :param limit: optional - Number of records Default:100 Max:500 - 100
         :type limit: int
@@ -5978,7 +5978,7 @@ class Client(object):
 
         https://binance-docs.github.io/apidocs/voptions/en/#query-trade-history
 
-        :param symbol: mandatory - Option trading pair - BTC-200730-9000-C
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
         :param fromId: optional - The deal ID from which to return. The latest deal record is returned by default - 1592317127349
         :type fromId: int
