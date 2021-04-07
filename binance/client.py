@@ -171,6 +171,9 @@ class Client(object):
     def _create_futures_coin_data_api_url(self, path, version=1):
         return self.FUTURES_COIN_DATA_URL + "/" + path
 
+    def _create_options_api_uri(self, path):
+        return self.OPTIONS_URL + '/' + self.OPTIONS_API_VERSION + '/' + path
+
     def _generate_signature(self, data):
 
         ordered_data = self._order_params(data)
