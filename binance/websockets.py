@@ -665,6 +665,29 @@ class BinanceSocketManager(threading.Thread):
         stream_path = 'streams={}'.format('/'.join(streams))
         return self._start_socket(stream_path, callback, 'stream?')
 
+    def start_options_multiplex_socket(self, streams, callback):
+        """Start a multiplexed socket using a list of socket names.
+        User stream sockets can not be included.
+
+        Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
+
+        Combined stream events are wrapped as follows: {"stream":"<streamName>","data":<rawPayload>}
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-and-trading-interface
+
+        :param streams: list of stream names in lower case
+        :type streams: list
+        :param callback: callback function to handle messages
+        :type callback: function
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+
+        """
+        stream_path = 'streams={}'.format('/'.join([s.lower() for s in streams]))
+        return self._start_options_socket(stream_path, callback, 'stream?')
+
     def start_user_socket(self, callback):
         """Start a websocket for user data
 
