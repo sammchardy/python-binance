@@ -1,4 +1,5 @@
 # coding=utf-8
+import gzip
 import threading
 
 from autobahn.twisted.websocket import WebSocketClientFactory, \
@@ -22,13 +23,18 @@ class BinanceClientProtocol(WebSocketClientProtocol):
         self.factory.resetDelay()
 
     def onMessage(self, payload, isBinary):
-        if not isBinary:
+        if isBinary:
             try:
-                payload_obj = json.loads(payload.decode('utf8'))
-            except ValueError:
-                pass
-            else:
-                self.factory.callback(payload_obj)
+                payload = gzip.decompress(payload)
+            except:
+                print('Could not interpret binary response payload')
+
+        try:
+            payload_obj = json.loads(payload.decode('utf8'))
+        except ValueError:
+            pass
+        else:
+            self.factory.callback(payload_obj)
 
 
 class BinanceReconnectingClientFactory(ReconnectingClientFactory):
@@ -64,6 +70,7 @@ class BinanceSocketManager(threading.Thread):
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
     FSTREAM_URL = 'wss://fstream.binance.com/'
+    VSTREAM_URL = 'wss://vstream.binance.com/'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -111,6 +118,20 @@ class BinanceSocketManager(threading.Thread):
             return False
 
         factory_url = self.FSTREAM_URL + prefix + path
+        factory = BinanceClientFactory(factory_url)
+        factory.protocol = BinanceClientProtocol
+        factory.callback = callback
+        factory.reconnect = True
+        context_factory = ssl.ClientContextFactory()
+
+        self._conns[path] = connectWS(factory, context_factory)
+        return path
+
+    def _start_options_socket(self, path, callback, prefix='ws/'):
+        if path in self._conns:
+            return False
+
+        factory_url = self.VSTREAM_URL + prefix + path
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
@@ -697,6 +718,58 @@ class BinanceSocketManager(threading.Thread):
         isolated_margin_listen_key = self._client.isolated_margin_stream_get_listen_key(symbol)
         # and start the socket with this specific kek
         return self._start_account_socket(symbol, isolated_margin_listen_key, callback)
+
+    def start_options_ticker_socket(self, symbol, callback):
+        """Subscribe to a 24 hour ticker info stream
+
+        https://binance-docs.github.io/apidocs/voptions/en/#market-streams-payload-24-hour-ticker
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        """
+        return self._start_options_socket(symbol.lower() + '@ticker', callback)
+
+    def start_options_recent_trades_socket(self, symbol, callback):
+        """Subscribe to a latest completed trades stream
+
+        https://binance-docs.github.io/apidocs/voptions/en/#market-streams-payload-latest-completed-trades
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        """
+        return self._start_options_socket(symbol.lower() + '@trade', callback)
+
+    def start_options_kline_socket(self, symbol, callback, interval=Client.KLINE_INTERVAL_1MINUTE):
+        """Subscribe to a candlestick data stream
+
+        https://binance-docs.github.io/apidocs/voptions/en/#market-streams-payload-candle
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
+        :type interval: str
+        """
+        return self._start_options_socket(symbol.lower() + '@kline_' + interval, callback)
+
+    def start_options_depth_socket(self, symbol, callback, depth='10'):
+        """Subscribe to a depth data stream
+
+        https://binance-docs.github.io/apidocs/voptions/en/#market-streams-payload-depth
+
+        :param symbol: required
+        :type symbol: str
+        :param callback: callback function to handle messages
+        :type callback: function
+        :param depth: optional Number of depth entries to return, default 10.
+        :type depth: str
+        """
+        return self._start_options_socket(symbol.lower() + '@depth' + str(depth), callback)
 
     def _start_account_socket(self, socket_type, listen_key, callback):
         """Starts one of user or margin socket"""
