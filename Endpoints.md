@@ -783,6 +783,52 @@
     > :warning: Not yet implemented
 - *User Data Streams*
     > :warning: Not yet implemented
+### [Vanilla Options](https://binance-docs.github.io/apidocs/voptions/en/)
+- *Quoting interface*
+  - **GET /vapi/v1/ping** (Test connectivity)
+    ```python
+    client.options_ping()
+    ```
+  - **GET /vapi/v1/time** (Get server time)
+    ```python
+    client.options_time()
+    ```
+  - **GET /vapi/v1/optionInfo** (Get current trading pair info)
+    ```python
+    client.options_info()
+    ```
+  - **GET /vapi/v1/exchangeInfo** (Get current limit info and trading pair info)
+    ```python
+    client.options_exchange_info()
+    ```
+  - **GET /vapi/v1/index** (Get the spot index price)
+    ```python
+    client.options_index_price(underlying)
+    ```
+  - **GET /vapi/v1/ticker** (Get the latest price)
+    ```python
+    client.options_price(symbol)
+    ```
+  - **GET /vapi/v1/mark** (Get the latest mark price)
+    ```python
+    client.options_mark_price(symbol)
+    ```
+  - **GET /vapi/v1/depth** (Depth information)
+    ```python
+    client.options_order_book(symbol, limit)
+    ```
+  - **GET /vapi/v1/klines** (Candle data)
+    ```python
+    client.options_klines(symbol, interval, startTime, endTime, limit)
+    ```
+  - **GET /vapi/v1/trades** (Recently completed Option trades)
+    ```python
+    client.options_recent_trades(symbol, limit)
+    ```
+  - **GET /vapi/v1/historicalTrades** (Query trade history)
+    ```python
+    client.options_historical_trades(symbol, fromId, limit)
+    ```
 ### [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
 > :warning: Not yet implemented
 ### [USDT-M Futures testnet](https://binance-docs.github.io/apidocs/testnet/en/)
