@@ -829,6 +829,56 @@
     ```python
     client.options_historical_trades(symbol, fromId, limit)
     ```
+- *Account and trading interface*
+  - **GET /vapi/v1/account (HMAC SHA256)** (Account asset info (USER_DATA))
+    ```python
+    client.options_account_info(recvWindow)
+    ```
+  - **POST /vapi/v1/transfer (HMAC SHA256)** (Funds transfer (USER_DATA))
+    ```python
+    client.options_funds_transfer(currency, type, amount, recvWindow)
+    ```
+  - **GET /vapi/v1/position (HMAC SHA256)** (Option holdings info (USER_DATA))
+    ```python
+    client.options_positions(symbol, recvWindow)
+    ```
+  - **POST /vapi/v1/bill (HMAC SHA256)** (Account funding flow (USER_DATA))
+    ```python
+    client.options_bill(currency, recordId, startTime, endTime, limit, recvWindow)
+    ```
+  - **POST /vapi/v1/order (HMAC SHA256)** (Option order (TRADE))
+    ```python
+    client.options_place_order(symbol, side, type, quantity, price, timeInForce, reduceOnly, postOnly, \
+        newOrderRespType, clientOrderId, recvWindow, recvWindow)
+    ```
+  - **POST /vapi/v1/batchOrders (HMAC SHA256)** (Place Multiple Option orders (TRADE))
+    ```python
+    client.options_place_batch_order(orders, recvWindow)
+    ```
+  - **DELETE /vapi/v1/order (HMAC SHA256)** (Cancel Option order (TRADE))
+    ```python
+    client.options_cancel_order(symbol, orderId, clientOrderId, recvWindow)
+    ```
+  - **DELETE /vapi/v1/batchOrders (HMAC SHA256)** (Cancel Multiple Option orders (TRADE))
+    ```python
+    client.options_cancel_batch_order(symbol, orderIds, clientOrderIds, recvWindow)
+    ```
+  - **DELETE /vapi/v1/allOpenOrders (HMAC SHA256)** (Cancel all Option orders (TRADE))
+    ```python
+    client.options_cancel_all_orders(symbol, recvWindow)
+    ```
+  - **GET /vapi/v1/order (HMAC SHA256)** (Query Option order (TRADE))
+    ```python
+    client.options_query_order(symbol, orderId, clientOrderId, recvWindow)
+    ```
+  - **GET /vapi/v1/openOrders (HMAC SHA256)** (Query current pending Option orders (TRADE))
+    ```python
+    client.options_query_pending_orders(symbol, orderId, startTime, endTime, limit, recvWindow)
+    ```
+  - **GET /vapi/v1/historyOrders (HMAC SHA256)** (Query Option order history (TRADE))
+    ```python
+    client.options_query_order_history(symbol, orderId, startTime, endTime, limit, recvWindow)
+    ```
 ### [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
 > :warning: Not yet implemented
 ### [USDT-M Futures testnet](https://binance-docs.github.io/apidocs/testnet/en/)
