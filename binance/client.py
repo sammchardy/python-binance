@@ -5928,7 +5928,7 @@ class Client(object):
         """
         return self._request_options_api('get', 'mark', data=params)
 
-    def options_depth(self, **params):
+    def options_order_book(self, **params):
         """Depth information
 
         https://binance-docs.github.io/apidocs/voptions/en/#depth-information
