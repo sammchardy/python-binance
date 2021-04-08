@@ -5987,3 +5987,217 @@ class Client(object):
 
         """
         return self._request_options_api('get', 'historicalTrades', data=params)
+
+    # Account and trading interface endpoints
+
+    def options_account_info(self, **params):
+        """Account asset info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-asset-info-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'account', data=params)
+
+    def options_funds_transfer(self, **params):
+        """Funds transfer (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#funds-transfer-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param type: required - IN: Transfer from spot account to option account OUT: Transfer from option account to spot account - IN
+        :type type: str (ENUM)
+        :param amount: required - Amount - 10000
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'transfer', data=params)
+
+    def options_positions(self, **params):
+        """Option holdings info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-holdings-info-user_data
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'position', data=params)
+
+    def options_bill(self, **params):
+        """Account funding flow (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-funding-flow-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param recordId: optional - Return the recordId and subsequent data, the latest data is returned by default - 100000
+        :type recordId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'bill', data=params)
+
+    def options_place_order(self, **params):
+        """Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param side: required - Buy/sell direction: SELL, BUY - BUY
+        :type side: str (ENUM)
+        :param type: required - Order Type: LIMIT, MARKET - LIMIT
+        :type type: str (ENUM)
+        :param quantity: required - Order Quantity - 3
+        :type quantity: float
+        :param price: optional - Order Price - 1000
+        :type price: float
+        :param timeInForce: optional - Time in force method（Default GTC) - GTC
+        :type timeInForce: str (ENUM)
+        :param reduceOnly: optional - Reduce Only (Default false) - false
+        :type reduceOnly: bool
+        :param postOnly: optional - Post Only (Default false) - false
+        :type postOnly: bool
+        :param newOrderRespType: optional - "ACK", "RESULT", Default "ACK" - ACK
+        :type newOrderRespType: str (ENUM)
+        :param clientOrderId: optional - User-defined order ID cannot be repeated in pending orders - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'order', data=params)
+
+    def options_place_batch_order(self, **params):
+        """Place Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#place-multiple-option-orders-trade
+
+        :param orders: required - order list. Max 5 orders - [{"symbol":"BTC-210115-35000-C","price":"100","quantity":"0.0001","side":"BUY","type":"LIMIT"}]
+        :type orders: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'batchOrders', data=params)
+
+    def options_cancel_order(self, **params):
+        """Cancel Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'order', data=params)
+
+    def options_cancel_batch_order(self, **params):
+        """Cancel Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-multiple-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderIds: optional - Order ID - [4611875134427365377,4611875134427365378]
+        :type orderId: list
+        :param clientOrderIds: optional - User-defined order ID - ["my_id_1","my_id_2"]
+        :type clientOrderIds: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'batchOrders', data=params)
+
+    def options_cancel_all_orders(self, **params):
+        """Cancel all Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-all-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'allOpenOrders', data=params)
+
+    def options_query_order(self, **params):
+        """Query Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'order', data=params)
+
+    def options_query_pending_orders(self, **params):
+        """Query current pending Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-current-pending-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'openOrders', data=params)
+
+    def options_query_order_history(self, **params):
+        """Query Option order history (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-history-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'historyOrders', data=params)
