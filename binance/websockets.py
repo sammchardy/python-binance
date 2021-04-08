@@ -28,6 +28,7 @@ class BinanceClientProtocol(WebSocketClientProtocol):
                 payload = gzip.decompress(payload)
             except:
                 print('Could not interpret binary response payload')
+                return
 
         try:
             payload_obj = json.loads(payload.decode('utf8'))
