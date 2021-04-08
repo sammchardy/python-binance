@@ -20,6 +20,7 @@ class Client(object):
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
     OPTIONS_URL = 'https://vapi.binance.{}/vapi'
+    OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
@@ -102,7 +103,7 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com', testnet=False):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -111,6 +112,8 @@ class Client(object):
         :type api_secret: str.
         :param requests_params: optional - Dictionary of requests params to use for all calls
         :type requests_params: dict.
+        :param testnet: Use testnet environment - only available for vanilla options at the moment
+        :type testnet: bool
 
         """
 
@@ -123,12 +126,14 @@ class Client(object):
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
         self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
         self.OPTIONS_URL = self.OPTIONS_URL.format(tld)
+        self.OPTIONS_TESTNET_URL = self.OPTIONS_TESTNET_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.testnet = testnet
         self.timestamp_offset = 0
 
         # init DNS and SSL cert
@@ -172,7 +177,11 @@ class Client(object):
         return self.FUTURES_COIN_DATA_URL + "/" + path
 
     def _create_options_api_uri(self, path):
-        return self.OPTIONS_URL + '/' + self.OPTIONS_API_VERSION + '/' + path
+        if self.testnet:
+            url =  self.OPTIONS_TESTNET_URL
+        else:
+            url = self.OPTIONS_URL
+        return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
     def _generate_signature(self, data):
 
