@@ -745,7 +745,7 @@ class BinanceSocketManager(threading.Thread):
             elif socket_type == 'margin':  # cross-margin
                 self._client.margin_stream_keepalive(listen_key)
             else:  # isolated margin
-                self._client.isolated_margin_stream_keepalive(listen_key)
+                self._client.isolated_margin_stream_keepalive(socket_type, listen_key)  # Passing symbol for islation margin
             self._start_socket_timer(socket_type)
 
     def stop_socket(self, conn_key):
