@@ -6210,3 +6210,24 @@ class Client(object):
 
         """
         return self._request_options_api('get', 'historyOrders', signed=True, data=params)
+
+    def options_user_trades(self, **params):
+        """Option Trade List (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-trade-list-user_data
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param fromId: optional - Trade id to fetch from. Default gets most recent trades. - 4611875134427365376
+        :type orderId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'userTrades', signed=True, data=params)

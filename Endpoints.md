@@ -879,6 +879,10 @@
     ```python
     client.options_query_order_history(symbol, orderId, startTime, endTime, limit, recvWindow)
     ```
+  - **GET /vapi/v1/userTrades (HMAC SHA256)** (Option Trade List (USER_DATA))
+    ```python
+    client.options_user_trades(symbol, fromId, startTime, endTime, limit, recvWindow)
+    ```
 ### [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)
 > :warning: Not yet implemented
 ### [USDT-M Futures testnet](https://binance-docs.github.io/apidocs/testnet/en/)
