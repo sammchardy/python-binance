@@ -72,6 +72,7 @@ class BinanceSocketManager(threading.Thread):
     STREAM_URL = 'wss://stream.binance.com:9443/'
     FSTREAM_URL = 'wss://fstream.binance.com/'
     VSTREAM_URL = 'wss://vstream.binance.com/'
+    VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.com/'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -96,6 +97,8 @@ class BinanceSocketManager(threading.Thread):
         self._listen_keys = {'user': None, 'margin': None}
         self._account_callbacks = {'user': None, 'margin': None}
         # Isolated margin sockets will be opened under the 'symbol' name
+
+        self.testnet = self._client.testnet
 
     def _start_socket(self, path, callback, prefix='ws/'):
         if path in self._conns:
@@ -132,7 +135,12 @@ class BinanceSocketManager(threading.Thread):
         if path in self._conns:
             return False
 
-        factory_url = self.VSTREAM_URL + prefix + path
+        if self.testnet:
+            url = self.VSTREAM_TESTNET_URL
+        else:
+            url = self.VSTREAM_URL
+
+        factory_url = url + prefix + path
         factory = BinanceClientFactory(factory_url)
         factory.protocol = BinanceClientProtocol
         factory.callback = callback
