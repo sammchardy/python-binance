@@ -740,6 +740,12 @@ class BinanceSocketManager(threading.Thread):
         if listen_key != self._listen_keys[socket_type]:
             self._start_account_socket(socket_type, listen_key, callback)
         else:
+            if socket_type == 'user':
+                self._client.stream_keepalive(listen_key)
+            elif socket_type == 'margin':  # cross-margin
+                self._client.margin_stream_keepalive(listen_key)
+            else:  # isolated margin
+                self._client.isolated_margin_stream_keepalive(listen_key)
             self._start_socket_timer(socket_type)
 
     def stop_socket(self, conn_key):
