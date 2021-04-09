@@ -6008,7 +6008,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'account', data=params)
+        return self._request_options_api('get', 'account', signed=True, data=params)
 
     def options_funds_transfer(self, **params):
         """Funds transfer (USER_DATA)
@@ -6025,7 +6025,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('post', 'transfer', data=params)
+        return self._request_options_api('post', 'transfer', signed=True, data=params)
 
     def options_positions(self, **params):
         """Option holdings info (USER_DATA)
@@ -6038,7 +6038,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'position', data=params)
+        return self._request_options_api('get', 'position', signed=True, data=params)
 
     def options_bill(self, **params):
         """Account funding flow (USER_DATA)
@@ -6059,7 +6059,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('post', 'bill', data=params)
+        return self._request_options_api('post', 'bill', signed=True, data=params)
 
     def options_place_order(self, **params):
         """Option order (TRADE)
@@ -6090,7 +6090,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('post', 'order', data=params)
+        return self._request_options_api('post', 'order', signed=True, data=params)
 
     def options_place_batch_order(self, **params):
         """Place Multiple Option orders (TRADE)
@@ -6103,7 +6103,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('post', 'batchOrders', data=params)
+        return self._request_options_api('post', 'batchOrders', signed=True, data=params)
 
     def options_cancel_order(self, **params):
         """Cancel Option order (TRADE)
@@ -6120,7 +6120,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('delete', 'order', data=params)
+        return self._request_options_api('delete', 'order', signed=True, data=params)
 
     def options_cancel_batch_order(self, **params):
         """Cancel Multiple Option orders (TRADE)
@@ -6137,7 +6137,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('delete', 'batchOrders', data=params)
+        return self._request_options_api('delete', 'batchOrders', signed=True, data=params)
 
     def options_cancel_all_orders(self, **params):
         """Cancel all Option orders (TRADE)
@@ -6150,7 +6150,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('delete', 'allOpenOrders', data=params)
+        return self._request_options_api('delete', 'allOpenOrders', signed=True, data=params)
 
     def options_query_order(self, **params):
         """Query Option order (TRADE)
@@ -6167,7 +6167,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'order', data=params)
+        return self._request_options_api('get', 'order', signed=True, data=params)
 
     def options_query_pending_orders(self, **params):
         """Query current pending Option orders (TRADE)
@@ -6188,7 +6188,7 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'openOrders', data=params)
+        return self._request_options_api('get', 'openOrders', signed=True, data=params)
 
     def options_query_order_history(self, **params):
         """Query Option order history (TRADE)
@@ -6209,4 +6209,4 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'historyOrders', data=params)
+        return self._request_options_api('get', 'historyOrders', signed=True, data=params)
