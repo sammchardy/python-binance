@@ -789,7 +789,7 @@ class Client(object):
         return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
     def _klines(self, spot=True, **params):
-        """Get respective kline function of futures (futures_klines) or spot (get_klines) endpoints.
+        """Get klines of spot (get_klines) or futures (futures_klines) endpoints.
 
         :param spot: Spot klines functions, otherwise futures
         :type spot: bool
@@ -828,10 +828,6 @@ class Client(object):
                            limit=500):
         """Get Historical Klines from Binance
 
-        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
-
-        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
-
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
@@ -850,7 +846,7 @@ class Client(object):
 
     def _historical_klines(self, symbol, interval, start_str, end_str=None,
                            limit=500, spot=True):
-        """Get Historical Klines from Binance
+        """Get Historical Klines from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
@@ -941,10 +937,6 @@ class Client(object):
     def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
         """Get Historical Klines generator from Binance
 
-        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
-
-        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
-
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
@@ -961,7 +953,7 @@ class Client(object):
         return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
 
     def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
-        """Get Historical Klines from Binance
+        """Get Historical Klines generator from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
@@ -5120,7 +5112,7 @@ class Client(object):
 
     def futures_historical_klines(self, symbol, interval, start_str, end_str=None,
                            limit=500):
-        """Get Historical Klines from Binance
+        """Get historical futures klines from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
@@ -5139,7 +5131,7 @@ class Client(object):
         return self._historical_klines(symbol, interval, start_str, end_str=None, limit=500, spot=False)
 
     def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        """Get Historical Kline generator from Binance
+        """Get historical futures klines generator from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
