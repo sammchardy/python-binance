@@ -788,28 +788,44 @@ class Client(object):
         """
         return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
-    def _get_earliest_valid_timestamp(self, symbol, interval):
+    def _klines(self, spot=True, **params):
+        """Get respective kline function of futures (futures_klines) or spot (get_klines) endpoints.
+
+        :param spot: Spot klines functions, otherwise futures
+        :type spot: bool
+
+        :return: klines, see get_klines
+
+        """
+        if spot:
+            return self.get_klines(**params)
+        else:
+            return self.futures_klines(**params)
+
+    def _get_earliest_valid_timestamp(self, symbol, interval, spot):
         """Get earliest valid open timestamp from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
+        :param spot: Spot endpoint, otherwise futures
+        :type spot: bool
 
         :return: first valid timestamp
 
         """
-        kline = self.get_klines(
-            symbol=symbol,
-            interval=interval,
-            limit=1,
-            startTime=0,
-            endTime=None
-        )
+        kline = self._klines(spot=spot,
+                             symbol=symbol,
+                             interval=interval,
+                             limit=1,
+                             startTime=0,
+                             endTime=None
+                             )
         return kline[0][0]
 
     def get_historical_klines(self, symbol, interval, start_str, end_str=None,
-                              limit=500):
+                           limit=500):
         """Get Historical Klines from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -830,6 +846,34 @@ class Client(object):
         :return: list of OHLCV values
 
         """
+        return self._historical_klines(symbol, interval, start_str, end_str=None, limit=500, spot=True)
+
+    def _historical_klines(self, symbol, interval, start_str, end_str=None,
+                           limit=500, spot=True):
+        """Get Historical Klines from Binance
+
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+
+        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+        :param spot: Historical klines from spot endpoint, otherwise futures
+        :type spot: bool
+
+        :return: list of OHLCV values
+
+        """
         # init our list
         output_data = []
 
@@ -846,7 +890,7 @@ class Client(object):
             start_ts = date_to_milliseconds(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, spot)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -860,7 +904,8 @@ class Client(object):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            temp_data = self.get_klines(
+            temp_data = self._klines(
+                spot=spot,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -894,7 +939,7 @@ class Client(object):
         return output_data
 
     def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        """Get Historical Klines from Binance
+        """Get Historical Klines generator from Binance
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
@@ -913,6 +958,30 @@ class Client(object):
 
         """
 
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
+
+    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
+        """Get Historical Klines from Binance
+
+        See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
+
+        If using offset strings for dates add "UTC" to date string e.g. "now UTC", "11 hours ago UTC"
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param spot: Historical klines generator from spot endpoint, otherwise futures
+        :type spot: bool
+
+        :return: generator of OHLCV values
+
+        """
+
         # setup the max limit
         limit = 500
 
@@ -926,7 +995,7 @@ class Client(object):
             start_ts = date_to_milliseconds(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, spot)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -941,6 +1010,7 @@ class Client(object):
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             output_data = self.get_klines(
+                spot=spot,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -5047,6 +5117,44 @@ class Client(object):
 
         """
         return self._request_futures_api('get', 'klines', data=params)
+
+    def futures_historical_klines(self, symbol, interval, start_str, end_str=None,
+                           limit=500):
+        """Get Historical Klines from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+
+        :return: list of OHLCV values
+
+        """
+        return self._historical_klines(symbol, interval, start_str, end_str=None, limit=500, spot=False)
+
+    def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
+        """Get Historical Kline generator from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+
+        :return: generator of OHLCV values
+
+        """
+
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=False)
 
     def futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
