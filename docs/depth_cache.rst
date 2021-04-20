@@ -1,7 +1,8 @@
 Depth Cache
 ===========
 
-To follow the depth cache updates for a symbol use the `DepthCacheManager`
+To follow the depth cache updates for a symbol use the `DepthCacheManager`. For vanilla options use the
+`OptionsDepthCacheManager`.
 
 Create the manager like so, passing the api client, symbol and an optional callback function.
 
