@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v0.7.10
+Welcome to python-binance v0.7.11
 =================================
 
 Note
@@ -59,6 +59,7 @@ Features
 - Deposit addresses
 - Margin Trading
 - Futures Trading
+- Vanilla Options
 - Support other domains (.us, .jp, etc)
 
 Quick Start
