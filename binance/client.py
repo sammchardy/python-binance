@@ -6346,4 +6346,4 @@ class Client(object):
         :type recvWindow: int
 
         """
-        return self._request_options_api('get', 'userTrades', signed=True, data=params
+        return self._request_options_api('get', 'userTrades', signed=True, data=params)
