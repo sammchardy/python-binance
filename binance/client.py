@@ -66,6 +66,14 @@ class Client(object):
     ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
     ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
 
+    FUTURE_ORDER_TYPE_LIMIT = 'LIMIT'
+    FUTURE_ORDER_TYPE_MARKET = 'MARKET'
+    FUTURE_ORDER_TYPE_STOP = 'STOP'
+    FUTURE_ORDER_TYPE_STOP_MARKET = 'STOP_MARKET'
+    FUTURE_ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
+    FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET = 'TAKE_PROFIT_MARKET'
+    FUTURE_ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
+	
     TIME_IN_FORCE_GTC = 'GTC'  # Good till cancelled
     TIME_IN_FORCE_IOC = 'IOC'  # Immediate or cancel
     TIME_IN_FORCE_FOK = 'FOK'  # Fill or kill
@@ -146,7 +154,7 @@ class Client(object):
 
         session = requests.session()
         session.headers.update({'Accept': 'application/json',
-                                'User-Agent': 'binance/python',
+                                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
                                 'X-MBX-APIKEY': self.API_KEY})
         return session
 
