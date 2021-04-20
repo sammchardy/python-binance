@@ -283,3 +283,103 @@ class DepthCacheManager(object):
         :return: symbol
         """
         return self._symbol
+
+
+class OptionsDepthCacheManager(DepthCacheManager):
+    _default_refresh = 60*30  # 30 minutes
+
+    def __init__(self, client, symbol, callback=None, refresh_interval=_default_refresh, bm=None, limit=10):
+        """Initialise the OptionsDepthCacheManager
+
+        :param client: Binance API client
+        :type client: binance.Client
+        :param symbol: Symbol to create depth cache for
+        :type symbol: string
+        :param callback: Optional function to receive depth cache updates
+        :type callback: function
+        :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+        :type refresh_interval: int
+        :param limit: Optional number of orders to get from orderbook
+        :type limit: int
+
+        """
+        self._client = client
+        self._symbol = symbol
+        self._limit = limit
+        self._callback = callback
+        self._bm = bm
+        self._refresh_interval = refresh_interval
+        self._conn_key = None
+
+        self._init_cache()
+        self._start_socket()
+
+    def _init_cache(self):
+        """Initialise the depth cache and set a refresh time
+
+        :return:
+        """
+
+        # initialise or clear depth cache
+        self._depth_cache = DepthCache(self._symbol)
+
+        # set a time to refresh the depth cache
+        if self._refresh_interval:
+            self._refresh_time = int(time.time()) + self._refresh_interval
+
+    def _start_socket(self):
+        """Start the depth cache socket
+
+        :return:
+        """
+        if self._bm is None:
+            self._bm = BinanceSocketManager(self._client)
+
+        self._conn_key = self._bm.start_options_depth_socket(self._symbol, self._depth_event)
+        if not self._bm.is_alive():
+            self._bm.start()
+
+    def _depth_event(self, msg):
+        """Handle a depth event
+
+        :param msg:
+        :return:
+
+        """
+
+        if 'e' in msg and msg['e'] == 'error':
+            # close the socket
+            self.close()
+
+            # notify the user by returning a None value
+            if self._callback:
+                self._callback(None)
+
+        self._process_depth_message(msg)
+
+    def _process_depth_message(self, msg, buffer=False):
+        """Process a depth event message.
+
+        :param msg: Depth event message.
+        :return:
+
+        """
+
+        # add any bid or ask values
+        for bid in msg['b']:
+            self._depth_cache.add_bid(bid)
+        for ask in msg['a']:
+            self._depth_cache.add_ask(ask)
+
+        # keeping update time
+        self._depth_cache.update_time = msg['E']
+
+        # call the callback with the updated depth cache
+        if self._callback:
+            self._callback(self._depth_cache)
+
+        # after processing event see if we need to refresh the depth cache
+        if self._refresh_interval and int(time.time()) > self._refresh_time:
+            self.close()
+            self._init_cache()
+            self._start_socket()

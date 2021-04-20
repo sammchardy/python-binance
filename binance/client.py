@@ -19,12 +19,15 @@ class Client(object):
     FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
+    OPTIONS_URL = 'https://vapi.binance.{}/vapi'
+    OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     WITHDRAW_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
+    OPTIONS_API_VERSION = 'v1'
 
     SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -100,7 +103,7 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com', testnet=False):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -109,6 +112,8 @@ class Client(object):
         :type api_secret: str.
         :param requests_params: optional - Dictionary of requests params to use for all calls
         :type requests_params: dict.
+        :param testnet: Use testnet environment - only available for vanilla options at the moment
+        :type testnet: bool
 
         """
 
@@ -120,12 +125,15 @@ class Client(object):
         self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
         self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
+        self.OPTIONS_URL = self.OPTIONS_URL.format(tld)
+        self.OPTIONS_TESTNET_URL = self.OPTIONS_TESTNET_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.testnet = testnet
         self.timestamp_offset = 0
 
         # init DNS and SSL cert
@@ -167,6 +175,13 @@ class Client(object):
 
     def _create_futures_coin_data_api_url(self, path, version=1):
         return self.FUTURES_COIN_DATA_URL + "/" + path
+
+    def _create_options_api_uri(self, path):
+        if self.testnet:
+            url =  self.OPTIONS_TESTNET_URL
+        else:
+            url = self.OPTIONS_URL
+        return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
     def _generate_signature(self, data):
 
@@ -273,6 +288,11 @@ class Client(object):
 
     def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
         uri = self._create_futures_coin_data_api_url(path, version=version)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_options_api(self, method, path, signed=False, **kwargs):
+        uri = self._create_options_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
 
@@ -5952,3 +5972,370 @@ class Client(object):
 
         """
         return self._request_margin_api('post', 'enableFastWithdrawSwitch', True, data=params)
+
+    """
+    ====================================================================================================================
+    Options API
+    ====================================================================================================================
+    """
+    # Quoting interface endpoints
+
+    def options_ping(self):
+        """Test connectivity
+
+        https://binance-docs.github.io/apidocs/voptions/en/#test-connectivity
+
+        """
+        return self._request_options_api('get', 'ping')
+
+    def options_time(self):
+        """Get server time
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-server-time
+
+        """
+        return self._request_options_api('get', 'time')
+
+    def options_info(self):
+        """Get current trading pair info
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-current-trading-pair-info
+
+        """
+        return self._request_options_api('get', 'optionInfo')
+
+    def options_exchange_info(self):
+        """Get current limit info and trading pair info
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-current-limit-info-and-trading-pair-info
+
+        """
+        return self._request_options_api('get', 'exchangeInfo')
+
+    def options_index_price(self, **params):
+        """Get the spot index price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-spot-index-price
+
+        :param underlying: required - Spot pair（Option contract underlying asset）- BTCUSDT
+        :type underlying: str
+
+        """
+        return self._request_options_api('get', 'index', data=params)
+
+    def options_price(self, **params):
+        """Get the latest price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-price
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+
+        """
+        return self._request_options_api('get', 'ticker', data=params)
+
+    def options_mark_price(self, **params):
+        """Get the latest mark price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-mark-price
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+
+        """
+        return self._request_options_api('get', 'mark', data=params)
+
+    def options_order_book(self, **params):
+        """Depth information
+
+        https://binance-docs.github.io/apidocs/voptions/en/#depth-information
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param limit: optional - Default:100 Max:1000.Optional value:[10, 20, 50, 100, 500, 1000] - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'depth', data=params)
+
+    def options_klines(self, **params):
+        """Candle data
+
+        https://binance-docs.github.io/apidocs/voptions/en/#candle-data
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param interval: required - Time interval - 5m
+        :type interval: str
+        :param startTime: optional - Start Time - 1592317127349
+        :type startTime: int
+        :param endTime: optional - End Time - 1592317127349
+        :type endTime: int
+        :param limit: optional - Number of records Default:500 Max:1500 - 500
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'klines', data=params)
+
+    def options_recent_trades(self, **params):
+        """Recently completed Option trades
+
+        https://binance-docs.github.io/apidocs/voptions/en/#recently-completed-option-trades
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param limit: optional - Number of records Default:100 Max:500 - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'trades', data=params)
+
+    def options_historical_trades(self, **params):
+        """Query trade history
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-trade-history
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param fromId: optional - The deal ID from which to return. The latest deal record is returned by default - 1592317127349
+        :type fromId: int
+        :param limit: optional - Number of records Default:100 Max:500 - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'historicalTrades', data=params)
+
+    # Account and trading interface endpoints
+
+    def options_account_info(self, **params):
+        """Account asset info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-asset-info-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'account', signed=True, data=params)
+
+    def options_funds_transfer(self, **params):
+        """Funds transfer (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#funds-transfer-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param type: required - IN: Transfer from spot account to option account OUT: Transfer from option account to spot account - IN
+        :type type: str (ENUM)
+        :param amount: required - Amount - 10000
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'transfer', signed=True, data=params)
+
+    def options_positions(self, **params):
+        """Option holdings info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-holdings-info-user_data
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'position', signed=True, data=params)
+
+    def options_bill(self, **params):
+        """Account funding flow (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-funding-flow-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param recordId: optional - Return the recordId and subsequent data, the latest data is returned by default - 100000
+        :type recordId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'bill', signed=True, data=params)
+
+    def options_place_order(self, **params):
+        """Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param side: required - Buy/sell direction: SELL, BUY - BUY
+        :type side: str (ENUM)
+        :param type: required - Order Type: LIMIT, MARKET - LIMIT
+        :type type: str (ENUM)
+        :param quantity: required - Order Quantity - 3
+        :type quantity: float
+        :param price: optional - Order Price - 1000
+        :type price: float
+        :param timeInForce: optional - Time in force method（Default GTC) - GTC
+        :type timeInForce: str (ENUM)
+        :param reduceOnly: optional - Reduce Only (Default false) - false
+        :type reduceOnly: bool
+        :param postOnly: optional - Post Only (Default false) - false
+        :type postOnly: bool
+        :param newOrderRespType: optional - "ACK", "RESULT", Default "ACK" - ACK
+        :type newOrderRespType: str (ENUM)
+        :param clientOrderId: optional - User-defined order ID cannot be repeated in pending orders - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'order', signed=True, data=params)
+
+    def options_place_batch_order(self, **params):
+        """Place Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#place-multiple-option-orders-trade
+
+        :param orders: required - order list. Max 5 orders - [{"symbol":"BTC-210115-35000-C","price":"100","quantity":"0.0001","side":"BUY","type":"LIMIT"}]
+        :type orders: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'batchOrders', signed=True, data=params)
+
+    def options_cancel_order(self, **params):
+        """Cancel Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'order', signed=True, data=params)
+
+    def options_cancel_batch_order(self, **params):
+        """Cancel Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-multiple-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderIds: optional - Order ID - [4611875134427365377,4611875134427365378]
+        :type orderId: list
+        :param clientOrderIds: optional - User-defined order ID - ["my_id_1","my_id_2"]
+        :type clientOrderIds: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'batchOrders', signed=True, data=params)
+
+    def options_cancel_all_orders(self, **params):
+        """Cancel all Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-all-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'allOpenOrders', signed=True, data=params)
+
+    def options_query_order(self, **params):
+        """Query Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'order', signed=True, data=params)
+
+    def options_query_pending_orders(self, **params):
+        """Query current pending Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-current-pending-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'openOrders', signed=True, data=params)
+
+    def options_query_order_history(self, **params):
+        """Query Option order history (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-history-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'historyOrders', signed=True, data=params)
+
+    def options_user_trades(self, **params):
+        """Option Trade List (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-trade-list-user_data
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param fromId: optional - Trade id to fetch from. Default gets most recent trades. - 4611875134427365376
+        :type orderId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'userTrades', signed=True, data=params)
