@@ -5,7 +5,7 @@ import hmac
 import requests
 import time
 from operator import itemgetter
-from .helpers import date_to_milliseconds, interval_to_milliseconds
+from .helpers import date_to_milliseconds, interval_to_milliseconds, increment_month
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
 
 
@@ -954,7 +954,10 @@ class Client(object):
                 break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            if interval == self.KLINE_INTERVAL_1MONTH:
+                start_ts = increment_month(start_ts)
+            else:
+                start_ts += timeframe
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
@@ -1056,7 +1059,10 @@ class Client(object):
                 break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            if interval == self.KLINE_INTERVAL_1MONTH:
+                start_ts = increment_month(start_ts)
+            else:
+                start_ts += timeframe
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
