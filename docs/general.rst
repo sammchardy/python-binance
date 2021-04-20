@@ -48,7 +48,7 @@ Get the exchange info for a particular symbol
     info = client.get_symbol_info('BNBBTC')
 
 `Get All Coins Info <binance.html#binance.client.Client.get_all_tickers>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Get information of coins (available for deposit and withdraw) for user
 
