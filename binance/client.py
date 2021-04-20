@@ -5047,6 +5047,14 @@ class Client(object):
 
         """
         return self._request_futures_api('get', 'klines', data=params)
+    
+    def futures_continous_klines(self, **params):
+        """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#continuous-contract-kline-candlestick-data
+
+        """
+        return self._request_futures_api('get', 'continuousKlines', data=params)
 
     def futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
