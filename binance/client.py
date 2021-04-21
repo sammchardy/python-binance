@@ -12,7 +12,7 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 class Client(object):
 
     API_URL = 'https://api.binance.{}/api'
-    WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
+    WITHDRAW_API_URL = 'https://api.binance.{}/sapi'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
@@ -23,7 +23,7 @@ class Client(object):
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
-    WITHDRAW_API_VERSION = 'v3'
+    WITHDRAW_API_VERSION = 'v1'
     MARGIN_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
@@ -1996,7 +1996,7 @@ class Client(object):
         :raises: BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'systemStatus.html')
+        return self._request_withdraw_api('get', 'system/status')
 
     def get_account_status(self, **params):
         """Get account status detail.
@@ -2021,7 +2021,7 @@ class Client(object):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
+        res = self._request_withdraw_api('get', 'account/status', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2098,7 +2098,7 @@ class Client(object):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'apiTradingStatus.html', True, data=params)
+        res = self._request_withdraw_api('get', 'account/apiTradingStatus', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2179,7 +2179,7 @@ class Client(object):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
+        res = self._request_withdraw_api('get', 'asset/dribblet', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2387,7 +2387,7 @@ class Client(object):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
+        res = self._request_withdraw_api('get', 'asset/tradeFee', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2426,7 +2426,7 @@ class Client(object):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
+        res = self._request_withdraw_api('get', 'asset/assetDetail', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2471,7 +2471,7 @@ class Client(object):
         # force a name for the withdrawal if one not set
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
-        res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        res = self._request_withdraw_api('post', 'capital/withdraw/apply', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2511,7 +2511,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
+        return self._request_withdraw_api('get', 'capital/deposit/hisrec', True, data=params)
 
     def get_withdraw_history(self, **params):
         """Fetch withdraw history.
@@ -2557,7 +2557,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+        return self._request_withdraw_api('get', 'capital/withdraw/history', True, data=params)
 
     def get_withdraw_history_id(self, withdraw_id, **params):
         """Fetch withdraw history.
@@ -2623,7 +2623,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
+        return self._request_withdraw_api('get', 'capital/deposit/address', True, data=params)
 
     # User Stream Endpoints
 
@@ -4162,7 +4162,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/list.html', True, data=params)
+        return self._request_withdraw_api('get', 'sub-account/list', True, data=params)
 
     def get_sub_account_transfer_history(self, **params):
         """Query Sub-account Transfer History.
@@ -4209,7 +4209,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/transfer/history.html', True, data=params)
+        return self._request_withdraw_api('get', 'sub-account/sub/transfer/history', True, data=params)
 
     def create_sub_account_transfer(self, **params):
         """Execute sub-account transfer
@@ -4239,7 +4239,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
+        return self._request_withdraw_api('post', 'sub-account/universalTransfer', True, data=params)
     
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
@@ -4373,7 +4373,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
+        return self._request_withdraw_api('get', 'sub-account/assets', True, data=params)
 
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
