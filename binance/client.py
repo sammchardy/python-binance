@@ -845,6 +845,8 @@ class Client(BaseClient):
         :return: klines, see get_klines
 
         """
+        if 'endTime' in params and not params['endTime']:
+            del params['endTime']
         if spot:
             return self.get_klines(**params)
         else:
@@ -6562,6 +6564,8 @@ class AsyncClient(BaseClient):
     get_klines.__doc__ = Client.get_klines.__doc__
 
     async def _klines(self, spot=True, **params):
+        if 'endTime' in params and not params['endTime']:
+            del params['endTime']
         if spot:
             return await self.get_klines(**params)
         else:
@@ -6569,7 +6573,7 @@ class AsyncClient(BaseClient):
     _klines.__doc__ = Client._klines.__doc__
 
     async def _get_earliest_valid_timestamp(self, symbol, interval, spot):
-        kline = await self.get_klines(
+        kline = await self._klines(
             spot=spot,
             symbol=symbol,
             interval=interval,
@@ -6641,7 +6645,7 @@ class AsyncClient(BaseClient):
     _historical_klines.__doc__ = Client._historical_klines.__doc__
 
     async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        return await self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
     get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
 
     async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
@@ -6665,7 +6669,7 @@ class AsyncClient(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            output_data = await self.get_klines(
+            output_data = await self._klines(
                 spot=spot,
                 symbol=symbol,
                 interval=interval,
