@@ -262,7 +262,7 @@ class BaseClient(ABC):
 
 class Client(BaseClient):
 
-    def __init__(self, api_key, api_secret, requests_params=None):
+    def __init__(self, api_key=None, api_secret=None, requests_params=None):
 
         super().__init__(api_key, api_secret, requests_params)
 
@@ -2596,7 +2596,7 @@ class Client(BaseClient):
         for entry in result['withdrawList']:
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
-        
+
         raise Exception("There is no entry with withdraw id", result)
 
     def get_deposit_address(self, **params):
@@ -2776,7 +2776,7 @@ class Client(BaseClient):
                 {
                 "assets":[
                     {
-                        "baseAsset": 
+                        "baseAsset":
                         {
                         "asset": "BTC",
                         "borrowEnabled": true,
@@ -2789,7 +2789,7 @@ class Client(BaseClient):
                         "repayEnabled": true,
                         "totalAsset": "0.00000000"
                         },
-                        "quoteAsset": 
+                        "quoteAsset":
                         {
                         "asset": "USDT",
                         "borrowEnabled": true,
@@ -2803,8 +2803,8 @@ class Client(BaseClient):
                         "totalAsset": "0.00000000"
                         },
                         "symbol": "BTCUSDT"
-                        "isolatedCreated": true, 
-                        "marginLevel": "0.00000000", 
+                        "isolatedCreated": true,
+                        "marginLevel": "0.00000000",
                         "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
                         "marginRatio": "0.00000000",
                         "indexPrice": "10000.00000000"
@@ -2815,7 +2815,7 @@ class Client(BaseClient):
                     ],
                     "totalAssetOfBtc": "0.00000000",
                     "totalLiabilityOfBtc": "0.00000000",
-                    "totalNetAssetOfBtc": "0.00000000" 
+                    "totalNetAssetOfBtc": "0.00000000"
                 }
 
             If "symbols" is sent:
@@ -2823,7 +2823,7 @@ class Client(BaseClient):
                 {
                 "assets":[
                     {
-                        "baseAsset": 
+                        "baseAsset":
                         {
                         "asset": "BTC",
                         "borrowEnabled": true,
@@ -2836,7 +2836,7 @@ class Client(BaseClient):
                         "repayEnabled": true,
                         "totalAsset": "0.00000000"
                         },
-                        "quoteAsset": 
+                        "quoteAsset":
                         {
                         "asset": "USDT",
                         "borrowEnabled": true,
@@ -2850,8 +2850,8 @@ class Client(BaseClient):
                         "totalAsset": "0.00000000"
                         },
                         "symbol": "BTCUSDT"
-                        "isolatedCreated": true, 
-                        "marginLevel": "0.00000000", 
+                        "isolatedCreated": true,
+                        "marginLevel": "0.00000000",
                         "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
                         "marginRatio": "0.00000000",
                         "indexPrice": "10000.00000000"
@@ -2978,7 +2978,7 @@ class Client(BaseClient):
             "quote":"USDT",
             "isMarginTrade":true,
             "isBuyAllowed":true,
-            "isSellAllowed":true      
+            "isSellAllowed":true
             }
 
 
@@ -3007,7 +3007,7 @@ class Client(BaseClient):
                     "isMarginTrade": true,
                     "isSellAllowed": true,
                     "quote": "BTC",
-                    "symbol": "BNBBTC"     
+                    "symbol": "BNBBTC"
                 },
                 {
                     "base": "TRX",
@@ -3015,7 +3015,7 @@ class Client(BaseClient):
                     "isMarginTrade": true,
                     "isSellAllowed": true,
                     "quote": "BTC",
-                    "symbol": "TRXBTC"    
+                    "symbol": "TRXBTC"
                 }
             ]
 
@@ -3181,7 +3181,7 @@ class Client(BaseClient):
 
         .. code:: python
 
-            transfer = client.transfer_isolated_margin_to_spot(asset='BTC', 
+            transfer = client.transfer_isolated_margin_to_spot(asset='BTC',
                                                                 symbol='ETHBTC', amount='1.1')
 
         :returns: API response
@@ -3215,7 +3215,7 @@ class Client(BaseClient):
 
         .. code:: python
 
-            transfer = client.transfer_spot_to_isolated_margin(asset='BTC', 
+            transfer = client.transfer_spot_to_isolated_margin(asset='BTC',
                                                                 symbol='ETHBTC', amount='1.1')
 
         :returns: API response
@@ -3253,7 +3253,7 @@ class Client(BaseClient):
 
             transaction = client.margin_create_loan(asset='BTC', amount='1.1')
 
-            transaction = client.margin_create_loan(asset='BTC', amount='1.1', 
+            transaction = client.margin_create_loan(asset='BTC', amount='1.1',
                                                     isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
@@ -3272,7 +3272,7 @@ class Client(BaseClient):
     def repay_margin_loan(self, **params):
         """Repay loan in cross-margin or isolated-margin account.
 
-        If amount is more than the amount borrowed, the full loan will be repaid. 
+        If amount is more than the amount borrowed, the full loan will be repaid.
 
         https://binance-docs.github.io/apidocs/spot/en/#margin-account-repay-margin
 
@@ -3291,7 +3291,7 @@ class Client(BaseClient):
 
             transaction = client.margin_repay_loan(asset='BTC', amount='1.1')
 
-            transaction = client.margin_repay_loan(asset='BTC', amount='1.1', 
+            transaction = client.margin_repay_loan(asset='BTC', amount='1.1',
                                                     isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
@@ -3821,7 +3821,7 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
-    # Cross-margin 
+    # Cross-margin
 
     def margin_stream_get_listen_key(self):
         """Start a new cross-margin data stream and return the listen key
@@ -3890,7 +3890,7 @@ class Client(BaseClient):
         }
         return self._request_margin_api('delete', 'userDataStream', signed=False, data=params)
 
-    # Isolated margin 
+    # Isolated margin
 
     def isolated_margin_stream_get_listen_key(self, symbol):
         """Start a new isolated margin data stream and return the listen key
@@ -4067,7 +4067,7 @@ class Client(BaseClient):
             ]
 
         :raises: BinanceRequestException, BinanceAPIException
-        
+
         """
         return self._request_margin_api('get', 'lending/project/list', signed=True, data=params)
 
@@ -4238,7 +4238,7 @@ class Client(BaseClient):
 
         """
         return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
-    
+
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
@@ -5135,7 +5135,7 @@ class Client(BaseClient):
 
         """
         return self._request_futures_api('get', 'klines', data=params)
-    
+
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
@@ -5401,7 +5401,7 @@ class Client(BaseClient):
         """Change position mode for authenticated account
 
         https://binance-docs.github.io/apidocs/futures/en/#change-position-mode-trade
-        
+
         """
         return self._request_futures_api('post', 'positionSide/dual', True, data=params)
 
@@ -5409,7 +5409,7 @@ class Client(BaseClient):
         """Get position mode for authenticated account
 
         https://binance-docs.github.io/apidocs/futures/en/#get-current-position-mode-user_data
-        
+
         """
         return self._request_futures_api('get', 'positionSide/dual', True, data=params)
 
@@ -5749,7 +5749,7 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/delivery/en/#change-position-mode-trade
         """
         return self._request_futures_coin_api("post", "positionSide/dual", True, data=params)
-    
+
     def futures_coin_get_position_mode(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
@@ -6349,7 +6349,7 @@ class Client(BaseClient):
 class AsyncClient(BaseClient):
 
     @classmethod
-    async def create(cls, api_key='', api_secret='', requests_params=None):
+    async def create(cls, api_key=None, api_secret=None, requests_params=None):
 
         self = cls(api_key, api_secret, requests_params)
 

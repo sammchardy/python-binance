@@ -218,7 +218,7 @@ class BaseDepthCacheManager(object):
 
         # after processing event see if we need to refresh the depth cache
         if self._refresh_interval and int(time.time()) > self._refresh_time:
-           await self._init_cache()
+            await self._init_cache()
 
     def _apply_orders(self, msg):
         for bid in msg.get('b', []) + msg.get('bids', []):

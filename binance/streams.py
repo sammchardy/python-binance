@@ -37,7 +37,7 @@ class ReconnectingWebsocket:
         if self._is_binary:
             try:
                 evt = gzip.decompress(evt)
-            except:
+            except (ValueError, OSError):
                 return None
         try:
             return json.loads(evt)
@@ -573,8 +573,8 @@ class BinanceSocketManager:
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-ticker-streams
         :param symbol: required
         :type symbol: str
-        :param callback: callback function to handle messages
-        :type callback: function
+        :param coro: callback function to handle messages
+        :type coro: function
         :returns: connection key string if successful, False otherwise
         .. code-block:: python
             {
@@ -606,7 +606,6 @@ class BinanceSocketManager:
                 }
             ]
         """
-
 
         return await self._start_futures_socket('!bookTicker', coro)
 
@@ -728,8 +727,8 @@ class BinanceSocketManager:
 
         https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
 
-        :param callback: callback function to handle messages
-        :type callback: function
+        :param coro: callback function to handle messages
+        :type coro: function
 
         :returns: connection key string if successful, False otherwise
 
@@ -847,8 +846,9 @@ class BinanceSocketManager:
             listen_key = await self._client.margin_stream_get_listen_key()
         else:  # isolated margin
             callback = self._account_callbacks.get(socket_type, None)
-            listen_key = await self._client.isolated_margin_stream_get_listen_key(socket_type)  # Passing symbol for isolated margin
-        
+            # Passing symbol for isolated margin
+            listen_key = await self._client.isolated_margin_stream_get_listen_key(socket_type)
+
         if listen_key != self._listen_keys[socket_type]:
             await self._start_account_socket(socket_type, listen_key, callback)
         else:
@@ -857,7 +857,8 @@ class BinanceSocketManager:
             elif socket_type == 'margin':  # cross-margin
                 self._client.margin_stream_keepalive(listen_key)
             else:  # isolated margin
-                self._client.isolated_margin_stream_keepalive(socket_type, listen_key)  # Passing symbol for isolated margin
+                # Passing symbol for isolated margin
+                self._client.isolated_margin_stream_keepalive(socket_type, listen_key)
             self._start_socket_timer(socket_type)
 
     async def stop_socket(self, conn_key):
