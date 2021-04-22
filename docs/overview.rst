@@ -39,7 +39,7 @@ Pass your API Key and Secret
 Making API Calls
 ----------------
 
-Every method supports the passing of arbitrary parameters via keyword matching those in the`Binance API documentation <https://github.com/binance-exchange/binance-official-api-docs>`_.
+Every method supports the passing of arbitrary parameters via keyword matching those in the `Binance API documentation <https://github.com/binance-exchange/binance-official-api-docs>`_.
 These keyword arguments will be sent directly to the relevant endpoint.
 
 Each API method returns a dictionary of the JSON response as per the `Binance API documentation <https://github.com/binance-exchange/binance-official-api-docs>`_.
