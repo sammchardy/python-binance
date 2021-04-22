@@ -200,7 +200,8 @@ class BaseClient(ABC):
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
-    def _order_params(self, data):
+    @staticmethod
+    def _order_params(data):
         """Convert params to list with signature as last element
 
         :param data:
@@ -285,7 +286,8 @@ class Client(BaseClient):
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
 
-    def _handle_response(self, response):
+    @staticmethod
+    def _handle_response(response):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
@@ -869,7 +871,7 @@ class Client(BaseClient):
             interval=interval,
             limit=1,
             startTime=0,
-            endTime=None
+            endTime=int(time.time() * 1000)
         )
         return kline[0][0]
 
@@ -6379,9 +6381,7 @@ class AsyncClient(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        logging.info(f'request {uri}')
         async with getattr(self.session, method)(uri, **kwargs) as response:
-            logging.info(response)
             return await self._handle_response(response)
 
     async def _handle_response(self, response):
@@ -6463,7 +6463,6 @@ class AsyncClient(BaseClient):
     get_orderbook_tickers.__doc__ = Client.get_orderbook_tickers.__doc__
 
     async def get_order_book(self, **params):
-        logging.info("get_order_book")
         return await self._get('depth', data=params)
     get_order_book.__doc__ = Client.get_order_book.__doc__
 
