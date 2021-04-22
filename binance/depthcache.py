@@ -1,4 +1,3 @@
-# coding=utf-8
 from operator import itemgetter
 import asyncio
 import time

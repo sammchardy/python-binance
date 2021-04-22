@@ -1,4 +1,3 @@
-# coding=utf-8
 import aiohttp
 import asyncio
 import hashlib

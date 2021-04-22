@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import dateparser
 import math
 import pytz

@@ -567,7 +567,7 @@ class BinanceSocketManager:
             ]
         """
         return await self._start_futures_socket(symbol.lower() + '@bookTicker', coro)
-    
+
     async def start_individual_symbol_ticker_futures_socket(self, symbol, coro):
         """Start a futures websocket for a single symbol's ticker data
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-ticker-streams
