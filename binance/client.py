@@ -870,7 +870,7 @@ class Client(object):
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=500, spot=True)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=True)
 
     def _historical_klines(self, symbol, interval, start_str, end_str=None,
                            limit=500, spot=True):
