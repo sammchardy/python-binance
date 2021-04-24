@@ -484,9 +484,12 @@ class Client(object):
     # Market Data Endpoints
 
     def get_all_tickers(self):
-        """Latest price for all symbols.
+        """Latest price for a symbol or symbols.
 
-        https://www.binance.com/restapipub.html#symbols-price-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+
+        :param symbol: optional
+        :type symbol: str
 
         :returns: List of market tickers
 
@@ -511,7 +514,10 @@ class Client(object):
     def get_orderbook_tickers(self):
         """Best price/qty on the order book for all symbols.
 
-        https://www.binance.com/restapipub.html#symbols-order-book-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
+
+        :param symbol: optional
+        :type symbol: str
 
         :returns: List of order book market entries
 
