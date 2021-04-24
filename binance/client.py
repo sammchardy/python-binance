@@ -12,7 +12,6 @@ from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWit
 class Client(object):
 
     API_URL = 'https://api.binance.{}/api'
-    WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
@@ -23,7 +22,6 @@ class Client(object):
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
-    WITHDRAW_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
@@ -126,7 +124,6 @@ class Client(object):
         """
 
         self.API_URL = self.API_URL.format(tld)
-        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
@@ -162,11 +159,8 @@ class Client(object):
         v = self.PRIVATE_API_VERSION if signed else version
         return self.API_URL + '/' + v + '/' + path
 
-    def _create_withdraw_api_uri(self, path):
-        return self.WITHDRAW_API_URL + '/' + self.WITHDRAW_API_VERSION + '/' + path
-
-    def _create_margin_api_uri(self, path):
-        return self.MARGIN_API_URL + '/' + self.MARGIN_API_VERSION + '/' + path
+    def _create_margin_api_uri(self, path, version=MARGIN_API_VERSION):
+        return self.MARGIN_API_URL + '/' + version + '/' + path
 
     def _create_website_uri(self, path):
         return self.WEBSITE_URL + '/' + path
@@ -264,13 +258,8 @@ class Client(object):
 
         return self._request(method, uri, signed, **kwargs)
 
-    def _request_withdraw_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_withdraw_api_uri(path)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _request_margin_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_margin_api_uri(path)
+    def _request_margin_api(self, method, path, signed=False, version=MARGIN_API_VERSION, **kwargs):
+        uri = self._create_margin_api_uri(path, version)
 
         return self._request(method, uri, signed, **kwargs)
 
@@ -1982,7 +1971,7 @@ class Client(object):
     def get_system_status(self):
         """Get system status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#system-status-system
+        https://binance-docs.github.io/apidocs/spot/en/#system-status-sapi-system
 
         :returns: API response
 
@@ -1996,12 +1985,12 @@ class Client(object):
         :raises: BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'systemStatus.html')
+        return self._request_margin_api('get', 'system/status')
 
     def get_account_status(self, **params):
         """Get account status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-status-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2011,17 +2000,13 @@ class Client(object):
         .. code-block:: python
 
             {
-                "msg": "Order failed:Low Order fill rate! Will be reactivated after 5 minutes.",
-                "success": true,
-                "objs": [
-                    "5"
-                ]
+                "data": "Normal"
             }
 
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
+        res = self._request_margin_api('get', 'account/status', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2029,84 +2014,7 @@ class Client(object):
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-api-trading-status-user_data
-
-        :param recvWindow: the number of milliseconds the request is valid for
-        :type recvWindow: int
-
-        :returns: API response
-
-        .. code-block:: python
-
-        {
-            "success": true,     // Query result
-            "status": {          // API trading status detail
-                "isLocked": false,   // API trading function is locked or not
-                "plannedRecoverTime": 0,  // If API trading function is locked, this is the planned recover time
-                "triggerCondition": {
-                        "gcr": 150,  // Number of GTC orders
-                        "ifer": 150, // Number of FOK/IOC orders
-                        "ufr": 300   // Number of orders
-                },
-                "indicators": {  // The indicators updated every 30 seconds
-                     "BTCUSDT": [  // The symbol
-                        {
-                            "i": "UFR",  // Unfilled Ratio (UFR)
-                            "c": 20,     // Count of all orders
-                            "v": 0.05,   // Current UFR value
-                            "t": 0.995   // Trigger UFR value
-                        },
-                        {
-                            "i": "IFER", // IOC/FOK Expiration Ratio (IFER)
-                            "c": 20,     // Count of FOK/IOC orders
-                            "v": 0.99,   // Current IFER value
-                            "t": 0.99    // Trigger IFER value
-                        },
-                        {
-                            "i": "GCR",  // GTC Cancellation Ratio (GCR)
-                            "c": 20,     // Count of GTC orders
-                            "v": 0.99,   // Current GCR value
-                            "t": 0.99    // Trigger GCR value
-                        }
-                    ],
-                    "ETHUSDT": [
-                        {
-                            "i": "UFR",
-                            "c": 20,
-                            "v": 0.05,
-                            "t": 0.995
-                        },
-                        {
-                            "i": "IFER",
-                            "c": 20,
-                            "v": 0.99,
-                            "t": 0.99
-                        },
-                        {
-                            "i": "GCR",
-                            "c": 20,
-                            "v": 0.99,
-                            "t": 0.99
-                        }
-                    ]
-                },
-                "updateTime": 1547630471725   // The query result return time
-            }
-        }
-
-
-        :raises: BinanceWithdrawException
-
-        """
-        res = self._request_withdraw_api('get', 'apiTradingStatus.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
-
-    def get_dust_log(self, **params):
-        """Get log of small amounts exchanged for BNB.
-
-        https://binance-docs.github.io/apidocs/spot/en/#dustlog-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-api-trading-status-sapi-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2116,70 +2024,141 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success": true,
-                "results": {
-                    "total": 2,   //Total counts of exchange
-                    "rows": [
-                        {
-                            "transfered_total": "0.00132256", # Total transfered BNB amount for this exchange.
-                            "service_charge_total": "0.00002699",   # Total service charge amount for this exchange.
-                            "tran_id": 4359321,
-                            "logs": [           # Details of  this exchange.
-                                {
-                                    "tranId": 4359321,
-                                    "serviceChargeAmount": "0.000009",
-                                    "uid": "10000015",
-                                    "amount": "0.0009",
-                                    "operateTime": "2018-05-03 17:07:04",
-                                    "transferedAmount": "0.000441",
-                                    "fromAsset": "USDT"
-                                },
-                                {
-                                    "tranId": 4359321,
-                                    "serviceChargeAmount": "0.00001799",
-                                    "uid": "10000015",
-                                    "amount": "0.0009",
-                                    "operateTime": "2018-05-03 17:07:04",
-                                    "transferedAmount": "0.00088156",
-                                    "fromAsset": "ETH"
-                                }
-                            ],
-                            "operate_time": "2018-05-03 17:07:04" //The time of this exchange.
-                        },
-                        {
-                            "transfered_total": "0.00058795",
-                            "service_charge_total": "0.000012",
-                            "tran_id": 4357015,
-                            "logs": [       // Details of  this exchange.
-                                {
-                                    "tranId": 4357015,
-                                    "serviceChargeAmount": "0.00001",
-                                    "uid": "10000015",
-                                    "amount": "0.001",
-                                    "operateTime": "2018-05-02 13:52:24",
-                                    "transferedAmount": "0.00049",
-                                    "fromAsset": "USDT"
-                                },
-                                {
-                                    "tranId": 4357015,
-                                    "serviceChargeAmount": "0.000002",
-                                    "uid": "10000015",
-                                    "amount": "0.0001",
-                                    "operateTime": "2018-05-02 13:51:11",
-                                    "transferedAmount": "0.00009795",
-                                    "fromAsset": "ETH"
-                                }
-                            ],
-                            "operate_time": "2018-05-02 13:51:11"
-                        }
-                    ]
+                "data": {          // API trading status detail
+                    "isLocked": false,   // API trading function is locked or not
+                    "plannedRecoverTime": 0,  // If API trading function is locked, this is the planned recover time
+                    "triggerCondition": {
+                            "GCR": 150,  // Number of GTC orders
+                            "IFER": 150, // Number of FOK/IOC orders
+                            "UFR": 300   // Number of orders
+                    },
+                    "indicators": {  // The indicators updated every 30 seconds
+                         "BTCUSDT": [  // The symbol
+                            {
+                                "i": "UFR",  // Unfilled Ratio (UFR)
+                                "c": 20,     // Count of all orders
+                                "v": 0.05,   // Current UFR value
+                                "t": 0.995   // Trigger UFR value
+                            },
+                            {
+                                "i": "IFER", // IOC/FOK Expiration Ratio (IFER)
+                                "c": 20,     // Count of FOK/IOC orders
+                                "v": 0.99,   // Current IFER value
+                                "t": 0.99    // Trigger IFER value
+                            },
+                            {
+                                "i": "GCR",  // GTC Cancellation Ratio (GCR)
+                                "c": 20,     // Count of GTC orders
+                                "v": 0.99,   // Current GCR value
+                                "t": 0.99    // Trigger GCR value
+                            }
+                        ],
+                        "ETHUSDT": [
+                            {
+                                "i": "UFR",
+                                "c": 20,
+                                "v": 0.05,
+                                "t": 0.995
+                            },
+                            {
+                                "i": "IFER",
+                                "c": 20,
+                                "v": 0.99,
+                                "t": 0.99
+                            },
+                            {
+                                "i": "GCR",
+                                "c": 20,
+                                "v": 0.99,
+                                "t": 0.99
+                            }
+                        ]
+                    },
+                    "updateTime": 1547630471725
                 }
             }
 
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
+        res = self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
+        if not res.get('success'):
+            raise BinanceWithdrawException(res['msg'])
+        return res
+
+    def get_dust_log(self, **params):
+        """Get log of small amounts exchanged for BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#dustlog-sapi-user_data
+
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "total": 8,   //Total counts of exchange
+                "userAssetDribblets": [
+                    {
+                        "totalTransferedAmount": "0.00132256",   // Total transfered BNB amount for this exchange.
+                        "totalServiceChargeAmount": "0.00002699",    //Total service charge amount for this exchange.
+                        "transId": 45178372831,
+                        "userAssetDribbletDetails": [           //Details of  this exchange.
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.000009",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.000441",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.00001799",
+                                "amount": "0.0009",
+                                "operateTime": "2018-05-03 17:07:04",
+                                "transferedAmount": "0.00088156",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    },
+                    {
+                        "operateTime":1616203180000,
+                        "totalTransferedAmount": "0.00058795",
+                        "totalServiceChargeAmount": "0.000012",
+                        "transId": 4357015,
+                        "userAssetDribbletDetails": [
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.00001"
+                                "amount": "0.001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00049",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.000002"
+                                "amount": "0.0001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00009795",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        :raises: BinanceWithdrawException
+
+        """
+        res = self._request_margin_api('get', 'asset/dribblet', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2358,7 +2337,7 @@ class Client(object):
     def get_trade_fee(self, **params):
         """Get trade fee.
 
-        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-sapi-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -2369,25 +2348,23 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "tradeFee": [
-                    {
-                        "symbol": "ADABNB",
-                        "maker": 0.9000,
-                        "taker": 1.0000
-                    }, {
-                        "symbol": "BNBBTC",
-                        "maker": 0.3000,
-                        "taker": 0.3000
-                    }
-                ],
-                "success": true
-            }
+            [
+                {
+                    "symbol": "ADABNB",
+                    "makerCommission": "0.001",
+                    "takerCommission": "0.001"
+                },
+                {
+                    "symbol": "BNBBTC",
+                    "makerCommission": "0.001",
+                    "takerCommission": "0.001"
+                }
+            ]
 
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
+        res = self._request_margin_api('get', 'asset/tradeFee', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2395,8 +2372,10 @@ class Client(object):
     def get_asset_details(self, **params):
         """Fetch details on assets.
 
-        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-sapi-user_data
 
+        :param asset: optional
+        :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2405,13 +2384,11 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success": true,
-                "assetDetail": {
                     "CTR": {
                         "minWithdrawAmount": "70.00000000", //min withdraw amount
-                        "depositStatus": false,//deposit status
+                        "depositStatus": false,//deposit status (false if ALL of networks' are false)
                         "withdrawFee": 35, // withdraw fee
-                        "withdrawStatus": true, //withdraw status
+                        "withdrawStatus": true, //withdraw status (false if ALL of networks' are false)
                         "depositTip": "Delisted, Deposit Suspended" //reason
                     },
                     "SKY": {
@@ -2420,13 +2397,12 @@ class Client(object):
                         "withdrawFee": 0.01,
                         "withdrawStatus": true
                     }
-                }
             }
 
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
+        res = self._request_margin_api('get', 'asset/assetDetail', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2436,20 +2412,26 @@ class Client(object):
     def withdraw(self, **params):
         """Submit a withdraw request.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-sapi
 
         Assumptions:
 
         - You must have Withdraw permissions enabled on your API key
         - You must have withdrawn to the address specified through the website and approved the transaction via email
 
-        :param asset: required
-        :type asset: str
-        :type address: required
+        :param coin: required
+        :type coin: str
+        :param withdrawOrderId: optional - client id for withdraw
+        :type withdrawOrderId: str
+        :param network: optional
+        :type network: str
+        :param address: optional
         :type address: str
         :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
         :param amount: required
         :type amount: decimal
+        :param transactionFeeFlag: required - When making internal transfer, true for returning the fee to the destination account; false for returning the fee back to the departure account. Default false.
+        :type transactionFeeFlag: bool
         :param name: optional - Description of the address, default asset value passed will be used
         :type name: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -2460,8 +2442,6 @@ class Client(object):
         .. code-block:: python
 
             {
-                "msg": "success",
-                "success": true,
                 "id":"7213fea8e94b4a5593d507237e5a555b"
             }
 
@@ -2471,7 +2451,7 @@ class Client(object):
         # force a name for the withdrawal if one not set
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
-        res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
+        res = self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
         if not res.get('success'):
             raise BinanceWithdrawException(res['msg'])
         return res
@@ -2479,16 +2459,20 @@ class Client(object):
     def get_deposit_history(self, **params):
         """Fetch deposit history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#deposit-history-supporting-network-user_data
 
-        :param asset: optional
-        :type asset: str
-        :type status: 0(0:pending,1:success) optional
+        :param coin: optional
+        :type coin: str
+        :type status: optional - 0(0:pending,1:success) optional
         :type status: int
         :param startTime: optional
         :type startTime: long
         :param endTime: optional
         :type endTime: long
+        :param offset: optional - default:0
+        :type offset: long
+        :param limit: optional
+        :type limit: long
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2496,36 +2480,55 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "depositList": [
-                    {
-                        "insertTime": 1508198532000,
-                        "amount": 0.04670582,
-                        "asset": "ETH",
-                        "status": 1
-                    }
-                ],
-                "success": true
-            }
+            [
+                {
+                    "amount":"0.00999800",
+                    "coin":"PAXG",
+                    "network":"ETH",
+                    "status":1,
+                    "address":"0x788cabe9236ce061e5a892e1a59395a81fc8d62c",
+                    "addressTag":"",
+                    "txId":"0xaad4654a3234aa6118af9b4b335f5ae81c360b2394721c019b5d1e75328b09f3",
+                    "insertTime":1599621997000,
+                    "transferType":0,
+                    "confirmTimes":"12/12"
+                },
+                {
+                    "amount":"0.50000000",
+                    "coin":"IOTA",
+                    "network":"IOTA",
+                    "status":1,
+                    "address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW",
+                    "addressTag":"",
+                    "txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999",
+                    "insertTime":1599620082000,
+                    "transferType":0,
+                    "confirmTimes":"1/1"
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
+        return self._request_margin_api('get', 'capital/deposit/hisrec', True, data=params)
 
     def get_withdraw_history(self, **params):
         """Fetch withdraw history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
 
-        :param asset: optional
-        :type asset: str
+        :param coin: optional
+        :type coin: str
         :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
         :type status: int
-        :param startTime: optional
-        :type startTime: long
-        :param endTime: optional
-        :type endTime: long
+        :param offset: optional - default:0
+        :type offset: int
+        :param limit: optional
+        :type limit: int
+        :param startTime: optional - Default: 90 days from current timestamp
+        :type startTime: int
+        :param endTime: optional - Default: present timestamp
+        :type endTime: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2533,36 +2536,41 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "withdrawList": [
-                    {
-                        "amount": 1,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000
-                        "status": 4
-                    },
-                    {
-                        "amount": 0.005,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "txId": "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000,
-                        "status": 4
-                    }
-                ],
-                "success": true
-            }
+            [
+                {
+                    "address": "0x94df8b352de7f46f64b01d3666bf6e936e44ce60",
+                    "amount": "8.91000000",
+                    "applyTime": "2019-10-12 11:12:02",
+                    "coin": "USDT",
+                    "id": "b6ae22b3aa844210a7041aee7589627c",
+                    "withdrawOrderId": "WITHDRAWtest123", // will not be returned if there's no withdrawOrderId for this withdraw.
+                    "network": "ETH",
+                    "transferType": 0,   // 1 for internal transfer, 0 for external transfer
+                    "status": 6,
+                    "txId": "0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268"
+                },
+                {
+                    "address": "1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB",
+                    "amount": "0.00150000",
+                    "applyTime": "2019-09-24 12:43:45",
+                    "coin": "BTC",
+                    "id": "156ec387f49b41df8724fa744fa82719",
+                    "network": "BTC",
+                    "status": 6,
+                    "txId": "60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354"
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+        return self._request_margin_api('get', 'capital/withdraw/history', True, data=params)
 
     def get_withdraw_history_id(self, withdraw_id, **params):
         """Fetch withdraw history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
+
         :param withdraw_id: required
         :type withdraw_id: str
         :param asset: optional
@@ -2581,17 +2589,21 @@ class Client(object):
         .. code-block:: python
 
             {
-                "amount": 1,
+                "id":"7213fea8e94b4a5593d507237e5a555b",
+                "withdrawOrderId": None,
+                "amount": 0.99,
+                "transactionFee": 0.01,
                 "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
                 "asset": "ETH",
-                "applyTime": 1508198532000
+                "txId": "0xdf33b22bdb2b28b1f75ccd201a4a4m6e7g83jy5fc5d5a9d1340961598cfcb0a1",
+                "applyTime": 1508198532000,
                 "status": 4
             }
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        result = self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+        result = self._request_margin_api('get', 'capital/withdraw/history', True, data=params)
 
         for entry in result['withdrawList']:
             if 'id' in entry and entry['id'] == withdraw_id:
@@ -2602,10 +2614,12 @@ class Client(object):
     def get_deposit_address(self, **params):
         """Fetch a deposit address for a symbol
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#deposit-address-supporting-network-user_data
 
-        :param asset: required
-        :type asset: str
+        :param coin: required
+        :type coin: str
+        :param network: optional
+        :type network: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2614,16 +2628,16 @@ class Client(object):
         .. code-block:: python
 
             {
-                "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                "success": true,
-                "addressTag": "1231212",
-                "asset": "BNB"
+                "address": "1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv",
+                "coin": "BTC",
+                "tag": "",
+                "url": "https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"
             }
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
+        return self._request_margin_api('get', 'capital/deposit/address', True, data=params)
 
     # User Stream Endpoints
 
@@ -4118,17 +4132,15 @@ class Client(object):
     def get_sub_account_list(self, **params):
         """Query Sub-account List.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-sapi-for-master-account
 
-        :param email: optional
+        :param email: optional - Sub-account email
         :type email: str
-        :param startTime: optional
-        :type startTime: int
-        :param endTime: optional
-        :type endTime: int
-        :param page: optional
+        :param isFreeze: optional
+        :type isFreeze: str
+        :param page: optional - Default value: 1
         :type page: int
-        :param limit: optional
+        :param limit: optional - Default value: 1, Max value: 200
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
@@ -4138,22 +4150,15 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success":true,
                 "subAccounts":[
                     {
-                        "email":"123@test.com",
-                        "status":"enabled",
-                        "activated":true,
-                        "mobile":"91605290",
-                        "gAuth":true,
+                        "email":"testsub@gmail.com",
+                        "isFreeze":false,
                         "createTime":1544433328000
                     },
                     {
-                        "email":"321@test.com",
-                        "status":"disabled",
-                        "activated":true,
-                        "mobile":"22501238",
-                        "gAuth":true,
+                        "email":"virtual@oxebmvfonoemail.com",
+                        "isFreeze":false,
                         "createTime":1544433328000
                     }
                 ]
@@ -4162,22 +4167,24 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/list.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/list', True, data=params)
 
     def get_sub_account_transfer_history(self, **params):
         """Query Sub-account Transfer History.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-sapi-for-master-account
 
-        :param email: required
-        :type email: str
+        :param fromEmail: optional
+        :type fromEmail: str
+        :param toEmail: optional
+        :type toEmail: str
         :param startTime: optional
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param page: optional
+        :param page: optional - Default value: 1
         :type page: int
-        :param limit: optional
+        :param limit: optional - Default value: 500
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
@@ -4186,61 +4193,32 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "success":true,
-                "transfers":[
-                    {
-                        "from":"aaa@test.com",
-                        "to":"bbb@test.com",
-                        "asset":"BTC",
-                        "qty":"1",
-                        "time":1544433328000
-                    },
-                    {
-                        "from":"bbb@test.com",
-                        "to":"ccc@test.com",
-                        "asset":"ETH",
-                        "qty":"2",
-                        "time":1544433328000
-                    }
-                ]
-            }
+            [
+                {
+                    "from":"aaa@test.com",
+                    "to":"bbb@test.com",
+                    "asset":"BTC",
+                    "qty":"10",
+                    "status": "SUCCESS",
+                    "tranId": 6489943656,
+                    "time":1544433328000
+                },
+                {
+                    "from":"bbb@test.com",
+                    "to":"ccc@test.com",
+                    "asset":"ETH",
+                    "qty":"2",
+                    "status": "SUCCESS",
+                    "tranId": 6489938713,
+                    "time":1544433328000
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/transfer/history.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/sub/transfer/history', True, data=params)
 
-    def create_sub_account_transfer(self, **params):
-        """Execute sub-account transfer
-
-        https://binance-docs.github.io/apidocs/spot/en/#sub-account-spot-asset-transfer-for-master-account
-
-        :param fromEmail: required - Sender email
-        :type fromEmail: str
-        :param toEmail: required - Recipient email
-        :type toEmail: str
-        :param asset: required
-        :type asset: str
-        :param amount: required
-        :type amount: decimal
-        :param recvWindow: optional
-        :type recvWindow: int
-
-        :returns: API response
-
-        .. code-block:: python
-
-            {
-                "success":true,
-                "txnId":"2966662589"
-            }
-
-        :raises: BinanceRequestException, BinanceAPIException
-
-        """
-        return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
-    
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
@@ -4326,12 +4304,10 @@ class Client(object):
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-sapi-for-master-account
 
         :param email: required
         :type email: str
-        :param symbol: optional
-        :type symbol: str
         :param recvWindow: optional
         :type recvWindow: int
 
@@ -4340,7 +4316,6 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success":true,
                 "balances":[
                     {
                         "asset":"ADA",
@@ -4373,7 +4348,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/assets', True, data=params, version='v3')
 
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
@@ -4993,9 +4968,9 @@ class Client(object):
         :type fromEmail: str
         :param toEmail: optional
         :type toEmail: str
-        :param fromAccountType: required
+        :param fromAccountType: required - "SPOT","USDT_FUTURE","COIN_FUTURE"
         :type fromAccountType: str
-        :param toAccountType: required
+        :param toAccountType: required - "SPOT","USDT_FUTURE","COIN_FUTURE"
         :type toAccountType: str
         :param asset: required - The asset being transferred, e.g., USDT
         :type asset: str
