@@ -5281,8 +5281,8 @@ class Client(object):
         """
         return self._request_futures_api('post', 'order', True, data=params)
 
-    def futures_create_orders(self, **params):
-        """Send in a new orders.
+    def futures_place_batch_order(self, **params):
+        """Send in new orders.
 
         https://binance-docs.github.io/apidocs/futures/en/#place-multiple-orders-trade
 
