@@ -44,6 +44,7 @@ Features
 --------
 
 - Implementation of all General, Market Data and Account endpoints.
+- Asyncio implementation
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
@@ -145,10 +146,8 @@ Async Example
 
     from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
 
-
     dcm1 = None
     loop = None
-
 
     async def main():
         global dcm1, loop
@@ -161,34 +160,69 @@ Async Example
 
         print(json.dumps(await client.get_symbol_ticker(symbol="BTCUSDT"), indent=2))
 
-
-        # initialise socket manager
+        # initialise websocket factory manager
         bsm = BinanceSocketManager(client, loop)
 
-        # setup async callback handler for socket messages
-        async def handle_evt(msg):
-            pair = msg['s']
-            print(f'{pair} : {msg}')
+        # create listener using async with
+        # this will exit and close the connection after 5 messages
+        async with bsm.trade_socket('ETHBTC') as ts:
+            count = 0
+            while count < 5:
+                res = await ts.recv()
+                print(f'recv {res}')
+                if res:
+                    count += 1
 
-        # create listener, can use the `ethkey` value to close the socket later
-        trxkey = await bsm.start_trade_socket('TRXBTC', handle_evt)
+        # get historical kline data from any date range
+
+        # fetch 1 minute klines for the last day up until now
+        klines = client.get_historical_klines("BNBBTC", AsyncClient.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+
+        # use generator to fetch 1 minute klines for the last day up until now
+        async for kline in await client.get_historical_klines_generator("BNBBTC", AsyncClient.KLINE_INTERVAL_1MINUTE, "1 day ago UTC"):
+            print(kline)
+
+        # fetch 30 minute klines for the last month of 2017
+        klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+
+        # fetch weekly klines since it listed
+        klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
 
-        # setup an async callback for the Depth Cache
-        async def process_depth(depth_cache):
-            print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
-            print("Top 5 asks:")
-            print(depth_cache.get_asks()[:5])
-            print("Top 5 bids:")
-            print(depth_cache.get_bids()[:5])
+        # setup an async context the Depth Cache and exit after 5 messages
+        async with DepthCacheManager(client, loop, 'ETHBTC') as dcm_socket:
+            count = 0
+            while count < 5:
+                depth_cache = await dcm_socket.recv()
+                if not depth_cache:
+                    continue
+                count += 1
+                print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
+                print("Top 5 asks:")
+                print(depth_cache.get_asks()[:5])
+                print("Top 5 bids:")
+                print(depth_cache.get_bids()[:5])
 
-        # create the Depth Cache
-        dcm1 = await DepthCacheManager.create(client, loop, 'TRXBTC', process_depth)
+        # Vanilla options Depth Cache works the same, update the symbol to a current one
+        options_symbol = 'BTC-210430-36000-C'
+        async with OptionsDepthCacheManager(client, loop, options_symbol) as dcm_socket:
+            count = 0
+            while count < 5:
+                depth_cache = await dcm_socket.recv()
+                if not depth_cache:
+                    continue
+                count += 1
+                print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
+                print("Top 5 asks:")
+                print(depth_cache.get_asks()[:5])
+                print("Top 5 bids:")
+                print(depth_cache.get_bids()[:5])
+            print('finished options dcm socket')
+
 
         while True:
             print("doing a sleep")
             await asyncio.sleep(20, loop=loop)
-
 
     if __name__ == "__main__":
 

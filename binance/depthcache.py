@@ -118,9 +118,9 @@ class DepthCache(object):
 
 class BaseDepthCacheManager(object):
     DEFAULT_REFRESH = 60 * 30  # 30 minutes
+    TIMEOUT = 60
 
-    @classmethod
-    async def create(cls, client, loop, symbol, coro=None, refresh_interval=None, bm=None, limit=10):
+    def __init__(self, client, loop, symbol, coro=None, refresh_interval=None, bm=None, limit=10):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -139,22 +139,36 @@ class BaseDepthCacheManager(object):
         :type limit: int
 
         """
-        self = cls()
+
         self._client = client
-        self._loop = loop
+        self._depth_cache = None
+        self._loop = loop or asyncio.get_event_loop()
         self._symbol = symbol
         self._limit = limit
         self._coro = coro
         self._last_update_id = None
-        self._bm = bm
+        self._bm = bm or BinanceSocketManager(self._client, self._loop)
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
-        self._conn_key = None
+        self._socket = None
 
+    async def __aenter__(self):
         await asyncio.gather(
             self._init_cache(),
-            self._start_socket(),
+            self._start_socket()
         )
+        await self._socket.__aenter__()
         return self
+
+    async def __aexit__(self, *args, **kwargs):
+        await self._socket.__aexit__(*args, **kwargs)
+
+    async def recv(self):
+        try:
+            res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
+        except Exception as e:
+            pass
+        else:
+            return await self._depth_event(res)
 
     async def _init_cache(self):
         """Initialise the depth cache calling REST endpoint
@@ -174,12 +188,9 @@ class BaseDepthCacheManager(object):
 
         :return:
         """
-        if self._bm is None:
-            self._bm = BinanceSocketManager(self._client, self._loop)
+        self._socket = self._get_socket()
 
-        self._conn_key = await self._get_conn_key()
-
-    async def _get_conn_key(self):
+    def _get_socket(self):
         raise NotImplementedError
 
     async def _depth_event(self, msg):
@@ -190,17 +201,19 @@ class BaseDepthCacheManager(object):
 
         """
 
+        if not msg:
+            return None
+
         if 'e' in msg and msg['e'] == 'error':
             # close the socket
             await self.close()
 
             # notify the user by returning a None value
-            if self._coro:
-                await self._coro(None)
+            return None
 
-        await self._process_depth_message(msg)
+        return await self._process_depth_message(msg)
 
-    async def _process_depth_message(self, msg, buffer=False):
+    async def _process_depth_message(self, msg):
         """Process a depth event message.
 
         :param msg: Depth event message.
@@ -212,12 +225,13 @@ class BaseDepthCacheManager(object):
         self._apply_orders(msg)
 
         # call the callback with the updated depth cache
-        if self._coro:
-            await self._coro(self._depth_cache)
+        res = self._depth_cache
 
         # after processing event see if we need to refresh the depth cache
         if self._refresh_interval and int(time.time()) > self._refresh_time:
             await self._init_cache()
+
+        return res
 
     def _apply_orders(self, msg):
         for bid in msg.get('b', []) + msg.get('bids', []):
@@ -241,8 +255,6 @@ class BaseDepthCacheManager(object):
 
         :return:
         """
-        await self._bm.close()
-        await asyncio.sleep(1)
         self._depth_cache = None
 
     def get_symbol(self):
@@ -303,7 +315,7 @@ class DepthCacheManager(BaseDepthCacheManager):
 
         # Apply any updates from the websocket
         for msg in self._depth_message_buffer:
-            await self._process_depth_message(msg, buffer=True)
+            await self._process_depth_message(msg)
 
         # clear the depth buffer
         self._depth_message_buffer = []
@@ -313,19 +325,15 @@ class DepthCacheManager(BaseDepthCacheManager):
 
         :return:
         """
-        if not getattr(self, '_depth_message_buffer'):
+        if not getattr(self, '_depth_message_buffer', None):
             self._depth_message_buffer = []
 
         await super()._start_socket()
 
-        # wait for some socket responses
-        while not len(self._depth_message_buffer):
-            await asyncio.sleep(1)
+    def _get_socket(self):
+        return self._bm.depth_socket(self._symbol)
 
-    async def _get_conn_key(self):
-        return await self._bm.start_depth_socket(self._symbol, self._depth_event)
-
-    async def _process_depth_message(self, msg, buffer=False):
+    async def _process_depth_message(self, msg):
         """Process a depth event message.
 
         :param msg: Depth event message.
@@ -333,12 +341,14 @@ class DepthCacheManager(BaseDepthCacheManager):
 
         """
 
+        print(msg['u'])
+
         if self._last_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
             self._depth_message_buffer.append(msg)
             return
 
-        if buffer and msg['u'] <= self._last_update_id:
+        if msg['u'] <= self._last_update_id:
             # ignore any updates before the initial update id
             return
         elif msg['U'] != self._last_update_id + 1:
@@ -350,8 +360,7 @@ class DepthCacheManager(BaseDepthCacheManager):
         self._apply_orders(msg)
 
         # call the callback with the updated depth cache
-        if self._coro:
-            await self._coro(self._depth_cache)
+        res = self._depth_cache
 
         self._last_update_id = msg['u']
 
@@ -359,8 +368,10 @@ class DepthCacheManager(BaseDepthCacheManager):
         if self._refresh_interval and int(time.time()) > self._refresh_time:
             await self._init_cache()
 
+        return res
+
 
 class OptionsDepthCacheManager(BaseDepthCacheManager):
 
-    async def _get_conn_key(self):
-        return await self._bm.start_options_depth_socket(self._symbol, self._depth_event)
+    def _get_socket(self):
+        return self._bm.options_depth_socket(self._symbol)
