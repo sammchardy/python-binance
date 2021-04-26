@@ -2,6 +2,17 @@
 Welcome to python-binance v0.7.11-async
 =======================================
 
+Note
+----
+
+We are working on a python3 version with async support to remove legacy dependencies and their related issues.
+
+This will be a breaking change for websocket implementations and change support to python 3.6+.
+
+Plan is to release this before early May 2021.
+
+I would appreciate if you could try out the `feature/asyncio <https://github.com/sammchardy/python-binance/tree/feature/asyncio>`_ branch and give your feedback.
+
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
@@ -107,10 +118,10 @@ Quick Start
     withdraws = client.get_withdraw_history()
 
     # fetch list of ETH withdrawals
-    eth_withdraws = client.get_withdraw_history(asset='ETH')
+    eth_withdraws = client.get_withdraw_history(coin='ETH')
 
     # get a deposit address for BTC
-    address = client.get_deposit_address(asset='BTC')
+    address = client.get_deposit_address(coin='BTC')
 
     # start aggregated trade websocket for BNBBTC
     def process_message(msg):
