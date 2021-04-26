@@ -1,3 +1,4 @@
+import logging
 from operator import itemgetter
 import asyncio
 import time
@@ -166,6 +167,7 @@ class BaseDepthCacheManager(object):
         try:
             res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
         except Exception as e:
+            logging.warning(e)
             pass
         else:
             return await self._depth_event(res)

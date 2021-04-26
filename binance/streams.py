@@ -111,10 +111,10 @@ class ReconnectingWebsocket:
 
     async def _wait_for_reconnect(self):
         while self.ws_state == WSListenerState.RECONNECTING:
-            logging.debug(f"reconnecting waiting for connect")
+            logging.debug("reconnecting waiting for connect")
             await asyncio.sleep(0.01)
         if not self.ws:
-            logging.debug(f"ignore message no ws")
+            logging.debug("ignore message no ws")
         else:
             logging.debug(f"ignore message {self.ws_state}")
 
@@ -139,7 +139,7 @@ class ReconnectingWebsocket:
         self._reconnects += 1
 
     def _no_message_received_reconnect(self):
-        logging.debug(f'No message received, reconnecting')
+        logging.debug('No message received, reconnecting')
         asyncio.create_task(self._reconnect())
 
     async def _reconnect(self):
