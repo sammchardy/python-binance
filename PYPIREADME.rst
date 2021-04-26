@@ -157,10 +157,7 @@ Async Example
 
     from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
 
-    loop = None
-
     async def main():
-        global loop
 
         # initialise the client
         client = await AsyncClient.create()
@@ -171,7 +168,7 @@ Async Example
         print(json.dumps(await client.get_symbol_ticker(symbol="BTCUSDT"), indent=2))
 
         # initialise websocket factory manager
-        bsm = BinanceSocketManager(client, loop)
+        bsm = BinanceSocketManager(client)
 
         # create listener using async with
         # this will exit and close the connection after 5 messages
@@ -196,7 +193,7 @@ Async Example
         klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
         # setup an async context the Depth Cache and exit after 5 messages
-        async with DepthCacheManager(client, loop, 'ETHBTC') as dcm_socket:
+        async with DepthCacheManager(client, symbol='ETHBTC') as dcm_socket:
             while _ in range(5):
                 depth_cache = await dcm_socket.recv()
                 print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
@@ -207,7 +204,7 @@ Async Example
 
         # Vanilla options Depth Cache works the same, update the symbol to a current one
         options_symbol = 'BTC-210430-36000-C'
-        async with OptionsDepthCacheManager(client, loop, options_symbol) as dcm_socket:
+        async with OptionsDepthCacheManager(client, symbol=options_symbol) as dcm_socket:
             while _ in range(5):
                 depth_cache = await dcm_socket.recv()
                 count += 1
