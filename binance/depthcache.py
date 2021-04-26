@@ -117,11 +117,11 @@ class DepthCache(object):
         return lst
 
 
-class BaseDepthCacheManager(object):
+class BaseDepthCacheManager:
     DEFAULT_REFRESH = 60 * 30  # 30 minutes
     TIMEOUT = 60
 
-    def __init__(self, client, loop, symbol, coro=None, refresh_interval=None, bm=None, limit=10):
+    def __init__(self, client, loop, symbol, refresh_interval=None, bm=None, limit=10):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -130,8 +130,6 @@ class BaseDepthCacheManager(object):
         :type loop:
         :param symbol: Symbol to create depth cache for
         :type symbol: string
-        :param coro: Optional coroutine to receive depth cache updates
-        :type coro: async coroutine
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
         :param bm: Optional BinanceSocketManager
@@ -146,7 +144,6 @@ class BaseDepthCacheManager(object):
         self._loop = loop or asyncio.get_event_loop()
         self._symbol = symbol
         self._limit = limit
-        self._coro = coro
         self._last_update_id = None
         self._bm = bm or BinanceSocketManager(self._client, self._loop)
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
@@ -164,13 +161,17 @@ class BaseDepthCacheManager(object):
         await self._socket.__aexit__(*args, **kwargs)
 
     async def recv(self):
-        try:
-            res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
-        except Exception as e:
-            logging.warning(e)
-            pass
-        else:
-            return await self._depth_event(res)
+        dc = None
+        while not dc:
+            try:
+                res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
+            except Exception as e:
+
+                logging.warning(e)
+                pass
+            else:
+                dc = await self._depth_event(res)
+        return dc
 
     async def _init_cache(self):
         """Initialise the depth cache calling REST endpoint

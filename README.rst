@@ -157,11 +157,10 @@ Async Example
 
     from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
 
-    dcm1 = None
     loop = None
 
     async def main():
-        global dcm1, loop
+        global loop
 
         # initialise the client
         client = await AsyncClient.create()
@@ -177,12 +176,9 @@ Async Example
         # create listener using async with
         # this will exit and close the connection after 5 messages
         async with bsm.trade_socket('ETHBTC') as ts:
-            count = 0
-            while count < 5:
+            while _ in range(5):
                 res = await ts.recv()
                 print(f'recv {res}')
-                if res:
-                    count += 1
 
         # get historical kline data from any date range
 
@@ -199,15 +195,10 @@ Async Example
         # fetch weekly klines since it listed
         klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
-
         # setup an async context the Depth Cache and exit after 5 messages
         async with DepthCacheManager(client, loop, 'ETHBTC') as dcm_socket:
-            count = 0
-            while count < 5:
+            while _ in range(5):
                 depth_cache = await dcm_socket.recv()
-                if not depth_cache:
-                    continue
-                count += 1
                 print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
                 print("Top 5 asks:")
                 print(depth_cache.get_asks()[:5])
@@ -217,23 +208,14 @@ Async Example
         # Vanilla options Depth Cache works the same, update the symbol to a current one
         options_symbol = 'BTC-210430-36000-C'
         async with OptionsDepthCacheManager(client, loop, options_symbol) as dcm_socket:
-            count = 0
-            while count < 5:
+            while _ in range(5):
                 depth_cache = await dcm_socket.recv()
-                if not depth_cache:
-                    continue
                 count += 1
                 print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
                 print("Top 5 asks:")
                 print(depth_cache.get_asks()[:5])
                 print("Top 5 bids:")
                 print(depth_cache.get_bids()[:5])
-            print('finished options dcm socket')
-
-
-        while True:
-            print("doing a sleep")
-            await asyncio.sleep(20, loop=loop)
 
     if __name__ == "__main__":
 

@@ -85,29 +85,30 @@ class ReconnectingWebsocket:
             return None
 
     async def recv(self):
-        if not self.ws or self.ws_state != WSListenerState.STREAMING:
-            await self._wait_for_reconnect()
-            return None
-        if self.ws_state == WSListenerState.EXITING:
-            return None
-        try:
-            res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
-        except asyncio.TimeoutError:
-            logging.debug(f"no message in {self.TIMEOUT} seconds")
-        except asyncio.CancelledError as e:
-            logging.debug(f"cancelled error {e}")
-        except asyncio.IncompleteReadError as e:
-            logging.debug(f"incomplete read error {e}")
-        except Exception as e:
-            logging.debug(f"exception {e}")
-        else:
+        res = None
+        while not res:
+            if not self.ws or self.ws_state != WSListenerState.STREAMING:
+                await self._wait_for_reconnect()
+                break
             if self.ws_state == WSListenerState.EXITING:
-                return None
-            res = await self._try_handle_msg(res)
-            if self.ws_state == WSListenerState.EXITING:
-                return None
-            return res
-        return None
+                break
+            try:
+                res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
+            except asyncio.TimeoutError:
+                logging.debug(f"no message in {self.TIMEOUT} seconds")
+            except asyncio.CancelledError as e:
+                logging.debug(f"cancelled error {e}")
+            except asyncio.IncompleteReadError as e:
+                logging.debug(f"incomplete read error {e}")
+            except Exception as e:
+                logging.debug(f"exception {e}")
+            else:
+                if self.ws_state == WSListenerState.EXITING:
+                    break
+                res = await self._try_handle_msg(res)
+                if self.ws_state == WSListenerState.EXITING:
+                    break
+        return res
 
     async def _wait_for_reconnect(self):
         while self.ws_state == WSListenerState.RECONNECTING:
