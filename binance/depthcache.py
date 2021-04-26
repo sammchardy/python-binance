@@ -8,17 +8,20 @@ from .streams import BinanceSocketManager
 
 class DepthCache(object):
 
-    def __init__(self, symbol):
+    def __init__(self, symbol, conv_type = float):
         """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
         :type symbol: string
+        :param conv_type: Optional type to represent price, and amount, default is float.
+        :type conv_type: function.
 
         """
         self.symbol = symbol
         self._bids = {}
         self._asks = {}
         self.update_time = None
+        self.conv_type = conv_type
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -27,7 +30,7 @@ class DepthCache(object):
         :return:
 
         """
-        self._bids[bid[0]] = float(bid[1])
+        self._bids[bid[0]] = self.conv_type(bid[1])
         if bid[1] == "0.00000000":
             del self._bids[bid[0]]
 
@@ -38,14 +41,14 @@ class DepthCache(object):
         :return:
 
         """
-        self._asks[ask[0]] = float(ask[1])
+        self._asks[ask[0]] = self.conv_type(ask[1])
         if ask[1] == "0.00000000":
             del self._asks[ask[0]]
 
     def get_bids(self):
         """Get the current bids
 
-        :return: list of bids with price and quantity as floats
+        :return: list of bids with price and quantity as conv_type
 
         .. code-block:: python
 
@@ -73,12 +76,12 @@ class DepthCache(object):
             ]
 
         """
-        return DepthCache.sort_depth(self._bids, reverse=True)
+        return DepthCache.sort_depth(self._bids, reverse=True, conv_type=self.conv_type)
 
     def get_asks(self):
         """Get the current asks
 
-        :return: list of asks with price and quantity as floats
+        :return: list of asks with price and quantity as conv_type.
 
         .. code-block:: python
 
@@ -106,13 +109,13 @@ class DepthCache(object):
             ]
 
         """
-        return DepthCache.sort_depth(self._asks, reverse=False)
+        return DepthCache.sort_depth(self._asks, reverse=False, conv_type=self.conv_type)
 
     @staticmethod
-    def sort_depth(vals, reverse=False):
+    def sort_depth(vals, reverse=False, conv_type = float):
         """Sort bids or asks by price
         """
-        lst = [[float(price), quantity] for price, quantity in vals.items()]
+        lst = [[conv_type(price), quantity] for price, quantity in vals.items()]
         lst = sorted(lst, key=itemgetter(0), reverse=reverse)
         return lst
 
@@ -121,7 +124,7 @@ class BaseDepthCacheManager:
     DEFAULT_REFRESH = 60 * 30  # 30 minutes
     TIMEOUT = 60
 
-    def __init__(self, client, loop, symbol, refresh_interval=None, bm=None, limit=10):
+    def __init__(self, client, loop, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -136,6 +139,8 @@ class BaseDepthCacheManager:
         :type bm: BinanceSocketManager
         :param limit: Optional number of orders to get from orderbook
         :type limit: int
+        :param conv_type: Optional type to represent price, and amount, default is float.
+        :type conv_type: function.
 
         """
 
@@ -147,7 +152,8 @@ class BaseDepthCacheManager:
         self._last_update_id = None
         self._bm = bm or BinanceSocketManager(self._client, self._loop)
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
-        self._socket = None
+        self._conn_key = None
+        self._conv_type = conv_type
 
     async def __aenter__(self):
         await asyncio.gather(
@@ -180,7 +186,7 @@ class BaseDepthCacheManager:
         """
 
         # initialise or clear depth cache
-        self._depth_cache = DepthCache(self._symbol)
+        self._depth_cache = DepthCache(self._symbol, conv_type=self._conv_type)
 
         # set a time to refresh the depth cache
         if self._refresh_interval:
