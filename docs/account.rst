@@ -169,6 +169,13 @@ Account
 
     status = client.get_account_status()
 
+`Get account API trading status <binance.html#binance.client.Client.get_account_api_trading_status>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    status = client.get_account_api_trading_status()
+
 `Get trades <binance.html#binance.client.Client.get_my_trades>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -215,3 +222,19 @@ Account
 .. code:: python
 
     history = client.get_asset_dividend_history()
+
+
+`Disable Fast Withdraw Switch <binance.html#binance.client.Client.disable_fast_withdraw_switch>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    client.disable_fast_withdraw_switch()
+
+
+`Enable Fast Withdraw Switch <binance.html#binance.client.Client.enable_fast_withdraw_switch>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: python
+
+    client.enable_fast_withdraw_switch()
