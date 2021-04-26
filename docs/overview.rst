@@ -24,7 +24,7 @@ Firstly `register an account with Binance <https://www.binance.com/register.html
 Generate an API Key
 -------------------
 
-To use signed account methods you are required to `create an API Key  <https://www.binance.com/userCenter/createApi.html>`_.
+To use signed account methods you are required to `create an API Key  <https://www.binance.com/en/support/faq/360002502072>`_.
 
 Initialise the client
 ---------------------
@@ -63,7 +63,7 @@ At the current time Binance rate limits are:
 - 100,000 orders per 24hrs
 
 Some calls have a higher weight than others especially if a call returns information about all symbols.
-Read the `official Binance documentation <https://github.com/binance-exchange/binance-official-api-docs`_ for specific information.
+Read the `official Binance documentation <https://github.com/binance-exchange/binance-official-api-docs>`_ for specific information.
 
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
 
