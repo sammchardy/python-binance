@@ -8,7 +8,7 @@
  
 ### [Spot/Margin/Saving/Mining Endpoints](https://binance-docs.github.io/apidocs/spot/en/)
 - *Wallet Endpoints*
-  - **GET /wapi/v3/systemStatus.html** (Fetch system status.)
+  - **GET /sapi/v1/system/status** (Fetch system status.)
     ```python 
     client.get_system_status()
     ```
@@ -28,12 +28,9 @@
     ```python 
     client.enable_fast_withdraw_switch(type='SPOT')
     ```
-  - **POST /sapi/v1/capital/withdraw/apply (HMAC SHA256)** (Withdraw [SAPI]: Submit a withdraw request.)
-  
-    > :warning: Not yet implemented  
-  - **POST /wapi/v3/withdraw.html (HMAC SHA256)** (Withdraw: Submit a withdraw request.)
+  - **POST /sapi/v1/capital/withdraw/apply (HMAC SHA256)** (Withdraw: Submit a withdraw request.)
     ```python 
-    client.withdraw(asset, 
+    client.withdraw(coin, 
         withdrawOrderId, 
         network, 
         address, 
@@ -44,35 +41,26 @@
         recvWindow)
     ```
   - **GET /sapi/v1/capital/deposit/hisrec (HMAC SHA256)** (Fetch Deposit History(supporting network) (USER_DATA).)
-  
-    > :warning: Not yet implemented  
-  - **GET /wapi/v3/depositHistory.html (HMAC SHA256)** (Fetch Deposit History (USER_DATA).)
     ```python 
-    client.get_deposit_history(asset, status, startTime, endTime, recvWindow)
+    client.get_deposit_history(coin, status, startTime, endTime, recvWindow)
     ```
   - **GET /sapi/v1/capital/withdraw/history (HMAC SHA256)** (Fetch Withdraw History (supporting network) (USER_DATA).)
-  
-    > :warning: Not yet implemented  
-  - **GET /wapi/v3/withdrawHistory.html (HMAC SHA256)** (Fetch Withdraw History (USER_DATA))
     ```python 
-    client.get_withdraw_history(asset, status, startTime, endTime, recvWindow)
+    client.get_withdraw_history(coin, status, startTime, endTime, recvWindow)
     ```
   - **GET /sapi/v1/capital/deposit/address (HMAC SHA256)** (Fetch deposit address with network.)
-  
-    > :warning: Not yet implemented  
-  - **GET /wapi/v3/depositAddress.html (HMAC SHA256)** (Fetch deposit address.)
     ```python 
-    client.get_deposit_address(asset, status, recvWindow)
+    client.get_deposit_address(coin, status, recvWindow)
     ```
-  - **GET /wapi/v3/accountStatus.html** (Fetch account status detail.)
+  - **GET /sapi/v1/account/status** (Fetch account status detail.)
     ```python 
     client.get_account_status(recvWindow)
     ```
-  - **GET /wapi/v3/apiTradingStatus.html** (Fetch account api trading status detail.)
+  - **GET /sapi/account/apiTradingStatus** (Fetch account api trading status detail.)
     ```python 
     client.get_account_api_trading_status(recvWindow)
     ```
-  - **GET /wapi/v3/userAssetDribbletLog.html (HMAC SHA256)** (DustLog: Fetch small amounts of assets exchanged BNB records.)
+  - **GET /sapi/v1/asset/dribblet (HMAC SHA256)** (DustLog: Fetch small amounts of assets exchanged BNB records.)
     ```python 
     client.get_dust_log(recvWindow)
     ```
@@ -84,11 +72,11 @@
     ```python 
     client.get_asset_dividend_history(asset, startTime, endTime, limit, recvWindow)
     ```
-  - **GET /wapi/v3/assetDetail.html (HMAC SHA256)** (Fetch details of assets supported on Binance.)
+  - **GET /sapi/v1/asset/assetDetail (HMAC SHA256)** (Fetch details of assets supported on Binance.)
     ```python 
     client.get_asset_details(recvWindow)
     ```
-  - **GET /wapi/v3/tradeFee.html (HMAC SHA256)** (Fetch trade fee, values in percentage.)
+  - **GET /sapi/v1/asset/tradeFee (HMAC SHA256)** (Fetch trade fee, values in percentage.)
     ```python 
     client.get_trade_fee(symbol, recvWindow)
     ```
@@ -434,11 +422,11 @@
     client.get_max_margin_transfer(asset, isolatedSymbol, recvWindow)
     ```
   - **POST /sapi/v1/margin/isolated/create (HMAC SHA256)** (Create Isolated Margin Account (MARGIN).)
-    ```python
+    ```python 
     client.create_isolated_margin_account(base, quote, recvWindow)
     ```
   - **POST /sapi/v1/margin/isolated/transfer (HMAC SHA256)** (Isolated Margin Account Transfer (MARGIN).)
-    ```python
+    ```python 
     client.transfer_spot_to_isolated_margin(asset, symbol, amount, recvWindow)
     client.transfer_isolated_margin_to_spot(asset, symbol, amount, recvWindow)
     ```
@@ -446,15 +434,15 @@
   
     > :warning: Not yet implemented
   - **GET /sapi/v1/margin/isolated/account (HMAC SHA256)** (Query Isolated Margin Account Info (USER_DATA).)
-    ```python
+    ```python 
     client.get_isolated_margin_account(symbols, recvWindow)
     ```
   - **GET /sapi/v1/margin/isolated/pair (HMAC SHA256)** (Query Isolated Margin Symbol (USER_DATA).)
-    ```python
+    ```python 
     client.get_isolated_margin_symbol(symbol, recvWindow)
     ```
   - **GET /sapi/v1/margin/isolated/allPairs (HMAC SHA256)** (Get All Isolated Margin Symbol (USER_DATA).)
-    ```python
+    ```python 
     client.get_all_isolated_margin_symbols(recvWindow)
     ```
 - *User Data Streams*
@@ -552,19 +540,15 @@
 - *Mining Endpoints*
     > :warning: Not yet implemented
 - *Sub-Account Endpoints*
-  - **GET /wapi/v3/sub-account/list.html (HMAC SHA256)** (Query Sub-account List (For Master Account).)
+  - **GET /sapi/v1/sub-account/list (HMAC SHA256)** (Query Sub-account List (For Master Account).)
     ```python 
-    client.get_sub_account_list(email, startTime, endTime, page, limit, recvWindow)
+    client.get_sub_account_list(email, isFreeze, page, limit, recvWindow)
     ```
-  - **GET /wapi/v3/sub-account/transfer/history.html (HMAC SHA256)** (Query Sub-account Spot Asset Transfer History (For Master Account).)
+  - **GET /sapi/v1/sub-account/sub/transfer/history (HMAC SHA256)** (Query Sub-account Spot Asset Transfer History (For Master Account).)
     ```python 
-    client.get_sub_account_transfer_history(email, startTime, endTime, page, limit, recvWindow)
+    client.get_sub_account_transfer_history(fromEmail, toEmail, startTime, endTime, page, limit, recvWindow)
     ```
-  - **POST /wapi/v3/sub-account/transfer.html (HMAC SHA256)** (Execute Sub-account Spot Asset Transfer (For Master Account).)
-    ```python 
-    client.create_sub_account_transfer(fromEmail, toEmail, asset, amount, recvWindow)
-    ```
-  - **GET /wapi/v3/sub-account/assets.html (HMAC SHA256)** (Query Sub-account Assets (For Master Account).)
+  - **GET /sapi/v1/sub-account/assets (HMAC SHA256)** (Query Sub-account Assets (For Master Account).)
     ```python 
     client.get_sub_account_assets(email, recvWindow)
     ```
@@ -786,101 +770,101 @@
 ### [Vanilla Options](https://binance-docs.github.io/apidocs/voptions/en/)
 - *Quoting interface*
   - **GET /vapi/v1/ping** (Test connectivity)
-    ```python
+    ```python 
     client.options_ping()
     ```
   - **GET /vapi/v1/time** (Get server time)
-    ```python
+    ```python 
     client.options_time()
     ```
   - **GET /vapi/v1/optionInfo** (Get current trading pair info)
-    ```python
+    ```python 
     client.options_info()
     ```
   - **GET /vapi/v1/exchangeInfo** (Get current limit info and trading pair info)
-    ```python
+    ```python 
     client.options_exchange_info()
     ```
   - **GET /vapi/v1/index** (Get the spot index price)
-    ```python
+    ```python 
     client.options_index_price(underlying)
     ```
   - **GET /vapi/v1/ticker** (Get the latest price)
-    ```python
+    ```python 
     client.options_price(symbol)
     ```
   - **GET /vapi/v1/mark** (Get the latest mark price)
-    ```python
+    ```python 
     client.options_mark_price(symbol)
     ```
   - **GET /vapi/v1/depth** (Depth information)
-    ```python
+    ```python 
     client.options_order_book(symbol, limit)
     ```
   - **GET /vapi/v1/klines** (Candle data)
-    ```python
+    ```python 
     client.options_klines(symbol, interval, startTime, endTime, limit)
     ```
   - **GET /vapi/v1/trades** (Recently completed Option trades)
-    ```python
+    ```python 
     client.options_recent_trades(symbol, limit)
     ```
   - **GET /vapi/v1/historicalTrades** (Query trade history)
-    ```python
+    ```python 
     client.options_historical_trades(symbol, fromId, limit)
     ```
 - *Account and trading interface*
   - **GET /vapi/v1/account (HMAC SHA256)** (Account asset info (USER_DATA))
-    ```python
+    ```python 
     client.options_account_info(recvWindow)
     ```
   - **POST /vapi/v1/transfer (HMAC SHA256)** (Funds transfer (USER_DATA))
-    ```python
+    ```python 
     client.options_funds_transfer(currency, type, amount, recvWindow)
     ```
   - **GET /vapi/v1/position (HMAC SHA256)** (Option holdings info (USER_DATA))
-    ```python
+    ```python 
     client.options_positions(symbol, recvWindow)
     ```
   - **POST /vapi/v1/bill (HMAC SHA256)** (Account funding flow (USER_DATA))
-    ```python
+    ```python 
     client.options_bill(currency, recordId, startTime, endTime, limit, recvWindow)
     ```
   - **POST /vapi/v1/order (HMAC SHA256)** (Option order (TRADE))
-    ```python
+    ```python 
     client.options_place_order(symbol, side, type, quantity, price, timeInForce, reduceOnly, postOnly, \
         newOrderRespType, clientOrderId, recvWindow, recvWindow)
     ```
   - **POST /vapi/v1/batchOrders (HMAC SHA256)** (Place Multiple Option orders (TRADE))
-    ```python
+    ```python 
     client.options_place_batch_order(orders, recvWindow)
     ```
   - **DELETE /vapi/v1/order (HMAC SHA256)** (Cancel Option order (TRADE))
-    ```python
+    ```python 
     client.options_cancel_order(symbol, orderId, clientOrderId, recvWindow)
     ```
   - **DELETE /vapi/v1/batchOrders (HMAC SHA256)** (Cancel Multiple Option orders (TRADE))
-    ```python
+    ```python 
     client.options_cancel_batch_order(symbol, orderIds, clientOrderIds, recvWindow)
     ```
   - **DELETE /vapi/v1/allOpenOrders (HMAC SHA256)** (Cancel all Option orders (TRADE))
-    ```python
+    ```python 
     client.options_cancel_all_orders(symbol, recvWindow)
     ```
   - **GET /vapi/v1/order (HMAC SHA256)** (Query Option order (TRADE))
-    ```python
+    ```python 
     client.options_query_order(symbol, orderId, clientOrderId, recvWindow)
     ```
   - **GET /vapi/v1/openOrders (HMAC SHA256)** (Query current pending Option orders (TRADE))
-    ```python
+    ```python 
     client.options_query_pending_orders(symbol, orderId, startTime, endTime, limit, recvWindow)
     ```
   - **GET /vapi/v1/historyOrders (HMAC SHA256)** (Query Option order history (TRADE))
-    ```python
+    ```python 
     client.options_query_order_history(symbol, orderId, startTime, endTime, limit, recvWindow)
     ```
   - **GET /vapi/v1/userTrades (HMAC SHA256)** (Option Trade List (USER_DATA))
-    ```python
+    ```python 
     client.options_user_trades(symbol, fromId, startTime, endTime, limit, recvWindow)
     ```
 ### [COIN-M Futures](https://binance-docs.github.io/apidocs/delivery/en/)

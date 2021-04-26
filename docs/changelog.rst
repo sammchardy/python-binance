@@ -1,6 +1,23 @@
 Changelog
 =========
 
+v0.7.11
+^^^^^^^^^^
+
+**Added**
+- Vanilla Options REST endpoints
+- Vanilla Options websockets
+- Futures order type enums
+
+**Updated**
+
+- websocket keep-alive functions for different socket types
+- dependencies
+
+**Fixed**
+
+- change to User-Agent to avoid connection issues
+
 v0.7.5.dev
 ^^^^^^^^^^
 **Changed**

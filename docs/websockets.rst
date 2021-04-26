@@ -8,11 +8,11 @@ Multiple socket connections can be made through the manager.
 Only one instance of each socket type will be created, i.e. only one BNBBTC Depth socket can be created
 and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 
-When creating socket connections a callback function is passed which receives the messages.
+When creating socket connections an Asynchronous context manager is returned.
 
 Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md>`_.
 
-Websockets are setup to reconnect with a maximum of 5 retries.
+Websockets are setup to reconnect with a maximum of 5 retries with an exponential backoff strategy.
 
 Websocket Usage
 ---------------
@@ -24,25 +24,30 @@ Create the manager like so, passing the API client.
     from binance.websockets import BinanceSocketManager
     bm = BinanceSocketManager(client)
     # start any sockets here, i.e a trade socket
-    conn_key = bm.start_trade_socket('BNBBTC', process_message)
-    # then start the socket manager
-    bm.start()
+    ts = bm.trade_socket('BNBBTC')
+    # then start receiving messages
+    async with ts as tscm:
+        res = await tscm.recv()
+        print(res)
 
-A callback to process messages would take the format
-
-.. code:: python
-
-    def process_message(msg):
-        print("message type: {}".format(msg['e']))
-        print(msg)
-        # do something
-
-Set a custom timeout for the websocket connection
+Set a custom timeout for the websocket connections
 
 .. code:: python
 
     # set a timeout of 60 seconds
     bm = BinanceSocketManager(client, user_timeout=60)
+
+Manually enter and exit the Asynchronous context manager
+
+.. code:: python
+
+    ts = bm.trade_socket('BNBBTC')
+    # enter the context manager
+    await ts.__aenter__()
+    # receive a message
+    msg = await ts.recv()
+    # exit the context manager
+    await ts.__aexit__()
 
 
 Websocket Errors
@@ -65,8 +70,8 @@ If the websocket is disconnected and is unable to reconnect a message is sent to
             # process message normally
 
 
-`Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.start_multiplex_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.multiplex_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Create a socket combining multiple streams.
 
@@ -78,14 +83,11 @@ See the `Binance Websocket Streams API documentation <https://github.com/binance
 
 .. code:: python
 
-    def process_m_message(msg):
-        print("stream: {} data: {}".format(msg['stream'], msg['data']))
-
     # pass a list of stream names
-    conn_key = bm.start_multiplex_socket(['bnbbtc@aggTrade', 'neobtc@ticker'], process_m_message)
+    ms = bm.multiplex_socket(['bnbbtc@aggTrade', 'neobtc@ticker'])
 
-`Depth Socket <binance.html#binance.websockets.BinanceSocketManager.start_depth_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Depth Socket <binance.html#binance.websockets.BinanceSocketManager.depth_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Depth sockets have an optional depth parameter to receive partial book rather than a diff response.
 By default this the diff response is returned.
@@ -94,14 +96,14 @@ Valid depth values are 5, 10 and 20 and `defined as enums <enums.html>`_.
 .. code:: python
 
     # depth diff response
-    diff_key = bm.start_depth_socket('BNBBTC', process_message)
+    ds = bm.depth_socket('BNBBTC')
 
     # partial book response
-    partial_key = bm.start_depth_socket('BNBBTC', process_message, depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
+    ds = bm.depth_socket('BNBBTC', depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
 
 
-`Kline Socket <binance.html#binance.websockets.BinanceSocketManager.start_kline_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Kline Socket <binance.html#binance.websockets.BinanceSocketManager.kline_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Kline sockets have an optional interval parameter. By default this is set to 1 minute.
 Valid interval values are `defined as enums <enums.html>`_.
@@ -109,49 +111,49 @@ Valid interval values are `defined as enums <enums.html>`_.
 .. code:: python
 
     from binance.enums import *
-    conn_key = bm.start_kline_socket('BNBBTC', process_message, interval=KLINE_INTERVAL_30MINUTE)
+    ks = bm.kline_socket('BNBBTC', interval=KLINE_INTERVAL_30MINUTE)
 
 
-`Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_aggtrade_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. code:: python
-
-    conn_key = bm.start_aggtrade_socket('BNBBTC', process_message)
-
-
-`Trade Socket <binance.html#binance.websockets.BinanceSocketManager.start_trade_socket>`_
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Aggregated Trade Socket <binance.html#binance.websockets.BinanceSocketManager.aggtrade_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
-    conn_key = bm.start_trade_socket('BNBBTC', process_message)
+    ats = bm.aggtrade_socket('BNBBTC')
 
-`Symbol Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_symbol_ticker_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-.. code:: python
-
-    conn_key = bm.start_symbol_ticker_socket('BNBBTC', process_message)
-
-`Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_ticker_socket>`_
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Trade Socket <binance.html#binance.websockets.BinanceSocketManager.trade_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
-    conn_key = bm.start_ticker_socket(process_message)
+    ts = bm.trade_socket('BNBBTC')
 
-`Mini Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.start_miniticker_socket>`_
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+`Symbol Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.symbol_ticker_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: python
+
+    sts = bm.symbol_ticker_socket('BNBBTC')
+
+`Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.ticker_socket>`_
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+.. code:: python
+
+    ts = bm.ticker_socket(process_message)
+
+`Mini Ticker Socket <binance.html#binance.websockets.BinanceSocketManager.miniticker_socket>`_
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. code:: python
 
     # by default updates every second
-    conn_key = bm.start_miniticker_socket(process_message)
+    mts = bm.miniticker_socket()
 
     # this socket can take an update interval parameter
     # set as 5000 to receive updates every 5 seconds
-    conn_key = bm.start_miniticker_socket(process_message, 5000)
+    mts = bm.miniticker_socket(5000)
 
 User Socket
 +++++++++++
@@ -166,64 +168,26 @@ The Manager handles keeping the socket alive.
 
 There are separate sockets for Spot, Cross-margin and separate Isolated margin accounts.
 
-`Spot trading <binance.html#binance.websockets.BinanceSocketManager.start_user_socket>`_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`Spot trading <binance.html#binance.websockets.BinanceSocketManager.user_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
-    bm.start_user_socket(process_message)
+    bm.user_socket()
 
 
-`Cross-margin <binance.html#binance.websockets.BinanceSocketManager.start_margin_socket>`_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: python
-
-    bm.start_margin_socket(process_message)
-
-
-`Isolated margin <binance.html#binance.websockets.BinanceSocketManager.start_isolated_margin_socket>`_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`Cross-margin <binance.html#binance.websockets.BinanceSocketManager.margin_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
-    bm.start_isolated_margin_socket(symbol, process_message)
+    bm.margin_socket()
 
 
-
-`Close a Socket <binance.html#binance.websockets.BinanceSocketManager.stop_socket>`_
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-To close an individual socket call the `stop_socket` function.
-This takes a conn_key parameter which is returned when starting the socket.
+`Isolated margin <binance.html#binance.websockets.BinanceSocketManager.isolated_margin_socket>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 
-    bm.stop_socket(conn_key)
+    bm.isolated_margin_socket(symbol)
 
-
-To stop all sockets and end the manager call `close` after doing this a `start` call would be required to connect any new sockets.
-
-.. code:: python
-
-    bm.close()
-
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/websockets?pixel
-
-
-Close and exit program
-++++++++++++++++++++++
-
-Websockets utilise a reactor loop from the Twisted library. Using the `close` method above will close
-the websocket connections but it won't stop the reactor loop so your code may not exit when you expect.
-
-If you do want to exit then use the `stop` method from reactor like below.
-
-.. code:: python
-
-    from twisted.internet import reactor
-
-    # program code here
-
-    # when you need to exit
-    reactor.stop()
