@@ -6,6 +6,7 @@ import requests
 import time
 from abc import ABC, abstractmethod
 from operator import itemgetter
+from urllib.parse import urlencode
 
 from .helpers import interval_to_milliseconds, convert_ts_str
 from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
@@ -5257,6 +5258,20 @@ class Client(BaseClient):
 
         """
         return self._request_futures_api('post', 'order', True, data=params)
+
+    def futures_place_batch_order(self, **params):
+        """Send in new orders.
+
+        https://binance-docs.github.io/apidocs/futures/en/#place-multiple-orders-trade
+
+        To avoid modifying the existing signature generation and parameter order logic,
+        the url encoding is done on the special query param, batchOrders, in the early stage.
+
+        """
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+        return self._request_futures_api('post', 'batchOrders', True, data=params)
 
     def futures_get_order(self, **params):
         """Check an order's status.
