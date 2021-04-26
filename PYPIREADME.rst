@@ -97,7 +97,7 @@ Quick Start
     withdraws = client.get_withdraw_history()
 
     # fetch list of ETH withdrawals
-    eth_withdraws = client.get_withdraw_history(asset='ETH')
+    eth_withdraws = client.get_withdraw_history(coin='ETH')
 
     # get a deposit address for BTC
     address = client.get_deposit_address(asset='BTC')
