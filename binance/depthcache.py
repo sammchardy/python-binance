@@ -8,7 +8,7 @@ from .streams import BinanceSocketManager
 
 class DepthCache(object):
 
-    def __init__(self, symbol, conv_type = float):
+    def __init__(self, symbol, conv_type=float):
         """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
@@ -112,7 +112,7 @@ class DepthCache(object):
         return DepthCache.sort_depth(self._asks, reverse=False, conv_type=self.conv_type)
 
     @staticmethod
-    def sort_depth(vals, reverse=False, conv_type = float):
+    def sort_depth(vals, reverse=False, conv_type=float):
         """Sort bids or asks by price
         """
         lst = [[conv_type(price), quantity] for price, quantity in vals.items()]
