@@ -198,6 +198,10 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             listen_key = await self._client.stream_get_listen_key()
         elif self._keepalive_type == 'margin':  # cross-margin
             listen_key = await self._client.margin_stream_get_listen_key()
+        elif self._keepalive_type == 'futures':
+            listen_key = await self._client.futures_stream_get_listen_key()
+        elif self._keepalive_type == 'coin_futures':
+            listen_key = await self._client.futures_coin_stream_get_listen_key()
         else:  # isolated margin
             # Passing symbol for isolated margin
             listen_key = await self._client.isolated_margin_stream_get_listen_key(self._keepalive_type)
@@ -214,6 +218,10 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 await self._client.stream_keepalive(self._path)
             elif self._keepalive_type == 'margin':  # cross-margin
                 await self._client.margin_stream_keepalive(self._path)
+            elif self._keepalive_type == 'futures':
+                await self._client.futures_stream_keepalive(self._path)
+            elif self._keepalive_type == 'coin_futures':
+                await self._client.futures_coin_stream_keepalive(self._path)
             else:  # isolated margin
                 # Passing symbol for isolated margin
                 await self._client.isolated_margin_stream_keepalive(self._keepalive_type, self._path)
@@ -224,6 +232,7 @@ class BinanceSocketManager:
 
     STREAM_URL = 'wss://stream.binance.com:9443/'
     FSTREAM_URL = 'wss://fstream.binance.com/'
+    DSTREAM_URL = 'wss://dstream.binance.com/'
     VSTREAM_URL = 'wss://vstream.binance.com/'
     VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.com/'
 
@@ -829,6 +838,28 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
         """
         return self._get_account_socket('margin')
+
+    def futures_socket(self):
+        """Start a websocket for futures data
+
+            https://binance-docs.github.io/apidocs/futures/en/#websocket-market-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+        """
+        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+
+    def coin_futures_socket(self):
+        """Start a websocket for coin futures data
+
+            https://binance-docs.github.io/apidocs/delivery/en/#websocket-market-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+        """
+        return self._get_account_socket('coin_futures', stream_url=self.DSTREAM_URL)
 
     def isolated_margin_socket(self, symbol):
         """Start a websocket for isolated margin data

@@ -5409,6 +5409,22 @@ class Client(BaseClient):
         """
         return self._request_futures_api('get', 'positionSide/dual', True, data=params)
 
+    def futures_stream_get_listen_key(self):
+        res = self._request_futures_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    def futures_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_api('put', 'listenKey', signed=False, data=params)
+
+    def futures_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_api('delete', 'listenKey', signed=False, data=params)
+
     # COIN Futures API
     def futures_coin_ping(self):
         """Test connectivity to the Rest API
@@ -5753,6 +5769,22 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
+
+    def futures_coin_stream_get_listen_key(self):
+        res = self._request_futures_coin_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    def futures_coin_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_coin_api('put', 'listenKey', signed=False, data=params)
+
+    def futures_coin_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_coin_api('delete', 'listenKey', signed=False, data=params)
 
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
@@ -7291,6 +7323,22 @@ class AsyncClient(BaseClient):
     async def futures_get_position_mode(self, **params):
         return await self._request_futures_api('get', 'positionSide/dual', True, data=params)
 
+    async def futures_stream_get_listen_key(self):
+        res = await self._request_futures_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    async def futures_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_api('put', 'listenKey', signed=False, data=params)
+
+    async def futures_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_api('delete', 'listenKey', signed=False, data=params)
+
     # COIN Futures API
 
     async def futures_coin_ping(self):
@@ -7437,6 +7485,22 @@ class AsyncClient(BaseClient):
 
     async def futures_coin_get_position_mode(self, **params):
         return await self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
+
+    async def futures_coin_stream_get_listen_key(self):
+        res = await self._request_futures_coin_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    async def futures_coin_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_coin_api('put', 'listenKey', signed=False, data=params)
+
+    async def futures_coin_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_coin_api('delete', 'listenKey', signed=False, data=params)
 
     async def get_all_coins_info(self, **params):
         return await self._request_margin_api('get', 'capital/config/getall', True, data=params)
