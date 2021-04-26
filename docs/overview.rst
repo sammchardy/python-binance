@@ -11,11 +11,6 @@ Install with ``pip``:
 
     pip install python-binance
 
-**Windows**
-
-If you see errors building Twisted indication Microsoft Visual C++ is required you may need to install the Visual C++ Build Tools
-refer to the `Python Wiki on Widows Compilers <https://wiki.python.org/moin/WindowsCompilers>`_ for your relevant version.
-
 Register on Binance
 -------------------
 
@@ -50,6 +45,32 @@ The Binance API documentation references a `timestamp` parameter, this is genera
 Some methods have a `recvWindow` parameter for `timing security, see Binance documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#timing-security>`_.
 
 API Endpoints are rate limited by Binance at 20 requests per second, ask them if you require more.
+
+Async API Calls
+---------------
+
+aiohttp is used to handle asyncio REST requests.
+
+Each function available in the normal client is available in the AsyncClient class.
+
+The only difference is to run within an asyncio event loop and await the function like below.
+
+.. code:: python
+
+    from binance import AsyncClient
+
+    async def main():
+        client = await AsyncClient.create()
+
+        # fetch exchange info
+        res = await client.get_exchange_info()
+        print(json.dumps(res, indent=2))
+
+    if __name__ == "__main__":
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+
 
 API Rate Limit
 --------------
