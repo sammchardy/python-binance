@@ -848,7 +848,7 @@ class Client(BaseClient):
         else:
             return self.futures_klines(**params)
 
-    def _get_earliest_valid_timestamp(self, symbol, interval, spot):
+    def _get_earliest_valid_timestamp(self, symbol, interval, spot=True):
         """Get earliest valid open timestamp from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -6564,7 +6564,7 @@ class AsyncClient(BaseClient):
             return await self.futures_klines(**params)
     _klines.__doc__ = Client._klines.__doc__
 
-    async def _get_earliest_valid_timestamp(self, symbol, interval, spot):
+    async def _get_earliest_valid_timestamp(self, symbol, interval, spot=True):
         kline = await self._klines(
             spot=spot,
             symbol=symbol,
