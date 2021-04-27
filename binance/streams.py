@@ -240,7 +240,7 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-    def __init__(self, client, loop, user_timeout=DEFAULT_USER_TIMEOUT):
+    def __init__(self, client, loop=None, user_timeout=DEFAULT_USER_TIMEOUT):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
@@ -248,7 +248,7 @@ class BinanceSocketManager:
 
         """
         self._conns = {}
-        self._loop = loop
+        self._loop = loop or asyncio.get_event_loop()
         self._client = client
         self._user_timeout = user_timeout
 

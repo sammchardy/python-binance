@@ -124,7 +124,7 @@ class BaseDepthCacheManager:
     DEFAULT_REFRESH = 60 * 30  # 30 minutes
     TIMEOUT = 60
 
-    def __init__(self, client, loop, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float):
+    def __init__(self, client, symbol, loop=None, refresh_interval=None, bm=None, limit=10, conv_type=float):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -276,8 +276,7 @@ class BaseDepthCacheManager:
 
 class DepthCacheManager(BaseDepthCacheManager):
 
-    @classmethod
-    async def create(cls, client, loop, symbol, coro=None, refresh_interval=None, bm=None, limit=500, ws_interval=None):
+    def __init__(self, client, symbol, loop=None, refresh_interval=None, bm=None, limit=500, ws_interval=None):
         """Initialise the DepthCacheManager
 
         :param client: Binance API client
@@ -285,8 +284,6 @@ class DepthCacheManager(BaseDepthCacheManager):
         :param loop: asyncio loop
         :param symbol: Symbol to create depth cache for
         :type symbol: string
-        :param coro: Optional function to receive depth cache updates
-        :type coro: function
         :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
         :type refresh_interval: int
         :param limit: Optional number of orders to get from orderbook
@@ -295,9 +292,8 @@ class DepthCacheManager(BaseDepthCacheManager):
         :type ws_interval: int
 
         """
-        self = await super().create(client, loop, symbol, coro, refresh_interval, bm, limit)
+        super().__init__(client, symbol, loop, refresh_interval, bm, limit)
         self._ws_interval = ws_interval
-        return self
 
     async def _init_cache(self):
         """Initialise the depth cache calling REST endpoint

@@ -1,18 +1,20 @@
+from typing import Dict
+
 import aiohttp
 import asyncio
 import hashlib
 import hmac
 import requests
 import time
-from abc import ABC, abstractmethod
 from operator import itemgetter
 from urllib.parse import urlencode
 
+
 from .helpers import interval_to_milliseconds, convert_ts_str
-from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
+from .exceptions import BinanceAPIException, BinanceRequestException
 
 
-class BaseClient(ABC):
+class BaseClient:
 
     API_URL = 'https://api.binance.{}/api'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
@@ -144,16 +146,18 @@ class BaseClient(ABC):
         self.testnet = testnet
         self.timestamp_offset = 0
 
-    def _get_headers(self):
-        return {
+    def _get_headers(self) -> Dict:
+        headers = {
             'Accept': 'application/json',
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',  # noqa
-            'X-MBX-APIKEY': self.API_KEY
         }
+        if self.API_KEY:
+            assert self.API_KEY
+            headers['X-MBX-APIKEY'] = self.API_KEY
+        return headers
 
-    @abstractmethod
     def _init_session(self):
-        pass
+        raise NotImplementedError
 
     def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
         v = self.PRIVATE_API_VERSION if signed else version
@@ -2013,10 +2017,7 @@ class Client(BaseClient):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_margin_api('get', 'account/status', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'account/status', True, data=params)
 
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
@@ -2088,10 +2089,7 @@ class Client(BaseClient):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
 
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
@@ -2165,10 +2163,7 @@ class Client(BaseClient):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_margin_api('get', 'asset/dribblet', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/dribblet', True, data=params)
 
     def transfer_dust(self, **params):
         """Convert dust assets to BNB.
@@ -2371,10 +2366,7 @@ class Client(BaseClient):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_margin_api('get', 'asset/tradeFee', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/tradeFee', True, data=params)
 
     def get_asset_details(self, **params):
         """Fetch details on assets.
@@ -2409,10 +2401,7 @@ class Client(BaseClient):
         :raises: BinanceWithdrawException
 
         """
-        res = self._request_margin_api('get', 'asset/assetDetail', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
     # Withdraw Endpoints
 
@@ -2458,10 +2447,7 @@ class Client(BaseClient):
         # force a name for the withdrawal if one not set
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
-        res = self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
     def get_deposit_history(self, **params):
         """Fetch deposit history.
@@ -6376,8 +6362,12 @@ class Client(BaseClient):
 
 class AsyncClient(BaseClient):
 
+    def __init__(self, api_key=None, api_secret=None, requests_params=None, loop=None):
+        self.loop = loop or asyncio.get_event_loop()
+        super().__init__(api_key, api_secret, requests_params)
+
     @classmethod
-    async def create(cls, api_key=None, api_secret=None, requests_params=None):
+    async def create(cls, api_key=None, api_secret=None, requests_params=None, loop=None):
 
         self = cls(api_key, api_secret, requests_params)
 
@@ -6391,16 +6381,16 @@ class AsyncClient(BaseClient):
 
     def _init_session(self):
 
-        loop = asyncio.get_event_loop()
         session = aiohttp.ClientSession(
-            loop=loop,
+            loop=self.loop,
             headers=self._get_headers()
         )
         return session
 
     async def close_connection(self):
-        await self.session.close()
-        return
+        if self.session:
+            assert self.session
+            await self.session.close()
 
     async def _request(self, method, uri, signed, force_params=False, **kwargs):
 
@@ -6854,24 +6844,15 @@ class AsyncClient(BaseClient):
     get_system_status.__doc__ = Client.get_system_status.__doc__
 
     async def get_account_status(self, **params):
-        res = await self._request_margin_api('get', 'account/status', True, data=params)
-        if not res['success']:
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('get', 'account/status', True, data=params)
     get_account_status.__doc__ = Client.get_account_status.__doc__
 
     async def get_account_api_trading_status(self, **params):
-        res = await self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
     get_account_api_trading_status.__doc__ = Client.get_account_api_trading_status.__doc__
 
     async def get_dust_log(self, **params):
-        res = await self._request_margin_api('get', 'asset/dribblet', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('get', 'asset/dribblet', True, data=params)
     get_dust_log.__doc__ = Client.get_dust_log.__doc__
 
     async def transfer_dust(self, **params):
@@ -6891,17 +6872,11 @@ class AsyncClient(BaseClient):
     query_universal_transfer_history.__doc__ = Client.query_universal_transfer_history.__doc__
 
     async def get_trade_fee(self, **params):
-        res = await self._request_margin_api('get', 'asset/tradeFee', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('get', 'asset/tradeFee', True, data=params)
     get_trade_fee.__doc__ = Client.get_trade_fee.__doc__
 
     async def get_asset_details(self, **params):
-        res = await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
 
     # Withdraw Endpoints
@@ -6910,10 +6885,7 @@ class AsyncClient(BaseClient):
         # force a name for the withdrawal if one not set
         if 'asset' in params and 'name' not in params:
             params['name'] = params['asset']
-        res = await self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return await self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
     withdraw.__doc__ = Client.withdraw.__doc__
 
     async def get_deposit_history(self, **params):
