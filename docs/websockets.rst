@@ -46,8 +46,9 @@ Manually enter and exit the Asynchronous context manager
     await ts.__aenter__()
     # receive a message
     msg = await ts.recv()
+    print(msg)
     # exit the context manager
-    await ts.__aexit__()
+    await ts.__aexit__(None, None, None)
 
 
 Websocket Errors
