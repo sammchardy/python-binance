@@ -26,8 +26,3 @@ The exception provides access to the
     except BinanceAPIException as e:
         print e.status_code
         print e.message
-
-BinanceWithdrawException
-------------------------
-
-Raised if the withdraw fails.
