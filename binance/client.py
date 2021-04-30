@@ -924,6 +924,9 @@ class Client(object):
                 end_ts = end_str
             else:
                 end_ts = date_to_milliseconds(end_str)
+		
+	    if end_str <= start_ts:
+                return []
 
         idx = 0
         while True:
