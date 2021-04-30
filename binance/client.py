@@ -853,7 +853,7 @@ class Client(object):
         return kline[0][0]
 
     def get_historical_klines(self, symbol, interval, start_str, end_str=None,
-                           limit=500):
+                           limit=500, spot=True):
         """Get Historical Klines from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -866,11 +866,13 @@ class Client(object):
         :type end_str: str|int
         :param limit: Default 500; max 1000.
         :type limit: int
+	:param spot: Historical klines from spot endpoint, otherwise futures
+        :type spot: bool
 
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=None, limit=500, spot=True)
+        return self._historical_klines(symbol, interval, start_str, end_str=None, limit=500, spot=spot)
 
     def _historical_klines(self, symbol, interval, start_str, end_str=None,
                            limit=500, spot=True):
