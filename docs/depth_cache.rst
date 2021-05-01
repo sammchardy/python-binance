@@ -8,7 +8,7 @@ Create the manager like so, passing the api client, symbol and an optional callb
 
 .. code:: python
 
-    from binance.depthcache import DepthCacheManager
+    from binance import DepthCacheManager
     dcm = DepthCacheManager(client, 'BNBBTC')
 
 The `DepthCacheManager` returns an Asynchronous Context Manager which can be used with `async for`
