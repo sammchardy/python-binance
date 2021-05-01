@@ -50,13 +50,14 @@ Examples
 .. code:: python
 
     async with dcm(client, symbol='ETHBTC') as dcm_socket:
-        depth_cache = await dcm_socket.recv()
-        print("symbol {}".format(depth_cache.symbol))
-        print("top 5 bids")
-        print(depth_cache.get_bids()[:5])
-        print("top 5 asks")
-        print(depth_cache.get_asks()[:5])
-        print("last update time {}".format(depth_cache.update_time))
+        while True:
+            depth_cache = await dcm_socket.recv()
+            print("symbol {}".format(depth_cache.symbol))
+            print("top 5 bids")
+            print(depth_cache.get_bids()[:5])
+            print("top 5 asks")
+            print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time))
 
 To use the magic `__aenter__` and `__aexit__` functions to use this class without the `async with`
 

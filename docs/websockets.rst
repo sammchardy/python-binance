@@ -21,14 +21,16 @@ Create the manager like so, passing the API client.
 
 .. code:: python
 
-    from binance.websockets import BinanceSocketManager
-    bm = BinanceSocketManager(client)
-    # start any sockets here, i.e a trade socket
-    ts = bm.trade_socket('BNBBTC')
-    # then start receiving messages
-    async with ts as tscm:
-        res = await tscm.recv()
-        print(res)
+    async def x():
+        from binance.streams import BinanceSocketManager
+        bm = BinanceSocketManager(client)
+        # start any sockets here, i.e a trade socket
+        ts = bm.trade_socket('BNBBTC')
+        # then start receiving messages
+        async with ts as tscm:
+            while True:
+                res = await tscm.recv()
+                print(res)
 
 Set a custom timeout for the websocket connections
 
