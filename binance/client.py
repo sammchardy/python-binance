@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 import aiohttp
 import asyncio
@@ -114,7 +114,11 @@ class BaseClient:
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com', testnet=False):
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False
+    ):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -261,9 +265,13 @@ class BaseClient:
 
 class Client(BaseClient):
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None):
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False
+    ):
 
-        super().__init__(api_key, api_secret, requests_params)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet)
 
         # init DNS and SSL cert
         self.ping()
@@ -6363,14 +6371,23 @@ class Client(BaseClient):
 
 class AsyncClient(BaseClient):
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, loop=None):
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False, loop=None
+    ):
+
         self.loop = loop or asyncio.get_event_loop()
-        super().__init__(api_key, api_secret, requests_params)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet)
 
     @classmethod
-    async def create(cls, api_key=None, api_secret=None, requests_params=None, loop=None):
+    async def create(
+        cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False, loop=None
+    ):
 
-        self = cls(api_key, api_secret, requests_params)
+        self = cls(api_key, api_secret, requests_params, tld, testnet, loop)
 
         await self.ping()
 
