@@ -1,17 +1,6 @@
-=======================================
-Welcome to python-binance v0.7.11-async
-=======================================
-
-Note
-----
-
-We are working on a python3 version with async support to remove legacy dependencies and their related issues.
-
-This will be a breaking change for websocket implementations and change support to python 3.6+.
-
-Plan is to release this before early May 2021.
-
-I would appreciate if you could try out the `feature/asyncio <https://github.com/sammchardy/python-binance/tree/feature/asyncio>`_ branch and give your feedback.
+================================
+Welcome to python-binance v1.0.0
+================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
@@ -69,6 +58,17 @@ Features
 - Vanilla Options
 - Support other domains (.us, .jp, etc)
 
+Upgrading to v1.0.0+
+--------------------
+
+The breaking changes include the migration from wapi to sapi endpoints which related to the
+wallet endpoints detailed in the `Binance Docs <https://binance-docs.github.io/apidocs/spot/en/#wallet-endpoints>`_
+
+The other breaking change is for websocket streams and the Depth Cache Manager which have been
+converted to use Asynchronous Context Managers. See examples in the Async section below or view the
+`websockets <https://python-binance.readthedocs.io/en/latest/websockets.html>`_ and
+`depth cache <https://python-binance.readthedocs.io/en/latest/depth_cache.html>`_ docs.
+
 Quick Start
 -----------
 
@@ -101,15 +101,13 @@ Quick Start
 
     # withdraw 100 ETH
     # check docs for assumptions around withdrawals
-    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException
     try:
         result = client.withdraw(
             asset='ETH',
             address='<eth_address>',
             amount=100)
     except BinanceAPIException as e:
-        print(e)
-    except BinanceWithdrawException as e:
         print(e)
     else:
         print("Success")
@@ -122,17 +120,6 @@ Quick Start
 
     # get a deposit address for BTC
     address = client.get_deposit_address(coin='BTC')
-
-    # start aggregated trade websocket for BNBBTC
-    def process_message(msg):
-        print("message type: {}".format(msg['e']))
-        print(msg)
-        # do something
-
-    from binance.websockets import BinanceSocketManager
-    bm = BinanceSocketManager(client)
-    bm.start_aggtrade_socket('BNBBTC', process_message)
-    bm.start()
 
     # get historical kline data from any date range
 
