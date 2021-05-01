@@ -230,11 +230,11 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
 class BinanceSocketManager:
 
-    STREAM_URL = 'wss://stream.binance.com:9443/'
-    FSTREAM_URL = 'wss://fstream.binance.com/'
-    DSTREAM_URL = 'wss://dstream.binance.com/'
-    VSTREAM_URL = 'wss://vstream.binance.com/'
-    VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.com/'
+    STREAM_URL = 'wss://stream.binance.{}:9443/'
+    FSTREAM_URL = 'wss://fstream.binance.{}/'
+    DSTREAM_URL = 'wss://dstream.binance.{}/'
+    VSTREAM_URL = 'wss://vstream.binance.{}/'
+    VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.{}/'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -247,6 +247,12 @@ class BinanceSocketManager:
         :type client: binance.Client
 
         """
+        self.STREAM_URL = self.STREAM_URL.format(client.tld)
+        self.FSTREAM_URL = self.FSTREAM_URL.format(client.tld)
+        self.DSTREAM_URL = self.DSTREAM_URL.format(client.tld)
+        self.VSTREAM_URL = self.VSTREAM_URL.format(client.tld)
+        self.VSTREAM_TESTNET_URL = self.VSTREAM_TESTNET_URL.format(client.tld)
+
         self._conns = {}
         self._loop = loop or asyncio.get_event_loop()
         self._client = client
@@ -254,7 +260,8 @@ class BinanceSocketManager:
 
         self.testnet = self._client.testnet
 
-    def _get_socket(self, path, stream_url=STREAM_URL, prefix='ws/', is_binary=False):
+    def _get_socket(self, path, stream_url=None, prefix='ws/', is_binary=False):
+        stream_url = stream_url or self.STREAM_URL
         if path not in self._conns:
             self._conns[path] = ReconnectingWebsocket(
                 loop=self._loop,
@@ -267,7 +274,8 @@ class BinanceSocketManager:
 
         return self._conns[path]
 
-    def _get_account_socket(self, path, stream_url=STREAM_URL, prefix='ws/', is_binary=False):
+    def _get_account_socket(self, path, stream_url=None, prefix='ws/', is_binary=False):
+        stream_url = stream_url or self.STREAM_URL
         if path not in self._conns:
             self._conns[path] = KeepAliveWebsocket(
                 client=self._client,

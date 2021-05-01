@@ -128,6 +128,7 @@ class BaseClient:
 
         """
 
+        self.tld = tld
         self.API_URL = self.API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
