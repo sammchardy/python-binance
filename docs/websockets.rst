@@ -21,8 +21,9 @@ Create the manager like so, passing the API client.
 
 .. code:: python
 
-    async def x():
-        from binance import BinanceSocketManager
+    from binance import BinanceSocketManager
+
+    async def x():    
         bm = BinanceSocketManager(client)
         # start any sockets here, i.e a trade socket
         ts = bm.trade_socket('BNBBTC')
