@@ -16,11 +16,16 @@ with codecs.open(
     except IndexError:
         raise RuntimeError('Unable to determine version.')
 
+with open("README.rst", "r") as fh:
+        long_description = fh.read()
+
 setup(
     name='python-binance',
     version=version,
     packages=['binance'],
     description='Binance REST API python implementation',
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
     url='https://github.com/sammchardy/python-binance',
     author='Sam McHardy',
     license='MIT',
