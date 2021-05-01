@@ -1,18 +1,19 @@
 # coding=utf-8
+import json
 
 
 class BinanceAPIException(Exception):
 
-    def __init__(self, response):
+    def __init__(self, response, status_code, text):
         self.code = 0
         try:
-            json_res = response.json()
+            json_res = json.loads(text)
         except ValueError:
             self.message = 'Invalid JSON error message from Binance: {}'.format(response.text)
         else:
             self.code = json_res['code']
             self.message = json_res['msg']
-        self.status_code = response.status_code
+        self.status_code = status_code
         self.response = response
         self.request = getattr(response, 'request', None)
 
@@ -73,11 +74,5 @@ class BinanceOrderInactiveSymbolException(BinanceOrderException):
         super(BinanceOrderInactiveSymbolException, self).__init__(-1013, message)
 
 
-class BinanceWithdrawException(Exception):
-    def __init__(self, message):
-        if message == u'参数异常':
-            message = 'Withdraw to this address through the website first'
-        self.message = message
-
-    def __str__(self):
-        return 'BinanceWithdrawException: %s' % self.message
+class BinanceWebsocketUnableToConnect(Exception):
+    pass

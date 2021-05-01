@@ -1,8 +1,35 @@
 Changelog
 =========
 
+v1.0.1
+^^^^^^^
+
+**Fixed**
+
+- restored params for Client and AsyncClient classes
+
+v1.0.0
+^^^^^^^
+
+**Added**
+
+- Async support for all REST endpoints
+- USDⓈ-M and Coin-M Futures websocket streams
+- Websockets use same tld as Client
+- convert type option for DepthCache
+
+**Breaking Changes**
+
+- Supports only py3.6+
+- All wapi calls changed to sapi
+- Websockets have changed to use Asynchronous context managers
+
+**Fixed**
+
+- get_historical_klines params
+
 v0.7.11
-^^^^^^^^^^
+^^^^^^^
 
 **Added**
 - Vanilla Options REST endpoints

@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import dateparser
 import math
 import pytz
@@ -65,3 +63,11 @@ def round_step_size(quantity, step_size):
     """
     precision = int(round(-math.log(step_size, 10), 0))
     return float(round(quantity, precision))
+
+
+def convert_ts_str(ts_str):
+    if ts_str is None:
+        return ts_str
+    if type(ts_str) == int:
+        return ts_str
+    return date_to_milliseconds(ts_str)

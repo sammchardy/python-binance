@@ -20,9 +20,3 @@ Check recvWindow is an integer and not a string.
 *A2*: You may need to regenerate your API Key and Secret
 
 *A3*: You may be attempting to access the API from a Chinese IP address, these are now restricted by Binance.
-
-
-*Q: Twisted won't install using pip on Windows*
-
-*A*:If you see errors building Twisted indication Microsoft Visual C++ is required you may need to install the Visual C++ Build Tools
-refer to the `Python Wiki on Widows Compilers <https://wiki.python.org/moin/WindowsCompilers>`_ for your relevant version.
