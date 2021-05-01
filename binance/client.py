@@ -652,7 +652,7 @@ class Client(BaseClient):
     def get_historical_trades(self, **params):
         """Get older trades.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#old-trade-lookup
 
         :param symbol: required
         :type symbol: str
