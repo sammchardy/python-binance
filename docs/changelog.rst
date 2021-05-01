@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.1
+^^^^^^^
+
+**Fixed**
+
+- restored params for Client and AsyncClient classes
+
 v1.0.0
 ^^^^^^^
 
