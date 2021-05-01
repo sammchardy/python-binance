@@ -17,7 +17,7 @@ with codecs.open(
         raise RuntimeError('Unable to determine version.')
 
 with open("README.rst", "r") as fh:
-        long_description = fh.read()
+    long_description = fh.read()
 
 setup(
     name='python-binance',
