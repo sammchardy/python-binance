@@ -884,7 +884,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
         """Get Historical Klines from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -897,7 +897,7 @@ class Client(BaseClient):
         :type end_str: str|int
         :param limit: Default 500; max 1000.
         :type limit: int
-	:param spot: Historical klines from spot endpoint, otherwise futures
+        :param spot: Historical klines from spot endpoint, otherwise futures
         :type spot: bool
 
         :return: list of OHLCV values
@@ -982,7 +982,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
+    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
         """Get Historical Klines generator from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -993,12 +993,14 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param spot: Historical klines from spot endpoint, otherwise futures
+        :type spot: bool
 
         :return: generator of OHLCV values
 
         """
 
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=spot)
 
     def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
         """Get Historical Klines generator from Binance (spot or futures)
@@ -6678,8 +6680,8 @@ class AsyncClient(BaseClient):
         return output_data
     _historical_klines.__doc__ = Client._historical_klines.__doc__
 
-    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=True)
+    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=spot)
     get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
 
     async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
