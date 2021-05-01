@@ -897,11 +897,13 @@ class Client(BaseClient):
         :type end_str: str|int
         :param limit: Default 500; max 1000.
         :type limit: int
+	:param spot: Historical klines from spot endpoint, otherwise futures
+        :type spot: bool
 
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=True)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=spot)
 
     def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
         """Get Historical Klines from Binance (spot or futures)
@@ -6616,8 +6618,8 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
-        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=True)
+    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
+        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=spot)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
     async def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
