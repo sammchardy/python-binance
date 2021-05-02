@@ -10,7 +10,7 @@ and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 
 When creating socket connections an Asynchronous context manager is returned.
 
-Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md>`_.
+Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md>`_.
 
 Websockets are setup to reconnect with a maximum of 5 retries with an exponential backoff strategy.
 
@@ -83,7 +83,7 @@ These streams can include the depth, kline, ticker and trade streams but not the
 
 Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
 
-See the `Binance Websocket Streams API documentation <https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md>`_ for details on socket names.
+See the `Binance Websocket Streams API documentation <https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md>`_ for details on socket names.
 
 .. code:: python
 
