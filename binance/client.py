@@ -249,9 +249,9 @@ class BaseClient:
         # sort get and post params to match signature order
         if data:
             # Remove any arguments with values of None.
-            null_args = [i for i, (key, value) in enumerate(kwargs['data']) if value is None]
-            for i in reversed(null_args):
-                del kwargs['data'][i]
+            null_args = [key for (key, value) in kwargs['data'].items() if value is None]
+            for key in null_args:
+                del kwargs['data'][key]
             # sort post params
             kwargs['data'] = self._order_params(kwargs['data'])
 
