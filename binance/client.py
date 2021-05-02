@@ -209,6 +209,7 @@ class BaseClient:
         :return:
 
         """
+        data = dict(filter(lambda el: el[1] is not None, data.items()))
         has_signature = False
         params = []
         for key, value in data.items():
@@ -248,12 +249,8 @@ class BaseClient:
 
         # sort get and post params to match signature order
         if data:
-            # sort post params
+            # sort post params and remove any arguments with values of None
             kwargs['data'] = self._order_params(kwargs['data'])
-            # Remove any arguments with values of None.
-            null_args = [i for i, (key, value) in enumerate(kwargs['data']) if value is None]
-            for i in reversed(null_args):
-                del kwargs['data'][i]
 
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
