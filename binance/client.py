@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List, Tuple
 
 import aiohttp
 import asyncio
@@ -164,37 +164,37 @@ class BaseClient:
     def _init_session(self):
         raise NotImplementedError
 
-    def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
+    def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         v = self.PRIVATE_API_VERSION if signed else version
         return self.API_URL + '/' + v + '/' + path
 
-    def _create_margin_api_uri(self, path, version=MARGIN_API_VERSION):
+    def _create_margin_api_uri(self, path: str, version: str = MARGIN_API_VERSION) -> str:
         return self.MARGIN_API_URL + '/' + version + '/' + path
 
-    def _create_website_uri(self, path):
+    def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
 
-    def _create_futures_api_uri(self, path):
+    def _create_futures_api_uri(self, path: str) -> str:
         return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
 
-    def _create_futures_data_api_uri(self, path):
+    def _create_futures_data_api_uri(self, path: str) -> str:
         return self.FUTURES_DATA_URL + '/' + path
 
-    def _create_futures_coin_api_url(self, path, version=1):
+    def _create_futures_coin_api_url(self, path: str, version=1) -> str:
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
         return self.FUTURES_COIN_URL + "/" + options[version] + "/" + path
 
-    def _create_futures_coin_data_api_url(self, path, version=1):
+    def _create_futures_coin_data_api_url(self, path: str, version=1) -> str:
         return self.FUTURES_COIN_DATA_URL + "/" + path
 
-    def _create_options_api_uri(self, path):
+    def _create_options_api_uri(self, path: str) -> str:
         if self.testnet:
             url = self.OPTIONS_TESTNET_URL
         else:
             url = self.OPTIONS_URL
         return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
-    def _generate_signature(self, data):
+    def _generate_signature(self, data: Dict) -> str:
 
         ordered_data = self._order_params(data)
         query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
@@ -202,7 +202,7 @@ class BaseClient:
         return m.hexdigest()
 
     @staticmethod
-    def _order_params(data):
+    def _order_params(data: Dict) -> List[Tuple[str, str]]:
         """Convert params to list with signature as last element
 
         :param data:
@@ -223,7 +223,7 @@ class BaseClient:
             params.append(('signature', data['signature']))
         return params
 
-    def _get_request_kwargs(self, method, signed, force_params=False, **kwargs):
+    def _get_request_kwargs(self, method, signed: bool, force_params: bool = False, **kwargs) -> Dict:
 
         # set default requests timeout
         kwargs['timeout'] = 10
@@ -273,7 +273,7 @@ class Client(BaseClient):
         # init DNS and SSL cert
         self.ping()
 
-    def _init_session(self):
+    def _init_session(self) -> requests.Session:
 
         headers = self._get_headers()
 
@@ -281,7 +281,7 @@ class Client(BaseClient):
         session.headers.update(headers)
         return session
 
-    def _request(self, method, uri, signed, force_params=False, **kwargs):
+    def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs) -> Dict:
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
@@ -289,7 +289,7 @@ class Client(BaseClient):
         return self._handle_response(response)
 
     @staticmethod
-    def _handle_response(response):
+    def _handle_response(response: requests.Response) -> Dict:
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
@@ -301,59 +301,61 @@ class Client(BaseClient):
         except ValueError:
             raise BinanceRequestException('Invalid Response: %s' % response.text)
 
-    def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    def _request_api(
+        self, method, path: str, signed: bool = False, version=BaseClient.PUBLIC_API_VERSION, **kwargs
+    ) -> Dict:
         uri = self._create_api_uri(path, signed, version)
         return self._request(method, uri, signed, **kwargs)
 
-    def _request_futures_api(self, method, path, signed=False, **kwargs):
+    def _request_futures_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_futures_data_api(self, method, path, signed=False, **kwargs):
+    def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs):
+    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
+    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_options_api(self, method, path, signed=False, **kwargs):
+    def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_margin_api(self, method, path, signed=False, **kwargs):
+    def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_margin_api_uri(path)
 
         return self._request(method, uri, signed, **kwargs)
 
-    def _request_website(self, method, path, signed=False, **kwargs):
+    def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
         return self._request(method, uri, signed, **kwargs)
 
-    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('get', path, signed, version, **kwargs)
 
-    def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('post', path, signed, version, **kwargs)
 
-    def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('put', path, signed, version, **kwargs)
 
-    def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
 
-    def get_products(self):
+    def get_products(self) -> Dict:
         """Return list of products currently listed on Binance
 
         Use get_exchange_info() call instead
@@ -366,7 +368,7 @@ class Client(BaseClient):
         products = self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
         return products
 
-    def get_exchange_info(self):
+    def get_exchange_info(self) -> Dict:
         """Return rate limits and list of symbols
 
         :returns: list - List of product dictionaries
@@ -430,7 +432,7 @@ class Client(BaseClient):
 
         return self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
 
-    def get_symbol_info(self, symbol):
+    def get_symbol_info(self, symbol) -> Optional[Dict]:
         """Return information about a symbol
 
         :param symbol: required e.g BNBBTC
@@ -481,7 +483,7 @@ class Client(BaseClient):
 
     # General Endpoints
 
-    def ping(self):
+    def ping(self) -> Dict:
         """Test connectivity to the Rest API.
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-connectivity
@@ -497,7 +499,7 @@ class Client(BaseClient):
         """
         return self._get('ping', version=self.PRIVATE_API_VERSION)
 
-    def get_server_time(self):
+    def get_server_time(self) -> Dict:
         """Test connectivity to the Rest API and get the current server time.
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#check-server-time
@@ -517,7 +519,7 @@ class Client(BaseClient):
 
     # Market Data Endpoints
 
-    def get_all_tickers(self):
+    def get_all_tickers(self) -> Dict:
         """Latest price for a symbol or symbols.
 
         https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
@@ -545,7 +547,7 @@ class Client(BaseClient):
         """
         return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
 
-    def get_orderbook_tickers(self):
+    def get_orderbook_tickers(self) -> Dict:
         """Best price/qty on the order book for all symbols.
 
         https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
@@ -579,7 +581,7 @@ class Client(BaseClient):
         """
         return self._get('ticker/bookTicker', version=self.PRIVATE_API_VERSION)
 
-    def get_order_book(self, **params):
+    def get_order_book(self, **params) -> Dict:
         """Get the Order Book for the market
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#order-book
@@ -616,7 +618,7 @@ class Client(BaseClient):
         """
         return self._get('depth', data=params, version=self.PRIVATE_API_VERSION)
 
-    def get_recent_trades(self, **params):
+    def get_recent_trades(self, **params) -> Dict:
         """Get recent trades (up to last 500).
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
@@ -646,7 +648,7 @@ class Client(BaseClient):
         """
         return self._get('trades', data=params)
 
-    def get_historical_trades(self, **params):
+    def get_historical_trades(self, **params) -> Dict:
         """Get older trades.
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#old-trade-lookup
@@ -678,7 +680,7 @@ class Client(BaseClient):
         """
         return self._get('historicalTrades', data=params, version=self.PRIVATE_API_VERSION)
 
-    def get_aggregate_trades(self, **params):
+    def get_aggregate_trades(self, **params) -> Dict:
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
@@ -717,7 +719,7 @@ class Client(BaseClient):
         """
         return self._get('aggTrades', data=params, version=self.PRIVATE_API_VERSION)
 
-    def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+    def aggregate_trade_iter(self, symbol: str, start_str=None, last_id=None):
         """Iterate over aggregate trade data from (start_time or last_id) to
         the end of the history so far.
 
@@ -800,7 +802,7 @@ class Client(BaseClient):
                 yield t
             last_id = trades[-1][self.AGG_ID]
 
-    def get_klines(self, **params):
+    def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
         https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data
@@ -842,7 +844,7 @@ class Client(BaseClient):
         """
         return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
-    def _klines(self, spot=True, **params):
+    def _klines(self, spot=True, **params) -> Dict:
         """Get klines of spot (get_klines) or futures (futures_klines) endpoints.
 
         :param spot: Spot klines functions, otherwise futures
@@ -6398,7 +6400,7 @@ class AsyncClient(BaseClient):
 
         return self
 
-    def _init_session(self):
+    def _init_session(self) -> aiohttp.ClientSession:
 
         session = aiohttp.ClientSession(
             loop=self.loop,
@@ -6411,14 +6413,14 @@ class AsyncClient(BaseClient):
             assert self.session
             await self.session.close()
 
-    async def _request(self, method, uri, signed, force_params=False, **kwargs):
+    async def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs) -> Dict:
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         async with getattr(self.session, method)(uri, **kwargs) as response:
             return await self._handle_response(response)
 
-    async def _handle_response(self, response):
+    async def _handle_response(self, response: aiohttp.ClientResponse) -> Dict:
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
@@ -6431,68 +6433,68 @@ class AsyncClient(BaseClient):
             txt = await response.text()
             raise BinanceRequestException('Invalid Response: {}'.format(txt))
 
-    async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         uri = self._create_api_uri(path, signed, version)
         return await self._request(method, uri, signed, **kwargs)
 
-    async def _request_futures_api(self, method, path, signed=False, **kwargs):
+    async def _request_futures_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_api_uri(path)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_futures_data_api(self, method, path, signed=False, **kwargs):
+    async def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs):
+    async def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
+    async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_options_api(self, method, path, signed=False, **kwargs):
+    async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_margin_api(self, method, path, signed=False, **kwargs):
+    async def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_margin_api_uri(path)
 
         return await self._request(method, uri, signed, **kwargs)
 
-    async def _request_website(self, method, path, signed=False, **kwargs):
+    async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
         return await self._request(method, uri, signed, **kwargs)
 
-    async def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    async def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return await self._request_api('get', path, signed, version, **kwargs)
 
-    async def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    async def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return await self._request_api('post', path, signed, version, **kwargs)
 
-    async def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    async def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return await self._request_api('put', path, signed, version, **kwargs)
 
-    async def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+    async def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return await self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
 
-    async def get_products(self):
+    async def get_products(self) -> Dict:
         products = await self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
         return products
     get_products.__doc__ = Client.get_products.__doc__
 
-    async def get_exchange_info(self):
+    async def get_exchange_info(self) -> Dict:
         return await self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
     get_exchange_info.__doc__ = Client.get_exchange_info.__doc__
 
-    async def get_symbol_info(self, symbol):
+    async def get_symbol_info(self, symbol) -> Optional[Dict]:
         res = await self.get_exchange_info()
 
         for item in res['symbols']:
@@ -6504,37 +6506,37 @@ class AsyncClient(BaseClient):
 
     # General Endpoints
 
-    async def ping(self):
+    async def ping(self) -> Dict:
         return await self._get('ping', version=self.PRIVATE_API_VERSION)
     ping.__doc__ = Client.ping.__doc__
 
-    async def get_server_time(self):
+    async def get_server_time(self) -> Dict:
         return await self._get('time', version=self.PRIVATE_API_VERSION)
     get_server_time.__doc__ = Client.get_server_time.__doc__
 
     # Market Data Endpoints
 
-    async def get_all_tickers(self):
+    async def get_all_tickers(self) -> Dict:
         return await self._get('ticker/price', version=self.PRIVATE_API_VERSION)
     get_all_tickers.__doc__ = Client.get_all_tickers.__doc__
 
-    async def get_orderbook_tickers(self):
+    async def get_orderbook_tickers(self) -> Dict:
         return await self._get('ticker/bookTicker', version=self.PRIVATE_API_VERSION)
     get_orderbook_tickers.__doc__ = Client.get_orderbook_tickers.__doc__
 
-    async def get_order_book(self, **params):
+    async def get_order_book(self, **params) -> Dict:
         return await self._get('depth', data=params, version=self.PRIVATE_API_VERSION)
     get_order_book.__doc__ = Client.get_order_book.__doc__
 
-    async def get_recent_trades(self, **params):
+    async def get_recent_trades(self, **params) -> Dict:
         return await self._get('trades', data=params)
     get_recent_trades.__doc__ = Client.get_recent_trades.__doc__
 
-    async def get_historical_trades(self, **params):
+    async def get_historical_trades(self, **params) -> Dict:
         return await self._get('historicalTrades', data=params, version=self.PRIVATE_API_VERSION)
     get_historical_trades.__doc__ = Client.get_historical_trades.__doc__
 
-    async def get_aggregate_trades(self, **params):
+    async def get_aggregate_trades(self, **params) -> Dict:
         return await self._get('aggTrades', data=params, version=self.PRIVATE_API_VERSION)
     get_aggregate_trades.__doc__ = Client.get_aggregate_trades.__doc__
 
@@ -6592,11 +6594,11 @@ class AsyncClient(BaseClient):
             last_id = trades[-1][self.AGG_ID]
     aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
 
-    async def get_klines(self, **params):
+    async def get_klines(self, **params) -> Dict:
         return await self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
     get_klines.__doc__ = Client.get_klines.__doc__
 
-    async def _klines(self, spot=True, **params):
+    async def _klines(self, spot=True, **params) -> Dict:
         if 'endTime' in params and not params['endTime']:
             del params['endTime']
         if spot:
