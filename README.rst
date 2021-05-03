@@ -165,7 +165,7 @@ Async Example
         # create listener using async with
         # this will exit and close the connection after 5 messages
         async with bsm.trade_socket('ETHBTC') as ts:
-            while _ in range(5):
+            for _ in range(5):
                 res = await ts.recv()
                 print(f'recv {res}')
 
@@ -186,7 +186,7 @@ Async Example
 
         # setup an async context the Depth Cache and exit after 5 messages
         async with DepthCacheManager(client, symbol='ETHBTC') as dcm_socket:
-            while _ in range(5):
+            for _ in range(5):
                 depth_cache = await dcm_socket.recv()
                 print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
                 print("Top 5 asks:")
@@ -197,7 +197,7 @@ Async Example
         # Vanilla options Depth Cache works the same, update the symbol to a current one
         options_symbol = 'BTC-210430-36000-C'
         async with OptionsDepthCacheManager(client, symbol=options_symbol) as dcm_socket:
-            while _ in range(5):
+            for _ in range(5):
                 depth_cache = await dcm_socket.recv()
                 count += 1
                 print(f"symbol {depth_cache.symbol} updated:{depth_cache.update_time}")
