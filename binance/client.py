@@ -17,6 +17,7 @@ from .exceptions import BinanceAPIException, BinanceRequestException
 class BaseClient:
 
     API_URL = 'https://api.binance.{}/api'
+    API_TESTNET_URL = 'https://testnet.binance.vision/api'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
@@ -165,8 +166,11 @@ class BaseClient:
         raise NotImplementedError
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
+        url = self.API_URL
+        if self.testnet:
+            url = self.API_TESTNET_URL
         v = self.PRIVATE_API_VERSION if signed else version
-        return self.API_URL + '/' + v + '/' + path
+        return url + '/' + v + '/' + path
 
     def _create_margin_api_uri(self, path: str, version: str = MARGIN_API_VERSION) -> str:
         return self.MARGIN_API_URL + '/' + version + '/' + path
@@ -188,10 +192,9 @@ class BaseClient:
         return self.FUTURES_COIN_DATA_URL + "/" + path
 
     def _create_options_api_uri(self, path: str) -> str:
+        url = self.OPTIONS_URL
         if self.testnet:
             url = self.OPTIONS_TESTNET_URL
-        else:
-            url = self.OPTIONS_URL
         return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
     def _generate_signature(self, data: Dict) -> str:

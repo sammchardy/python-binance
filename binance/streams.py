@@ -235,6 +235,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 class BinanceSocketManager:
 
     STREAM_URL = 'wss://stream.binance.{}:9443/'
+    STREAM_TESTNET_URL = 'wss://testnet.binance.vision:9443/'
     FSTREAM_URL = 'wss://fstream.binance.{}/'
     DSTREAM_URL = 'wss://dstream.binance.{}/'
     VSTREAM_URL = 'wss://vstream.binance.{}/'
@@ -264,13 +265,20 @@ class BinanceSocketManager:
 
         self.testnet = self._client.testnet
 
+    def _get_stream_url(self, stream_url: Optional[str] = None):
+        if stream_url:
+            return stream_url
+        stream_url = self.STREAM_URL
+        if self._client.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return stream_url
+
     def _get_socket(self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False):
-        stream_url = stream_url or self.STREAM_URL
         if path not in self._conns:
             self._conns[path] = ReconnectingWebsocket(
                 loop=self._loop,
                 path=path,
-                url=stream_url,
+                url=self._get_stream_url(stream_url),
                 prefix=prefix,
                 exit_coro=self._exit_socket,
                 is_binary=is_binary
@@ -281,12 +289,11 @@ class BinanceSocketManager:
     def _get_account_socket(
         self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False
     ):
-        stream_url = stream_url or self.STREAM_URL
         if path not in self._conns:
             self._conns[path] = KeepAliveWebsocket(
                 client=self._client,
                 loop=self._loop,
-                url=stream_url,
+                url=self._get_stream_url(stream_url),
                 keepalive_type=path,
                 prefix=prefix,
                 exit_coro=self._exit_socket,
@@ -300,10 +307,9 @@ class BinanceSocketManager:
         return self._get_socket(path, self.FSTREAM_URL, prefix)
 
     def _get_options_socket(self, path: str, prefix: str = 'ws/'):
+        stream_url = self.VSTREAM_URL
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
-        else:
-            stream_url = self.VSTREAM_URL
 
         return self._get_socket(path, stream_url, prefix, is_binary=True)
 
