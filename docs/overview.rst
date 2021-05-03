@@ -31,6 +31,40 @@ Pass your API Key and Secret
     from binance.client import Client
     client = Client(api_key, api_secret)
 
+or for Asynchronous client
+
+.. code:: python
+
+    async def main():
+
+        # initialise the client
+        client = await AsyncClient.create(api_key, api_secret)
+
+    if __name__ == "__main__":
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+
+
+Using a different TLD
+---------------------
+
+If you are interacting with a regional version of Binance which has a different TLD such as `.us` or `.jp' then you
+will need to pass this when creating the client, see examples below.
+
+This tld will also be used by any websocket streams when the client is passed to the BinanceSocketManager.
+
+.. code:: python
+
+    client = Client(api_key, api_secret, tld='us')
+
+or for Asynchronous client
+
+.. code:: python
+
+    client = await AsyncClient.create(api_key, api_secret, tld='us')
+
+
 Making API Calls
 ----------------
 

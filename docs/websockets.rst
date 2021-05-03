@@ -17,13 +17,14 @@ Websockets are setup to reconnect with a maximum of 5 retries with an exponentia
 Websocket Usage
 ---------------
 
-Create the manager like so, passing the API client.
+Create the manager like so, passing an AsyncClient.
 
 .. code:: python
 
-    from binance import BinanceSocketManager
+    from binance import AsyncClient, BinanceSocketManager
 
     async def x():
+        client = AsyncClient.create()
         bm = BinanceSocketManager(client)
         # start any sockets here, i.e a trade socket
         ts = bm.trade_socket('BNBBTC')
@@ -52,6 +53,23 @@ Manually enter and exit the Asynchronous context manager
     print(msg)
     # exit the context manager
     await ts.__aexit__(None, None, None)
+
+
+Using a different TLD
+---------------------
+
+The BinanceSocketManager uses the same tld value as the AsyncClient that is passed in. To use the 'us' tld we
+can do this.
+
+.. code:: python
+
+    from binance import AsyncClient, BinanceSocketManager
+
+    async def x():
+        client = AsyncClient.create(tld='us')
+        bm = BinanceSocketManager(client)
+
+        # start a socket...
 
 
 Websocket Errors

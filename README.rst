@@ -22,7 +22,8 @@ Welcome to python-binance v1.0.1
 
 This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://github.com/binance/binance-spot-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
 
-If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_. If you want to automate interactions with Binance stick around.
+If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_.
+If you want to automate interactions with Binance stick around.
 
 If you're interested in Binance's new DEX Binance Chain see my `python-binance-chain library <https://github.com/sammchardy/python-binance-chain>`_
 
@@ -35,7 +36,7 @@ Documentation
 Binance API Telegram
   https://t.me/binance_api_english
 
-Blog with examples
+Blog with examples including async
   https://sammchardy.github.io
 
 Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
@@ -75,6 +76,10 @@ Quick Start
 `Register an account with Binance <https://accounts.binance.com/en/register?ref=10099792>`_.
 
 `Generate an API Key <https://www.binance.com/en/my/settings/api-management>`_ and assign relevant permissions.
+
+If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
+client.
+
 
 .. code:: bash
 
