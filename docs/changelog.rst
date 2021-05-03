@@ -1,6 +1,22 @@
 Changelog
 =========
 
+v1.0.2
+^^^^^^^
+
+**Added**
+
+- start of typing to client and websockets
+
+**Fixed**
+
+- end_str, limit, spot params in kline fetching
+- drop None values in params passed
+
+**Updated**
+
+- more examples in docs
+
 v1.0.1
 ^^^^^^^
 
