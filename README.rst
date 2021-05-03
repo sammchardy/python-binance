@@ -1,5 +1,5 @@
 ================================
-Welcome to python-binance v1.0.2
+Welcome to python-binance v1.0.3
 ================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -46,6 +46,7 @@ Features
 
 - Implementation of all General, Market Data and Account endpoints.
 - Asyncio implementation
+- Testnet support
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
@@ -79,6 +80,9 @@ Quick Start
 
 If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
 client.
+
+To use the `Spot <https://testnet.binance.vision/>`_ or `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
+pass `testnet=True` when creating the client.
 
 
 .. code:: bash

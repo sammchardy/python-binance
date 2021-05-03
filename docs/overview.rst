@@ -46,6 +46,26 @@ or for Asynchronous client
         loop.run_until_complete(main())
 
 
+Using the Spot or Vanilla Options Testnet
+-----------------------------------------
+
+Binance offers a `Spot <https://testnet.binance.vision/>`_ and `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
+to test interacting with the exchange.
+
+To enable this set the `testnet` parameter passed to the Client to True.
+
+The testnet paramets will also be used by any websocket streams when the client is passed to the BinanceSocketManager.
+
+.. code:: python
+
+    client = Client(api_key, api_secret, testnet=True)
+
+or for Asynchronous client
+
+.. code:: python
+
+    client = await AsyncClient.create(api_key, api_secret, testnet=True)
+
 Using a different TLD
 ---------------------
 

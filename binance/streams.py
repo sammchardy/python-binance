@@ -269,7 +269,7 @@ class BinanceSocketManager:
         if stream_url:
             return stream_url
         stream_url = self.STREAM_URL
-        if self._client.testnet:
+        if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
         return stream_url
 

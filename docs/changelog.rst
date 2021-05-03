@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v1.0.3
+^^^^^^^
+
+**Added**
+
+- Spot Testnet support
+
+
 v1.0.2
 ^^^^^^^
 
