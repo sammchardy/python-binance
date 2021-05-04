@@ -4,9 +4,6 @@ Account Endpoints
 Orders
 ------
 
-Read `Understanding Binance Order Filters <https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html>`_
-for more information about price and quantity filters on `Binance <https://www.binance.com/?ref=10099792>`_.
-
 Order Validation
 ^^^^^^^^^^^^^^^^
 
@@ -15,13 +12,26 @@ Binance has a number of rules around symbol pair orders with validation on minim
 Read more about their specifics in the `Filters <https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#filters>`_
 section of the official API.
 
-It can be helpful to format the output using the following snippet
+Read `Understanding Binance Order Filters <https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html>`_
+for more information about price and quantity filters on `Binance <https://www.binance.com/?ref=10099792>`_.
+
+It can be helpful to format the output using formatting
 
 .. code:: python
 
     amount = 0.000234234
     precision = 5
     amt_str = "{:0.0{}f}".format(amount, precision)
+
+Or if you have the tickSize or stepSize then use the helper to round to step size
+
+.. code:: python
+
+    from binance.helpers import round_step_size
+
+    amount = 0.000234234
+    tick_size = 0.00001
+    rounded_amount = round_step_size(amount, tick_size)
 
 
 `Fetch all orders <binance.html#binance.client.Client.get_all_orders>`_

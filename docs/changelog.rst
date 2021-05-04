@@ -1,16 +1,27 @@
 Changelog
 =========
 
+v1.0.4
+^^^^^^
+
+**Added**
+
+- Futures Testnet support
+- Kline type for fetching historical klines
+
+**Fixed**
+
+- Spot Testnet websocket URL
+
 v1.0.3
-^^^^^^^
+^^^^^^
 
 **Added**
 
 - Spot Testnet support
 
-
 v1.0.2
-^^^^^^^
+^^^^^^
 
 **Added**
 
@@ -26,14 +37,14 @@ v1.0.2
 - more examples in docs
 
 v1.0.1
-^^^^^^^
+^^^^^^
 
 **Fixed**
 
 - restored params for Client and AsyncClient classes
 
 v1.0.0
-^^^^^^^
+^^^^^^
 
 **Added**
 
