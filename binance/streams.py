@@ -10,6 +10,7 @@ import websockets as ws
 
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
+from .enums import FuturesType
 
 DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
 
@@ -235,9 +236,11 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 class BinanceSocketManager:
 
     STREAM_URL = 'wss://stream.binance.{}:9443/'
-    STREAM_TESTNET_URL = 'wss://testnet.binance.vision:9443/'
+    STREAM_TESTNET_URL = 'wss://testnet.binance.vision/'
     FSTREAM_URL = 'wss://fstream.binance.{}/'
+    FSTREAM_TESTNET_URL = 'wss://stream.binancefuture.com/'
     DSTREAM_URL = 'wss://dstream.binance.{}/'
+    DSTREAM_TESTNET_URL = 'wss://dstream.binancefuture.com/'
     VSTREAM_URL = 'wss://vstream.binance.{}/'
     VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.{}/'
 
@@ -303,14 +306,21 @@ class BinanceSocketManager:
 
         return self._conns[path]
 
-    def _get_futures_socket(self, path: str, prefix: str = 'stream?streams='):
-        return self._get_socket(path, self.FSTREAM_URL, prefix)
+    def _get_futures_socket(self, path: str, futures_type: FuturesType, prefix: str = 'stream?streams='):
+        if futures_type == FuturesType.USD_M:
+            stream_url = self.FSTREAM_URL
+            if self.testnet:
+                stream_url = self.FSTREAM_TESTNET_URL
+        else:
+            stream_url = self.DSTREAM_URL
+            if self.testnet:
+                stream_url = self.DSTREAM_TESTNET_URL
+        return self._get_socket(path, stream_url, prefix)
 
     def _get_options_socket(self, path: str, prefix: str = 'ws/'):
         stream_url = self.VSTREAM_URL
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
-
         return self._get_socket(path, stream_url, prefix, is_binary=True)
 
     async def _exit_socket(self, path: str):
@@ -529,11 +539,11 @@ class BinanceSocketManager:
         """
         return self._get_socket(symbol.lower() + '@aggTrade')
 
-    def aggtrade_futures_socket(self, symbol: str):
+    def aggtrade_futures_socket(self, symbol: str, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for aggregate symbol trade data for the futures stream
 
         :param symbol: required
-        :type symbol: str
+        :param futures_type: use USD-M or COIN-M futures default USD-M
 
         :returns: connection key string if successful, False otherwise
 
@@ -555,7 +565,7 @@ class BinanceSocketManager:
             }
 
         """
-        return self._get_futures_socket(symbol.lower() + '@aggTrade')
+        return self._get_futures_socket(symbol.lower() + '@aggTrade', futures_type=futures_type)
 
     def symbol_ticker_socket(self, symbol: str):
         """Start a websocket for a symbol's ticker data
@@ -644,13 +654,31 @@ class BinanceSocketManager:
         """
         return self._get_socket('!ticker@arr')
 
-    def symbol_mark_price_socket(self, symbol: str, fast: bool = True):
+    def index_price_socket(self, symbol: str, fast: bool = True):
+        """Start a websocket for a symbol's futures mark price
+        https://binance-docs.github.io/apidocs/delivery/en/#index-price-stream
+        :param symbol: required
+        :param fast: use faster or 1s default
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+        .. code-block:: python
+            {
+                "e": "indexPriceUpdate",  // Event type
+                "E": 1591261236000,       // Event time
+                "i": "BTCUSD",            // Pair
+                "p": "9636.57860000",     // Index Price
+              }
+        """
+        stream_name = '@indexPrice@1s' if fast else '@indexPrice'
+        return self._get_futures_socket(symbol.lower() + stream_name, futures_type=FuturesType.COIN_M)
+
+    def symbol_mark_price_socket(self, symbol: str, fast: bool = True, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for a symbol's futures mark price
         https://binance-docs.github.io/apidocs/futures/en/#mark-price-stream
         :param symbol: required
-        :type symbol: str
         :param fast: use faster or 1s default
-        :type fast: bool
+        :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         Message Format
         .. code-block:: python
@@ -664,14 +692,14 @@ class BinanceSocketManager:
             }
         """
         stream_name = '@markPrice@1s' if fast else '@markPrice'
-        return self._get_futures_socket(symbol.lower() + stream_name)
+        return self._get_futures_socket(symbol.lower() + stream_name, futures_type=futures_type)
 
-    def all_mark_price_socket(self, fast: bool = True):
+    def all_mark_price_socket(self, fast: bool = True, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for all futures mark price data
         By default all symbols are included in an array.
         https://binance-docs.github.io/apidocs/futures/en/#mark-price-stream-for-all-market
         :param fast: use faster or 1s default
-        :type fast: bool
+        :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         Message Format
         .. code-block:: python
@@ -688,16 +716,14 @@ class BinanceSocketManager:
             ]
         """
         stream_name = '!markPrice@arr@1s' if fast else '!markPrice@arr'
-        return self._get_futures_socket(stream_name)
+        return self._get_futures_socket(stream_name, futures_type=futures_type)
 
-    def symbol_ticker_futures_socket(self, symbol: str):
+    def symbol_ticker_futures_socket(self, symbol: str, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for a symbol's ticker data
         By default all markets are included in an array.
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-book-ticker-streams
         :param symbol: required
-        :type symbol: str
-        :param coro: callback function to handle messages
-        :type coro: function
+        :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         .. code-block:: python
             [
@@ -711,13 +737,14 @@ class BinanceSocketManager:
                 }
             ]
         """
-        return self._get_futures_socket(symbol.lower() + '@bookTicker')
+        return self._get_futures_socket(symbol.lower() + '@bookTicker', futures_type=futures_type)
 
-    def individual_symbol_ticker_futures_socket(self, symbol: str):
+    def individual_symbol_ticker_futures_socket(self, symbol: str, futures_type: FuturesType = FuturesType.USD_M):
         """Start a futures websocket for a single symbol's ticker data
         https://binance-docs.github.io/apidocs/futures/en/#individual-symbol-ticker-streams
         :param symbol: required
         :type symbol: str
+        :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         .. code-block:: python
             {
@@ -727,12 +754,13 @@ class BinanceSocketManager:
                 "p": "0.0015",      // Price change
             }
         """
-        return self._get_futures_socket(symbol.lower() + '@ticker')
+        return self._get_futures_socket(symbol.lower() + '@ticker', futures_type=futures_type)
 
-    def all_ticker_futures_socket(self):
+    def all_ticker_futures_socket(self, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for all ticker data
         By default all markets are included in an array.
         https://binance-docs.github.io/apidocs/futures/en/#all-book-tickers-stream
+        :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         Message Format
         .. code-block:: python
@@ -748,7 +776,7 @@ class BinanceSocketManager:
             ]
         """
 
-        return self._get_futures_socket('!bookTicker')
+        return self._get_futures_socket('!bookTicker', futures_type=futures_type)
 
     def symbol_book_ticker_socket(self, symbol: str):
         """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
@@ -835,6 +863,27 @@ class BinanceSocketManager:
         """
         stream_path = 'streams={}'.format('/'.join([s.lower() for s in streams]))
         return self._get_options_socket(stream_path, prefix='stream?')
+
+    def futures_multiplex_socket(self, streams: List[str], futures_type: FuturesType = FuturesType.USD_M):
+        """Start a multiplexed socket using a list of socket names.
+        User stream sockets can not be included.
+
+        Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
+
+        Combined stream events are wrapped as follows: {"stream":"<streamName>","data":<rawPayload>}
+
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
+
+        :param streams: list of stream names in lower case
+        :param futures_type: use USD-M or COIN-M futures default USD-M
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+
+        """
+        path = 'streams={}'.format('/'.join(streams))
+        return self._get_futures_socket(path, prefix='stream?', futures_type=futures_type)
 
     def user_socket(self):
         """Start a websocket for user data

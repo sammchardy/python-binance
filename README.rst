@@ -49,7 +49,7 @@ Features
 
 - Implementation of all General, Market Data and Account endpoints.
 - Asyncio implementation
-- Testnet support
+- Testnet support for Spot, Futures and Vanilla Options
 - Simple handling of authentication
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling

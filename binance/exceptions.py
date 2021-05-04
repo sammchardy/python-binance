@@ -81,4 +81,4 @@ class BinanceWebsocketUnableToConnect(Exception):
 class NotImplementedException(Exception):
     def __init__(self, value):
         message = f'Not implemented: {value}'
-        super(message)
+        super().__init__(message)

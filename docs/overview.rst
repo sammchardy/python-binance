@@ -45,15 +45,17 @@ or for Asynchronous client
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
-Using the Spot or Vanilla Options Testnet
------------------------------------------
+Using the Spot, Futures or Vanilla Options Testnet
+--------------------------------------------------
 
-Binance offers a `Spot <https://testnet.binance.vision/>`_ and `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
+Binance offers a `Spot <https://testnet.binance.vision/>`_,
+`Futures <https://testnet.binancefuture.com/>`_
+and `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
 to test interacting with the exchange.
 
 To enable this set the `testnet` parameter passed to the Client to True.
 
-The testnet paramets will also be used by any websocket streams when the client is passed to the BinanceSocketManager.
+The testnet parameter will also be used by any websocket streams when the client is passed to the BinanceSocketManager.
 
 .. code:: python
 

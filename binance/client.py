@@ -22,9 +22,13 @@ class BaseClient:
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    FUTURES_TESTNET_URL = 'https://testnet.binancefuture.com/fapi'
     FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
+    FUTURES_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
+    FUTURES_COIN_TESTNET_URL = 'https://testnet.binancefuture.com/dapi'
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
+    FUTURES_COIN_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
     OPTIONS_URL = 'https://vapi.binance.{}/vapi'
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
@@ -180,17 +184,29 @@ class BaseClient:
         return self.WEBSITE_URL + '/' + path
 
     def _create_futures_api_uri(self, path: str) -> str:
-        return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
+        url = self.FUTURES_URL
+        if self.testnet:
+            url = self.FUTURES_TESTNET_URL
+        return url + '/' + self.FUTURES_API_VERSION + '/' + path
 
     def _create_futures_data_api_uri(self, path: str) -> str:
-        return self.FUTURES_DATA_URL + '/' + path
+        url = self.FUTURES_DATA_URL
+        if self.testnet:
+            url = self.FUTURES_DATA_TESTNET_URL
+        return url + '/' + path
 
     def _create_futures_coin_api_url(self, path: str, version=1) -> str:
+        url = self.FUTURES_COIN_URL
+        if self.testnet:
+            url = self.FUTURES_COIN_TESTNET_URL
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
-        return self.FUTURES_COIN_URL + "/" + options[version] + "/" + path
+        return url + "/" + options[version] + "/" + path
 
     def _create_futures_coin_data_api_url(self, path: str, version=1) -> str:
-        return self.FUTURES_COIN_DATA_URL + "/" + path
+        url = self.FUTURES_COIN_DATA_URL
+        if self.testnet:
+            url = self.FUTURES_COIN_DATA_TESTNET_URL
+        return url + "/" + path
 
     def _create_options_api_uri(self, path: str) -> str:
         url = self.OPTIONS_URL
