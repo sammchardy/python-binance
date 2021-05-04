@@ -11,7 +11,8 @@ from urllib.parse import urlencode
 
 
 from .helpers import interval_to_milliseconds, convert_ts_str
-from .exceptions import BinanceAPIException, BinanceRequestException
+from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
+from .enums import HistoricalKlinesType
 
 
 class BaseClient:
@@ -847,37 +848,40 @@ class Client(BaseClient):
         """
         return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
-    def _klines(self, spot=True, **params) -> Dict:
+    def _klines(self, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT, **params) -> Dict:
         """Get klines of spot (get_klines) or futures (futures_klines) endpoints.
 
-        :param spot: Spot klines functions, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: klines, see get_klines
 
         """
         if 'endTime' in params and not params['endTime']:
             del params['endTime']
-        if spot:
-            return self.get_klines(**params)
-        else:
-            return self.futures_klines(**params)
 
-    def _get_earliest_valid_timestamp(self, symbol, interval, spot=True):
+        if HistoricalKlinesType.SPOT == klines_type:
+            return self.get_klines(**params)
+        elif HistoricalKlinesType.FUTURES == klines_type:
+            return self.futures_klines(**params)
+        else:
+            raise NotImplementedException(klines_type)
+
+    def _get_earliest_valid_timestamp(self, symbol, interval, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get earliest valid open timestamp from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param spot: Spot endpoint, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: first valid timestamp
 
         """
         kline = self._klines(
-            spot=spot,
+            klines_type=klines_type,
             symbol=symbol,
             interval=interval,
             limit=1,
@@ -886,7 +890,8 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                              klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -899,15 +904,16 @@ class Client(BaseClient):
         :type end_str: str|int
         :param limit: Default 500; max 1000.
         :type limit: int
-        :param spot: Historical klines from spot endpoint, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=spot)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
 
-    def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
+    def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                           klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -926,8 +932,8 @@ class Client(BaseClient):
         :type limit: int
         :param limit: Default 500; max 1000.
         :type limit: int
-        :param spot: Historical klines from spot endpoint, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: list of OHLCV values
 
@@ -941,7 +947,7 @@ class Client(BaseClient):
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, spot)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -951,7 +957,7 @@ class Client(BaseClient):
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             temp_data = self._klines(
-                spot=spot,
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -984,7 +990,8 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
+    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                        klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -995,16 +1002,17 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
-        :param spot: Historical klines from spot endpoint, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: generator of OHLCV values
 
         """
 
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=spot)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
+    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -1019,8 +1027,8 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
-        :param spot: Historical klines generator from spot endpoint, otherwise futures
-        :type spot: bool
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: generator of OHLCV values
 
@@ -1035,7 +1043,7 @@ class Client(BaseClient):
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, spot)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -1045,7 +1053,7 @@ class Client(BaseClient):
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             output_data = self.get_klines(
-                spot=spot,
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -5144,7 +5152,7 @@ class Client(BaseClient):
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=False)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
 
     def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
         """Get historical futures klines generator from Binance
@@ -5162,7 +5170,7 @@ class Client(BaseClient):
 
         """
 
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=False)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
 
     def futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
@@ -6601,18 +6609,21 @@ class AsyncClient(BaseClient):
         return await self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
     get_klines.__doc__ = Client.get_klines.__doc__
 
-    async def _klines(self, spot=True, **params) -> Dict:
+    async def _klines(self, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT, **params) -> Dict:
         if 'endTime' in params and not params['endTime']:
             del params['endTime']
-        if spot:
+        if HistoricalKlinesType.SPOT == klines_type:
             return await self.get_klines(**params)
-        else:
+        elif HistoricalKlinesType.FUTURES == klines_type:
             return await self.futures_klines(**params)
+        else:
+            raise NotImplementedException(klines_type)
     _klines.__doc__ = Client._klines.__doc__
 
-    async def _get_earliest_valid_timestamp(self, symbol, interval, spot=True):
+    async def _get_earliest_valid_timestamp(self, symbol, interval,
+                                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         kline = await self._klines(
-            spot=spot,
+            klines_type=klines_type,
             symbol=symbol,
             interval=interval,
             limit=1,
@@ -6622,11 +6633,13 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
-        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=spot)
+    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                                    klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
-    async def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500, spot=True):
+    async def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                                 klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # init our list
         output_data = []
@@ -6638,7 +6651,7 @@ class AsyncClient(BaseClient):
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, spot)
+        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -6648,7 +6661,7 @@ class AsyncClient(BaseClient):
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             temp_data = await self._klines(
-                spot=spot,
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -6682,11 +6695,13 @@ class AsyncClient(BaseClient):
         return output_data
     _historical_klines.__doc__ = Client._historical_klines.__doc__
 
-    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=spot)
+    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                              klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
     get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
 
-    async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None, spot=True):
+    async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                           klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # setup the max limit
         limit = 500
@@ -6698,7 +6713,7 @@ class AsyncClient(BaseClient):
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, spot)
+        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
@@ -6708,7 +6723,7 @@ class AsyncClient(BaseClient):
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
             output_data = await self._klines(
-                spot=spot,
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -7221,10 +7236,10 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'continuousKlines', data=params)
 
     async def futures_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, spot=False)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
 
     async def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, spot=False)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
 
     async def futures_mark_price(self, **params):
         return await self._request_futures_api('get', 'premiumIndex', data=params)
