@@ -4,6 +4,9 @@ Account Endpoints
 Orders
 ------
 
+Read `Understanding Binance Order Filters <https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html>`_
+for more information about price and quantity filters on `Binance <https://www.binance.com/?ref=10099792>`_.
+
 Order Validation
 ^^^^^^^^^^^^^^^^
 

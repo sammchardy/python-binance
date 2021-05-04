@@ -45,7 +45,6 @@ or for Asynchronous client
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
-
 Using the Spot or Vanilla Options Testnet
 -----------------------------------------
 
@@ -125,6 +124,8 @@ The only difference is to run within an asyncio event loop and await the functio
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
+Read `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
+for more information about asynchronous patterns.
 
 API Rate Limit
 --------------

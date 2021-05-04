@@ -39,6 +39,9 @@ Binance API Telegram
 Blog with examples including async
   https://sammchardy.github.io
 
+- `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
+- `Understanding Binance Order Filters <https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html>`_
+
 Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
 
 Features
@@ -145,6 +148,9 @@ For more `check out the documentation <https://python-binance.readthedocs.io/en/
 
 Async Example
 -------------
+
+Read `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
+for more information.
 
 .. code:: python
 

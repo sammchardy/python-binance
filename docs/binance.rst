@@ -2,7 +2,7 @@ Binance API
 ===========
 
 client module
-----------------------
+-------------
 
 .. automodule:: binance.client
     :members:
@@ -10,7 +10,7 @@ client module
     :show-inheritance:
 
 depthcache module
---------------------------
+-----------------
 
 .. automodule:: binance.depthcache
     :members:
@@ -18,7 +18,7 @@ depthcache module
     :show-inheritance:
 
 exceptions module
---------------------------
+-----------------
 
 .. automodule:: binance.exceptions
     :members:
@@ -26,7 +26,7 @@ exceptions module
     :show-inheritance:
 
 helpers module
---------------------------
+--------------
 
 .. automodule:: binance.helpers
     :members:
@@ -34,9 +34,9 @@ helpers module
     :show-inheritance:
 
 websockets module
---------------------------
+-----------------
 
-.. automodule:: binance.websockets
+.. automodule:: binance.streams
     :members:
     :undoc-members:
     :show-inheritance:
