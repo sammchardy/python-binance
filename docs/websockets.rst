@@ -21,10 +21,12 @@ Create the manager like so, passing an AsyncClient.
 
 .. code:: python
 
+    import asyncio
     from binance import AsyncClient, BinanceSocketManager
 
-    async def x():
-        client = AsyncClient.create()
+
+    async def main():
+        client = await AsyncClient.create()
         bm = BinanceSocketManager(client)
         # start any sockets here, i.e a trade socket
         ts = bm.trade_socket('BNBBTC')
@@ -33,6 +35,13 @@ Create the manager like so, passing an AsyncClient.
             while True:
                 res = await tscm.recv()
                 print(res)
+
+        await client.close_connection()
+
+    if __name__ == "__main__":
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
 
 Set a custom timeout for the websocket connections
 
@@ -66,10 +75,12 @@ can do this.
     from binance import AsyncClient, BinanceSocketManager
 
     async def x():
-        client = AsyncClient.create(tld='us')
+        client = await AsyncClient.create(tld='us')
         bm = BinanceSocketManager(client)
 
         # start a socket...
+
+        await client.close_connection()
 
 
 Websocket Errors

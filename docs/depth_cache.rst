@@ -4,12 +4,33 @@ Depth Cache
 To follow the depth cache updates for a symbol use the `DepthCacheManager`. For vanilla options use the
 `OptionsDepthCacheManager`.
 
-Create the manager like so, passing the api client, symbol and an optional callback function.
+Create the manager like so, passing the async api client, symbol and an optional callback function.
 
 .. code:: python
 
-    from binance import DepthCacheManager
-    dcm = DepthCacheManager(client, 'BNBBTC')
+    import asyncio
+
+    from binance import AsyncClient, DepthCacheManager
+
+
+    async def main():
+        client = await AsyncClient.create()
+        dcm = DepthCacheManager(client, 'BNBBTC')
+
+        async with dcm as dcm_socket:
+            while True:
+                depth_cache = await dcm_socket.recv()
+                print("symbol {}".format(depth_cache.symbol))
+                print("top 5 bids")
+                print(depth_cache.get_bids()[:5])
+                print("top 5 asks")
+                print(depth_cache.get_asks()[:5])
+                print("last update time {}".format(depth_cache.update_time))
+
+    if __name__ == "__main__":
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
 
 The `DepthCacheManager` returns an Asynchronous Context Manager which can be used with `async for`
 or by interacting with the `__aenter__` and `__aexit__` functions
@@ -49,7 +70,7 @@ Examples
 
 .. code:: python
 
-    async with dcm(client, symbol='ETHBTC') as dcm_socket:
+    async with dcm as dcm_socket:
         while True:
             depth_cache = await dcm_socket.recv()
             print("symbol {}".format(depth_cache.symbol))

@@ -216,6 +216,8 @@ for more information.
                 print("Top 5 bids:")
                 print(depth_cache.get_bids()[:5])
 
+        await client.close_connection()
+
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
