@@ -86,7 +86,7 @@ class ReconnectingWebsocket:
         try:
             return json.loads(evt)
         except ValueError:
-            self._log.debug('error parsing evt json:{}'.format(evt))
+            self._log.debug(f'error parsing evt json:{evt}')
             return None
 
     async def recv(self):
@@ -392,10 +392,10 @@ class BinanceSocketManager:
         """
         socket_name = symbol.lower() + '@depth'
         if depth and depth != '1':
-            socket_name = '{}{}'.format(socket_name, depth)
+            socket_name = f'{socket_name}{depth}'
         if interval:
             if interval in [0, 100]:
-                socket_name = '{}@{}ms'.format(socket_name, interval)
+                socket_name = f'{socket_name}@{interval}ms'
             else:
                 raise ValueError("Websocket interval value not allowed. Allowed values are [0, 100]")
         return self._get_socket(socket_name)
@@ -441,7 +441,7 @@ class BinanceSocketManager:
                     }
             }
         """
-        path = '{}@kline_{}'.format(symbol.lower(), interval)
+        path = f'{symbol.lower()}@kline_{interval}'
         return self._get_socket(path)
 
     def miniticker_socket(self, update_time: int = 1000):
@@ -474,7 +474,7 @@ class BinanceSocketManager:
             ]
         """
 
-        return self._get_socket('!miniTicker@arr@{}ms'.format(update_time))
+        return self._get_socket(f'!miniTicker@arr@{update_time}ms')
 
     def trade_socket(self, symbol: str):
         """Start a websocket for symbol trade data
@@ -840,7 +840,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = 'streams={}'.format('/'.join(streams))
+        path = f'streams={"/".join(streams)}'
         return self._get_socket(path, prefix='stream?')
 
     def options_multiplex_socket(self, streams: List[str]):
@@ -861,7 +861,8 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        stream_path = 'streams={}'.format('/'.join([s.lower() for s in streams]))
+        stream_name = '/'.join([s.lower() for s in streams])
+        stream_path = f'streams={stream_name}'
         return self._get_options_socket(stream_path, prefix='stream?')
 
     def futures_multiplex_socket(self, streams: List[str], futures_type: FuturesType = FuturesType.USD_M):
@@ -882,7 +883,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = 'streams={}'.format('/'.join(streams))
+        path = f'streams={"/".join(streams)}'
         return self._get_futures_socket(path, prefix='stream?', futures_type=futures_type)
 
     def user_socket(self):

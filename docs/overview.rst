@@ -112,6 +112,7 @@ The only difference is to run within an asyncio event loop and await the functio
 
 .. code:: python
 
+    import asyncio
     from binance import AsyncClient
 
     async def main():
@@ -120,6 +121,8 @@ The only difference is to run within an asyncio event loop and await the functio
         # fetch exchange info
         res = await client.get_exchange_info()
         print(json.dumps(res, indent=2))
+
+        await client.close_connection()
 
     if __name__ == "__main__":
 
@@ -143,8 +146,52 @@ At the current time Binance rate limits are:
 Some calls have a higher weight than others especially if a call returns information about all symbols.
 Read the `official Binance documentation <https://github.com/binance-exchange/binance-official-api-docs>`_ for specific information.
 
-.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
+On each request Binance returns `X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter)` and `X-MBX-ORDER-COUNT-(intervalNum)`
+headers.
 
+Here are examples to access these
+
+Asynchronous example
+
+.. code:: python
+
+    import asyncio
+    from binance import AsyncClient
+
+    api_key = '<api_key>'
+    api_secret = '<api_secret>'
+
+    async def main():
+        client = await AsyncClient.create(api_key, api_secret)
+
+        res = await client.get_exchange_info()
+        print(client.response.headers)
+
+        await client.close_connection()
+
+    if __name__ == "__main__":
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+
+Synchronous example
+
+
+.. code:: python
+
+    from binance import Client
+
+    api_key = '<api_key>'
+    api_secret = '<api_secret>'
+
+    def main():
+        client = Client(api_key, api_secret)
+
+        res = client.get_exchange_info()
+        print(res.headers)
+
+    if __name__ == "__main__":
+        main()
 Requests Settings
 -----------------
 
@@ -198,3 +245,5 @@ For Windows environments
 
     C:\>set HTTP_PROXY=http://10.10.1.10:3128
     C:\>set HTTPS_PROXY=http://10.10.1.10:1080
+
+.. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel

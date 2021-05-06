@@ -217,7 +217,7 @@ class BaseClient:
     def _generate_signature(self, data: Dict) -> str:
 
         ordered_data = self._order_params(data)
-        query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
+        query_string = '&'.join([f"{d[0]}={d[1]}" for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
@@ -305,8 +305,8 @@ class Client(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        response = getattr(self.session, method)(uri, **kwargs)
-        return self._handle_response(response)
+        self.response = getattr(self.session, method)(uri, **kwargs)
+        return self._handle_response(self.response)
 
     @staticmethod
     def _handle_response(response: requests.Response) -> Dict:
@@ -6445,6 +6445,7 @@ class AsyncClient(BaseClient):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         async with getattr(self.session, method)(uri, **kwargs) as response:
+            self.response = response
             return await self._handle_response(response)
 
     async def _handle_response(self, response: aiohttp.ClientResponse) -> Dict:
@@ -6458,7 +6459,7 @@ class AsyncClient(BaseClient):
             return await response.json()
         except ValueError:
             txt = await response.text()
-            raise BinanceRequestException('Invalid Response: {}'.format(txt))
+            raise BinanceRequestException(f'Invalid Response: {txt}')
 
     async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         uri = self._create_api_uri(path, signed, version)
