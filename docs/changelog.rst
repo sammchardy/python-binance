@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.5
+^^^^^^
+
+**Fixed**
+
+- Restored access to last response on client
+
 v1.0.4
 ^^^^^^
 
