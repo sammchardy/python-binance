@@ -1068,14 +1068,14 @@ class Client(BaseClient):
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            output_data = self.get_klines(
-                klines_type=klines_type,
-                symbol=symbol,
-                interval=interval,
-                limit=limit,
-                startTime=start_ts,
-                endTime=end_ts
-            )
+            output_data = self._klines(
+                                        klines_type=klines_type,
+                                        symbol=symbol,
+                                        interval=interval,
+                                        limit=limit,
+                                        startTime=start_ts,
+                                        endTime=end_ts
+                                    )
 
             # handle the case where exactly the limit amount of data was returned last loop
             if not len(output_data):
