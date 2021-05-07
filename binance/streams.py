@@ -12,7 +12,7 @@ from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import FuturesType
 
-DEFAULT_USER_TIMEOUT = 30 * 60  # 30 minutes
+KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
 
 
 class WSListenerState(Enum):
@@ -174,7 +174,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         super().__init__(loop=loop, path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
         self._keepalive_type = keepalive_type
         self._client = client
-        self._user_timeout = user_timeout or DEFAULT_USER_TIMEOUT
+        self._user_timeout = user_timeout or KEEPALIVE_TIMEOUT
         self._timer = None
 
     async def __aexit__(self, *args, **kwargs):
@@ -195,7 +195,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
     def _start_socket_timer(self):
         self._timer = self._loop.call_later(
             self._user_timeout,
-            self._keepalive_socket
+            asyncio.create_task,
+            self._keepalive_socket()
         )
 
     async def _get_listen_key(self):
@@ -248,7 +249,7 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-    def __init__(self, client: AsyncClient, loop=None, user_timeout=DEFAULT_USER_TIMEOUT):
+    def __init__(self, client: AsyncClient, loop=None, user_timeout=KEEPALIVE_TIMEOUT):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
