@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.6
+^^^^^^
+
+**Fixed**
+
+- fix time for authenticated stream keepalive
+
 v1.0.5
 ^^^^^^
 
