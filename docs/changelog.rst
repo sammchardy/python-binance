@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.7
+^^^^^^
+
+**Fixed**
+
+- remove version param from get_sub_account_assets
+
 v1.0.6
 ^^^^^^
 
