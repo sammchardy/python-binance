@@ -66,7 +66,11 @@ class ReconnectingWebsocket:
         assert self._path
         ws_url = self._url + self._prefix + self._path
         self._conn = ws.connect(ws_url)
-        self.ws = await self._conn.__aenter__()
+        try:
+            self.ws = await self._conn.__aenter__()
+        except:  # noqa
+            await self._reconnect()
+            return
         self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
@@ -140,8 +144,9 @@ class ReconnectingWebsocket:
         return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def before_reconnect(self):
-        await self._conn.__aexit__(None, None, None)
-        self.ws = None
+        if self.ws:
+            await self._conn.__aexit__(None, None, None)
+            self.ws = None
         self._reconnects += 1
 
     def _no_message_received_reconnect(self):

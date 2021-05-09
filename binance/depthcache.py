@@ -346,8 +346,6 @@ class DepthCacheManager(BaseDepthCacheManager):
 
         """
 
-        print(msg['u'])
-
         if self._last_update_id is None:
             # Initial depth snapshot fetch not yet performed, buffer messages
             self._depth_message_buffer.append(msg)
