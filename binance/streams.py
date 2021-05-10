@@ -2,15 +2,17 @@ import asyncio
 import gzip
 import json
 import logging
+import time
 from enum import Enum
 from random import random
-from typing import Optional, List
+from typing import Optional, List, Dict, Callable, Any
 
 import websockets as ws
 
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import FuturesType
+from .threaded_stream import ThreadedApiManager
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
 
@@ -1009,3 +1011,298 @@ class BinanceSocketManager:
             return
 
         del(self._conns[conn_key])
+
+
+class ThreadedWebsocketManager(ThreadedApiManager):
+
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False
+    ):
+        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+        self._bsm: Optional[BinanceSocketManager] = None
+
+    async def _before_socket_listener_start(self):
+        assert self._client
+        self._bsm = BinanceSocketManager(self._client, self._loop)
+
+    def _start_async_socket(
+        self, callback: Callable, socket_name: str, params: Dict[str, Any], path: Optional[str] = None
+    ) -> str:
+        while not self._bsm:
+            time.sleep(0.1)
+        socket = getattr(self._bsm, socket_name)(**params)
+        path = path or socket._path  # noqa
+        self._socket_running[path] = True
+        self._loop.call_soon(asyncio.create_task, self.start_listener(socket, socket._path, callback))
+        return path
+
+    def start_depth_socket(
+        self, callback: Callable, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='depth_socket',
+            params={
+                'symbol': symbol,
+                'depth': depth,
+                'interval': interval,
+            }
+        )
+
+    def start_kline_socket(self, callback: Callable, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='kline_socket',
+            params={
+                'symbol': symbol,
+                'interval': interval,
+            }
+        )
+
+    def start_miniticker_socket(self, callback: Callable, update_time: int = 1000) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='miniticker_socket',
+            params={
+                'update_time': update_time,
+            }
+        )
+
+    def start_trade_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='trade_socket',
+            params={
+                'symbol': symbol,
+            }
+        )
+
+    def start_aggtrade_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='aggtrade_socket',
+            params={
+                'symbol': symbol,
+            }
+        )
+
+    def start_aggtrade_futures_socket(
+        self, callback: Callable, symbol: str, futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='aggtrade_socket',
+            params={
+                'symbol': symbol,
+                'futures_type': futures_type,
+            }
+        )
+
+    def start_symbol_ticker_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_ticker_socket',
+            params={
+                'symbol': symbol,
+            }
+        )
+
+    def start_ticker_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='ticker_socket',
+            params={}
+        )
+
+    def start_index_price_socket(self, callback: Callable, symbol: str, fast: bool = True) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='index_price_socket',
+            params={
+                'symbol': symbol,
+                'fast': fast
+            }
+        )
+
+    def start_symbol_mark_price_socket(
+        self, callback: Callable, symbol: str, fast: bool = True, futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_mark_price_socket',
+            params={
+                'symbol': symbol,
+                'fast': fast,
+                'futures_type': futures_type
+            }
+        )
+
+    def start_all_mark_price_socket(
+        self, callback: Callable, fast: bool = True, futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='all_mark_price_socket',
+            params={
+                'fast': fast,
+                'futures_type': futures_type
+            }
+        )
+
+    def start_symbol_ticker_futures_socket(
+        self, callback: Callable, symbol: str, futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_ticker_futures_socket',
+            params={
+                'symbol': symbol,
+                'futures_type': futures_type
+            }
+        )
+
+    def start_individual_symbol_ticker_futures_socket(
+        self, callback: Callable, symbol: str, futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='individual_symbol_ticker_futures_socket',
+            params={
+                'symbol': symbol,
+                'futures_type': futures_type
+            }
+        )
+
+    def start_all_ticker_futures_socket(self, callback: Callable, futures_type: FuturesType = FuturesType.USD_M) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='all_ticker_futures_socket',
+            params={
+                'futures_type': futures_type
+            }
+        )
+
+    def start_symbol_book_ticker_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_book_ticker_socket',
+            params={
+                'symbol': symbol
+            }
+        )
+
+    def start_book_ticker_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_book_ticker_socket',
+            params={}
+        )
+
+    def start_multiplex_socket(self, callback: Callable, streams: List[str]) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_book_ticker_socket',
+            params={
+                'streams': streams
+            }
+        )
+
+    def start_options_multiplex_socket(self, callback: Callable, streams: List[str]) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_multiplex_socket',
+            params={
+                'streams': streams
+            }
+        )
+
+    def start_futures_multiplex_socket(
+        self, callback: Callable, streams: List[str], futures_type: FuturesType = FuturesType.USD_M
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_multiplex_socket',
+            params={
+                'streams': streams,
+                'futures_type': futures_type
+            }
+        )
+
+    def start_user_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='user_socket',
+            params={}
+        )
+
+    def start_margin_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='margin_socket',
+            params={}
+        )
+
+    def start_futures_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='futures_socket',
+            params={}
+        )
+
+    def start_coin_futures_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='coin_futures_socket',
+            params={}
+        )
+
+    def start_isolated_margin_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='isolated_margin_socket',
+            params={
+                'symbol': symbol
+            }
+        )
+
+    def start_options_ticker_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_ticker_socket',
+            params={
+                'symbol': symbol
+            }
+        )
+
+    def start_options_recent_trades_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_recent_trades_socket',
+            params={
+                'symbol': symbol
+            }
+        )
+
+    def start_options_kline_socket(
+        self, callback: Callable, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE
+    ) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_kline_socket',
+            params={
+                'symbol': symbol,
+                'interval': interval
+            }
+        )
+
+    def start_options_depth_socket(self, callback: Callable, symbol: str, depth: str = '10') -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_depth_socket',
+            params={
+                'symbol': symbol,
+                'depth': depth
+            }
+        )
