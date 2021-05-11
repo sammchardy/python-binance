@@ -1,6 +1,8 @@
 ================================
-Welcome to python-binance v1.0.7
+Welcome to python-binance v1.0.8
 ================================
+
+Updated 11th May 2021
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
@@ -95,7 +97,7 @@ pass `testnet=True` when creating the client.
 
 .. code:: python
 
-    from binance.client import Client
+    from binance import Client, ThreadedWebsocketManager, ThreadedDepthCacheManager
     client = Client(api_key, api_secret)
 
     # get market depth
@@ -143,6 +145,35 @@ pass `testnet=True` when creating the client.
 
     # fetch weekly klines since it listed
     klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+
+    # socket manager using threads
+    twm = ThreadedWebsocketManager()
+    twm.start()
+
+    # depth cache manager using threads
+    dcm = ThreadedDepthCacheManager()
+    dcm.start()
+
+    def handle_socket_message(msg):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+    def handle_dcm_message(depth_cache):
+        print(f"symbol {depth_cache.symbol}")
+        print("top 5 bids")
+        print(depth_cache.get_bids()[:5])
+        print("top 5 asks")
+        print(depth_cache.get_asks()[:5])
+        print("last update time {}".format(depth_cache.update_time))
+
+    twm.start_kline_socket(callback=handle_socket_message, symbol='BNBBTC')
+
+    dcm.start_depth_cache(callback=handle_dcm_message, symbol='ETHBTC')
+
+    # replace with a current options symbol
+    options_symbol = 'BTC-210430-36000-C'
+    dcm.start_options_depth_cache(callback=handle_dcm_message, symbol=options_symbol)
+
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 

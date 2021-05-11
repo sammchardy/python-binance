@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.0.8 - 2021-05-11
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- old style websocket and depth cache managers as option without interacting with asyncio
+
+**Fixed**
+
+- fixed issue with get_historical_klines in Client
+- remove print debug line
+
 v1.0.7
 ^^^^^^
 
