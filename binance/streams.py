@@ -224,11 +224,11 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         listen_key = await self._get_listen_key()
 
         if listen_key != self._path:
-            print("listen key changed: reconnect")
+            logging.debug("listen key changed: reconnect")
             self._path = listen_key
             await self._reconnect()
         else:
-            print("listen key same: keepalive")
+            logging.debug("listen key same: keepalive")
             if self._keepalive_type == 'user':
                 await self._client.stream_keepalive(self._path)
             elif self._keepalive_type == 'margin':  # cross-margin
