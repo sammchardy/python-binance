@@ -1196,14 +1196,14 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     def start_book_ticker_socket(self, callback: Callable) -> str:
         return self._start_async_socket(
             callback=callback,
-            socket_name='symbol_book_ticker_socket',
+            socket_name='book_ticker_socket',
             params={}
         )
 
     def start_multiplex_socket(self, callback: Callable, streams: List[str]) -> str:
         return self._start_async_socket(
             callback=callback,
-            socket_name='symbol_book_ticker_socket',
+            socket_name='multiplex_socket',
             params={
                 'streams': streams
             }
