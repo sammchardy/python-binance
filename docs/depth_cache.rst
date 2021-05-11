@@ -1,8 +1,101 @@
 Depth Cache
 ===========
 
-To follow the depth cache updates for a symbol use the `DepthCacheManager`. For vanilla options use the
-`OptionsDepthCacheManager`.
+To follow the depth cache updates for a symbol there are 2 options similar to websockets.
+
+Use the `DepthCacheManager <binance.html#binance.depth_cache.DepthCacheManager>`_
+(or `OptionsDepthCacheManager <binance.html#binance.depth_cache.OptionsDepthCacheManager>`_ for vanilla options) or
+use the `ThreadedDepthCacheManager <binance.html#binance.depth_cache.ThreadedDepthCacheManager>`_
+if you don't want to interact with asyncio.
+
+ThreadedDepthCacheManager Websocket Usage
+-----------------------------------------
+
+Starting sockets on the ThreadedDepthCacheManager requires a callback parameter, similar to old implementations of
+depth cache on python-binance pre v1
+
+ThreadedDepthCacheManager takes similar parameters to the `Client <binance.html#binance.client.Client>`_ class
+as it creates an AsyncClient internally.
+
+As these use threads `start()` is required to be called before starting any depth cache streams.
+
+.. code:: python
+
+    from binance import ThreadedDepthCacheManager
+
+    def main():
+
+        dcm = ThreadedDepthCacheManager()
+        # start is required to initialise its internal loop
+        dcm.start()
+
+        def handle_depth_cache(depth_cache):
+            print(f"symbol {depth_cache.symbol}")
+            print("top 5 bids")
+            print(depth_cache.get_bids()[:5])
+            print("top 5 asks")
+            print(depth_cache.get_asks()[:5])
+            print("last update time {}".format(depth_cache.update_time))
+
+        dcm_name = dcm.start_depth_cache(handle_depth_cache, symbol='BNBBTC')
+
+        # multiple depth caches can be started
+        dcm_name = dcm.start_depth_cache(handle_depth_cache, symbol='ETHBTC')
+
+
+    if __name__ == "__main__":
+       main()
+
+
+**Stop Individual Depth Cache**
+
+When starting a stream, a name for that stream will be returned. This can be used to stop that individual stream
+
+.. code:: python
+
+    from binance import ThreadedDepthCacheManager
+
+    symbol = 'BNBBTC'
+
+    dcm = ThreadedDepthCacheManager()
+    dcm.start()
+
+    def handle_depth_cache(depth_cache):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+    dcm_name = dcm.start_depth_cache(handle_depth_cache, symbol='BNBBTC')
+
+    # some time later
+
+    dcm.stop_socket(dcm_name)
+
+**Stop All Depth Cache streams**
+
+.. code:: python
+
+    from binance import ThreadedDepthCacheManager
+
+    symbol = 'BNBBTC'
+
+    dcm = ThreadedDepthCacheManager()
+    dcm.start()
+
+    def handle_depth_cache(depth_cache):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+    dcm_name = dcm.start_depth_cache(handle_depth_cache, symbol='BNBBTC')
+
+    # some time later
+
+    dcm.stop()
+
+Attempting to start a stream after `stop` is called will not work.
+
+
+DepthCacheManager or OptionsDepthCacheManager Usage
+---------------------------------------------------
 
 Create the manager like so, passing the async api client, symbol and an optional callback function.
 

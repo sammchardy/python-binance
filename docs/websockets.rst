@@ -1,21 +1,116 @@
 Websockets
 ==========
 
-Sockets are handled through a Socket Manager `BinanceSocketManager <binance.html#binance.websockets.BinanceSocketManager>`_.
+There are 2 ways to interact with websockets.
 
-Multiple socket connections can be made through the manager.
+with `ThreadedWebsocketManager <binance.html#binance.websockets.ThreadedWebsocketManager>`_ or `BinanceSocketManager <binance.html#binance.websockets.BinanceSocketManager>`_.
+
+ThreadedWebsocketManager does not require asyncio programming, while BinanceSocketManager does.
+
+ThreadedWebsocketManager function being with `start_`, e.g `start_ticker_socket` while BinanceSocketManager is simple `ticker_socket`
+
+Multiple socket connections can be made through either manager.
 
 Only one instance of each socket type will be created, i.e. only one BNBBTC Depth socket can be created
 and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
-
-When creating socket connections an Asynchronous context manager is returned.
 
 Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md>`_.
 
 Websockets are setup to reconnect with a maximum of 5 retries with an exponential backoff strategy.
 
-Websocket Usage
----------------
+ThreadedWebsocketManager Websocket Usage
+----------------------------------------
+
+Starting sockets on the ThreadedWebsocketManager requires a callback parameter, similar to old implementations of websockets on python-binance
+
+ThreadedWebsocketManager takes similar parameters to the `Client <binance.html#binance.client.Client>`_ class as it
+creates an AsyncClient internally.
+
+For authenticated streams `api_key` and `api_stream` are required.
+
+As these use threads `start()` is required to be called before starting any sockets.
+
+.. code:: python
+
+    from binance import ThreadedWebsocketManager
+
+    api_key = '<api_key'>
+    api_secret = '<api_secret'>
+
+    def main():
+
+        symbol = 'BNBBTC'
+
+        twm = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
+        # start is required to initialise its internal loop
+        twm.start()
+
+        def handle_socket_message(msg):
+            print(f"message type: {msg['e']}")
+            print(msg)
+
+        twm.start_kline_socket(callback=handle_socket_message, symbol=symbol)
+
+        # multiple sockets can be started
+        twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
+
+        # or a multiplex socket can be started like this
+        # see Binance docs for stream names
+        streams = ['BNBBTC@miniTicker', 'BNBBTC@bookTicker']
+        twm.start_multiplex_socket(callback=handle_socket_message, streams=streams)
+
+
+    if __name__ == "__main__":
+       main()
+
+**Stop Individual Stream**
+
+When starting a stream, a name for that stream will be returned. This can be used to stop that individual stream
+
+.. code:: python
+
+    from binance import ThreadedWebsocketManager
+
+    symbol = 'BNBBTC'
+
+    twm = ThreadedWebsocketManager()
+    # start is required to initialise its internal loop
+    twm.start()
+
+    def handle_socket_message(msg):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+        twm.start_kline_socket(callback=handle_socket_message, symbol=symbol)
+    depth_stream_name = twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
+
+    # some time later
+
+    twm.stop_socket(depth_stream_name)
+
+**Stop All Streams**
+
+.. code:: python
+
+    from binance import ThreadedWebsocketManager
+
+    twm = ThreadedWebsocketManager()
+    # start is required to initialise its internal loop
+    twm.start()
+
+    def handle_socket_message(msg):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+    depth_stream_name = twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
+
+    twm.stop()
+
+Attempting to start a stream after `stop` is called will not work.
+
+
+BinanceSocketManager Websocket Usage
+------------------------------------
 
 Create the manager like so, passing an AsyncClient.
 
@@ -66,6 +161,14 @@ Manually enter and exit the Asynchronous context manager
 
 Using a different TLD
 ---------------------
+
+The ThreadedWebsocketManager can take the tld when created if required.
+
+.. code:: python
+
+    from binance.streams import ThreadedWebsocketManager
+
+    twm = ThreadedWebsocketManager(tld='us')
 
 The BinanceSocketManager uses the same tld value as the AsyncClient that is passed in. To use the 'us' tld we
 can do this.

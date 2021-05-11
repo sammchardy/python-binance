@@ -850,7 +850,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = f'streams={"/".join(streams)}'
+        path = f'streams={"/".join(streams)}'.lower()
         return self._get_socket(path, prefix='stream?')
 
     def options_multiplex_socket(self, streams: List[str]):
