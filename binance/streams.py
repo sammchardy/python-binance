@@ -576,7 +576,36 @@ class BinanceSocketManager:
 
         """
         return self._get_futures_socket(symbol.lower() + '@aggTrade', futures_type=futures_type)
+    
+    def symbol_miniTicker_socket(self, symbol: str):
+        """Start a websocket for a symbol's miniTicker data
 
+                https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#individual-symbol-mini-ticker-stream
+
+                :param symbol: required
+                :type symbol: str
+
+                :returns: connection key string if successful, False otherwise
+
+                Message Format
+
+                .. code-block:: python
+
+                    {
+                        "e": "24hrMiniTicker",  // Event type
+                        "E": 123456789,         // Event time
+                        "s": "BNBBTC",          // Symbol
+                        "c": "0.0025",          // Close price
+                        "o": "0.0010",          // Open price
+                        "h": "0.0025",          // High price
+                        "l": "0.0010",          // Low price
+                        "v": "10000",           // Total traded base asset volume
+                        "q": "18"               // Total traded quote asset volume
+                    }
+
+                """
+        return self._get_socket(symbol.lower() + '@miniTicker')
+    
     def symbol_ticker_socket(self, symbol: str):
         """Start a websocket for a symbol's ticker data
 
