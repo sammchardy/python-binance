@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.9 - 2021-05-12
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- start_book_ticker_socket and start_multiplex_socket to call correct async function
+
 v1.0.8 - 2021-05-11
 ^^^^^^^^^^^^^^^^^^^
 
