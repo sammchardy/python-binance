@@ -2646,7 +2646,7 @@ class Client(BaseClient):
 
         raise Exception("There is no entry with withdraw id", result)
 
-    def get_deposit_address(self, **params):
+    def get_deposit_address(self, coin: str, network: Optional[str] = None, **params):
         """Fetch a deposit address for a symbol
 
         https://binance-docs.github.io/apidocs/spot/en/#deposit-address-supporting-network-user_data
@@ -2672,6 +2672,9 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        params['coin'] = coin
+        if network:
+            params['network'] = network
         return self._request_margin_api('get', 'capital/deposit/address', True, data=params)
 
     # User Stream Endpoints
@@ -6987,7 +6990,10 @@ class AsyncClient(BaseClient):
         raise Exception("There is no entry with withdraw id", result)
     get_withdraw_history_id.__doc__ = Client.get_withdraw_history_id.__doc__
 
-    async def get_deposit_address(self, **params):
+    async def get_deposit_address(self, coin: str, network: Optional[str] = None, **params):
+        params['coin'] = coin
+        if network:
+            params['network'] = network
         return await self._request_margin_api('get', 'capital/deposit/address', True, data=params)
     get_deposit_address.__doc__ = Client.get_deposit_address.__doc__
 
