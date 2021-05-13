@@ -539,7 +539,7 @@ class Client(BaseClient):
 
     # Market Data Endpoints
 
-    def get_all_tickers(self) -> Dict:
+    def get_all_tickers(self, symbol: Optional[str] = None) -> Dict:
         """Latest price for a symbol or symbols.
 
         https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
@@ -565,7 +565,10 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
+        params = {}
+        if symbol:
+            params['symbol'] = symbol
+        return self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
 
     def get_orderbook_tickers(self) -> Dict:
         """Best price/qty on the order book for all symbols.
@@ -6563,8 +6566,11 @@ class AsyncClient(BaseClient):
 
     # Market Data Endpoints
 
-    async def get_all_tickers(self) -> Dict:
-        return await self._get('ticker/price', version=self.PRIVATE_API_VERSION)
+    async def get_all_tickers(self, symbol: Optional[str] = None) -> Dict:
+        params = {}
+        if symbol:
+            params['symbol'] = symbol
+        return await self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
     get_all_tickers.__doc__ = Client.get_all_tickers.__doc__
 
     async def get_orderbook_tickers(self) -> Dict:
