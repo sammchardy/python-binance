@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.0.10 - 2021-05-13
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- futures multi-asset margin mode endpoints
+- optional symbol param to get_all_tickers
+
+**Fixed**
+
+- start_multiplex_socket remove lower case filter on stream names
+
 v1.0.9 - 2021-05-12
 ^^^^^^^^^^^^^^^^^^^
 
