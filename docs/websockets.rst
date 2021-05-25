@@ -7,7 +7,7 @@ with `ThreadedWebsocketManager <binance.html#binance.websockets.ThreadedWebsocke
 
 ThreadedWebsocketManager does not require asyncio programming, while BinanceSocketManager does.
 
-ThreadedWebsocketManager function being with `start_`, e.g `start_ticker_socket` while BinanceSocketManager is simple `ticker_socket`
+ThreadedWebsocketManager function begin with `start_`, e.g `start_ticker_socket` while BinanceSocketManager is simple `ticker_socket`
 
 Multiple socket connections can be made through either manager.
 
