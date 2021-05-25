@@ -342,7 +342,7 @@ class DepthCacheManager(BaseDepthCacheManager):
         await super()._start_socket()
 
     def _get_socket(self):
-        return self._bm.depth_socket(self._symbol)
+        return self._bm.depth_socket(self._symbol, interval=self._ws_interval)
 
     async def _process_depth_message(self, msg):
         """Process a depth event message.
@@ -396,7 +396,8 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
 
     def _start_depth_cache(
-        self, dcm_class, callback: Callable, symbol: str, refresh_interval=None, bm=None, limit=10, conv_type=float
+        self, dcm_class, callback: Callable, symbol: str,
+        refresh_interval=None, bm=None, limit=10, conv_type=float, **kwargs
     ) -> str:
         dcm = dcm_class(
             client=self._client,
@@ -405,7 +406,8 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
             refresh_interval=refresh_interval,
             bm=bm,
             limit=limit,
-            conv_type=conv_type
+            conv_type=conv_type,
+            **kwargs
         )
         path = symbol.lower() + '@depth' + str(limit)
         self._socket_running[path] = True
@@ -413,7 +415,7 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
         return path
 
     def start_depth_cache(
-        self, callback: Callable, symbol: str, refresh_interval=None, bm=None, limit=10, conv_type=float
+        self, callback: Callable, symbol: str, refresh_interval=None, bm=None, limit=10, conv_type=float, ws_interval=0
     ) -> str:
         return self._start_depth_cache(
             dcm_class=DepthCacheManager,
@@ -422,7 +424,8 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
             refresh_interval=refresh_interval,
             bm=bm,
             limit=limit,
-            conv_type=conv_type
+            conv_type=conv_type,
+            ws_interval=ws_interval
         )
 
     def start_options_depth_socket(
