@@ -539,13 +539,34 @@ class Client(BaseClient):
 
     # Market Data Endpoints
 
-    def get_all_tickers(self, symbol: Optional[str] = None) -> Dict:
-        """Latest price for a symbol or symbols.
+    def get_ticker(self, symbol: str) -> Dict:
+        """Latest price for a symbol.
 
         https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
-        :param symbol: optional
+        :param symbol
         :type symbol: str
+
+        :returns: market ticker
+
+        .. code-block:: python
+
+            {
+                "symbol": "LTCBTC",
+                "price": "4.00000200"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        params = {}
+        params['symbol'] = symbol
+        return self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
+
+    def get_all_tickers(self) -> List[Dict[str, str]]:
+        """Latest price for all symbols.
+
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
         :returns: List of market tickers
 
@@ -565,10 +586,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        params = {}
-        if symbol:
-            params['symbol'] = symbol
-        return self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
+        return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
 
     def get_orderbook_tickers(self) -> Dict:
         """Best price/qty on the order book for all symbols.
