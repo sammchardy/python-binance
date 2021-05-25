@@ -5258,7 +5258,15 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/allForceOrders', data=params)
+        return self._request_futures_api('get', 'forceOrders', signed=True, data=params)
+
+    def futures_adl_quantile_estimate(self, **params):
+        """Get Position ADL Quantile Estimate
+
+        https://binance-docs.github.io/apidocs/futures/en/#position-adl-quantile-estimation-user_data
+
+        """
+        return self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
 
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
@@ -5626,10 +5634,10 @@ class Client(BaseClient):
     def futures_coin_liquidation_orders(self, **params):
         """Get all liquidation orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-all-liquidation-orders
+        https://binance-docs.github.io/apidocs/delivery/en/#user-39-s-force-orders-user_data
 
         """
-        return self._request_futures_coin_api("get", "allForceOrders", data=params)
+        return self._request_futures_coin_api("get", "forceOrders", signed=True, data=params)
 
     def futures_coin_open_interest(self, **params):
         """Get present open interest of a specific symbol.
@@ -7323,7 +7331,10 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'ticker/bookTicker', data=params)
 
     async def futures_liquidation_orders(self, **params):
-        return await self._request_futures_api('get', 'ticker/allForceOrders', data=params)
+        return await self._request_futures_api('get', 'forceOrders', signed=True, data=params)
+
+    async def futures_adl_quantile_estimate(self, **params):
+        return await self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
 
     async def futures_open_interest(self, **params):
         return await self._request_futures_api('get', 'openInterest', data=params)
@@ -7476,7 +7487,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_coin_api("get", "ticker/bookTicker", data=params)
 
     async def futures_coin_liquidation_orders(self, **params):
-        return await self._request_futures_coin_api("get", "allForceOrders", data=params)
+        return await self._request_futures_coin_api("get", "forceOrders", signed=True, data=params)
 
     async def futures_coin_open_interest(self, **params):
         return await self._request_futures_coin_api("get", "openInterest", data=params)
