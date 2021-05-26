@@ -56,7 +56,7 @@ As these use threads `start()` is required to be called before starting any sock
 
         # or a multiplex socket can be started like this
         # see Binance docs for stream names
-        streams = ['BNBBTC@miniTicker', 'BNBBTC@bookTicker']
+        streams = ['bnbbtc@miniTicker', 'bnbbtc@bookTicker']
         twm.start_multiplex_socket(callback=handle_socket_message, streams=streams)
 
 
