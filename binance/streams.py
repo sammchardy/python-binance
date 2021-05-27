@@ -1223,7 +1223,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     ) -> str:
         return self._start_async_socket(
             callback=callback,
-            socket_name='options_multiplex_socket',
+            socket_name='futures_multiplex_socket',
             params={
                 'streams': streams,
                 'futures_type': futures_type
