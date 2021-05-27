@@ -1093,7 +1093,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     ) -> str:
         return self._start_async_socket(
             callback=callback,
-            socket_name='aggtrade_socket',
+            socket_name='aggtrade_futures_socket',
             params={
                 'symbol': symbol,
                 'futures_type': futures_type,
