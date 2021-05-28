@@ -5248,7 +5248,7 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#open-interest-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/openInterest', data=params)
+        return self._request_futures_api('get', 'openInterest', data=params)
 
     def futures_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
@@ -7308,7 +7308,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'ticker/allForceOrders', data=params)
 
     async def futures_open_interest(self, **params):
-        return await self._request_futures_api('get', 'ticker/openInterest', data=params)
+        return await self._request_futures_api('get', 'openInterest', data=params)
 
     async def futures_open_interest_hist(self, **params):
         return await self._request_futures_data_api('get', 'openInterestHist', data=params)
