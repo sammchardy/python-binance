@@ -5245,7 +5245,7 @@ class Client(BaseClient):
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#open-interest-market_data
+        https://binance-docs.github.io/apidocs/futures/en/#open-interest
 
         """
         return self._request_futures_api('get', 'openInterest', data=params)
