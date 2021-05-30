@@ -2640,7 +2640,7 @@ class Client(BaseClient):
         """
         result = self.get_withdraw_history(**params)
 
-        for entry in result['withdrawList']:
+        for entry in result:
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
 
