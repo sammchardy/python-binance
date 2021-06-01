@@ -8,6 +8,7 @@ from random import random
 from typing import Optional, List, Dict, Callable, Any
 
 import websockets as ws
+from websockets.protocol import State
 
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
@@ -45,9 +46,9 @@ class ReconnectingWebsocket:
         self._is_binary = is_binary
         self._conn = None
         self._socket = None
-        self.ws = None
+        self.ws: Optional[ws.WebSocketClientProtocol] = None
         self.ws_state = WSListenerState.INITIALISING
-        self.reconnect_handle = None
+        self._queue = asyncio.Queue(loop=self._loop)
 
     async def __aenter__(self):
         await self.connect()
@@ -76,6 +77,7 @@ class ReconnectingWebsocket:
         self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
+        self._loop.call_soon(asyncio.create_task, self._read_loop())
 
     async def _before_connect(self):
         pass
@@ -95,51 +97,64 @@ class ReconnectingWebsocket:
             self._log.debug(f'error parsing evt json:{evt}')
             return None
 
-    async def recv(self):
-        res = None
-        while not res:
+    async def _read_loop(self):
+        while True:
+            res = None
             if not self.ws or self.ws_state != WSListenerState.STREAMING:
                 await self._wait_for_reconnect()
                 break
             if self.ws_state == WSListenerState.EXITING:
                 break
+            if self.ws.state == State.CLOSING:
+                break
+            if self.ws.state == State.CLOSED:
+                try:
+                    await self._reconnect()
+                except BinanceWebsocketUnableToConnect:
+                    return {
+                        'e': 'error',
+                        'm': 'Max reconnect retries reached'
+                    }
+                else:
+                    break
             try:
                 res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
             except asyncio.TimeoutError:
                 logging.debug(f"no message in {self.TIMEOUT} seconds")
             except asyncio.CancelledError as e:
                 logging.debug(f"cancelled error {e}")
+                break
             except asyncio.IncompleteReadError as e:
                 logging.debug(f"incomplete read error {e}")
             except Exception as e:
                 logging.debug(f"exception {e}")
+                break
             else:
-                if self.ws_state == WSListenerState.EXITING:
+                if self.ws_state in (WSListenerState.EXITING, WSListenerState.RECONNECTING):
                     break
-                res = await self._try_handle_msg(res)
-                if self.ws_state == WSListenerState.EXITING:
+                res = self._handle_message(res)
+                if self.ws_state in (WSListenerState.EXITING, WSListenerState.RECONNECTING):
                     break
+
+            if res and self._queue.qsize() < 100:
+                await self._queue.put(res)
+
+    async def recv(self):
+        res = None
+        while not res:
+            try:
+                res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
+            except asyncio.TimeoutError:
+                logging.debug(f"no message in {self.TIMEOUT} seconds")
         return res
 
     async def _wait_for_reconnect(self):
         while self.ws_state == WSListenerState.RECONNECTING:
             logging.debug("reconnecting waiting for connect")
-            await asyncio.sleep(0.01)
         if not self.ws:
             logging.debug("ignore message no ws")
         else:
             logging.debug(f"ignore message {self.ws_state}")
-
-    async def _try_handle_msg(self, res):
-        msg_res = self._handle_message(res)
-        if msg_res:
-            # cancel error timeout
-            if self.reconnect_handle:
-                self.reconnect_handle.cancel()
-            self.reconnect_handle = self._loop.call_later(
-                self.NO_MESSAGE_RECONNECT_TIMEOUT, self._no_message_received_reconnect
-            )
-        return msg_res
 
     def _get_reconnect_wait(self, attempts: int) -> int:
         expo = 2 ** attempts
@@ -159,8 +174,6 @@ class ReconnectingWebsocket:
         if self.ws_state == WSListenerState.RECONNECTING:
             return
         self.ws_state = WSListenerState.RECONNECTING
-        if self.reconnect_handle:
-            self.reconnect_handle.cancel()
         await self.before_reconnect()
         if self._reconnects < self.MAX_RECONNECTS:
             reconnect_wait = self._get_reconnect_wait(self._reconnects)
