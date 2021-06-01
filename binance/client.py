@@ -301,7 +301,7 @@ class Client(BaseClient):
         session.headers.update(headers)
         return session
 
-    def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs) -> Dict:
+    def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
@@ -309,7 +309,7 @@ class Client(BaseClient):
         return self._handle_response(self.response)
 
     @staticmethod
-    def _handle_response(response: requests.Response) -> Dict:
+    def _handle_response(response: requests.Response):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
@@ -323,7 +323,7 @@ class Client(BaseClient):
 
     def _request_api(
         self, method, path: str, signed: bool = False, version=BaseClient.PUBLIC_API_VERSION, **kwargs
-    ) -> Dict:
+    ):
         uri = self._create_api_uri(path, signed, version)
         return self._request(method, uri, signed, **kwargs)
 
@@ -361,7 +361,7 @@ class Client(BaseClient):
         uri = self._create_website_uri(path)
         return self._request(method, uri, signed, **kwargs)
 
-    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('get', path, signed, version, **kwargs)
 
     def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
@@ -538,30 +538,6 @@ class Client(BaseClient):
         return self._get('time', version=self.PRIVATE_API_VERSION)
 
     # Market Data Endpoints
-
-    def get_ticker(self, symbol: str) -> Dict:
-        """Latest price for a symbol.
-
-        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
-
-        :param symbol
-        :type symbol: str
-
-        :returns: market ticker
-
-        .. code-block:: python
-
-            {
-                "symbol": "LTCBTC",
-                "price": "4.00000200"
-            }
-
-        :raises: BinanceRequestException, BinanceAPIException
-
-        """
-        params = {}
-        params['symbol'] = symbol
-        return self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
 
     def get_all_tickers(self) -> List[Dict[str, str]]:
         """Latest price for all symbols.
@@ -6491,7 +6467,7 @@ class AsyncClient(BaseClient):
             assert self.session
             await self.session.close()
 
-    async def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs) -> Dict:
+    async def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
@@ -6499,7 +6475,7 @@ class AsyncClient(BaseClient):
             self.response = response
             return await self._handle_response(response)
 
-    async def _handle_response(self, response: aiohttp.ClientResponse) -> Dict:
+    async def _handle_response(self, response: aiohttp.ClientResponse):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
@@ -6512,7 +6488,7 @@ class AsyncClient(BaseClient):
             txt = await response.text()
             raise BinanceRequestException(f'Invalid Response: {txt}')
 
-    async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+    async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         uri = self._create_api_uri(path, signed, version)
         return await self._request(method, uri, signed, **kwargs)
 
@@ -6550,7 +6526,7 @@ class AsyncClient(BaseClient):
         uri = self._create_website_uri(path)
         return await self._request(method, uri, signed, **kwargs)
 
-    async def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+    async def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return await self._request_api('get', path, signed, version, **kwargs)
 
     async def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
@@ -6595,7 +6571,7 @@ class AsyncClient(BaseClient):
 
     # Market Data Endpoints
 
-    async def get_all_tickers(self, symbol: Optional[str] = None) -> Dict:
+    async def get_all_tickers(self, symbol: Optional[str] = None) -> List[Dict[str, str]]:
         params = {}
         if symbol:
             params['symbol'] = symbol
@@ -7009,7 +6985,7 @@ class AsyncClient(BaseClient):
     async def get_withdraw_history_id(self, withdraw_id, **params):
         result = await self.get_withdraw_history(**params)
 
-        for entry in result['withdrawList']:
+        for entry in result:
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
 
