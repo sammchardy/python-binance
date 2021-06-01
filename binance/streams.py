@@ -576,7 +576,7 @@ class BinanceSocketManager:
 
         """
         return self._get_futures_socket(symbol.lower() + '@aggTrade', futures_type=futures_type)
-    
+
     def symbol_miniticker_socket(self, symbol: str):
         """Start a websocket for a symbol's miniTicker data
 
@@ -605,7 +605,7 @@ class BinanceSocketManager:
 
                 """
         return self._get_socket(symbol.lower() + '@miniTicker')
-    
+
     def symbol_ticker_socket(self, symbol: str):
         """Start a websocket for a symbol's ticker data
 
@@ -1126,6 +1126,15 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             params={
                 'symbol': symbol,
                 'futures_type': futures_type,
+            }
+        )
+
+    def start_symbol_miniticker_socket(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='symbol_miniticker_socket',
+            params={
+                'symbol': symbol,
             }
         )
 
