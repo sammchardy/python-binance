@@ -577,7 +577,7 @@ class BinanceSocketManager:
         """
         return self._get_futures_socket(symbol.lower() + '@aggTrade', futures_type=futures_type)
     
-    def symbol_miniTicker_socket(self, symbol: str):
+    def symbol_miniticker_socket(self, symbol: str):
         """Start a websocket for a symbol's miniTicker data
 
                 https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#individual-symbol-mini-ticker-stream
