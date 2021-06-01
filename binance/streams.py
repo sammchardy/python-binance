@@ -8,7 +8,6 @@ from random import random
 from typing import Optional, List, Dict, Callable, Any
 
 import websockets as ws
-from websockets.protocol import State
 
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
@@ -105,9 +104,9 @@ class ReconnectingWebsocket:
                 break
             if self.ws_state == WSListenerState.EXITING:
                 break
-            if self.ws.state == State.CLOSING:
+            if self.ws.state == ws.protocol.State.CLOSING:
                 break
-            if self.ws.state == State.CLOSED:
+            if self.ws.state == ws.protocol.State.CLOSED:
                 try:
                     await self._reconnect()
                 except BinanceWebsocketUnableToConnect:
