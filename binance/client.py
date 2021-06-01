@@ -256,16 +256,16 @@ class BaseClient:
         if data and isinstance(data, dict):
             kwargs['data'] = data
 
-        if signed:
-            # generate signature
-            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
-            kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
-
             # find any requests params passed and apply them
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
                 kwargs.update(kwargs['data']['requests_params'])
                 del(kwargs['data']['requests_params'])
+
+        if signed:
+            # generate signature
+            kwargs['data']['timestamp'] = int(time.time() * 1000 + self.timestamp_offset)
+            kwargs['data']['signature'] = self._generate_signature(kwargs['data'])
 
         # sort get and post params to match signature order
         if data:
