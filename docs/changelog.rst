@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v1.0.12 - 2021-06-03
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- coin futures batch order function
+
+**Fixed**
+
+- threaded websockets on python3.9
+- filter out None params in request kwargs
+- deconflict streams with same name on different websocket urls
+- reduce close timeout on websocket close to short time to reduce waiting
+
+
 v1.0.10 - 2021-05-13
 ^^^^^^^^^^^^^^^^^^^^
 
