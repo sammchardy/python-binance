@@ -24,6 +24,14 @@ class WSListenerState(Enum):
     EXITING = 'Exiting'
 
 
+class BinanceSocketType(str, Enum):
+    SPOT = 'Spot'
+    USD_M_FUTURES = 'USD_M_Futures'
+    COIN_M_FUTURES = 'Coin_M_Futures'
+    OPTIONS = 'Vanilla_Options'
+    ACCOUNT = 'Account'
+
+
 class ReconnectingWebsocket:
 
     MAX_RECONNECTS = 5
@@ -189,7 +197,10 @@ class ReconnectingWebsocket:
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
 
-    def __init__(self, client: AsyncClient, loop, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None, user_timeout=None):
+    def __init__(
+        self, client: AsyncClient, loop, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None,
+        user_timeout=None
+    ):
         super().__init__(loop=loop, path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
         self._keepalive_type = keepalive_type
         self._client = client
@@ -298,9 +309,13 @@ class BinanceSocketManager:
             stream_url = self.STREAM_TESTNET_URL
         return stream_url
 
-    def _get_socket(self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False):
-        if path not in self._conns:
-            self._conns[path] = ReconnectingWebsocket(
+    def _get_socket(
+        self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False,
+        socket_type: BinanceSocketType = BinanceSocketType.SPOT
+    ) -> str:
+        conn_id = f'{socket_type}_{path}'
+        if conn_id not in self._conns:
+            self._conns[conn_id] = ReconnectingWebsocket(
                 loop=self._loop,
                 path=path,
                 url=self._get_stream_url(stream_url),
@@ -309,13 +324,14 @@ class BinanceSocketManager:
                 is_binary=is_binary
             )
 
-        return self._conns[path]
+        return self._conns[conn_id]
 
     def _get_account_socket(
         self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False
     ):
-        if path not in self._conns:
-            self._conns[path] = KeepAliveWebsocket(
+        conn_id = f'{BinanceSocketType.ACCOUNT}_{path}'
+        if conn_id not in self._conns:
+            self._conns[conn_id] = KeepAliveWebsocket(
                 client=self._client,
                 loop=self._loop,
                 url=self._get_stream_url(stream_url),
@@ -326,9 +342,10 @@ class BinanceSocketManager:
                 user_timeout=self._user_timeout
             )
 
-        return self._conns[path]
+        return self._conns[conn_id]
 
     def _get_futures_socket(self, path: str, futures_type: FuturesType, prefix: str = 'stream?streams='):
+        socket_type: BinanceSocketType = BinanceSocketType.USD_M_FUTURES
         if futures_type == FuturesType.USD_M:
             stream_url = self.FSTREAM_URL
             if self.testnet:
@@ -337,13 +354,13 @@ class BinanceSocketManager:
             stream_url = self.DSTREAM_URL
             if self.testnet:
                 stream_url = self.DSTREAM_TESTNET_URL
-        return self._get_socket(path, stream_url, prefix)
+        return self._get_socket(path, stream_url, prefix, socket_type=socket_type)
 
     def _get_options_socket(self, path: str, prefix: str = 'ws/'):
         stream_url = self.VSTREAM_URL
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
-        return self._get_socket(path, stream_url, prefix, is_binary=True)
+        return self._get_socket(path, stream_url, prefix, is_binary=True, socket_type=BinanceSocketType.OPTIONS)
 
     async def _exit_socket(self, path: str):
         await self._stop_socket(path)
