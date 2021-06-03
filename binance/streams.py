@@ -75,7 +75,7 @@ class ReconnectingWebsocket:
         await self._before_connect()
         assert self._path
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url)
+        self._conn = ws.connect(ws_url, close_timeout=0.001)
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
