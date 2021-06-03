@@ -19,6 +19,8 @@ as it creates an AsyncClient internally.
 
 As these use threads `start()` is required to be called before starting any depth cache streams.
 
+To keep the ThreadedDepthCacheManager running using `join()` to join it to the main thread.
+
 .. code:: python
 
     from binance import ThreadedDepthCacheManager
@@ -41,6 +43,8 @@ As these use threads `start()` is required to be called before starting any dept
 
         # multiple depth caches can be started
         dcm_name = dcm.start_depth_cache(handle_depth_cache, symbol='ETHBTC')
+
+        dcm.join()
 
 
     if __name__ == "__main__":
