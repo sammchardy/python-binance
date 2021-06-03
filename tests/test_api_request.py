@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding=utf-8
-
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
 import pytest

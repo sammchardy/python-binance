@@ -38,6 +38,8 @@ class BaseClient:
     FUTURES_API_VERSION2 = "v2"
     OPTIONS_API_VERSION = 'v1'
 
+    REQUEST_TIMEOUT: float = 10
+
     SYMBOL_TYPE_SPOT = 'SPOT'
 
     ORDER_STATUS_NEW = 'NEW'
@@ -246,7 +248,7 @@ class BaseClient:
     def _get_request_kwargs(self, method, signed: bool, force_params: bool = False, **kwargs) -> Dict:
 
         # set default requests timeout
-        kwargs['timeout'] = 10
+        kwargs['timeout'] = self.REQUEST_TIMEOUT
 
         # add our global requests params
         if self._requests_params:
@@ -271,6 +273,10 @@ class BaseClient:
         if data:
             # sort post params and remove any arguments with values of None
             kwargs['data'] = self._order_params(kwargs['data'])
+            # Remove any arguments with values of None.
+            null_args = [i for i, (key, value) in enumerate(kwargs['data']) if value is None]
+            for i in reversed(null_args):
+                del kwargs['data'][i]
 
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
