@@ -5672,7 +5672,7 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api("post", "order", True, data=params)
-    
+
     def futures_coin_place_batch_order(self, **params):
         """Send in new orders.
 
@@ -7499,7 +7499,6 @@ class AsyncClient(BaseClient):
 
     async def new_transfer_history(self, **params):
         return await self._request_margin_api("get", "asset/transfer", True, data=params)
-        # return await self._request_margin_api("get", "futures/transfer", True, data=params)
 
     async def universal_transfer(self, **params):
         return await self._request_margin_api(
@@ -7508,6 +7507,13 @@ class AsyncClient(BaseClient):
 
     async def futures_coin_create_order(self, **params):
         return await self._request_futures_coin_api("post", "order", True, data=params)
+
+    async def futures_coin_place_batch_order(self, **params):
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+
+        return await self._request_futures_coin_api('post', 'batchOrders', True, data=params)
 
     async def futures_coin_get_order(self, **params):
         return await self._request_futures_coin_api("get", "order", True, data=params)
