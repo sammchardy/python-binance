@@ -30,7 +30,11 @@ For authenticated streams `api_key` and `api_stream` are required.
 
 As these use threads `start()` is required to be called before starting any sockets.
 
+To keep the ThreadedWebsocketManager running using `join()` to join it to the main thread.
+
 .. code:: python
+
+    import time
 
     from binance import ThreadedWebsocketManager
 
@@ -58,6 +62,8 @@ As these use threads `start()` is required to be called before starting any sock
         # see Binance docs for stream names
         streams = ['bnbbtc@miniTicker', 'bnbbtc@bookTicker']
         twm.start_multiplex_socket(callback=handle_socket_message, streams=streams)
+
+        twm.join()
 
 
     if __name__ == "__main__":

@@ -84,7 +84,7 @@ class ReconnectingWebsocket:
         self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
-        self._loop.call_soon(asyncio.create_task, self._read_loop())
+        self._loop.call_soon_threadsafe(asyncio.create_task, self._read_loop())
 
     async def _before_connect(self):
         pass
@@ -1083,7 +1083,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
 
     async def _before_socket_listener_start(self):
         assert self._client
-        self._bsm = BinanceSocketManager(self._client, self._loop)
+        self._bsm = BinanceSocketManager(client=self._client, loop=self._loop)
 
     def _start_async_socket(
         self, callback: Callable, socket_name: str, params: Dict[str, Any], path: Optional[str] = None
@@ -1093,7 +1093,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         socket = getattr(self._bsm, socket_name)(**params)
         path = path or socket._path  # noqa
         self._socket_running[path] = True
-        self._loop.call_soon(asyncio.create_task, self.start_listener(socket, socket._path, callback))
+        self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket._path, callback))
         return path
 
     def start_depth_socket(

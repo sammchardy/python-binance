@@ -174,6 +174,9 @@ pass `testnet=True` when creating the client.
     options_symbol = 'BTC-210430-36000-C'
     dcm.start_options_depth_cache(callback=handle_dcm_message, symbol=options_symbol)
 
+    # join the threaded managers to the main thread
+    twm.join()
+    dcm.join()
 
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 
