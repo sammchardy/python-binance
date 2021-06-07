@@ -609,7 +609,7 @@ class BinanceSocketManager:
     def symbol_miniticker_socket(self, symbol: str):
         """Start a websocket for a symbol's miniTicker data
 
-                https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#individual-symbol-mini-ticker-stream
+                https://binance-docs.github.io/apidocs/spot/en/#individual-symbol-mini-ticker-stream
 
                 :param symbol: required
                 :type symbol: str
