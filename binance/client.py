@@ -512,7 +512,7 @@ class Client(BaseClient):
     def ping(self) -> Dict:
         """Test connectivity to the Rest API.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-connectivity
+        https://binance-docs.github.io/apidocs/spot/en/#test-connectivity
 
         :returns: Empty array
 
@@ -528,7 +528,7 @@ class Client(BaseClient):
     def get_server_time(self) -> Dict:
         """Test connectivity to the Rest API and get the current server time.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#check-server-time
+        https://binance-docs.github.io/apidocs/spot/en/#check-server-time
 
         :returns: Current server time
 
@@ -607,7 +607,7 @@ class Client(BaseClient):
     def get_order_book(self, **params) -> Dict:
         """Get the Order Book for the market
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#order-book
+        https://binance-docs.github.io/apidocs/spot/en/#order-book
 
         :param symbol: required
         :type symbol: str
@@ -644,7 +644,7 @@ class Client(BaseClient):
     def get_recent_trades(self, **params) -> Dict:
         """Get recent trades (up to last 500).
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://binance-docs.github.io/apidocs/spot/en/#recent-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -674,7 +674,7 @@ class Client(BaseClient):
     def get_historical_trades(self, **params) -> Dict:
         """Get older trades.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#old-trade-lookup
+        https://binance-docs.github.io/apidocs/spot/en/#old-trade-lookup
 
         :param symbol: required
         :type symbol: str
@@ -707,7 +707,7 @@ class Client(BaseClient):
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
+        https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -766,7 +766,7 @@ class Client(BaseClient):
         return the first trade occurring later than this time.
         :type start_str: str|int
         :param last_id: aggregate trade ID of the last known aggregate trade.
-        Not a regular trade ID. See https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+        Not a regular trade ID. See https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
 
         :returns: an iterator of JSON objects, one per trade. The format of
         each object is identical to Client.aggregate_trades().
@@ -828,7 +828,7 @@ class Client(BaseClient):
     def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data
+        https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
 
         :param symbol: required
         :type symbol: str
@@ -1107,7 +1107,7 @@ class Client(BaseClient):
     def get_avg_price(self, **params):
         """Current average price for a symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-average-price
+        https://binance-docs.github.io/apidocs/spot/en/#current-average-price
 
         :param symbol:
         :type symbol: str
@@ -1126,7 +1126,7 @@ class Client(BaseClient):
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1187,7 +1187,7 @@ class Client(BaseClient):
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
         :param symbol:
         :type symbol: str
@@ -1224,7 +1224,7 @@ class Client(BaseClient):
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
 
         :param symbol:
         :type symbol: str
@@ -1274,7 +1274,7 @@ class Client(BaseClient):
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-order--trade
+        https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1583,7 +1583,7 @@ class Client(BaseClient):
     def create_oco_order(self, **params):
         """Send in a new OCO order
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-oco-trade
+        https://binance-docs.github.io/apidocs/spot/en/#new-oco-trade
 
         :param symbol: required
         :type symbol: str
@@ -1729,7 +1729,7 @@ class Client(BaseClient):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-new-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1767,7 +1767,7 @@ class Client(BaseClient):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#query-order-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1806,12 +1806,16 @@ class Client(BaseClient):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#all-orders-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
         :param orderId: The unique order id
         :type orderId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
         :param limit: Default 500; max 500.
         :type limit: int
         :param recvWindow: the number of milliseconds the request is valid for
@@ -1847,7 +1851,7 @@ class Client(BaseClient):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1879,7 +1883,7 @@ class Client(BaseClient):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-open-orders-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -1917,7 +1921,7 @@ class Client(BaseClient):
     def get_account(self, **params):
         """Get current account information.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1956,8 +1960,6 @@ class Client(BaseClient):
     def get_asset_balance(self, asset, **params):
         """Get current asset balance.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
-
         :param asset: required
         :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -1987,10 +1989,14 @@ class Client(BaseClient):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-trade-list-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
         :param limit: Default 500; max 500.
         :type limit: int
         :param fromId: TradeId to fetch from. Default gets most recent trades.
@@ -2686,7 +2692,7 @@ class Client(BaseClient):
 
         Can be used to keep the user stream alive.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :returns: API response
 
@@ -2705,7 +2711,7 @@ class Client(BaseClient):
     def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :param listenKey: required
         :type listenKey: str
@@ -2727,7 +2733,7 @@ class Client(BaseClient):
     def stream_close(self, listenKey):
         """Close out a user data stream.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :param listenKey: required
         :type listenKey: str
