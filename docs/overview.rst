@@ -188,7 +188,7 @@ Synchronous example
         client = Client(api_key, api_secret)
 
         res = client.get_exchange_info()
-        print(res.headers)
+        print(client.response.headers)
 
     if __name__ == "__main__":
         main()
