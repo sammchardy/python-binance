@@ -340,8 +340,9 @@
     client.get_margin_symbol(symbol)
     ```
   - **GET /sapi/v1/margin/allAssets** (Get All Cross Margin Assets (MARKET_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.get_margin_all_assets()
+    ```
   - **GET /sapi/v1/margin/allPairs** (Get All Cross Margin Pairs (MARKET_DATA).)
   
     > :warning: Not yet implemented

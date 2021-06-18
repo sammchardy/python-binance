@@ -2985,6 +2985,43 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/pair', data=params)
 
+    def get_margin_all_assets(self, **params):
+        """Get All Margin Assets (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-margin-assets-market_data
+
+        .. code:: python
+
+            margin_assets = client.get_margin_all_assets()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "assetFullName": "USD coin",
+                    "assetName": "USDC",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "0.00000000",
+                    "userMinRepay": "0.00000000"
+                },
+                {
+                    "assetFullName": "BNB-coin",
+                    "assetName": "BNB",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "1.00000000",
+                    "userMinRepay": "0.00000000"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allAssets', data=params)
+
     def create_isolated_margin_account(self, **params):
         """Create isolated margin account for symbol
 
