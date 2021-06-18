@@ -9,7 +9,7 @@ with codecs.open(
         os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
             'binance',
-            '__init__.py'
+            'global_flags.py'
         ), 'r', 'latin1') as fp:
     try:
         version = re.findall(r"^__version__ = '([^']+)'$", fp.read(), re.M)[0]
