@@ -3022,6 +3022,45 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/allAssets', data=params)
 
+    def get_margin_all_pairs(self, **params):
+        """Get All Cross Margin Pairs (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-cross-margin-pairs-market_data
+
+        .. code:: python
+
+            margin_pairs = client.get_margin_all_pairs()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "base": "BNB",
+                    "id": 351637150141315861,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "BNBBTC"
+                },
+                {
+                    "base": "TRX",
+                    "id": 351637923235429141,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "TRXBTC"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allPairs', data=params)
+
     def create_isolated_margin_account(self, **params):
         """Create isolated margin account for symbol
 

@@ -344,8 +344,9 @@
     client.get_margin_all_assets()
     ```
   - **GET /sapi/v1/margin/allPairs** (Get All Cross Margin Pairs (MARKET_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.get_margin_all_pairs()
+    ```
   - **GET /sapi/v1/margin/priceIndex** (Query Margin PriceIndex (MARKET_DATA).)
     ```python 
     client.get_margin_price_index(symbol)
