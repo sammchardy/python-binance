@@ -67,3 +67,9 @@ class HistoricalKlinesType(Enum):
 class FuturesType(Enum):
     USD_M = 1
     COIN_M = 2
+
+
+class ContractType(Enum):
+    PERPETUAL = "perpetual"
+    CURRENT_QUARTER = "current_quarter"
+    NEXT_QUARTER = "next_quarter"
