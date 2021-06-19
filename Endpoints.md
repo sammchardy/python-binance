@@ -390,8 +390,9 @@
     client.get_margin_repay_details(asset, isolatedSymbol, txId, startTime, endTime, current, size, recvWindow)
     ```
   - **GET /sapi/v1/margin/interestHistory (HMAC SHA256)** (Get Interest History (USER_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.get_margin_interest_history(asset, isolatedSymbol, startTime, endTime, current, size, archived, recvWindow)
+    ```
   - **GET /sapi/v1/margin/forceLiquidationRec (HMAC SHA256)** (Get Force Liquidation Record (USER_DATA).)
   
     > :warning: Not yet implemented

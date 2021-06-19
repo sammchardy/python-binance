@@ -3698,6 +3698,50 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
+    
+    def get_margin_interest_history(self, **params):
+        """Get Interest History (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+
+        :param asset:
+        :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param archived: Default: false. Set to true for archived data from 6 months ago
+        :type archived: bool
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows":[
+                    {
+                        "isolatedSymbol": "BNBUSDT", // isolated symbol, will not be returned for crossed margin
+                        "asset": "BNB",
+                        "interest": "0.02414667",
+                        "interestAccuredTime": 1566813600000,
+                        "interestRate": "0.01600000",
+                        "principal": "36.22000000",
+                        "type": "ON_BORROW"
+                    }
+                ],
+                "total": 1
+            }
+
+
+        """
+        return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+
 
     def get_margin_order(self, **params):
         """Query margin accounts order
