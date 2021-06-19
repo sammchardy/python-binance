@@ -394,8 +394,9 @@
     client.get_margin_interest_history(asset, isolatedSymbol, startTime, endTime, current, size, archived, recvWindow)
     ```
   - **GET /sapi/v1/margin/forceLiquidationRec (HMAC SHA256)** (Get Force Liquidation Record (USER_DATA).)
-  
-    > :warning: Not yet implemented
+    ```python 
+    client.get_margin_force_liquidation_rec(isolatedSymbol, startTime, endTime, current, size, recvWindow)
+    ```
   - **GET /sapi/v1/margin/account (HMAC SHA256)** (Query Cross Margin Account Details (USER_DATA).)
     ```python 
     client.get_margin_account(recvWindow)

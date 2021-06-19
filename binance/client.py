@@ -3742,6 +3742,47 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
 
+    def get_margin_force_liquidation_rec(self, **params):
+        """Get Force Liquidation Record (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-force-liquidation-record-user_data
+
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        "avgPrice": "0.00388359",
+                        "executedQty": "31.39000000",
+                        "orderId": 180015097,
+                        "price": "0.00388110",
+                        "qty": "31.39000000",
+                        "side": "SELL",
+                        "symbol": "BNBBTC",
+                        "timeInForce": "GTC",
+                        "isIsolated": true,
+                        "updatedTime": 1558941374745
+                    }
+                ],
+                "total": 1
+            }
+            
+
+        """
+        return self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
 
     def get_margin_order(self, **params):
         """Query margin accounts order
