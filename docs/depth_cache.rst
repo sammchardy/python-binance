@@ -23,7 +23,7 @@ As these use threads `start()` is required to be called before starting any dept
 
     from binance import ThreadedDepthCacheManager
 
-    def main():
+    def async_main():
 
         dcm = ThreadedDepthCacheManager()
         # start is required to initialise its internal loop
@@ -44,7 +44,7 @@ As these use threads `start()` is required to be called before starting any dept
 
 
     if __name__ == "__main__":
-       main()
+       async_main()
 
 
 **Stop Individual Depth Cache**
@@ -106,7 +106,7 @@ Create the manager like so, passing the async api client, symbol and an optional
     from binance import AsyncClient, DepthCacheManager
 
 
-    async def main():
+    async def async_main():
         client = await AsyncClient.create()
         dcm = DepthCacheManager(client, 'BNBBTC')
 
@@ -123,7 +123,7 @@ Create the manager like so, passing the async api client, symbol and an optional
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        loop.run_until_complete(async_main())
 
 The `DepthCacheManager` returns an Asynchronous Context Manager which can be used with `async for`
 or by interacting with the `__aenter__` and `__aexit__` functions
