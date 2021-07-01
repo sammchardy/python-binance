@@ -37,7 +37,7 @@ As these use threads `start()` is required to be called before starting any sock
     api_key = '<api_key'>
     api_secret = '<api_secret'>
 
-    def async_main():
+    def bots_engine():
 
         symbol = 'BNBBTC'
 
@@ -61,7 +61,7 @@ As these use threads `start()` is required to be called before starting any sock
 
 
     if __name__ == "__main__":
-       async_main()
+       bots_engine()
 
 **Stop Individual Stream**
 
@@ -120,7 +120,7 @@ Create the manager like so, passing an AsyncClient.
     from binance import AsyncClient, BinanceSocketManager
 
 
-    async def async_main():
+    async def bots_engine():
         client = await AsyncClient.create()
         bm = BinanceSocketManager(client)
         # start any sockets here, i.e a trade socket
@@ -136,7 +136,7 @@ Create the manager like so, passing an AsyncClient.
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(async_main())
+        loop.run_until_complete(bots_engine())
 
 Set a custom timeout for the websocket connections
 

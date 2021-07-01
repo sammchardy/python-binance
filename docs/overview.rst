@@ -35,7 +35,7 @@ or for Asynchronous client
 
 .. code:: python
 
-    async def async_main():
+    async def bots_engine():
 
         # initialise the client
         client = await AsyncClient.create(api_key, api_secret)
@@ -43,7 +43,7 @@ or for Asynchronous client
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(async_main())
+        loop.run_until_complete(bots_engine())
 
 Using the Spot, Futures or Vanilla Options Testnet
 --------------------------------------------------
@@ -115,7 +115,7 @@ The only difference is to run within an asyncio event loop and await the functio
     import asyncio
     from binance import AsyncClient
 
-    async def async_main():
+    async def bots_engine():
         client = await AsyncClient.create()
 
         # fetch exchange info
@@ -127,7 +127,7 @@ The only difference is to run within an asyncio event loop and await the functio
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(async_main())
+        loop.run_until_complete(bots_engine())
 
 Read `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
 for more information about asynchronous patterns.
@@ -161,7 +161,7 @@ Asynchronous example
     api_key = '<api_key>'
     api_secret = '<api_secret>'
 
-    async def async_main():
+    async def bots_engine():
         client = await AsyncClient.create(api_key, api_secret)
 
         res = await client.get_exchange_info()
@@ -172,7 +172,7 @@ Asynchronous example
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(async_main())
+        loop.run_until_complete(bots_engine())
 
 Synchronous example
 
@@ -184,14 +184,14 @@ Synchronous example
     api_key = '<api_key>'
     api_secret = '<api_secret>'
 
-    def async_main():
+    def bots_engine():
         client = Client(api_key, api_secret)
 
         res = client.get_exchange_info()
         print(res.headers)
 
     if __name__ == "__main__":
-        async_main()
+        bots_engine()
 Requests Settings
 -----------------
 
