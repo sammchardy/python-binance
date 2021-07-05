@@ -6452,6 +6452,13 @@ class Client(BaseClient):
         """
         return self._request_options_api('get', 'userTrades', signed=True, data=params)
 
+    def close_connection(self):
+        if self.session:
+            self.session.close()
+
+    def __del__(self):
+        self.close_connection()
+
 
 class AsyncClient(BaseClient):
 
