@@ -997,7 +997,11 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('coin_futures', stream_url=self.DSTREAM_URL)
+        if self.testnet:
+            stream_url = self.DSTREAM_TESTNET_URL
+        else:
+            stream_url = self.DSTREAM_URL
+        return self._get_account_socket('coin_futures', stream_url=stream_url)
 
     def isolated_margin_socket(self, symbol: str):
         """Start a websocket for isolated margin data
