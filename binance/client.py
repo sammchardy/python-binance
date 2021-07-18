@@ -2139,6 +2139,35 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
 
+    def get_account_api_permissions(self, **params):
+        """Fetch api key permissions.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-api-key-permission-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "ipRestrict": false,
+               "createTime": 1623840271000,   
+               "enableWithdrawals": false,   // This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to enable withdrawals
+               "enableInternalTransfer": true,  // This option authorizes this key to transfer funds between your master account and your sub account instantly
+               "permitsUniversalTransfer": true,  // Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
+               "enableVanillaOptions": false,  //  Authorizes this key to Vanilla options trading
+               "enableReading": true,
+               "enableFutures": false,  //  API Key created before your futures account opened does not support futures API service
+               "enableMargin": false,   //  This option can be adjusted after the Cross Margin account transfer is completed
+               "enableSpotAndMarginTrading": false, // Spot and margin trading
+               "tradingAuthorityExpirationTime": 1628985600000  // Expiration time for spot and margin trading permission
+            }
+
+        """
+        return self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
+
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
@@ -6963,6 +6992,10 @@ class AsyncClient(BaseClient):
     async def get_account_api_trading_status(self, **params):
         return await self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
     get_account_api_trading_status.__doc__ = Client.get_account_api_trading_status.__doc__
+
+    async def get_account_api_permissions(self, **params):
+        return await self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
+    get_account_api_permissions.__doc__ = Client.get_account_api_permissions.__doc__
 
     async def get_dust_log(self, **params):
         return await self._request_margin_api('get', 'asset/dribblet', True, data=params)
