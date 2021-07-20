@@ -1180,8 +1180,8 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             params={
                 'symbol': symbol,
                 'interval': interval,
-                'futures_type': futures_type,
-                'contract_type': contract_type
+                'futures_type': futures_type.value,
+                'contract_type': contract_type.value
             }
         )
 
