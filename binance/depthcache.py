@@ -380,6 +380,22 @@ class DepthCacheManager(BaseDepthCacheManager):
         return res
 
 
+class FuturesDepthCacheManager(BaseDepthCacheManager):
+    async def _process_depth_message(self, msg):
+        """Process a depth event message.
+
+        :param msg: Depth event message.
+        :return:
+
+        """
+        msg = msg.get('data')
+        return await super()._process_depth_message(msg)
+
+    def _get_socket(self):
+        sock = self._bm.futures_depth_socket(self._symbol)
+        return sock
+
+
 class OptionsDepthCacheManager(BaseDepthCacheManager):
 
     def _get_socket(self):
@@ -426,6 +442,19 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
             limit=limit,
             conv_type=conv_type,
             ws_interval=ws_interval
+        )
+
+    def start_futures_depth_socket(
+            self, callback: Callable, symbol: str, refresh_interval=None, bm=None, limit=10, conv_type=float
+    ) -> str:
+        return self._start_depth_cache(
+            dcm_class=FuturesDepthCacheManager,
+            callback=callback,
+            symbol=symbol,
+            refresh_interval=refresh_interval,
+            bm=bm,
+            limit=limit,
+            conv_type=conv_type
         )
 
     def start_options_depth_socket(
