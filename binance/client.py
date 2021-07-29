@@ -648,7 +648,7 @@ class Client(BaseClient):
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -678,7 +678,7 @@ class Client(BaseClient):
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
         :param fromId:  TradeId to fetch from. Default gets most recent trades.
         :type fromId: str
@@ -717,7 +717,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: Timestamp in ms to get aggregate trades until INCLUSIVE.
         :type endTime: int
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -834,7 +834,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: -
         :type interval: str
-        :param limit: - Default 500; max 500.
+        :param limit: - Default 500; max 1000.
         :type limit: int
         :param startTime:
         :type startTime: int
@@ -1816,7 +1816,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param limit: Default 500; max 500.
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1997,7 +1997,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param limit: Default 500; max 500.
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param fromId: TradeId to fetch from. Default gets most recent trades.
         :type fromId: int
