@@ -22,7 +22,7 @@ Updated 11th May 2021
 .. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
-This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://github.com/binance/binance-spot-api-docs>`_. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://binance-docs.github.io/apidocs/spot/en>`_. I am in no way affiliated with Binance, use at your own risk.
 
 If you came here looking for the `Binance exchange <https://www.binance.com/?ref=10099792>`_ to purchase cryptocurrencies, then `go here <https://www.binance.com/?ref=10099792>`_.
 If you want to automate interactions with Binance stick around.

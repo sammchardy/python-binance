@@ -26,6 +26,14 @@ class WSListenerState(Enum):
     EXITING = 'Exiting'
 
 
+class BinanceSocketType(str, Enum):
+    SPOT = 'Spot'
+    USD_M_FUTURES = 'USD_M_Futures'
+    COIN_M_FUTURES = 'Coin_M_Futures'
+    OPTIONS = 'Vanilla_Options'
+    ACCOUNT = 'Account'
+
+
 class ReconnectingWebsocket:
 
     MAX_RECONNECTS = 5
@@ -69,7 +77,7 @@ class ReconnectingWebsocket:
         await self._before_connect()
         assert self._path
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url)
+        self._conn = ws.connect(ws_url, close_timeout=0.001)
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
@@ -78,7 +86,7 @@ class ReconnectingWebsocket:
         self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
-        self._loop.call_soon(asyncio.create_task, self._read_loop())
+        self._loop.call_soon_threadsafe(asyncio.create_task, self._read_loop())
 
     async def _before_connect(self):
         pass
@@ -191,7 +199,10 @@ class ReconnectingWebsocket:
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
 
-    def __init__(self, client: AsyncClient, loop, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None, user_timeout=None):
+    def __init__(
+        self, client: AsyncClient, loop, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None,
+        user_timeout=None
+    ):
         super().__init__(loop=loop, path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
         self._keepalive_type = keepalive_type
         self._client = client
@@ -308,9 +319,13 @@ class BinanceSocketManager:
             stream_url = self.STREAM_TESTNET_URL
         return stream_url
 
-    def _get_socket(self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False):
-        if path not in self._conns:
-            self._conns[path] = ReconnectingWebsocket(
+    def _get_socket(
+        self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False,
+        socket_type: BinanceSocketType = BinanceSocketType.SPOT
+    ) -> str:
+        conn_id = f'{socket_type}_{path}'
+        if conn_id not in self._conns:
+            self._conns[conn_id] = ReconnectingWebsocket(
                 loop=self._loop,
                 path=path,
                 url=self._get_stream_url(stream_url),
@@ -319,13 +334,14 @@ class BinanceSocketManager:
                 is_binary=is_binary
             )
 
-        return self._conns[path]
+        return self._conns[conn_id]
 
     def _get_account_socket(
         self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False
     ):
-        if path not in self._conns:
-            self._conns[path] = KeepAliveWebsocket(
+        conn_id = f'{BinanceSocketType.ACCOUNT}_{path}'
+        if conn_id not in self._conns:
+            self._conns[conn_id] = KeepAliveWebsocket(
                 client=self._client,
                 loop=self._loop,
                 url=self._get_stream_url(stream_url),
@@ -336,9 +352,10 @@ class BinanceSocketManager:
                 user_timeout=self._user_timeout
             )
 
-        return self._conns[path]
+        return self._conns[conn_id]
 
     def _get_futures_socket(self, path: str, futures_type: FuturesType, prefix: str = 'stream?streams='):
+        socket_type: BinanceSocketType = BinanceSocketType.USD_M_FUTURES
         if futures_type == FuturesType.USD_M:
             stream_url = self.FSTREAM_URL
             if self.testnet:
@@ -347,13 +364,13 @@ class BinanceSocketManager:
             stream_url = self.DSTREAM_URL
             if self.testnet:
                 stream_url = self.DSTREAM_TESTNET_URL
-        return self._get_socket(path, stream_url, prefix)
+        return self._get_socket(path, stream_url, prefix, socket_type=socket_type)
 
     def _get_options_socket(self, path: str, prefix: str = 'ws/'):
         stream_url = self.VSTREAM_URL
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
-        return self._get_socket(path, stream_url, prefix, is_binary=True)
+        return self._get_socket(path, stream_url, prefix, is_binary=True, socket_type=BinanceSocketType.OPTIONS)
 
     async def _exit_socket(self, path: str):
         await self._stop_socket(path)
@@ -602,7 +619,7 @@ class BinanceSocketManager:
     def symbol_miniticker_socket(self, symbol: str):
         """Start a websocket for a symbol's miniTicker data
 
-                https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md#individual-symbol-mini-ticker-stream
+                https://binance-docs.github.io/apidocs/spot/en/#individual-symbol-mini-ticker-stream
 
                 :param symbol: required
                 :type symbol: str
@@ -1076,7 +1093,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
 
     async def _before_socket_listener_start(self):
         assert self._client
-        self._bsm = BinanceSocketManager(self._client, self._loop)
+        self._bsm = BinanceSocketManager(client=self._client, loop=self._loop)
 
     def _start_async_socket(
         self, callback: Callable, socket_name: str, params: Dict[str, Any], path: Optional[str] = None
@@ -1086,7 +1103,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         socket = getattr(self._bsm, socket_name)(**params)
         path = path or socket._path  # noqa
         self._socket_running[path] = True
-        self._loop.call_soon(asyncio.create_task, self.start_listener(socket, socket._path, callback))
+        self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket._path, callback))
         return path
 
     def start_depth_socket(

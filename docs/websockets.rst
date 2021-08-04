@@ -14,7 +14,7 @@ Multiple socket connections can be made through either manager.
 Only one instance of each socket type will be created, i.e. only one BNBBTC Depth socket can be created
 and there can be both a BNBBTC Depth and a BNBBTC Trade socket open at once.
 
-Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md>`_.
+Messages are received as dictionary objects relating to the message formats defined in the `Binance WebSocket API documentation <https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams>`_.
 
 Websockets are setup to reconnect with a maximum of 5 retries with an exponential backoff strategy.
 
@@ -30,7 +30,11 @@ For authenticated streams `api_key` and `api_stream` are required.
 
 As these use threads `start()` is required to be called before starting any sockets.
 
+To keep the ThreadedWebsocketManager running using `join()` to join it to the main thread.
+
 .. code:: python
+
+    import time
 
     from binance import ThreadedWebsocketManager
 
@@ -58,6 +62,8 @@ As these use threads `start()` is required to be called before starting any sock
         # see Binance docs for stream names
         streams = ['bnbbtc@miniTicker', 'bnbbtc@bookTicker']
         twm.start_multiplex_socket(callback=handle_socket_message, streams=streams)
+
+        twm.join()
 
 
     if __name__ == "__main__":
@@ -215,7 +221,7 @@ These streams can include the depth, kline, ticker and trade streams but not the
 
 Symbols in socket name must be lowercase i.e bnbbtc@aggTrade, neobtc@ticker
 
-See the `Binance Websocket Streams API documentation <https://github.com/binance/binance-spot-api-docs/blob/master/web-socket-streams.md>`_ for details on socket names.
+See the `Binance Websocket Streams API documentation <https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams>`_ for details on socket names.
 
 .. code:: python
 

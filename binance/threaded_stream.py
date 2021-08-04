@@ -32,7 +32,7 @@ class ThreadedApiManager(threading.Thread):
         ...
 
     async def socket_listener(self):
-        self._client = await AsyncClient.create(**self._client_params)
+        self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
         await self._before_socket_listener_start()
         while self._running:
             await asyncio.sleep(0.2)
