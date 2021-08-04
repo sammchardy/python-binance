@@ -62,6 +62,7 @@ WEBSOCKET_DEPTH_20 = '20'
 class HistoricalKlinesType(Enum):
     SPOT = 1
     FUTURES = 2
+    FUTURES_COIN = 3
 
 
 class FuturesType(Enum):

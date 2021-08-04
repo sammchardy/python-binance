@@ -883,6 +883,8 @@ class Client(BaseClient):
             return self.get_klines(**params)
         elif HistoricalKlinesType.FUTURES == klines_type:
             return self.futures_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN == klines_type:
+            return self.futures_coin_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -966,8 +968,9 @@ class Client(BaseClient):
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
-        start_ts = max(start_ts, first_valid_ts)
+        if klines_type != HistoricalKlinesType.FUTURES_COIN:
+            first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+            start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
@@ -992,16 +995,16 @@ class Client(BaseClient):
             output_data += temp_data
 
             # set our start timestamp using the last value in the array
-            start_ts = temp_data[-1][0]
+            start_ts = temp_data[-1][0] + 1
 
             idx += 1
             # check if we received less than the required limit and exit the loop
-            if len(temp_data) < limit:
-                # exit the while loop
-                break
+            # if len(temp_data) < limit:
+            #     # exit the while loop
+            #     break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            # start_ts += timeframe
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
@@ -5553,6 +5556,12 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/delivery/en/#kline-candlestick-data
 
         """
+        start = params.get('startTime')
+        end = params.get('endTime')
+        if start is not None and end is not None and (end - start) > 200 * 24 * 3600 * 1000:
+            end = start + 199 * 24 * 3600 * 1000
+            params['endTime'] = end
+
         return self._request_futures_coin_api("get", "klines", data=params)
 
     def futures_coin_continous_klines(self, **params):
