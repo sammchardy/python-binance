@@ -269,12 +269,16 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 self._start_socket_timer()
         except gaierror as ex:
             self._log.info(f"Keep alive: DNS Error ({ex})")
+            raise
         except asyncio.TimeoutError as ex:
             self._log.info(f"Keep alive: Time out ({ex})")
+            raise
         except RuntimeError as ex:
             self._log.info(f"Keep alive: Runtime ({ex})")
+            raise
         except ClientConnectorError as ex:
             self._log.info(f"Keep alive: Client connector error ({ex})")
+            raise
 
 class BinanceSocketManager:
 
