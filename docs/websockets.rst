@@ -7,7 +7,7 @@ with `ThreadedWebsocketManager <binance.html#binance.websockets.ThreadedWebsocke
 
 ThreadedWebsocketManager does not require asyncio programming, while BinanceSocketManager does.
 
-ThreadedWebsocketManager function begin with `start_`, e.g `start_ticker_socket` while BinanceSocketManager is simple `ticker_socket`
+ThreadedWebsocketManager function begin with `start_`, e.g `start_ticker_socket` while BinanceSocketManager is simply `ticker_socket`.
 
 Multiple socket connections can be made through either manager.
 
@@ -21,7 +21,7 @@ Websockets are setup to reconnect with a maximum of 5 retries with an exponentia
 ThreadedWebsocketManager Websocket Usage
 ----------------------------------------
 
-Starting sockets on the ThreadedWebsocketManager requires a callback parameter, similar to old implementations of websockets on python-binance
+Starting sockets on the ThreadedWebsocketManager requires a callback parameter, similar to the old implementations of websockets on python-binance.
 
 ThreadedWebsocketManager takes similar parameters to the `Client <binance.html#binance.client.Client>`_ class as it
 creates an AsyncClient internally.
@@ -30,7 +30,7 @@ For authenticated streams `api_key` and `api_stream` are required.
 
 As these use threads `start()` is required to be called before starting any sockets.
 
-To keep the ThreadedWebsocketManager running using `join()` to join it to the main thread.
+To keep the ThreadedWebsocketManager running, use `join()` to join it to the main thread.
 
 .. code:: python
 
@@ -71,7 +71,7 @@ To keep the ThreadedWebsocketManager running using `join()` to join it to the ma
 
 **Stop Individual Stream**
 
-When starting a stream, a name for that stream will be returned. This can be used to stop that individual stream
+When starting a stream, a name for that stream will be returned. This can be used to stop that individual stream.
 
 .. code:: python
 
@@ -195,7 +195,7 @@ can do this.
 Websocket Errors
 ----------------
 
-If the websocket is disconnected and is unable to reconnect a message is sent to the callback to indicate this. The format is
+If the websocket is disconnected and is unable to reconnect, a message is sent to the callback to indicate this. The format is
 
 .. code:: python
 
