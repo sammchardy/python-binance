@@ -74,14 +74,14 @@ class ReconnectingWebsocket:
     async def connect(self):
         await self._before_connect()
         assert self._path
+        self.ws_state = WSListenerState.STREAMING
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url, close_timeout=0.001)
+        self._conn = ws.connect(ws_url, timeout=1)
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
             await self._reconnect()
             return
-        self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
         self._loop.call_soon_threadsafe(asyncio.create_task, self._read_loop())
@@ -113,7 +113,7 @@ class ReconnectingWebsocket:
             if self.ws_state == WSListenerState.EXITING:
                 break
             if self.ws.state == ws.protocol.State.CLOSING:
-                break
+                continue
             if self.ws.state == ws.protocol.State.CLOSED:
                 try:
                     await self._reconnect()
@@ -135,7 +135,7 @@ class ReconnectingWebsocket:
                 logging.debug(f"incomplete read error {e}")
             except Exception as e:
                 logging.debug(f"exception {e}")
-                break
+                continue
             else:
                 if self.ws_state in (WSListenerState.EXITING, WSListenerState.RECONNECTING):
                     break
