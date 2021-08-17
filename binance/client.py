@@ -2522,8 +2522,8 @@ class Client(BaseClient):
 
         """
         # force a name for the withdrawal if one not set
-        if 'asset' in params and 'name' not in params:
-            params['name'] = params['asset']
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
         return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
     def get_deposit_history(self, **params):
@@ -7036,8 +7036,8 @@ class AsyncClient(BaseClient):
 
     async def withdraw(self, **params):
         # force a name for the withdrawal if one not set
-        if 'asset' in params and 'name' not in params:
-            params['name'] = params['asset']
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
         return await self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
     withdraw.__doc__ = Client.withdraw.__doc__
 
