@@ -648,7 +648,7 @@ class Client(BaseClient):
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -678,7 +678,7 @@ class Client(BaseClient):
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
         :param fromId:  TradeId to fetch from. Default gets most recent trades.
         :type fromId: str
@@ -717,7 +717,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: Timestamp in ms to get aggregate trades until INCLUSIVE.
         :type endTime: int
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -834,7 +834,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: -
         :type interval: str
-        :param limit: - Default 500; max 500.
+        :param limit: - Default 500; max 1000.
         :type limit: int
         :param startTime:
         :type startTime: int
@@ -1816,7 +1816,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param limit: Default 500; max 500.
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1997,7 +1997,7 @@ class Client(BaseClient):
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param limit: Default 500; max 500.
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param fromId: TradeId to fetch from. Default gets most recent trades.
         :type fromId: int
@@ -2138,6 +2138,35 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
+
+    def get_account_api_permissions(self, **params):
+        """Fetch api key permissions.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-api-key-permission-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "ipRestrict": false,
+               "createTime": 1623840271000,   
+               "enableWithdrawals": false,   // This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to enable withdrawals
+               "enableInternalTransfer": true,  // This option authorizes this key to transfer funds between your master account and your sub account instantly
+               "permitsUniversalTransfer": true,  // Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
+               "enableVanillaOptions": false,  //  Authorizes this key to Vanilla options trading
+               "enableReading": true,
+               "enableFutures": false,  //  API Key created before your futures account opened does not support futures API service
+               "enableMargin": false,   //  This option can be adjusted after the Cross Margin account transfer is completed
+               "enableSpotAndMarginTrading": false, // Spot and margin trading
+               "tradingAuthorityExpirationTime": 1628985600000  // Expiration time for spot and margin trading permission
+            }
+
+        """
+        return self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
 
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
@@ -2493,8 +2522,8 @@ class Client(BaseClient):
 
         """
         # force a name for the withdrawal if one not set
-        if 'asset' in params and 'name' not in params:
-            params['name'] = params['asset']
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
         return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
     def get_deposit_history(self, **params):
@@ -6452,6 +6481,13 @@ class Client(BaseClient):
         """
         return self._request_options_api('get', 'userTrades', signed=True, data=params)
 
+    def close_connection(self):
+        if self.session:
+            self.session.close()
+
+    def __del__(self):
+        self.close_connection()
+
 
 class AsyncClient(BaseClient):
 
@@ -6964,6 +7000,10 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
     get_account_api_trading_status.__doc__ = Client.get_account_api_trading_status.__doc__
 
+    async def get_account_api_permissions(self, **params):
+        return await self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
+    get_account_api_permissions.__doc__ = Client.get_account_api_permissions.__doc__
+
     async def get_dust_log(self, **params):
         return await self._request_margin_api('get', 'asset/dribblet', True, data=params)
     get_dust_log.__doc__ = Client.get_dust_log.__doc__
@@ -6996,8 +7036,8 @@ class AsyncClient(BaseClient):
 
     async def withdraw(self, **params):
         # force a name for the withdrawal if one not set
-        if 'asset' in params and 'name' not in params:
-            params['name'] = params['asset']
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
         return await self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
     withdraw.__doc__ = Client.withdraw.__doc__
 
