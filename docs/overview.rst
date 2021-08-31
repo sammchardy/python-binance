@@ -35,7 +35,7 @@ or for Asynchronous client
 
 .. code:: python
 
-    async def bots_engine():
+    async def main():
 
         # initialise the client
         client = await AsyncClient.create(api_key, api_secret)
@@ -43,7 +43,7 @@ or for Asynchronous client
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(bots_engine())
+        loop.run_until_complete(main())
 
 Using the Spot, Futures or Vanilla Options Testnet
 --------------------------------------------------
@@ -115,7 +115,7 @@ The only difference is to run within an asyncio event loop and await the functio
     import asyncio
     from binance import AsyncClient
 
-    async def bots_engine():
+    async def main():
         client = await AsyncClient.create()
 
         # fetch exchange info
@@ -127,7 +127,7 @@ The only difference is to run within an asyncio event loop and await the functio
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(bots_engine())
+        loop.run_until_complete(main())
 
 Read `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
 for more information about asynchronous patterns.
@@ -161,7 +161,7 @@ Asynchronous example
     api_key = '<api_key>'
     api_secret = '<api_secret>'
 
-    async def bots_engine():
+    async def main():
         client = await AsyncClient.create(api_key, api_secret)
 
         res = await client.get_exchange_info()
@@ -172,7 +172,7 @@ Asynchronous example
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(bots_engine())
+        loop.run_until_complete(main())
 
 Synchronous example
 
@@ -184,14 +184,14 @@ Synchronous example
     api_key = '<api_key>'
     api_secret = '<api_secret>'
 
-    def bots_engine():
+    def main():
         client = Client(api_key, api_secret)
 
         res = client.get_exchange_info()
         print(client.response.headers)
 
     if __name__ == "__main__":
-        bots_engine()
+        main()
 Requests Settings
 -----------------
 

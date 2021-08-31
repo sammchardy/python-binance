@@ -25,7 +25,7 @@ To keep the ThreadedDepthCacheManager running using `join()` to join it to the m
 
     from binance import ThreadedDepthCacheManager
 
-    def bots_engine():
+    def main():
 
         dcm = ThreadedDepthCacheManager()
         # start is required to initialise its internal loop
@@ -48,7 +48,7 @@ To keep the ThreadedDepthCacheManager running using `join()` to join it to the m
 
 
     if __name__ == "__main__":
-       bots_engine()
+       main()
 
 
 **Stop Individual Depth Cache**
@@ -110,7 +110,7 @@ Create the manager like so, passing the async api client, symbol and an optional
     from binance import AsyncClient, DepthCacheManager
 
 
-    async def bots_engine():
+    async def main():
         client = await AsyncClient.create()
         dcm = DepthCacheManager(client, 'BNBBTC')
 
@@ -127,7 +127,7 @@ Create the manager like so, passing the async api client, symbol and an optional
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(bots_engine())
+        loop.run_until_complete(main())
 
 The `DepthCacheManager` returns an Asynchronous Context Manager which can be used with `async for`
 or by interacting with the `__aenter__` and `__aexit__` functions

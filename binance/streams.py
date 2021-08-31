@@ -266,19 +266,21 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 else:  # isolated margin
                     # Passing symbol for isolated margin
                     await self._client.isolated_margin_stream_keepalive(self._keepalive_type, self._path)
-                self._start_socket_timer()
         except gaierror as ex:
             self._log.info(f"Keep alive: DNS Error ({ex})")
-            raise
+            # raise
         except asyncio.TimeoutError as ex:
             self._log.info(f"Keep alive: Time out ({ex})")
-            raise
+            # raise
         except RuntimeError as ex:
             self._log.info(f"Keep alive: Runtime ({ex})")
-            raise
+            # raise
         except ClientConnectorError as ex:
             self._log.info(f"Keep alive: Client connector error ({ex})")
-            raise
+            # raise
+        finally:
+            self._start_socket_timer()
+
 
 class BinanceSocketManager:
 

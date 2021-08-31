@@ -193,7 +193,7 @@ for more information.
 
     from binance import AsyncClient, DepthCacheManager, BinanceSocketManager
 
-    async def bots_engine():
+    async def main():
 
         # initialise the client
         client = await AsyncClient.create()
@@ -255,7 +255,7 @@ for more information.
     if __name__ == "__main__":
 
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(bots_engine())
+        loop.run_until_complete(main())
 
 
 Donate
