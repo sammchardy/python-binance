@@ -8,8 +8,10 @@ from random import random
 from typing import Optional, List, Dict, Callable, Any
 from socket import gaierror
 from aiohttp import ClientConnectorError
+from asyncio import sleep
 
 import websockets as ws
+from websockets.exceptions import ConnectionClosedError
 
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
@@ -124,8 +126,8 @@ class ReconnectingWebsocket:
                         'e': 'error',
                         'm': 'Max reconnect retries reached'
                     }
-                else:
-                    break
+                # else:
+                #     break
             try:
                 res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
             except asyncio.TimeoutError:
@@ -134,10 +136,21 @@ class ReconnectingWebsocket:
                 self._log.debug(f"cancelled error {e}")
                 break
             except asyncio.IncompleteReadError as e:
-                self._log.debug(f"incomplete read error {e}")
+                self._log.debug(f"incomplete read error ({e})")
+            except ConnectionClosedError as e:
+                self._log.debug(f"connection close error ({e})")
+                try:
+                    await self._reconnect()
+                except BinanceWebsocketUnableToConnect:
+                    await self._queue.put({
+                        'e': 'error',
+                        'm': 'Max reconnect retries reached'
+                    })
+                    return
             except Exception as e:
-                self._log.debug(f"exception {e}")
-                break
+                self._log.debug(f"Unknown exception ({e})")
+                if self.ws:
+                    self.ws.state =ws.protocol.State.CLOSED
             else:
                 if self.ws_state in (WSListenerState.EXITING, WSListenerState.RECONNECTING):
                     break
@@ -145,8 +158,13 @@ class ReconnectingWebsocket:
                 if self.ws_state in (WSListenerState.EXITING, WSListenerState.RECONNECTING):
                     break
 
-            if res and self._queue.qsize() < 100:
-                await self._queue.put(res)
+            if res:
+                if self._queue.qsize() < 100:
+                    await self._queue.put(res)
+                else:
+                    self._log.debug("Queue overflow. Message not filled")
+            else:
+                self._log.debug("No messages")
 
     async def recv(self):
         res = None
@@ -160,6 +178,7 @@ class ReconnectingWebsocket:
     async def _wait_for_reconnect(self):
         while self.ws_state == WSListenerState.RECONNECTING:
             self._log.debug("reconnecting waiting for connect")
+            await sleep(10)  # FIXME
         if not self.ws:
             self._log.debug("ignore message no ws")
         else:
@@ -183,18 +202,21 @@ class ReconnectingWebsocket:
         if self.ws_state == WSListenerState.RECONNECTING:
             return
         self.ws_state = WSListenerState.RECONNECTING
-        await self.before_reconnect()
-        if self._reconnects < self.MAX_RECONNECTS:
-            reconnect_wait = self._get_reconnect_wait(self._reconnects)
-            self._log.debug(
-                f"websocket reconnecting {self.MAX_RECONNECTS - self._reconnects} reconnects left - "
-                f"waiting {reconnect_wait}"
-            )
-            await asyncio.sleep(reconnect_wait)
-            await self.connect()
-        else:
-            self._log.error(f'Max reconnections {self.MAX_RECONNECTS} reached:')
-            raise BinanceWebsocketUnableToConnect
+        while True:
+            await self.before_reconnect()
+            if self._reconnects < self.MAX_RECONNECTS:
+                reconnect_wait = self._get_reconnect_wait(self._reconnects)
+                self._log.debug(
+                    f"websocket reconnecting {self.MAX_RECONNECTS - self._reconnects} reconnects left - "
+                    f"waiting {reconnect_wait}"
+                )
+                await asyncio.sleep(reconnect_wait)
+                await self.connect()
+                if self.ws_state == WSListenerState.STREAMING:
+                    break
+            else:
+                self._log.error(f'Max reconnections {self.MAX_RECONNECTS} reached:')
+                raise BinanceWebsocketUnableToConnect
 
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
