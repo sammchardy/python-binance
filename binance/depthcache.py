@@ -117,7 +117,12 @@ class DepthCache(object):
     def sort_depth(vals, reverse=False, conv_type=float):
         """Sort bids or asks by price
         """
-        lst = [[conv_type(price), quantity] for price, quantity in vals.items()]
+        if isinstance(vals, dict):
+            lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals.items()]
+        elif isinstance(vals, list):
+            lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals]
+        else:
+            raise ValueError(f'Unknown order book depth data type: {type(vals)}')
         lst = sorted(lst, key=itemgetter(0), reverse=reverse)
         return lst
 
@@ -390,6 +395,13 @@ class FuturesDepthCacheManager(BaseDepthCacheManager):
         """
         msg = msg.get('data')
         return await super()._process_depth_message(msg)
+
+    def _apply_orders(self, msg):
+        self._depth_cache._bids = msg.get('b', [])
+        self._depth_cache._asks = msg.get('a', [])
+
+        # keeping update time
+        self._depth_cache.update_time = msg.get('E') or msg.get('lastUpdateId')
 
     def _get_socket(self):
         sock = self._bm.futures_depth_socket(self._symbol)
