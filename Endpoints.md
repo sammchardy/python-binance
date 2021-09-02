@@ -617,7 +617,6 @@
     client.futures_liquidation_orders(symbol, startTime, endTime, limit)
     ``` 
   - **GET /fapi/v1/openInterest** (Get present open interest of a specific symbol.)
-    > :warning: Probably broken, python code below is implemented on v1/openInterest endpoint.
     ```python 
     client.futures_open_interest(symbol)
     ``` 
