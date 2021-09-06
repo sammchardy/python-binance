@@ -61,32 +61,26 @@ class ReconnectingWebsocket:
         self.ws: Optional[ws.WebSocketClientProtocol] = None
         self.ws_state = WSListenerState.INITIALISING
         self._queue = asyncio.Queue(loop=self._loop)
-        self._read_loop_running = False
         self._handle_read_loop = None
-        self._stop_read_loop = False
 
     async def __aenter__(self):
         await self.connect()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        try:
-            if self._exit_coro:
-                await self._exit_coro(self._path)
-            self.ws_state = WSListenerState.EXITING
-            if self.ws:
-                self.ws.fail_connection()
-            if self._conn and hasattr(self._conn, 'protocol'):
-                await self._conn.__aexit__(exc_type, exc_val, exc_tb)
-            self.ws = None
-            if self._handle_read_loop:
-                self._log.error("CANCEL read_loop")
-                await self._kill_read_loop()
-        except Exception as e:
-            raise
+        if self._exit_coro:
+            await self._exit_coro(self._path)
+        self.ws_state = WSListenerState.EXITING
+        if self.ws:
+            self.ws.fail_connection()
+        if self._conn and hasattr(self._conn, 'protocol'):
+            await self._conn.__aexit__(exc_type, exc_val, exc_tb)
+        self.ws = None
+        if not self._handle_read_loop:
+            self._log.error("CANCEL read_loop")
+            await self._kill_read_loop()
 
     async def connect(self):
-        assert not self.ws
         await self._before_connect()
         assert self._path
         ws_url = self._url + self._prefix + self._path
@@ -97,14 +91,12 @@ class ReconnectingWebsocket:
         await self._after_connect()
         # To manage the "cannot call recv while another coroutine is already waiting for the next message"
         if not self._handle_read_loop:
-            self._log.debug(f"call_soon_threadsafe for {id(self)}")
             self._handle_read_loop = self._loop.call_soon_threadsafe(asyncio.create_task, self._read_loop())
 
     async def _kill_read_loop(self):
         self.ws_state = WSListenerState.EXITING
-        while self._stop_read_loop:
+        while self._handle_read_loop:
             await sleep(0)
-        self._log.error("Detect task killed")
 
     async def _before_connect(self):
         pass
@@ -145,6 +137,7 @@ class ReconnectingWebsocket:
 
                     elif self.ws_state == WSListenerState.STREAMING:
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
+                        print(".",flush=True,end="");
                         res = self._handle_message(res)
                         if res:
                             if self._queue.qsize() < self.MAX_QUEUE_SIZE:
@@ -174,11 +167,10 @@ class ReconnectingWebsocket:
                     self._log.debug(f"Unknown exception ({e})")
 
         finally:
-            self._stop_read_loop = False  # Signal the coro is stopped
+            self._handle_read_loop = None  # Signal the coro is stopped
             self._reconnects = 0
 
     async def _run_reconnect(self):
-        self._log.error("Demande de reconnect")
         await self.before_reconnect()
         if self._reconnects < self.MAX_RECONNECTS:
             reconnect_wait = self._get_reconnect_wait(self._reconnects)
@@ -241,7 +233,6 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         self._timer = None
 
     async def __aexit__(self, *args, **kwargs):
-        logging.error(f"aexit ({id(self)})")
         if not self._path:
             return
         if self._timer:
@@ -257,12 +248,10 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         self._start_socket_timer()
 
     def _start_socket_timer(self):
-        generator = self._keepalive_socket()
-        # generator.send(None)  # Remove RuntimeWarning: coroutine 'KeepAliveWebsocket._keepalive_socket' was never awaited
         self._timer = self._loop.call_later(
             self._user_timeout,
             asyncio.create_task,
-            generator  # self._keepalive_socket()
+            self._keepalive_socket()
         )
 
     async def _get_listen_key(self):
@@ -300,18 +289,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 else:  # isolated margin
                     # Passing symbol for isolated margin
                     await self._client.isolated_margin_stream_keepalive(self._keepalive_type, self._path)
-        except gaierror as ex:
-            self._log.info(f"Keep alive: DNS Error ({ex})")
-            # raise
-        except TimeoutError as ex:
-            self._log.info(f"Keep alive: Time out ({ex})")
-            # raise
-        except RuntimeError as ex:
-            self._log.info(f"Keep alive: Runtime ({ex})")
-            # raise
-        except ClientConnectorError as ex:
-            self._log.info(f"Keep alive: Client connector error ({ex})")
-            # raise
+        except Exception:
+            pass # Ignore
         finally:
             self._start_socket_timer()
 
@@ -1129,11 +1108,6 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     ):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
         self._bsm: Optional[BinanceSocketManager] = None
-        self._handle_start_listener = None
-
-    def __del__(self):
-        if self._handle_start_listener:
-            self._handle_start_listener.cancel()
 
     async def _before_socket_listener_start(self):
         assert self._client
@@ -1147,9 +1121,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         socket = getattr(self._bsm, socket_name)(**params)
         path = path or socket._path  # noqa
         self._socket_running[path] = True
-        self._handle_start_listener = self._loop.call_soon_threadsafe(asyncio.create_task,
-                                                                      self.start_listener(socket, socket._path,
-                                                                                          callback))
+        self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket._path, callback))
         return path
 
     def start_depth_socket(
