@@ -6934,7 +6934,7 @@ class Client(BaseClient):
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
         :param fromId: optional - Trade id to fetch from. Default gets most recent trades. - 4611875134427365376
-        :type orderId: int
+        :type fromId: int
         :param startTime: optional - Start Time - 1593511200000
         :type startTime: int
         :param endTime: optional - End Time - 1593511200000
@@ -6956,6 +6956,56 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    # C2C Endpoints
+
+    def get_c2c_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-c2c-trade-history-user_data
+
+        :param tradeType: required - BUY, SELL
+        :type tradeType: str
+        :param startTimestamp: optional
+        :type startTime: int
+        :param endTimestamp: optional
+        :type endTimestamp: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 100
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "code": "000000",
+                "message": "success",
+                "data": [
+                    {
+                        "orderNumber":"20219644646554779648",
+                        "advNo": "11218246497340923904",
+                        "tradeType": "SELL",
+                        "asset": "BUSD",
+                        "fiat": "CNY",
+                        "fiatSymbol": "￥",
+                        "amount": "5000.00000000",  // Quantity (in Crypto)
+                        "totalPrice": "33400.00000000",
+                        "unitPrice": "6.68", // Unit Price (in Fiat)
+                        "orderStatus": "COMPLETED",  // PENDING, TRADING, BUYER_PAYED, DISTRIBUTING, COMPLETED, IN_APPEAL, CANCELLED, CANCELLED_BY_SYSTEM
+                        "createTime": 1619361369000,
+                        "commission": "0",   // Transaction Fee (in Crypto)
+                        "counterPartNickName": "ab***",
+                        "advertisementRole": "TAKER"
+                    }
+                ],
+                "total": 1,
+                "success": true
+            }
+
+        """
+        return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
 
     def close_connection(self):
         if self.session:
@@ -8248,3 +8298,8 @@ class AsyncClient(BaseClient):
 
     async def get_fiat_deposit_withdraw_history(self, **params):
         return await self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    # C2C Endpoints
+
+    async def get_c2c_trade_history(self, **params):
+        return await self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
