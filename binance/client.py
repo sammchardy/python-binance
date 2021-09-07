@@ -6954,8 +6954,42 @@ class Client(BaseClient):
 
         https://binance-docs.github.io/apidocs/spot/en/#get-fiat-deposit-withdraw-history-user_data
 
+        :param transactionType: required - 0-deposit,1-withdraw
+        :type transactionType: str
+        :param beginTime: optional
+        :type beginTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 500
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
         """
         return self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    def get_fiat_payments_history(self, **params):
+        """Get Fiat Payments History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-fiat-payments-history-user_data
+
+        :param transactionType: required - 0-buy,1-sell
+        :type transactionType: str
+        :param beginTime: optional
+        :type beginTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 500
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_margin_api('get', 'fiat/payments', signed=True, data=params)
 
     # C2C Endpoints
 
@@ -8298,6 +8332,9 @@ class AsyncClient(BaseClient):
 
     async def get_fiat_deposit_withdraw_history(self, **params):
         return await self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    async def get_fiat_payments_history(self, **params):
+        return await self._request_margin_api('get', 'fiat/payments', signed=True, data=params)
 
     # C2C Endpoints
 
