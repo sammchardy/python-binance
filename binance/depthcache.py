@@ -162,6 +162,7 @@ class BaseDepthCacheManager:
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
         self._conn_key = None
         self._conv_type = conv_type
+        self._log = logging.getLogger(__name__)
 
     async def __aenter__(self):
         await asyncio.gather(
