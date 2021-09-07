@@ -3558,6 +3558,195 @@ class Client(BaseClient):
         """
         return self._request_margin_api('delete', 'margin/order', signed=True, data=params)
 
+    def create_margin_oco_order(self, **params):
+        """Send in a new OCO for a margin account
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-oco-trade
+
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param listClientOrderId: A unique Id for the entire orderList
+        :type listClientOrderId: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param limitClientOrderId: A unique Id for the limit order
+        :type limitClientOrderId: str
+        :param price: required
+        :type price: decimal
+        :param limitIcebergQty:
+        :type limitIcebergQty: decimal
+        :param stopClientOrderId: A unique Id for the stop loss/stop loss limit leg 
+        :type stopClientOrderId: str
+        :param stopPrice: required 
+        :type stopPrice: decimal
+        :param stopLimitPrice: If provided, stopLimitTimeInForce is required.
+        :type stopLimitPrice: decimal
+        :param stopIcebergQty:
+        :type stopIcebergQty: decimal
+        :param stopLimitTimeInForce: required if limit order GTC,IOC,FOK
+        :type stopLimitTimeInForce: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to
+            FULL, all other orders default to ACK.
+        :type newOrderRespType: str
+        :param sideEffectType: NO_SIDE_EFFECT, MARGIN_BUY, AUTO_REPAY; default NO_SIDE_EFFECT
+        :type sideEffectType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",
+                "transactionTime": 1563417480525,
+                "symbol": "LTCBTC",
+                "marginBuyBorrowAmount": "5",       // will not return if no margin trade happens
+                "marginBuyBorrowAsset": "BTC",    // will not return if no margin trade happens
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 2,
+                    "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"
+                    },
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 3,
+                    "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"
+                    }
+                ],
+                "orderReports": [
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 2,
+                    "orderListId": 0,
+                    "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",
+                    "transactTime": 1563417480525,
+                    "price": "0.000000",
+                    "origQty": "0.624363",
+                    "executedQty": "0.000000",
+                    "cummulativeQuoteQty": "0.000000",
+                    "status": "NEW",
+                    "timeInForce": "GTC",
+                    "type": "STOP_LOSS",
+                    "side": "BUY",
+                    "stopPrice": "0.960664"
+                    },
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 3,
+                    "orderListId": 0,
+                    "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",
+                    "transactTime": 1563417480525,
+                    "price": "0.036435",
+                    "origQty": "0.624363",
+                    "executedQty": "0.000000",
+                    "cummulativeQuoteQty": "0.000000",
+                    "status": "NEW",
+                    "timeInForce": "GTC",
+                    "type": "LIMIT_MAKER",
+                    "side": "BUY"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException,
+            BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException,
+            BinanceOrderInactiveSymbolException
+
+        """
+        return self._request_margin_api('post', 'margin/order/oco', signed=True, data=params)
+
+    def cancel_margin_oco_order(self, **params):
+        """Cancel an entire Order List for a margin account.
+
+        Either orderListId or listClientOrderId must be provided
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-oco-trade
+
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param orderListId:
+        :type orderListId: str
+        :param listClientOrderId:
+        :type listClientOrderId: str
+        :param newClientOrderId:
+        :type newClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "ALL_DONE",
+                "listOrderStatus": "ALL_DONE",
+                "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",
+                "transactionTime": 1574040868128,
+                "symbol": "LTCBTC",
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 2,
+                    "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"
+                    },
+                    {
+                    "symbol": "LTCBTC",
+                    "orderId": 3,
+                    "clientOrderId": "TXOvglzXuaubXAaENpaRCB"
+                    }
+                ],
+                "orderReports": [
+                    {
+                    "symbol": "LTCBTC",
+                    "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",
+                    "orderId": 2,
+                    "orderListId": 0,
+                    "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                    "price": "1.00000000",
+                    "origQty": "10.00000000",
+                    "executedQty": "0.00000000",
+                    "cummulativeQuoteQty": "0.00000000",
+                    "status": "CANCELED",
+                    "timeInForce": "GTC",
+                    "type": "STOP_LOSS_LIMIT",
+                    "side": "SELL",
+                    "stopPrice": "1.00000000"
+                    },
+                    {
+                    "symbol": "LTCBTC",
+                    "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",
+                    "orderId": 3,
+                    "orderListId": 0,
+                    "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                    "price": "3.00000000",
+                    "origQty": "10.00000000",
+                    "executedQty": "0.00000000",
+                    "cummulativeQuoteQty": "0.00000000",
+                    "status": "CANCELED",
+                    "timeInForce": "GTC",
+                    "type": "LIMIT_MAKER",
+                    "side": "SELL"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('delete', 'margin/orderList', signed=True, data=params)
+
     def get_margin_loan_details(self, **params):
         """Query loan record
 
