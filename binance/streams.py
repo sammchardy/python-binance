@@ -12,6 +12,7 @@ import websockets as ws
 from .client import AsyncClient
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import FuturesType
+from .enums import ContractType
 from .threaded_stream import ThreadedApiManager
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
@@ -482,6 +483,56 @@ class BinanceSocketManager:
         """
         path = f'{symbol.lower()}@kline_{interval}'
         return self._get_socket(path)
+
+    def kline_futures_socket(self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+                             futures_type: FuturesType = FuturesType.USD_M,
+                             contract_type: ContractType = ContractType.PERPETUAL):
+        """Start a websocket for symbol kline data for the perpeual futures stream
+
+        https://binance-docs.github.io/apidocs/futures/en/#continuous-contract-kline-candlestick-streams
+
+        :param symbol: required
+        :type symbol: str
+        :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
+        :type interval: str
+        :param futures_type: use USD-M or COIN-M futures default USD-M
+        :param contract_type: use PERPETUAL or CURRENT_QUARTER or NEXT_QUARTER default PERPETUAL
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+                {
+                "e":"continuous_kline",   // Event type
+                "E":1607443058651,        // Event time
+                "ps":"BTCUSDT",           // Pair
+                "ct":"PERPETUAL"          // Contract type
+                "k":{
+                    "t":1607443020000,      // Kline start time
+                    "T":1607443079999,      // Kline close time
+                    "i":"1m",               // Interval
+                    "f":116467658886,       // First trade ID
+                    "L":116468012423,       // Last trade ID
+                    "o":"18787.00",         // Open price
+                    "c":"18804.04",         // Close price
+                    "h":"18804.04",         // High price
+                    "l":"18786.54",         // Low price
+                    "v":"197.664",          // volume
+                    "n": 543,               // Number of trades
+                    "x":false,              // Is this kline closed?
+                    "q":"3715253.19494",    // Quote asset volume
+                    "V":"184.769",          // Taker buy volume
+                    "Q":"3472925.84746",    //Taker buy quote asset volume
+                    "B":"0"                 // Ignore
+                }
+            }
+            <pair>_<contractType>@continuousKline_<interval>
+        """
+
+        path = f'{symbol.lower()}_{contract_type}@continuousKline_{interval}'
+        return self._get_futures_socket(path, futures_type=futures_type)
 
     def miniticker_socket(self, update_time: int = 1000):
         """Start a miniticker websocket for all trades
@@ -1140,6 +1191,21 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             params={
                 'symbol': symbol,
                 'interval': interval,
+            }
+        )
+
+    def start_kline_futures_socket(self, callback: Callable, symbol: str,
+                                   interval = AsyncClient.KLINE_INTERVAL_1MINUTE,
+                                   futures_type: FuturesType = FuturesType.USD_M,
+                                   contract_type : ContractType = ContractType.PERPETUAL) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='kline_futures_socket',
+            params={
+                'symbol': symbol,
+                'interval': interval,
+                'futures_type': futures_type.value,
+                'contract_type': contract_type.value
             }
         )
 
