@@ -1020,25 +1020,25 @@ class BinanceSocketManager:
     def user_socket(self):
         """Start a websocket for user data
 
-            https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
-            https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :returns: connection key string if successful, False otherwise
 
         Message Format - see Binance API docs for all types
         """
         return self._get_account_socket('user')
-    
+
     def futures_user_socket(self):
         """Start a websocket for coin futures user data
-        
+
         https://binance-docs.github.io/apidocs/futures/en/#user-data-streams
-        
+
         :returns: connection key string if successful, False otherwise
-        
+
         Message Format - see Binanace API docs for all types
         """
-        
+
         return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
 
     def margin_socket(self):
@@ -1195,9 +1195,9 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         )
 
     def start_kline_futures_socket(self, callback: Callable, symbol: str,
-                                   interval = AsyncClient.KLINE_INTERVAL_1MINUTE,
+                                   interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
                                    futures_type: FuturesType = FuturesType.USD_M,
-                                   contract_type : ContractType = ContractType.PERPETUAL) -> str:
+                                   contract_type: ContractType = ContractType.PERPETUAL) -> str:
         return self._start_async_socket(
             callback=callback,
             socket_name='kline_futures_socket',
