@@ -2153,7 +2153,7 @@ class Client(BaseClient):
 
             {
                "ipRestrict": false,
-               "createTime": 1623840271000,   
+               "createTime": 1623840271000,
                "enableWithdrawals": false,   // This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to enable withdrawals
                "enableInternalTransfer": true,  // This option authorizes this key to transfer funds between your master account and your sub account instantly
                "permitsUniversalTransfer": true,  // Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
@@ -3727,7 +3727,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
-    
+
     def get_margin_interest_history(self, **params):
         """Get Interest History (USER_DATA)
 
@@ -3808,7 +3808,6 @@ class Client(BaseClient):
                 ],
                 "total": 1
             }
-            
 
         """
         return self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
@@ -4068,6 +4067,312 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    # Margin OCO
+
+    def create_margin_oco_order(self, **params):
+        """Post a new OCO trade for margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-oco-trade
+
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param listClientOrderId: A unique id for the list order. Automatically generated if not sent.
+        :type listClientOrderId: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param limitClientOrderId: A unique id for the limit order. Automatically generated if not sent.
+        :type limitClientOrderId: str
+        :param price: required
+        :type price: str
+        :param limitIcebergQty: Used to make the LIMIT_MAKER leg an iceberg order.
+        :type limitIcebergQty: decimal
+        :param stopClientOrderId: A unique Id for the stop loss/stop loss limit leg. Automatically generated if not sent.
+        :type stopClientOrderId: str
+        :param stopPrice: required
+        :type stopPrice: str
+        :param stopLimitPrice: If provided, stopLimitTimeInForce is required.
+        :type stopLimitPrice: str
+        :param stopIcebergQty: Used with STOP_LOSS_LIMIT leg to make an iceberg order.
+        :type stopIcebergQty: decimal
+        :param stopLimitTimeInForce: Valid values are GTC/FOK/IOC.
+        :type stopLimitTimeInForce: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param sideEffectType: NO_SIDE_EFFECT, MARGIN_BUY, AUTO_REPAY; default NO_SIDE_EFFECT.
+        :type sideEffectType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",
+                "transactionTime": 1563417480525,
+                "symbol": "LTCBTC",
+                "marginBuyBorrowAmount": "5",       // will not return if no margin trade happens
+                "marginBuyBorrowAsset": "BTC",    // will not return if no margin trade happens
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"
+                    }
+                ],
+                "orderReports": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "orderListId": 0,
+                        "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",
+                        "transactTime": 1563417480525,
+                        "price": "0.000000",
+                        "origQty": "0.624363",
+                        "executedQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS",
+                        "side": "BUY",
+                        "stopPrice": "0.960664"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "orderListId": 0,
+                        "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",
+                        "transactTime": 1563417480525,
+                        "price": "0.036435",
+                        "origQty": "0.624363",
+                        "executedQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "BUY"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException,
+            BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException,
+            BinanceOrderInactiveSymbolException
+
+        """
+        return self._request_margin_api('post', 'margin/order/oco', signed=True, data=params)
+
+    def cancel_margin_oco_order(self, **params):
+        """Cancel an entire Order List for a margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-oco-trade
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param orderListId: Either orderListId or listClientOrderId must be provided
+        :type orderListId: int
+        :param listClientOrderId: Either orderListId or listClientOrderId must be provided
+        :type listClientOrderId: str
+        :param newClientOrderId: Used to uniquely identify this cancel. Automatically generated by default.
+        :type newClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "ALL_DONE",
+                "listOrderStatus": "ALL_DONE",
+                "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",
+                "transactionTime": 1574040868128,
+                "symbol": "LTCBTC",
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "clientOrderId": "TXOvglzXuaubXAaENpaRCB"
+                    }
+                ],
+                "orderReports": [
+                    {
+                        "symbol": "LTCBTC",
+                        "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",
+                        "orderId": 2,
+                        "orderListId": 0,
+                        "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                        "price": "1.00000000",
+                        "origQty": "10.00000000",
+                        "executedQty": "0.00000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "CANCELED",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS_LIMIT",
+                        "side": "SELL",
+                        "stopPrice": "1.00000000"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",
+                        "orderId": 3,
+                        "orderListId": 0,
+                        "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                        "price": "3.00000000",
+                        "origQty": "10.00000000",
+                        "executedQty": "0.00000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "CANCELED",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "SELL"
+                    }
+                ]
+            }
+
+    """
+        return self._request_margin_api('delete', 'margin/orderList', signed=True, data=params)
+
+    def get_margin_oco_order(self, **params):
+        """Retrieves a specific OCO based on provided optional parameters
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-oco-user_data
+
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param symbol: mandatory for isolated margin, not supported for cross margin
+        :type symbol: str
+        :param orderListId: Either orderListId or listClientOrderId must be provided
+        :type orderListId: int
+        :param listClientOrderId: Either orderListId or listClientOrderId must be provided
+        :type listClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "orderListId": 27,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "h2USkA5YQpaXHPIrkd96xE",
+                "transactionTime": 1565245656253,
+                "symbol": "LTCBTC",
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 4,
+                        "clientOrderId": "qD1gy3kc3Gx0rihm9Y3xwS"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 5,
+                        "clientOrderId": "ARzZ9I00CPM8i3NhmU9Ega"
+                    }
+                ]
+            }
+
+    """
+        return self._request_margin_api('get', 'margin/orderList', signed=True, data=params)
+
+    def get_open_margin_oco_orders(self, **params):
+        """Retrieves open OCO trades
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-oco-user_data
+
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param symbol: mandatory for isolated margin, not supported for cross margin
+        :type symbol: str
+        :param fromId: If supplied, neither startTime or endTime can be provided
+        :type fromId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional Default Value: 500; Max Value: 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            [
+                {
+                    "orderListId": 29,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "amEEAXryFzFwYF1FeRpUoZ",
+                    "transactionTime": 1565245913483,
+                    "symbol": "LTCBTC",
+                    "isIsolated": true,       // if isolated margin
+                    "orders": [
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 4,
+                            "clientOrderId": "oD7aesZqjEGlZrbtRpy5zB"
+                        },
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 5,
+                            "clientOrderId": "Jr1h6xirOxgeJOUuYQS7V3"
+                        }
+                    ]
+                },
+                {
+                    "orderListId": 28,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "hG7hFNxJV6cZy3Ze4AUT4d",
+                    "transactionTime": 1565245913407,
+                    "symbol": "LTCBTC",
+                    "orders": [
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 2,
+                            "clientOrderId": "j6lFOfbmFMRjTYA7rRJ0LP"
+                        },
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 3,
+                            "clientOrderId": "z0KCjOdditiLS5ekAFtK81"
+                        }
+                    ]
+                }
+            ]
+
+    """
+        return self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
 
     # Cross-margin
 
@@ -7355,6 +7660,20 @@ class AsyncClient(BaseClient):
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    # Margin OCO
+
+    async def create_margin_oco_order(self, **params):
+        return await self._request_margin_api('post', 'margin/order/oco', signed=True, data=params)
+
+    async def cancel_margin_oco_order(self, **params):
+        return await self._request_margin_api('delete', 'margin/orderList', signed=True, data=params)
+
+    async def get_margin_oco_order(self, **params):
+        return await self._request_margin_api('get', 'margin/orderList', signed=True, data=params)
+
+    async def get_open_margin_oco_orders(self, **params):
+        return await self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
 
     # Cross-margin
 
