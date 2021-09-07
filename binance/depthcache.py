@@ -24,6 +24,7 @@ class DepthCache(object):
         self._asks = {}
         self.update_time = None
         self.conv_type = conv_type
+        self._log = logging.getLogger(__name__)
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -179,9 +180,7 @@ class BaseDepthCacheManager:
             try:
                 res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
             except Exception as e:
-
-                logging.warning(e)
-                pass
+                self._log.warning(e)
             else:
                 dc = await self._depth_event(res)
         return dc
