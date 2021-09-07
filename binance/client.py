@@ -6650,7 +6650,7 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/spot/en/#get-fiat-deposit-withdraw-history-user_data
 
         """
-        return self._request_margin_api('get', 'fiat/orders', True, data=params)
+        return self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
 
     def close_connection(self):
         if self.session:
@@ -7272,6 +7272,12 @@ class AsyncClient(BaseClient):
     async def get_margin_symbol(self, **params):
         return await self._request_margin_api('get', 'margin/pair', data=params)
 
+    async def get_margin_all_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/allAssets', data=params)
+
+    async def get_margin_all_pairs(self, **params):
+        return await self._request_margin_api('get', 'margin/allPairs', data=params)
+
     async def create_isolated_margin_account(self, **params):
         return await self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
 
@@ -7325,6 +7331,12 @@ class AsyncClient(BaseClient):
 
     async def get_margin_repay_details(self, **params):
         return await self._request_margin_api('get', 'margin/repay', signed=True, data=params)
+
+    async def get_margin_interest_history(self, **params):
+        return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+
+    async def get_margin_force_liquidation_rec(self, **params):
+        return await self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
 
     async def get_margin_order(self, **params):
         return await self._request_margin_api('get', 'margin/order', signed=True, data=params)
@@ -7916,9 +7928,4 @@ class AsyncClient(BaseClient):
     # Fiat Endpoints
 
     async def get_fiat_deposit_withdraw_history(self, **params):
-        """Get Fiat Deposit/Withdraw History
-
-        https://binance-docs.github.io/apidocs/spot/en/#get-fiat-deposit-withdraw-history-user_data
-
-        """
-        return await self._request_margin_api('get', 'fiat/orders', True, data=params)
+        return await self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
