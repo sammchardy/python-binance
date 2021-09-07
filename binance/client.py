@@ -3014,6 +3014,82 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/pair', data=params)
 
+    def get_margin_all_assets(self, **params):
+        """Get All Margin Assets (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-margin-assets-market_data
+
+        .. code:: python
+
+            margin_assets = client.get_margin_all_assets()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "assetFullName": "USD coin",
+                    "assetName": "USDC",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "0.00000000",
+                    "userMinRepay": "0.00000000"
+                },
+                {
+                    "assetFullName": "BNB-coin",
+                    "assetName": "BNB",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "1.00000000",
+                    "userMinRepay": "0.00000000"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allAssets', data=params)
+
+    def get_margin_all_pairs(self, **params):
+        """Get All Cross Margin Pairs (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-cross-margin-pairs-market_data
+
+        .. code:: python
+
+            margin_pairs = client.get_margin_all_pairs()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "base": "BNB",
+                    "id": 351637150141315861,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "BNBBTC"
+                },
+                {
+                    "base": "TRX",
+                    "id": 351637923235429141,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "TRXBTC"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allPairs', data=params)
+
     def create_isolated_margin_account(self, **params):
         """Create isolated margin account for symbol
 
@@ -3651,6 +3727,91 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
+    
+    def get_margin_interest_history(self, **params):
+        """Get Interest History (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+
+        :param asset:
+        :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param archived: Default: false. Set to true for archived data from 6 months ago
+        :type archived: bool
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows":[
+                    {
+                        "isolatedSymbol": "BNBUSDT", // isolated symbol, will not be returned for crossed margin
+                        "asset": "BNB",
+                        "interest": "0.02414667",
+                        "interestAccuredTime": 1566813600000,
+                        "interestRate": "0.01600000",
+                        "principal": "36.22000000",
+                        "type": "ON_BORROW"
+                    }
+                ],
+                "total": 1
+            }
+
+
+        """
+        return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+
+    def get_margin_force_liquidation_rec(self, **params):
+        """Get Force Liquidation Record (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-force-liquidation-record-user_data
+
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        "avgPrice": "0.00388359",
+                        "executedQty": "31.39000000",
+                        "orderId": 180015097,
+                        "price": "0.00388110",
+                        "qty": "31.39000000",
+                        "side": "SELL",
+                        "symbol": "BNBBTC",
+                        "timeInForce": "GTC",
+                        "isIsolated": true,
+                        "updatedTime": 1558941374745
+                    }
+                ],
+                "total": 1
+            }
+            
+
+        """
+        return self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
 
     def get_margin_order(self, **params):
         """Query margin accounts order
