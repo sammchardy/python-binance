@@ -6481,6 +6481,16 @@ class Client(BaseClient):
         """
         return self._request_options_api('get', 'userTrades', signed=True, data=params)
 
+    # Fiat Endpoints
+
+    def get_fiat_deposit_withdraw_history(self, **params):
+        """Get Fiat Deposit/Withdraw History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-fiat-deposit-withdraw-history-user_data
+
+        """
+        return self._request_margin_api('get', 'fiat/orders', True, data=params)
+
     def close_connection(self):
         if self.session:
             self.session.close()
