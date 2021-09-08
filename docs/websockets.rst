@@ -207,7 +207,7 @@ If the websocket is disconnected and is unable to reconnect, a message is sent t
     # check for it like so
     def process_message(msg):
         if msg['e'] == 'error':
-            # close and _restart the socket
+            # close and restart the socket
         else:
             # process message normally
 
