@@ -24,8 +24,8 @@ def test_add_bids(fresh_cache):
 
     assert bids == sorted(bids, reverse=True)
 
-    assert(isinstance(bids[0][0], Decimal))
-    assert(isinstance(bids[0][1], Decimal))
+    assert isinstance(bids[0][0], Decimal)
+    assert isinstance(bids[0][1], Decimal)
 
 
 def test_add_asks(fresh_cache):
@@ -45,5 +45,5 @@ def test_add_asks(fresh_cache):
     # Lowest ask price should be first (ascending order)
     assert asks == sorted(asks)
 
-    assert(isinstance(asks[0][0], Decimal))
-    assert(isinstance(asks[0][1], Decimal))
+    assert isinstance(asks[0][0], Decimal)
+    assert isinstance(asks[0][1], Decimal)
