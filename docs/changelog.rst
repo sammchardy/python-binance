@@ -1,6 +1,25 @@
 Changelog
 =========
 
+v1.0.13 - 2021-09-08
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Futures Depth Cache Manager
+- Futures kline websocket stream
+- Coin Futures User websocket stream
+- New Margin endpoints
+- Margin OCO order endpoints
+- Fiat endpoints
+- C2C endpoints
+- Account API permissions endpoint
+
+**Fixed**
+
+- changed `asset` to `coin` in withdraw endpoint
+
+
 v1.0.12 - 2021-06-03
 ^^^^^^^^^^^^^^^^^^^^
 

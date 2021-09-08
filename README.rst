@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v1.0.12
+Welcome to python-binance v1.0.13
 =================================
 
 Updated 11th May 2021
