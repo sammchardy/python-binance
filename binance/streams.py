@@ -16,6 +16,7 @@ from websockets.exceptions import ConnectionClosedError
 from .client import AsyncClient
 from .enums import FuturesType
 from .exceptions import BinanceWebsocketUnableToConnect
+from .enums import ContractType
 from .threaded_stream import ThreadedApiManager
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
@@ -83,10 +84,14 @@ class ReconnectingWebsocket:
     async def connect(self):
         await self._before_connect()
         assert self._path
-        ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url, close_timeout=0.001)
-        self.ws = await self._conn.__aenter__()
         self.ws_state = WSListenerState.STREAMING
+        ws_url = self._url + self._prefix + self._path
+        self._conn = ws.connect(ws_url, close_timeout=0.1)
+        try:
+            self.ws = await self._conn.__aenter__()
+        except:  # noqa
+            await self._reconnect()
+            return
         self._reconnects = 0
         await self._after_connect()
         # To manage the "cannot call recv while another coroutine is already waiting for the next message"
@@ -129,8 +134,7 @@ class ReconnectingWebsocket:
                     elif self.ws_state == WSListenerState.EXITING:
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:
-                        # break
-                        pass
+                        continue
                     elif self.ws.state == ws.protocol.State.CLOSED:
                         await self._reconnect()
                         self.ws_state = WSListenerState.RECONNECTING
@@ -165,7 +169,7 @@ class ReconnectingWebsocket:
                     break
                 except Exception as e:
                     self._log.debug(f"Unknown exception ({e})")
-
+                    continue
         finally:
             self._handle_read_loop = None  # Signal the coro is stopped
             self._reconnects = 0
@@ -219,7 +223,6 @@ class ReconnectingWebsocket:
     async def _reconnect(self):
         self._ws_state = WSListenerState.RECONNECTING
 
-
 class KeepAliveWebsocket(ReconnectingWebsocket):
 
     def __init__(
@@ -271,7 +274,6 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
     async def _keepalive_socket(self):
         try:
             listen_key = await self._get_listen_key()
-
             if listen_key != self._path:
                 self._log.debug("listen key changed: reconnect")
                 self._path = listen_key
@@ -510,6 +512,56 @@ class BinanceSocketManager:
         """
         path = f'{symbol.lower()}@kline_{interval}'
         return self._get_socket(path)
+
+    def kline_futures_socket(self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+                             futures_type: FuturesType = FuturesType.USD_M,
+                             contract_type: ContractType = ContractType.PERPETUAL):
+        """Start a websocket for symbol kline data for the perpeual futures stream
+
+        https://binance-docs.github.io/apidocs/futures/en/#continuous-contract-kline-candlestick-streams
+
+        :param symbol: required
+        :type symbol: str
+        :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
+        :type interval: str
+        :param futures_type: use USD-M or COIN-M futures default USD-M
+        :param contract_type: use PERPETUAL or CURRENT_QUARTER or NEXT_QUARTER default PERPETUAL
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+                {
+                "e":"continuous_kline",   // Event type
+                "E":1607443058651,        // Event time
+                "ps":"BTCUSDT",           // Pair
+                "ct":"PERPETUAL"          // Contract type
+                "k":{
+                    "t":1607443020000,      // Kline start time
+                    "T":1607443079999,      // Kline close time
+                    "i":"1m",               // Interval
+                    "f":116467658886,       // First trade ID
+                    "L":116468012423,       // Last trade ID
+                    "o":"18787.00",         // Open price
+                    "c":"18804.04",         // Close price
+                    "h":"18804.04",         // High price
+                    "l":"18786.54",         // Low price
+                    "v":"197.664",          // volume
+                    "n": 543,               // Number of trades
+                    "x":false,              // Is this kline closed?
+                    "q":"3715253.19494",    // Quote asset volume
+                    "V":"184.769",          // Taker buy volume
+                    "Q":"3472925.84746",    //Taker buy quote asset volume
+                    "B":"0"                 // Ignore
+                }
+            }
+            <pair>_<contractType>@continuousKline_<interval>
+        """
+
+        path = f'{symbol.lower()}_{contract_type}@continuousKline_{interval}'
+        return self._get_futures_socket(path, futures_type=futures_type)
 
     def miniticker_socket(self, update_time: int = 1000):
         """Start a miniticker websocket for all trades
@@ -982,17 +1034,41 @@ class BinanceSocketManager:
         path = f'streams={"/".join(streams)}'
         return self._get_futures_socket(path, prefix='stream?', futures_type=futures_type)
 
+    def futures_depth_socket(self, symbol: str, depth: str = '10', futures_type: FuturesType = FuturesType.USD_M):
+        """Subscribe to a depth data stream
+
+        https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
+
+        :param symbol: required
+        :type symbol: str
+        :param depth: optional Number of depth entries to return, default 10.
+        :type depth: str
+        """
+        return self._get_futures_socket(symbol.lower() + '@depth' + str(depth), futures_type=futures_type)
+
     def user_socket(self):
         """Start a websocket for user data
 
-            https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
-            https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
+        https://github.com/binance-exchange/binance-official-api-docs/blob/master/user-data-stream.md
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :returns: connection key string if successful, False otherwise
 
         Message Format - see Binance API docs for all types
         """
         return self._get_account_socket('user')
+
+    def futures_user_socket(self):
+        """Start a websocket for coin futures user data
+
+        https://binance-docs.github.io/apidocs/futures/en/#user-data-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binanace API docs for all types
+        """
+
+        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1144,6 +1220,21 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             params={
                 'symbol': symbol,
                 'interval': interval,
+            }
+        )
+
+    def start_kline_futures_socket(self, callback: Callable, symbol: str,
+                                   interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+                                   futures_type: FuturesType = FuturesType.USD_M,
+                                   contract_type: ContractType = ContractType.PERPETUAL) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='kline_futures_socket',
+            params={
+                'symbol': symbol,
+                'interval': interval,
+                'futures_type': futures_type.value,
+                'contract_type': contract_type.value
             }
         )
 

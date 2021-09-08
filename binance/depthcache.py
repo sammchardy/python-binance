@@ -24,6 +24,7 @@ class DepthCache(object):
         self._asks = {}
         self.update_time = None
         self.conv_type = conv_type
+        self._log = logging.getLogger(__name__)
 
     def add_bid(self, bid):
         """Add a bid to the cache
@@ -117,7 +118,12 @@ class DepthCache(object):
     def sort_depth(vals, reverse=False, conv_type=float):
         """Sort bids or asks by price
         """
-        lst = [[conv_type(price), quantity] for price, quantity in vals.items()]
+        if isinstance(vals, dict):
+            lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals.items()]
+        elif isinstance(vals, list):
+            lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals]
+        else:
+            raise ValueError(f'Unknown order book depth data type: {type(vals)}')
         lst = sorted(lst, key=itemgetter(0), reverse=reverse)
         return lst
 
@@ -156,6 +162,7 @@ class BaseDepthCacheManager:
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
         self._conn_key = None
         self._conv_type = conv_type
+        self._log = logging.getLogger(__name__)
 
     async def __aenter__(self):
         await asyncio.gather(
@@ -174,9 +181,7 @@ class BaseDepthCacheManager:
             try:
                 res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
             except Exception as e:
-
-                logging.warning(e)
-                pass
+                self._log.warning(e)
             else:
                 dc = await self._depth_event(res)
         return dc
@@ -380,6 +385,29 @@ class DepthCacheManager(BaseDepthCacheManager):
         return res
 
 
+class FuturesDepthCacheManager(BaseDepthCacheManager):
+    async def _process_depth_message(self, msg):
+        """Process a depth event message.
+
+        :param msg: Depth event message.
+        :return:
+
+        """
+        msg = msg.get('data')
+        return await super()._process_depth_message(msg)
+
+    def _apply_orders(self, msg):
+        self._depth_cache._bids = msg.get('b', [])
+        self._depth_cache._asks = msg.get('a', [])
+
+        # keeping update time
+        self._depth_cache.update_time = msg.get('E') or msg.get('lastUpdateId')
+
+    def _get_socket(self):
+        sock = self._bm.futures_depth_socket(self._symbol)
+        return sock
+
+
 class OptionsDepthCacheManager(BaseDepthCacheManager):
 
     def _get_socket(self):
@@ -426,6 +454,19 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
             limit=limit,
             conv_type=conv_type,
             ws_interval=ws_interval
+        )
+
+    def start_futures_depth_socket(
+            self, callback: Callable, symbol: str, refresh_interval=None, bm=None, limit=10, conv_type=float
+    ) -> str:
+        return self._start_depth_cache(
+            dcm_class=FuturesDepthCacheManager,
+            callback=callback,
+            symbol=symbol,
+            refresh_interval=refresh_interval,
+            bm=bm,
+            limit=limit,
+            conv_type=conv_type
         )
 
     def start_options_depth_socket(
