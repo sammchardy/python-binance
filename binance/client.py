@@ -2062,8 +2062,6 @@ class Client(BaseClient):
                 "data": "Normal"
             }
 
-        :raises: BinanceWithdrawException
-
         """
         return self._request_margin_api('get', 'account/status', True, data=params)
 
@@ -2133,8 +2131,6 @@ class Client(BaseClient):
                     "updateTime": 1547630471725
                 }
             }
-
-        :raises: BinanceWithdrawException
 
         """
         return self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
@@ -2236,8 +2232,6 @@ class Client(BaseClient):
                     }
                 ]
             }
-
-        :raises: BinanceWithdrawException
 
         """
         return self._request_margin_api('get', 'asset/dribblet', True, data=params)
@@ -2440,8 +2434,6 @@ class Client(BaseClient):
                 }
             ]
 
-        :raises: BinanceWithdrawException
-
         """
         return self._request_margin_api('get', 'asset/tradeFee', True, data=params)
 
@@ -2474,8 +2466,6 @@ class Client(BaseClient):
                         "withdrawStatus": true
                     }
             }
-
-        :raises: BinanceWithdrawException
 
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
@@ -2518,7 +2508,7 @@ class Client(BaseClient):
                 "id":"7213fea8e94b4a5593d507237e5a555b"
             }
 
-        :raises: BinanceRequestException, BinanceAPIException, BinanceWithdrawException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         # force a name for the withdrawal if one not set
@@ -7728,7 +7718,7 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/repay', signed=True, data=params)
 
     async def get_margin_interest_history(self, **params):
-        return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+        return await self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
 
     async def get_margin_force_liquidation_rec(self, **params):
         return await self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)

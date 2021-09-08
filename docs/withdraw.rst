@@ -8,11 +8,9 @@ Make sure you enable Withdrawal permissions for your API Key to use this call.
 
 You must have withdrawn to the address through the website and approved the withdrawal via email before you can withdraw using the API.
 
-Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithdrawException>`_ if the withdraw fails.
-
 .. code:: python
 
-    from binance.exceptions import BinanceAPIException, BinanceWithdrawException
+    from binance.exceptions import BinanceAPIException
     try:
         # name parameter will be set to the asset value by the client if not passed
         result = client.withdraw(
@@ -20,8 +18,6 @@ Raises a `BinanceWithdrawException <binance.html#binance.exceptions.BinanceWithd
             address='<eth_address>',
             amount=100)
     except BinanceAPIException as e:
-        print(e)
-    except BinanceWithdrawException as e:
         print(e)
     else:
         print("Success")
