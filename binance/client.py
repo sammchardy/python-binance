@@ -7069,13 +7069,19 @@ class AsyncClient(BaseClient):
 
         self = cls(api_key, api_secret, requests_params, tld, testnet, loop)
 
-        await self.ping()
+        try:
+            await self.ping()
 
-        # calculate timestamp offset between local and binance server
-        res = await self.get_server_time()
-        self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
+            # calculate timestamp offset between local and binance server
+            res = await self.get_server_time()
+            self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
 
-        return self
+            return self
+        except Exception:
+            # If ping throw an exception, the current self must be cleaned
+            # else, we can receive a "asyncio:Unclosed client session"
+            await self.close_connection()
+            raise
 
     def _init_session(self) -> aiohttp.ClientSession:
 
