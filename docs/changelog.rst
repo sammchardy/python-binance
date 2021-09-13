@@ -1,6 +1,178 @@
 Changelog
 =========
 
+v1.0.14 - 2021-09-08
+^^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- websocket reconnecting
+
+v1.0.13 - 2021-09-08
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Futures Depth Cache Manager
+- Futures kline websocket stream
+- Coin Futures User websocket stream
+- New Margin endpoints
+- Margin OCO order endpoints
+- Fiat endpoints
+- C2C endpoints
+- Account API permissions endpoint
+
+**Fixed**
+
+- changed `asset` to `coin` in withdraw endpoint
+
+
+v1.0.12 - 2021-06-03
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- coin futures batch order function
+
+**Fixed**
+
+- threaded websockets on python3.9
+- filter out None params in request kwargs
+- deconflict streams with same name on different websocket urls
+- reduce close timeout on websocket close to short time to reduce waiting
+
+
+v1.0.10 - 2021-05-13
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- futures multi-asset margin mode endpoints
+- optional symbol param to get_all_tickers
+
+**Fixed**
+
+- start_multiplex_socket remove lower case filter on stream names
+
+v1.0.9 - 2021-05-12
+^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- start_book_ticker_socket and start_multiplex_socket to call correct async function
+
+v1.0.8 - 2021-05-11
+^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- old style websocket and depth cache managers as option without interacting with asyncio
+
+**Fixed**
+
+- fixed issue with get_historical_klines in Client
+- remove print debug line
+
+v1.0.7
+^^^^^^
+
+**Fixed**
+
+- remove version param from get_sub_account_assets
+
+v1.0.6
+^^^^^^
+
+**Fixed**
+
+- fix time for authenticated stream keepalive
+
+v1.0.5
+^^^^^^
+
+**Fixed**
+
+- Restored access to last response on client
+
+v1.0.4
+^^^^^^
+
+**Added**
+
+- Futures Testnet support
+- Kline type for fetching historical klines
+
+**Fixed**
+
+- Spot Testnet websocket URL
+
+v1.0.3
+^^^^^^
+
+**Added**
+
+- Spot Testnet support
+
+v1.0.2
+^^^^^^
+
+**Added**
+
+- start of typing to client and websockets
+
+**Fixed**
+
+- end_str, limit, spot params in kline fetching
+- drop None values in params passed
+
+**Updated**
+
+- more examples in docs
+
+v1.0.1
+^^^^^^
+
+**Fixed**
+
+- restored params for Client and AsyncClient classes
+
+v1.0.0
+^^^^^^
+
+**Added**
+
+- Async support for all REST endpoints
+- USDⓈ-M and Coin-M Futures websocket streams
+- Websockets use same tld as Client
+- convert type option for DepthCache
+
+**Breaking Changes**
+
+- Supports only py3.6+
+- All wapi calls changed to sapi
+- Websockets have changed to use Asynchronous context managers
+
+**Fixed**
+
+- get_historical_klines params
+
+v0.7.11
+^^^^^^^
+
+**Added**
+- Vanilla Options REST endpoints
+- Vanilla Options websockets
+- Futures order type enums
+
+**Updated**
+
+- websocket keep-alive functions for different socket types
+- dependencies
+
+**Fixed**
+
+- change to User-Agent to avoid connection issues
+
 v0.7.5.dev
 ^^^^^^^^^^
 **Changed**

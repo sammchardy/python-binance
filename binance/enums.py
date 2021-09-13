@@ -1,4 +1,4 @@
-# coding=utf-8
+from enum import Enum
 
 SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -37,7 +37,6 @@ ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
 ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
 ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
 
-#Futures order enums update
 FUTURE_ORDER_TYPE_LIMIT = 'LIMIT'
 FUTURE_ORDER_TYPE_MARKET = 'MARKET'
 FUTURE_ORDER_TYPE_STOP = 'STOP'
@@ -58,3 +57,19 @@ ORDER_RESP_TYPE_FULL = 'FULL'
 WEBSOCKET_DEPTH_5 = '5'
 WEBSOCKET_DEPTH_10 = '10'
 WEBSOCKET_DEPTH_20 = '20'
+
+
+class HistoricalKlinesType(Enum):
+    SPOT = 1
+    FUTURES = 2
+
+
+class FuturesType(Enum):
+    USD_M = 1
+    COIN_M = 2
+
+
+class ContractType(Enum):
+    PERPETUAL = "perpetual"
+    CURRENT_QUARTER = "current_quarter"
+    NEXT_QUARTER = "next_quarter"

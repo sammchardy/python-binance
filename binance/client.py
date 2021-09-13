@@ -1,30 +1,44 @@
-# coding=utf-8
+from typing import Dict, Optional, List, Tuple
 
+import aiohttp
+import asyncio
 import hashlib
 import hmac
 import requests
 import time
 from operator import itemgetter
-from .helpers import date_to_milliseconds, interval_to_milliseconds
-from .exceptions import BinanceAPIException, BinanceRequestException, BinanceWithdrawException
+from urllib.parse import urlencode
 
 
-class Client(object):
+from .helpers import interval_to_milliseconds, convert_ts_str
+from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
+from .enums import HistoricalKlinesType
+
+
+class BaseClient:
 
     API_URL = 'https://api.binance.{}/api'
-    WITHDRAW_API_URL = 'https://api.binance.{}/wapi'
+    API_TESTNET_URL = 'https://testnet.binance.vision/api'
     MARGIN_API_URL = 'https://api.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
+    FUTURES_TESTNET_URL = 'https://testnet.binancefuture.com/fapi'
     FUTURES_DATA_URL = 'https://fapi.binance.{}/futures/data'
+    FUTURES_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
+    FUTURES_COIN_TESTNET_URL = 'https://testnet.binancefuture.com/dapi'
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
+    FUTURES_COIN_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
+    OPTIONS_URL = 'https://vapi.binance.{}/vapi'
+    OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
-    WITHDRAW_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
+    OPTIONS_API_VERSION = 'v1'
+
+    REQUEST_TIMEOUT: float = 10
 
     SYMBOL_TYPE_SPOT = 'SPOT'
 
@@ -63,6 +77,14 @@ class Client(object):
     ORDER_TYPE_TAKE_PROFIT_LIMIT = 'TAKE_PROFIT_LIMIT'
     ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
 
+    FUTURE_ORDER_TYPE_LIMIT = 'LIMIT'
+    FUTURE_ORDER_TYPE_MARKET = 'MARKET'
+    FUTURE_ORDER_TYPE_STOP = 'STOP'
+    FUTURE_ORDER_TYPE_STOP_MARKET = 'STOP_MARKET'
+    FUTURE_ORDER_TYPE_TAKE_PROFIT = 'TAKE_PROFIT'
+    FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET = 'TAKE_PROFIT_MARKET'
+    FUTURE_ORDER_TYPE_LIMIT_MAKER = 'LIMIT_MAKER'
+
     TIME_IN_FORCE_GTC = 'GTC'  # Good till cancelled
     TIME_IN_FORCE_IOC = 'IOC'  # Immediate or cancel
     TIME_IN_FORCE_FOK = 'FOK'  # Fill or kill
@@ -100,7 +122,11 @@ class Client(object):
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
-    def __init__(self, api_key=None, api_secret=None, requests_params=None, tld='com'):
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False
+    ):
         """Binance API Client constructor
 
         :param api_key: Api Key
@@ -109,96 +135,120 @@ class Client(object):
         :type api_secret: str.
         :param requests_params: optional - Dictionary of requests params to use for all calls
         :type requests_params: dict.
+        :param testnet: Use testnet environment - only available for vanilla options at the moment
+        :type testnet: bool
 
         """
 
+        self.tld = tld
         self.API_URL = self.API_URL.format(tld)
-        self.WITHDRAW_API_URL = self.WITHDRAW_API_URL.format(tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
         self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
         self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
         self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
+        self.OPTIONS_URL = self.OPTIONS_URL.format(tld)
+        self.OPTIONS_TESTNET_URL = self.OPTIONS_TESTNET_URL.format(tld)
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
+        self.testnet = testnet
         self.timestamp_offset = 0
 
-        # init DNS and SSL cert
-        self.ping()
-        # calculate timestamp offset between local and binance server
-        res = self.get_server_time()
-        self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
+    def _get_headers(self) -> Dict:
+        headers = {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',  # noqa
+        }
+        if self.API_KEY:
+            assert self.API_KEY
+            headers['X-MBX-APIKEY'] = self.API_KEY
+        return headers
 
     def _init_session(self):
+        raise NotImplementedError
 
-        session = requests.session()
-        session.headers.update({'Accept': 'application/json',
-                                'User-Agent': 'binance/python',
-                                'X-MBX-APIKEY': self.API_KEY})
-        return session
-
-    def _create_api_uri(self, path, signed=True, version=PUBLIC_API_VERSION):
+    def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
+        url = self.API_URL
+        if self.testnet:
+            url = self.API_TESTNET_URL
         v = self.PRIVATE_API_VERSION if signed else version
-        return self.API_URL + '/' + v + '/' + path
+        return url + '/' + v + '/' + path
 
-    def _create_withdraw_api_uri(self, path):
-        return self.WITHDRAW_API_URL + '/' + self.WITHDRAW_API_VERSION + '/' + path
+    def _create_margin_api_uri(self, path: str, version: str = MARGIN_API_VERSION) -> str:
+        return self.MARGIN_API_URL + '/' + version + '/' + path
 
-    def _create_margin_api_uri(self, path):
-        return self.MARGIN_API_URL + '/' + self.MARGIN_API_VERSION + '/' + path
-
-    def _create_website_uri(self, path):
+    def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
 
-    def _create_futures_api_uri(self, path):
-        return self.FUTURES_URL + '/' + self.FUTURES_API_VERSION + '/' + path
+    def _create_futures_api_uri(self, path: str) -> str:
+        url = self.FUTURES_URL
+        if self.testnet:
+            url = self.FUTURES_TESTNET_URL
+        return url + '/' + self.FUTURES_API_VERSION + '/' + path
 
-    def _create_futures_data_api_uri(self, path):
-        return self.FUTURES_DATA_URL + '/' + path
+    def _create_futures_data_api_uri(self, path: str) -> str:
+        url = self.FUTURES_DATA_URL
+        if self.testnet:
+            url = self.FUTURES_DATA_TESTNET_URL
+        return url + '/' + path
 
-    def _create_futures_coin_api_url(self, path, version=1):
+    def _create_futures_coin_api_url(self, path: str, version=1) -> str:
+        url = self.FUTURES_COIN_URL
+        if self.testnet:
+            url = self.FUTURES_COIN_TESTNET_URL
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
-        return self.FUTURES_COIN_URL + "/" + options[version] + "/" + path
+        return url + "/" + options[version] + "/" + path
 
-    def _create_futures_coin_data_api_url(self, path, version=1):
-        return self.FUTURES_COIN_DATA_URL + "/" + path
+    def _create_futures_coin_data_api_url(self, path: str, version=1) -> str:
+        url = self.FUTURES_COIN_DATA_URL
+        if self.testnet:
+            url = self.FUTURES_COIN_DATA_TESTNET_URL
+        return url + "/" + path
 
-    def _generate_signature(self, data):
+    def _create_options_api_uri(self, path: str) -> str:
+        url = self.OPTIONS_URL
+        if self.testnet:
+            url = self.OPTIONS_TESTNET_URL
+        return url + '/' + self.OPTIONS_API_VERSION + '/' + path
+
+    def _generate_signature(self, data: Dict) -> str:
 
         ordered_data = self._order_params(data)
-        query_string = '&'.join(["{}={}".format(d[0], d[1]) for d in ordered_data])
+        query_string = '&'.join([f"{d[0]}={d[1]}" for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
 
-    def _order_params(self, data):
+    @staticmethod
+    def _order_params(data: Dict) -> List[Tuple[str, str]]:
         """Convert params to list with signature as last element
 
         :param data:
         :return:
 
         """
+        data = dict(filter(lambda el: el[1] is not None, data.items()))
         has_signature = False
         params = []
         for key, value in data.items():
             if key == 'signature':
                 has_signature = True
             else:
-                params.append((key, value))
+                params.append((key, str(value)))
         # sort parameters by key
         params.sort(key=itemgetter(0))
         if has_signature:
             params.append(('signature', data['signature']))
         return params
 
-    def _request(self, method, uri, signed, force_params=False, **kwargs):
+    def _get_request_kwargs(self, method, signed: bool, force_params: bool = False, **kwargs) -> Dict:
 
         # set default requests timeout
-        kwargs['timeout'] = 10
+        kwargs['timeout'] = self.REQUEST_TIMEOUT
 
         # add our global requests params
         if self._requests_params:
@@ -221,7 +271,7 @@ class Client(object):
 
         # sort get and post params to match signature order
         if data:
-            # sort post params
+            # sort post params and remove any arguments with values of None
             kwargs['data'] = self._order_params(kwargs['data'])
             # Remove any arguments with values of None.
             null_args = [i for i, (key, value) in enumerate(kwargs['data']) if value is None]
@@ -233,76 +283,105 @@ class Client(object):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
 
+        return kwargs
+
+
+class Client(BaseClient):
+
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False
+    ):
+
+        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+
+        # init DNS and SSL cert
+        self.ping()
+
+    def _init_session(self) -> requests.Session:
+
+        headers = self._get_headers()
+
+        session = requests.session()
+        session.headers.update(headers)
+        return session
+
+    def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs):
+
+        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
+
         self.response = getattr(self.session, method)(uri, **kwargs)
-        return self._handle_response()
+        return self._handle_response(self.response)
 
-    def _request_api(self, method, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
-        uri = self._create_api_uri(path, signed, version)
-
-        return self._request(method, uri, signed, **kwargs)
-
-    def _request_withdraw_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_withdraw_api_uri(path)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _request_margin_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_margin_api_uri(path)
-
-        return self._request(method, uri, signed, **kwargs)
-
-    def _request_website(self, method, path, signed=False, **kwargs):
-        uri = self._create_website_uri(path)
-
-        return self._request(method, uri, signed, **kwargs)
-
-    def _request_futures_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_futures_api_uri(path)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _request_futures_data_api(self, method, path, signed=False, **kwargs):
-        uri = self._create_futures_data_api_uri(path)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs):
-        uri = self._create_futures_coin_api_url(path, version=version)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs):
-        uri = self._create_futures_coin_data_api_url(path, version=version)
-
-        return self._request(method, uri, signed, True, **kwargs)
-
-    def _handle_response(self):
+    @staticmethod
+    def _handle_response(response: requests.Response):
         """Internal helper for handling API responses from the Binance server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
-        if not (200 <= self.response.status_code < 300):
-            raise BinanceAPIException(self.response)
+        if not (200 <= response.status_code < 300):
+            raise BinanceAPIException(response, response.status_code, response.text)
         try:
-            return self.response.json()
+            return response.json()
         except ValueError:
-            raise BinanceRequestException('Invalid Response: %s' % self.response.text)
+            raise BinanceRequestException('Invalid Response: %s' % response.text)
 
-    def _get(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _request_api(
+        self, method, path: str, signed: bool = False, version=BaseClient.PUBLIC_API_VERSION, **kwargs
+    ):
+        uri = self._create_api_uri(path, signed, version)
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_futures_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_futures_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_futures_data_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_futures_coin_api_url(path, version=version)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_futures_coin_data_api_url(path, version=version)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_options_api_uri(path)
+
+        return self._request(method, uri, signed, True, **kwargs)
+
+    def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_margin_api_uri(path)
+
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_website_uri(path)
+        return self._request(method, uri, signed, **kwargs)
+
+    def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
         return self._request_api('get', path, signed, version, **kwargs)
 
-    def _post(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('post', path, signed, version, **kwargs)
 
-    def _put(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('put', path, signed, version, **kwargs)
 
-    def _delete(self, path, signed=False, version=PUBLIC_API_VERSION, **kwargs):
+    def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
         return self._request_api('delete', path, signed, version, **kwargs)
 
     # Exchange Endpoints
 
-    def get_products(self):
+    def get_products(self) -> Dict:
         """Return list of products currently listed on Binance
 
         Use get_exchange_info() call instead
@@ -315,7 +394,7 @@ class Client(object):
         products = self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
         return products
 
-    def get_exchange_info(self):
+    def get_exchange_info(self) -> Dict:
         """Return rate limits and list of symbols
 
         :returns: list - List of product dictionaries
@@ -379,7 +458,7 @@ class Client(object):
 
         return self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
 
-    def get_symbol_info(self, symbol):
+    def get_symbol_info(self, symbol) -> Optional[Dict]:
         """Return information about a symbol
 
         :param symbol: required e.g BNBBTC
@@ -420,7 +499,7 @@ class Client(object):
 
         """
 
-        res = self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
+        res = self.get_exchange_info()
 
         for item in res['symbols']:
             if item['symbol'] == symbol.upper():
@@ -430,10 +509,10 @@ class Client(object):
 
     # General Endpoints
 
-    def ping(self):
+    def ping(self) -> Dict:
         """Test connectivity to the Rest API.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-connectivity
+        https://binance-docs.github.io/apidocs/spot/en/#test-connectivity
 
         :returns: Empty array
 
@@ -446,10 +525,10 @@ class Client(object):
         """
         return self._get('ping', version=self.PRIVATE_API_VERSION)
 
-    def get_server_time(self):
+    def get_server_time(self) -> Dict:
         """Test connectivity to the Rest API and get the current server time.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#check-server-time
+        https://binance-docs.github.io/apidocs/spot/en/#check-server-time
 
         :returns: Current server time
 
@@ -466,10 +545,10 @@ class Client(object):
 
     # Market Data Endpoints
 
-    def get_all_tickers(self):
+    def get_all_tickers(self) -> List[Dict[str, str]]:
         """Latest price for all symbols.
 
-        https://www.binance.com/restapipub.html#symbols-price-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
         :returns: List of market tickers
 
@@ -491,10 +570,13 @@ class Client(object):
         """
         return self._get('ticker/price', version=self.PRIVATE_API_VERSION)
 
-    def get_orderbook_tickers(self):
+    def get_orderbook_tickers(self) -> Dict:
         """Best price/qty on the order book for all symbols.
 
-        https://www.binance.com/restapipub.html#symbols-order-book-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
+
+        :param symbol: optional
+        :type symbol: str
 
         :returns: List of order book market entries
 
@@ -522,10 +604,10 @@ class Client(object):
         """
         return self._get('ticker/bookTicker', version=self.PRIVATE_API_VERSION)
 
-    def get_order_book(self, **params):
+    def get_order_book(self, **params) -> Dict:
         """Get the Order Book for the market
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#order-book
+        https://binance-docs.github.io/apidocs/spot/en/#order-book
 
         :param symbol: required
         :type symbol: str
@@ -559,14 +641,14 @@ class Client(object):
         """
         return self._get('depth', data=params, version=self.PRIVATE_API_VERSION)
 
-    def get_recent_trades(self, **params):
+    def get_recent_trades(self, **params) -> Dict:
         """Get recent trades (up to last 500).
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://binance-docs.github.io/apidocs/spot/en/#recent-trades-list
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -589,14 +671,14 @@ class Client(object):
         """
         return self._get('trades', data=params)
 
-    def get_historical_trades(self, **params):
+    def get_historical_trades(self, **params) -> Dict:
         """Get older trades.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#recent-trades-list
+        https://binance-docs.github.io/apidocs/spot/en/#old-trade-lookup
 
         :param symbol: required
         :type symbol: str
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
         :param fromId:  TradeId to fetch from. Default gets most recent trades.
         :type fromId: str
@@ -621,11 +703,11 @@ class Client(object):
         """
         return self._get('historicalTrades', data=params, version=self.PRIVATE_API_VERSION)
 
-    def get_aggregate_trades(self, **params):
+    def get_aggregate_trades(self, **params) -> Dict:
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list
+        https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -635,7 +717,7 @@ class Client(object):
         :type startTime: int
         :param endTime: Timestamp in ms to get aggregate trades until INCLUSIVE.
         :type endTime: int
-        :param limit:  Default 500; max 500.
+        :param limit:  Default 500; max 1000.
         :type limit: int
 
         :returns: API response
@@ -660,7 +742,7 @@ class Client(object):
         """
         return self._get('aggTrades', data=params, version=self.PRIVATE_API_VERSION)
 
-    def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+    def aggregate_trade_iter(self, symbol: str, start_str=None, last_id=None):
         """Iterate over aggregate trade data from (start_time or last_id) to
         the end of the history so far.
 
@@ -684,7 +766,7 @@ class Client(object):
         return the first trade occurring later than this time.
         :type start_str: str|int
         :param last_id: aggregate trade ID of the last known aggregate trade.
-        Not a regular trade ID. See https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#compressedaggregate-trades-list.
+        Not a regular trade ID. See https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
 
         :returns: an iterator of JSON objects, one per trade. The format of
         each object is identical to Client.aggregate_trades().
@@ -705,10 +787,7 @@ class Client(object):
                 # The difference between startTime and endTime should be less
                 # or equal than an hour and the result set should contain at
                 # least one trade.
-                if type(start_str) == int:
-                    start_ts = start_str
-                else:
-                    start_ts = date_to_milliseconds(start_str)
+                start_ts = convert_ts_str(start_str)
                 # If the resulting set is empty (i.e. no trades in that interval)
                 # then we just move forward hour by hour until we find at least one
                 # trade or reach present moment
@@ -746,16 +825,16 @@ class Client(object):
                 yield t
             last_id = trades[-1][self.AGG_ID]
 
-    def get_klines(self, **params):
+    def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#klinecandlestick-data
+        https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
 
         :param symbol: required
         :type symbol: str
         :param interval: -
         :type interval: str
-        :param limit: - Default 500; max 500.
+        :param limit: - Default 500; max 1000.
         :type limit: int
         :param startTime:
         :type startTime: int
@@ -788,29 +867,73 @@ class Client(object):
         """
         return self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
 
-    def _get_earliest_valid_timestamp(self, symbol, interval):
+    def _klines(self, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT, **params) -> Dict:
+        """Get klines of spot (get_klines) or futures (futures_klines) endpoints.
+
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
+
+        :return: klines, see get_klines
+
+        """
+        if 'endTime' in params and not params['endTime']:
+            del params['endTime']
+
+        if HistoricalKlinesType.SPOT == klines_type:
+            return self.get_klines(**params)
+        elif HistoricalKlinesType.FUTURES == klines_type:
+            return self.futures_klines(**params)
+        else:
+            raise NotImplementedException(klines_type)
+
+    def _get_earliest_valid_timestamp(self, symbol, interval, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get earliest valid open timestamp from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: first valid timestamp
 
         """
-        kline = self.get_klines(
+        kline = self._klines(
+            klines_type=klines_type,
             symbol=symbol,
             interval=interval,
             limit=1,
             startTime=0,
-            endTime=None
+            endTime=int(time.time() * 1000)
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None,
-                              limit=500):
+    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                              klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
+
+        :return: list of OHLCV values
+
+        """
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
+
+    def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                           klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        """Get Historical Klines from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
@@ -823,9 +946,13 @@ class Client(object):
         :param start_str: Start date string in UTC format or timestamp in milliseconds
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
-        :type end_str: str|int
+        :type end_str: None|str|int
         :param limit: Default 500; max 1000.
         :type limit: int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: list of OHLCV values
 
@@ -833,34 +960,23 @@ class Client(object):
         # init our list
         output_data = []
 
-        # setup the max limit
-        limit = limit
-
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
-        end_ts = None
-        if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+        end_ts = convert_ts_str(end_str)
 
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            temp_data = self.get_klines(
+            temp_data = self._klines(
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -893,8 +1009,30 @@ class Client(object):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
-        """Get Historical Klines from Binance
+    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                        klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        """Get Historical Klines generator from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
+
+        :return: generator of OHLCV values
+
+        """
+
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
+
+    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        """Get Historical Klines generator from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
 
@@ -908,11 +1046,12 @@ class Client(object):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param klines_type: Historical klines type: SPOT or FUTURES
+        :type klines_type: HistoricalKlinesType
 
         :return: generator of OHLCV values
 
         """
-
         # setup the max limit
         limit = 500
 
@@ -920,27 +1059,20 @@ class Client(object):
         timeframe = interval_to_milliseconds(interval)
 
         # convert our date strings to milliseconds
-        if type(start_str) == int:
-            start_ts = start_str
-        else:
-            start_ts = date_to_milliseconds(start_str)
+        start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval)
+        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
         start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
-        end_ts = None
-        if end_str:
-            if type(end_str) == int:
-                end_ts = end_str
-            else:
-                end_ts = date_to_milliseconds(end_str)
+        end_ts = convert_ts_str(end_str)
 
         idx = 0
         while True:
             # fetch the klines from start_ts up to max 500 entries or the end_ts if set
-            output_data = self.get_klines(
+            output_data = self._klines(
+                klines_type=klines_type,
                 symbol=symbol,
                 interval=interval,
                 limit=limit,
@@ -975,7 +1107,7 @@ class Client(object):
     def get_avg_price(self, **params):
         """Current average price for a symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-average-price
+        https://binance-docs.github.io/apidocs/spot/en/#current-average-price
 
         :param symbol:
         :type symbol: str
@@ -988,13 +1120,13 @@ class Client(object):
                 "mins": 5,
                 "price": "9.35751834"
             }
-"""
+        """
         return self._get('avgPrice', data=params, version=self.PRIVATE_API_VERSION)
 
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1055,7 +1187,7 @@ class Client(object):
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#24hr-ticker-price-change-statistics
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
 
         :param symbol:
         :type symbol: str
@@ -1092,7 +1224,7 @@ class Client(object):
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#symbol-order-book-ticker
+        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
 
         :param symbol:
         :type symbol: str
@@ -1142,7 +1274,7 @@ class Client(object):
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-order--trade
+        https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1254,7 +1386,7 @@ class Client(object):
         """
         return self._post('order', True, data=params)
 
-    def order_limit(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -1291,7 +1423,7 @@ class Client(object):
         })
         return self.create_order(**params)
 
-    def order_limit_buy(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
@@ -1327,7 +1459,7 @@ class Client(object):
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
-    def order_limit_sell(self, timeInForce=TIME_IN_FORCE_GTC, **params):
+    def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
         :param symbol: required
@@ -1451,7 +1583,7 @@ class Client(object):
     def create_oco_order(self, **params):
         """Send in a new OCO order
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#new-oco-trade
+        https://binance-docs.github.io/apidocs/spot/en/#new-oco-trade
 
         :param symbol: required
         :type symbol: str
@@ -1597,7 +1729,7 @@ class Client(object):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#test-new-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1635,7 +1767,7 @@ class Client(object):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#query-order-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1674,13 +1806,17 @@ class Client(object):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#all-orders-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
         :param orderId: The unique order id
         :type orderId: int
-        :param limit: Default 500; max 500.
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1715,7 +1851,7 @@ class Client(object):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#cancel-order-trade
+        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1747,7 +1883,7 @@ class Client(object):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#current-open-orders-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -1785,7 +1921,7 @@ class Client(object):
     def get_account(self, **params):
         """Get current account information.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1824,8 +1960,6 @@ class Client(object):
     def get_asset_balance(self, asset, **params):
         """Get current asset balance.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-information-user_data
-
         :param asset: required
         :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -1855,11 +1989,15 @@ class Client(object):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#account-trade-list-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
-        :param limit: Default 500; max 500.
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: Default 500; max 1000.
         :type limit: int
         :param fromId: TradeId to fetch from. Default gets most recent trades.
         :type fromId: int
@@ -1892,7 +2030,7 @@ class Client(object):
     def get_system_status(self):
         """Get system status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#system-status-system
+        https://binance-docs.github.io/apidocs/spot/en/#system-status-sapi-system
 
         :returns: API response
 
@@ -1906,12 +2044,12 @@ class Client(object):
         :raises: BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'systemStatus.html')
+        return self._request_margin_api('get', 'system/status')
 
     def get_account_status(self, **params):
         """Get account status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-status-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -1921,26 +2059,120 @@ class Client(object):
         .. code-block:: python
 
             {
-                "msg": "Order failed:Low Order fill rate! Will be reactivated after 5 minutes.",
-                "success": true,
-                "objs": [
-                    "5"
-                ]
+                "data": "Normal"
             }
 
-        :raises: BinanceWithdrawException
+        """
+        return self._request_margin_api('get', 'account/status', True, data=params)
+
+    def get_account_api_trading_status(self, **params):
+        """Fetch account api trading status detail.
+
+        https://binance-docs.github.io/apidocs/spot/en/#account-api-trading-status-sapi-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "data": {          // API trading status detail
+                    "isLocked": false,   // API trading function is locked or not
+                    "plannedRecoverTime": 0,  // If API trading function is locked, this is the planned recover time
+                    "triggerCondition": {
+                            "GCR": 150,  // Number of GTC orders
+                            "IFER": 150, // Number of FOK/IOC orders
+                            "UFR": 300   // Number of orders
+                    },
+                    "indicators": {  // The indicators updated every 30 seconds
+                         "BTCUSDT": [  // The symbol
+                            {
+                                "i": "UFR",  // Unfilled Ratio (UFR)
+                                "c": 20,     // Count of all orders
+                                "v": 0.05,   // Current UFR value
+                                "t": 0.995   // Trigger UFR value
+                            },
+                            {
+                                "i": "IFER", // IOC/FOK Expiration Ratio (IFER)
+                                "c": 20,     // Count of FOK/IOC orders
+                                "v": 0.99,   // Current IFER value
+                                "t": 0.99    // Trigger IFER value
+                            },
+                            {
+                                "i": "GCR",  // GTC Cancellation Ratio (GCR)
+                                "c": 20,     // Count of GTC orders
+                                "v": 0.99,   // Current GCR value
+                                "t": 0.99    // Trigger GCR value
+                            }
+                        ],
+                        "ETHUSDT": [
+                            {
+                                "i": "UFR",
+                                "c": 20,
+                                "v": 0.05,
+                                "t": 0.995
+                            },
+                            {
+                                "i": "IFER",
+                                "c": 20,
+                                "v": 0.99,
+                                "t": 0.99
+                            },
+                            {
+                                "i": "GCR",
+                                "c": 20,
+                                "v": 0.99,
+                                "t": 0.99
+                            }
+                        ]
+                    },
+                    "updateTime": 1547630471725
+                }
+            }
 
         """
-        res = self._request_withdraw_api('get', 'accountStatus.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
+
+    def get_account_api_permissions(self, **params):
+        """Fetch api key permissions.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-api-key-permission-user_data
+
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+               "ipRestrict": false,
+               "createTime": 1623840271000,
+               "enableWithdrawals": false,   // This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to enable withdrawals
+               "enableInternalTransfer": true,  // This option authorizes this key to transfer funds between your master account and your sub account instantly
+               "permitsUniversalTransfer": true,  // Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
+               "enableVanillaOptions": false,  //  Authorizes this key to Vanilla options trading
+               "enableReading": true,
+               "enableFutures": false,  //  API Key created before your futures account opened does not support futures API service
+               "enableMargin": false,   //  This option can be adjusted after the Cross Margin account transfer is completed
+               "enableSpotAndMarginTrading": false, // Spot and margin trading
+               "tradingAuthorityExpirationTime": 1628985600000  // Expiration time for spot and margin trading permission
+            }
+
+        """
+        return self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
 
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
-        https://binance-docs.github.io/apidocs/spot/en/#dustlog-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#dustlog-sapi-user_data
 
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -1949,73 +2181,60 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success": true,
-                "results": {
-                    "total": 2,   //Total counts of exchange
-                    "rows": [
-                        {
-                            "transfered_total": "0.00132256", # Total transfered BNB amount for this exchange.
-                            "service_charge_total": "0.00002699",   # Total service charge amount for this exchange.
-                            "tran_id": 4359321,
-                            "logs": [           # Details of  this exchange.
-                                {
-                                    "tranId": 4359321,
-                                    "serviceChargeAmount": "0.000009",
-                                    "uid": "10000015",
-                                    "amount": "0.0009",
-                                    "operateTime": "2018-05-03 17:07:04",
-                                    "transferedAmount": "0.000441",
-                                    "fromAsset": "USDT"
-                                },
-                                {
-                                    "tranId": 4359321,
-                                    "serviceChargeAmount": "0.00001799",
-                                    "uid": "10000015",
-                                    "amount": "0.0009",
-                                    "operateTime": "2018-05-03 17:07:04",
-                                    "transferedAmount": "0.00088156",
-                                    "fromAsset": "ETH"
-                                }
-                            ],
-                            "operate_time": "2018-05-03 17:07:04" //The time of this exchange.
-                        },
-                        {
-                            "transfered_total": "0.00058795",
-                            "service_charge_total": "0.000012",
-                            "tran_id": 4357015,
-                            "logs": [       // Details of  this exchange.
-                                {
-                                    "tranId": 4357015,
-                                    "serviceChargeAmount": "0.00001",
-                                    "uid": "10000015",
-                                    "amount": "0.001",
-                                    "operateTime": "2018-05-02 13:52:24",
-                                    "transferedAmount": "0.00049",
-                                    "fromAsset": "USDT"
-                                },
-                                {
-                                    "tranId": 4357015,
-                                    "serviceChargeAmount": "0.000002",
-                                    "uid": "10000015",
-                                    "amount": "0.0001",
-                                    "operateTime": "2018-05-02 13:51:11",
-                                    "transferedAmount": "0.00009795",
-                                    "fromAsset": "ETH"
-                                }
-                            ],
-                            "operate_time": "2018-05-02 13:51:11"
-                        }
-                    ]
-                }
+                "total": 8,   //Total counts of exchange
+                "userAssetDribblets": [
+                    {
+                        "totalTransferedAmount": "0.00132256",   // Total transfered BNB amount for this exchange.
+                        "totalServiceChargeAmount": "0.00002699",    //Total service charge amount for this exchange.
+                        "transId": 45178372831,
+                        "userAssetDribbletDetails": [           //Details of  this exchange.
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.000009",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.000441",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.00001799",
+                                "amount": "0.0009",
+                                "operateTime": "2018-05-03 17:07:04",
+                                "transferedAmount": "0.00088156",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    },
+                    {
+                        "operateTime":1616203180000,
+                        "totalTransferedAmount": "0.00058795",
+                        "totalServiceChargeAmount": "0.000012",
+                        "transId": 4357015,
+                        "userAssetDribbletDetails": [
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.00001"
+                                "amount": "0.001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00049",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.000002"
+                                "amount": "0.0001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00009795",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    }
+                ]
             }
 
-        :raises: BinanceWithdrawException
-
         """
-        res = self._request_withdraw_api('get', 'userAssetDribbletLog.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/dribblet', True, data=params)
 
     def transfer_dust(self, **params):
         """Convert dust assets to BNB.
@@ -2191,7 +2410,7 @@ class Client(object):
     def get_trade_fee(self, **params):
         """Get trade fee.
 
-        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-sapi-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -2202,34 +2421,29 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "tradeFee": [
-                    {
-                        "symbol": "ADABNB",
-                        "maker": 0.9000,
-                        "taker": 1.0000
-                    }, {
-                        "symbol": "BNBBTC",
-                        "maker": 0.3000,
-                        "taker": 0.3000
-                    }
-                ],
-                "success": true
-            }
-
-        :raises: BinanceWithdrawException
+            [
+                {
+                    "symbol": "ADABNB",
+                    "makerCommission": "0.001",
+                    "takerCommission": "0.001"
+                },
+                {
+                    "symbol": "BNBBTC",
+                    "makerCommission": "0.001",
+                    "takerCommission": "0.001"
+                }
+            ]
 
         """
-        res = self._request_withdraw_api('get', 'tradeFee.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/tradeFee', True, data=params)
 
     def get_asset_details(self, **params):
         """Fetch details on assets.
 
-        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-user_data
+        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-sapi-user_data
 
+        :param asset: optional
+        :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2238,13 +2452,11 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success": true,
-                "assetDetail": {
                     "CTR": {
                         "minWithdrawAmount": "70.00000000", //min withdraw amount
-                        "depositStatus": false,//deposit status
+                        "depositStatus": false,//deposit status (false if ALL of networks' are false)
                         "withdrawFee": 35, // withdraw fee
-                        "withdrawStatus": true, //withdraw status
+                        "withdrawStatus": true, //withdraw status (false if ALL of networks' are false)
                         "depositTip": "Delisted, Deposit Suspended" //reason
                     },
                     "SKY": {
@@ -2253,36 +2465,36 @@ class Client(object):
                         "withdrawFee": 0.01,
                         "withdrawStatus": true
                     }
-                }
             }
 
-        :raises: BinanceWithdrawException
-
         """
-        res = self._request_withdraw_api('get', 'assetDetail.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
     # Withdraw Endpoints
 
     def withdraw(self, **params):
         """Submit a withdraw request.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-sapi
 
         Assumptions:
 
         - You must have Withdraw permissions enabled on your API key
         - You must have withdrawn to the address specified through the website and approved the transaction via email
 
-        :param asset: required
-        :type asset: str
-        :type address: required
+        :param coin: required
+        :type coin: str
+        :param withdrawOrderId: optional - client id for withdraw
+        :type withdrawOrderId: str
+        :param network: optional
+        :type network: str
+        :param address: optional
         :type address: str
         :type addressTag: optional - Secondary address identifier for coins like XRP,XMR etc.
         :param amount: required
         :type amount: decimal
+        :param transactionFeeFlag: required - When making internal transfer, true for returning the fee to the destination account; false for returning the fee back to the departure account. Default false.
+        :type transactionFeeFlag: bool
         :param name: optional - Description of the address, default asset value passed will be used
         :type name: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -2293,35 +2505,34 @@ class Client(object):
         .. code-block:: python
 
             {
-                "msg": "success",
-                "success": true,
                 "id":"7213fea8e94b4a5593d507237e5a555b"
             }
 
-        :raises: BinanceRequestException, BinanceAPIException, BinanceWithdrawException
+        :raises: BinanceRequestException, BinanceAPIException
 
         """
         # force a name for the withdrawal if one not set
-        if 'asset' in params and 'name' not in params:
-            params['name'] = params['asset']
-        res = self._request_withdraw_api('post', 'withdraw.html', True, data=params)
-        if not res.get('success'):
-            raise BinanceWithdrawException(res['msg'])
-        return res
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
+        return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
     def get_deposit_history(self, **params):
         """Fetch deposit history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#deposit-history-supporting-network-user_data
 
-        :param asset: optional
-        :type asset: str
-        :type status: 0(0:pending,1:success) optional
+        :param coin: optional
+        :type coin: str
+        :type status: optional - 0(0:pending,1:success) optional
         :type status: int
         :param startTime: optional
         :type startTime: long
         :param endTime: optional
         :type endTime: long
+        :param offset: optional - default:0
+        :type offset: long
+        :param limit: optional
+        :type limit: long
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2329,36 +2540,55 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "depositList": [
-                    {
-                        "insertTime": 1508198532000,
-                        "amount": 0.04670582,
-                        "asset": "ETH",
-                        "status": 1
-                    }
-                ],
-                "success": true
-            }
+            [
+                {
+                    "amount":"0.00999800",
+                    "coin":"PAXG",
+                    "network":"ETH",
+                    "status":1,
+                    "address":"0x788cabe9236ce061e5a892e1a59395a81fc8d62c",
+                    "addressTag":"",
+                    "txId":"0xaad4654a3234aa6118af9b4b335f5ae81c360b2394721c019b5d1e75328b09f3",
+                    "insertTime":1599621997000,
+                    "transferType":0,
+                    "confirmTimes":"12/12"
+                },
+                {
+                    "amount":"0.50000000",
+                    "coin":"IOTA",
+                    "network":"IOTA",
+                    "status":1,
+                    "address":"SIZ9VLMHWATXKV99LH99CIGFJFUMLEHGWVZVNNZXRJJVWBPHYWPPBOSDORZ9EQSHCZAMPVAPGFYQAUUV9DROOXJLNW",
+                    "addressTag":"",
+                    "txId":"ESBFVQUTPIWQNJSPXFNHNYHSQNTGKRVKPRABQWTAXCDWOAKDKYWPTVG9BGXNVNKTLEJGESAVXIKIZ9999",
+                    "insertTime":1599620082000,
+                    "transferType":0,
+                    "confirmTimes":"1/1"
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositHistory.html', True, data=params)
+        return self._request_margin_api('get', 'capital/deposit/hisrec', True, data=params)
 
     def get_withdraw_history(self, **params):
         """Fetch withdraw history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
 
-        :param asset: optional
-        :type asset: str
+        :param coin: optional
+        :type coin: str
         :type status: 0(0:Email Sent,1:Cancelled 2:Awaiting Approval 3:Rejected 4:Processing 5:Failure 6Completed) optional
         :type status: int
-        :param startTime: optional
-        :type startTime: long
-        :param endTime: optional
-        :type endTime: long
+        :param offset: optional - default:0
+        :type offset: int
+        :param limit: optional
+        :type limit: int
+        :param startTime: optional - Default: 90 days from current timestamp
+        :type startTime: int
+        :param endTime: optional - Default: present timestamp
+        :type endTime: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2366,36 +2596,41 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "withdrawList": [
-                    {
-                        "amount": 1,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000
-                        "status": 4
-                    },
-                    {
-                        "amount": 0.005,
-                        "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                        "txId": "0x80aaabed54bdab3f6de5868f89929a2371ad21d666f20f7393d1a3389fad95a1",
-                        "asset": "ETH",
-                        "applyTime": 1508198532000,
-                        "status": 4
-                    }
-                ],
-                "success": true
-            }
+            [
+                {
+                    "address": "0x94df8b352de7f46f64b01d3666bf6e936e44ce60",
+                    "amount": "8.91000000",
+                    "applyTime": "2019-10-12 11:12:02",
+                    "coin": "USDT",
+                    "id": "b6ae22b3aa844210a7041aee7589627c",
+                    "withdrawOrderId": "WITHDRAWtest123", // will not be returned if there's no withdrawOrderId for this withdraw.
+                    "network": "ETH",
+                    "transferType": 0,   // 1 for internal transfer, 0 for external transfer
+                    "status": 6,
+                    "txId": "0xb5ef8c13b968a406cc62a93a8bd80f9e9a906ef1b3fcf20a2e48573c17659268"
+                },
+                {
+                    "address": "1FZdVHtiBqMrWdjPyRPULCUceZPJ2WLCsB",
+                    "amount": "0.00150000",
+                    "applyTime": "2019-09-24 12:43:45",
+                    "coin": "BTC",
+                    "id": "156ec387f49b41df8724fa744fa82719",
+                    "network": "BTC",
+                    "status": 6,
+                    "txId": "60fd9007ebfddc753455f95fafa808c4302c836e4d1eebc5a132c36c1d8ac354"
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+        return self._request_margin_api('get', 'capital/withdraw/history', True, data=params)
 
     def get_withdraw_history_id(self, withdraw_id, **params):
         """Fetch withdraw history.
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
+
         :param withdraw_id: required
         :type withdraw_id: str
         :param asset: optional
@@ -2414,31 +2649,37 @@ class Client(object):
         .. code-block:: python
 
             {
-                "amount": 1,
+                "id":"7213fea8e94b4a5593d507237e5a555b",
+                "withdrawOrderId": None,
+                "amount": 0.99,
+                "transactionFee": 0.01,
                 "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
                 "asset": "ETH",
-                "applyTime": 1508198532000
+                "txId": "0xdf33b22bdb2b28b1f75ccd201a4a4m6e7g83jy5fc5d5a9d1340961598cfcb0a1",
+                "applyTime": 1508198532000,
                 "status": 4
             }
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        result = self._request_withdraw_api('get', 'withdrawHistory.html', True, data=params)
+        result = self.get_withdraw_history(**params)
 
-        for entry in result['withdrawList']:
+        for entry in result:
             if 'id' in entry and entry['id'] == withdraw_id:
                 return entry
-        
-        raise None
 
-    def get_deposit_address(self, **params):
+        raise Exception("There is no entry with withdraw id", result)
+
+    def get_deposit_address(self, coin: str, network: Optional[str] = None, **params):
         """Fetch a deposit address for a symbol
 
-        https://www.binance.com/restapipub.html
+        https://binance-docs.github.io/apidocs/spot/en/#deposit-address-supporting-network-user_data
 
-        :param asset: required
-        :type asset: str
+        :param coin: required
+        :type coin: str
+        :param network: optional
+        :type network: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2447,16 +2688,19 @@ class Client(object):
         .. code-block:: python
 
             {
-                "address": "0x6915f16f8791d0a1cc2bf47c13a6b2a92000504b",
-                "success": true,
-                "addressTag": "1231212",
-                "asset": "BNB"
+                "address": "1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv",
+                "coin": "BTC",
+                "tag": "",
+                "url": "https://btc.com/1HPn8Rx2y6nNSfagQBKy27GB99Vbzg89wv"
             }
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'depositAddress.html', True, data=params)
+        params['coin'] = coin
+        if network:
+            params['network'] = network
+        return self._request_margin_api('get', 'capital/deposit/address', True, data=params)
 
     # User Stream Endpoints
 
@@ -2467,7 +2711,7 @@ class Client(object):
 
         Can be used to keep the user stream alive.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#start-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :returns: API response
 
@@ -2486,7 +2730,7 @@ class Client(object):
     def stream_keepalive(self, listenKey):
         """PING a user data stream to prevent a time out.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#keepalive-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :param listenKey: required
         :type listenKey: str
@@ -2508,7 +2752,7 @@ class Client(object):
     def stream_close(self, listenKey):
         """Close out a user data stream.
 
-        https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md#close-user-data-stream-user_stream
+        https://binance-docs.github.io/apidocs/spot/en/#listen-key-spot
 
         :param listenKey: required
         :type listenKey: str
@@ -2609,7 +2853,7 @@ class Client(object):
                 {
                 "assets":[
                     {
-                        "baseAsset": 
+                        "baseAsset":
                         {
                         "asset": "BTC",
                         "borrowEnabled": true,
@@ -2622,7 +2866,7 @@ class Client(object):
                         "repayEnabled": true,
                         "totalAsset": "0.00000000"
                         },
-                        "quoteAsset": 
+                        "quoteAsset":
                         {
                         "asset": "USDT",
                         "borrowEnabled": true,
@@ -2636,8 +2880,8 @@ class Client(object):
                         "totalAsset": "0.00000000"
                         },
                         "symbol": "BTCUSDT"
-                        "isolatedCreated": true, 
-                        "marginLevel": "0.00000000", 
+                        "isolatedCreated": true,
+                        "marginLevel": "0.00000000",
                         "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
                         "marginRatio": "0.00000000",
                         "indexPrice": "10000.00000000"
@@ -2648,7 +2892,7 @@ class Client(object):
                     ],
                     "totalAssetOfBtc": "0.00000000",
                     "totalLiabilityOfBtc": "0.00000000",
-                    "totalNetAssetOfBtc": "0.00000000" 
+                    "totalNetAssetOfBtc": "0.00000000"
                 }
 
             If "symbols" is sent:
@@ -2656,7 +2900,7 @@ class Client(object):
                 {
                 "assets":[
                     {
-                        "baseAsset": 
+                        "baseAsset":
                         {
                         "asset": "BTC",
                         "borrowEnabled": true,
@@ -2669,7 +2913,7 @@ class Client(object):
                         "repayEnabled": true,
                         "totalAsset": "0.00000000"
                         },
-                        "quoteAsset": 
+                        "quoteAsset":
                         {
                         "asset": "USDT",
                         "borrowEnabled": true,
@@ -2683,8 +2927,8 @@ class Client(object):
                         "totalAsset": "0.00000000"
                         },
                         "symbol": "BTCUSDT"
-                        "isolatedCreated": true, 
-                        "marginLevel": "0.00000000", 
+                        "isolatedCreated": true,
+                        "marginLevel": "0.00000000",
                         "marginLevelStatus": "EXCESSIVE", // "EXCESSIVE", "NORMAL", "MARGIN_CALL", "PRE_LIQUIDATION", "FORCE_LIQUIDATION"
                         "marginRatio": "0.00000000",
                         "indexPrice": "10000.00000000"
@@ -2760,6 +3004,82 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/pair', data=params)
 
+    def get_margin_all_assets(self, **params):
+        """Get All Margin Assets (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-margin-assets-market_data
+
+        .. code:: python
+
+            margin_assets = client.get_margin_all_assets()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "assetFullName": "USD coin",
+                    "assetName": "USDC",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "0.00000000",
+                    "userMinRepay": "0.00000000"
+                },
+                {
+                    "assetFullName": "BNB-coin",
+                    "assetName": "BNB",
+                    "isBorrowable": true,
+                    "isMortgageable": true,
+                    "userMinBorrow": "1.00000000",
+                    "userMinRepay": "0.00000000"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allAssets', data=params)
+
+    def get_margin_all_pairs(self, **params):
+        """Get All Cross Margin Pairs (MARKET_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-all-cross-margin-pairs-market_data
+
+        .. code:: python
+
+            margin_pairs = client.get_margin_all_pairs()
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                {
+                    "base": "BNB",
+                    "id": 351637150141315861,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "BNBBTC"
+                },
+                {
+                    "base": "TRX",
+                    "id": 351637923235429141,
+                    "isBuyAllowed": true,
+                    "isMarginTrade": true,
+                    "isSellAllowed": true,
+                    "quote": "BTC",
+                    "symbol": "TRXBTC"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/allPairs', data=params)
+
     def create_isolated_margin_account(self, **params):
         """Create isolated margin account for symbol
 
@@ -2789,7 +3109,6 @@ class Client(object):
         """
         return self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
 
-
     def get_isolated_margin_symbol(self, **params):
         """Query isolated margin symbol info
 
@@ -2812,7 +3131,7 @@ class Client(object):
             "quote":"USDT",
             "isMarginTrade":true,
             "isBuyAllowed":true,
-            "isSellAllowed":true      
+            "isSellAllowed":true
             }
 
 
@@ -2841,7 +3160,7 @@ class Client(object):
                     "isMarginTrade": true,
                     "isSellAllowed": true,
                     "quote": "BTC",
-                    "symbol": "BNBBTC"     
+                    "symbol": "BNBBTC"
                 },
                 {
                     "base": "TRX",
@@ -2849,7 +3168,7 @@ class Client(object):
                     "isMarginTrade": true,
                     "isSellAllowed": true,
                     "quote": "BTC",
-                    "symbol": "TRXBTC"    
+                    "symbol": "TRXBTC"
                 }
             ]
 
@@ -2999,7 +3318,6 @@ class Client(object):
         params['type'] = 1
         return self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
 
-
     def transfer_isolated_margin_to_spot(self, **params):
         """Execute transfer between isolated margin account and spot account.
 
@@ -3016,7 +3334,7 @@ class Client(object):
 
         .. code:: python
 
-            transfer = client.transfer_isolated_margin_to_spot(asset='BTC', 
+            transfer = client.transfer_isolated_margin_to_spot(asset='BTC',
                                                                 symbol='ETHBTC', amount='1.1')
 
         :returns: API response
@@ -3050,7 +3368,7 @@ class Client(object):
 
         .. code:: python
 
-            transfer = client.transfer_spot_to_isolated_margin(asset='BTC', 
+            transfer = client.transfer_spot_to_isolated_margin(asset='BTC',
                                                                 symbol='ETHBTC', amount='1.1')
 
         :returns: API response
@@ -3088,7 +3406,7 @@ class Client(object):
 
             transaction = client.margin_create_loan(asset='BTC', amount='1.1')
 
-            transaction = client.margin_create_loan(asset='BTC', amount='1.1', 
+            transaction = client.margin_create_loan(asset='BTC', amount='1.1',
                                                     isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
@@ -3107,7 +3425,7 @@ class Client(object):
     def repay_margin_loan(self, **params):
         """Repay loan in cross-margin or isolated-margin account.
 
-        If amount is more than the amount borrowed, the full loan will be repaid. 
+        If amount is more than the amount borrowed, the full loan will be repaid.
 
         https://binance-docs.github.io/apidocs/spot/en/#margin-account-repay-margin
 
@@ -3126,7 +3444,7 @@ class Client(object):
 
             transaction = client.margin_repay_loan(asset='BTC', amount='1.1')
 
-            transaction = client.margin_repay_loan(asset='BTC', amount='1.1', 
+            transaction = client.margin_repay_loan(asset='BTC', amount='1.1',
                                                     isIsolated='TRUE', symbol='ETHBTC')
 
         :returns: API response
@@ -3400,6 +3718,90 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
 
+    def get_margin_interest_history(self, **params):
+        """Get Interest History (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+
+        :param asset:
+        :type asset: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param archived: Default: false. Set to true for archived data from 6 months ago
+        :type archived: bool
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows":[
+                    {
+                        "isolatedSymbol": "BNBUSDT", // isolated symbol, will not be returned for crossed margin
+                        "asset": "BNB",
+                        "interest": "0.02414667",
+                        "interestAccuredTime": 1566813600000,
+                        "interestRate": "0.01600000",
+                        "principal": "36.22000000",
+                        "type": "ON_BORROW"
+                    }
+                ],
+                "total": 1
+            }
+
+
+        """
+        return self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+
+    def get_margin_force_liquidation_rec(self, **params):
+        """Get Force Liquidation Record (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-force-liquidation-record-user_data
+
+        :param startTime:
+        :type startTime: str
+        :param endTime:
+        :type endTime: str
+        :param isolatedSymbol: isolated symbol (if querying isolated margin)
+        :type isolatedSymbol: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        "avgPrice": "0.00388359",
+                        "executedQty": "31.39000000",
+                        "orderId": 180015097,
+                        "price": "0.00388110",
+                        "qty": "31.39000000",
+                        "side": "SELL",
+                        "symbol": "BNBBTC",
+                        "timeInForce": "GTC",
+                        "isIsolated": true,
+                        "updatedTime": 1558941374745
+                    }
+                ],
+                "total": 1
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
+
     def get_margin_order(self, **params):
         """Query margin accounts order
 
@@ -3656,7 +4058,313 @@ class Client(object):
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
-    # Cross-margin 
+    # Margin OCO
+
+    def create_margin_oco_order(self, **params):
+        """Post a new OCO trade for margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-oco-trade
+
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param listClientOrderId: A unique id for the list order. Automatically generated if not sent.
+        :type listClientOrderId: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param limitClientOrderId: A unique id for the limit order. Automatically generated if not sent.
+        :type limitClientOrderId: str
+        :param price: required
+        :type price: str
+        :param limitIcebergQty: Used to make the LIMIT_MAKER leg an iceberg order.
+        :type limitIcebergQty: decimal
+        :param stopClientOrderId: A unique Id for the stop loss/stop loss limit leg. Automatically generated if not sent.
+        :type stopClientOrderId: str
+        :param stopPrice: required
+        :type stopPrice: str
+        :param stopLimitPrice: If provided, stopLimitTimeInForce is required.
+        :type stopLimitPrice: str
+        :param stopIcebergQty: Used with STOP_LOSS_LIMIT leg to make an iceberg order.
+        :type stopIcebergQty: decimal
+        :param stopLimitTimeInForce: Valid values are GTC/FOK/IOC.
+        :type stopLimitTimeInForce: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param sideEffectType: NO_SIDE_EFFECT, MARGIN_BUY, AUTO_REPAY; default NO_SIDE_EFFECT.
+        :type sideEffectType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",
+                "transactionTime": 1563417480525,
+                "symbol": "LTCBTC",
+                "marginBuyBorrowAmount": "5",       // will not return if no margin trade happens
+                "marginBuyBorrowAsset": "BTC",    // will not return if no margin trade happens
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"
+                    }
+                ],
+                "orderReports": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "orderListId": 0,
+                        "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",
+                        "transactTime": 1563417480525,
+                        "price": "0.000000",
+                        "origQty": "0.624363",
+                        "executedQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS",
+                        "side": "BUY",
+                        "stopPrice": "0.960664"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "orderListId": 0,
+                        "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",
+                        "transactTime": 1563417480525,
+                        "price": "0.036435",
+                        "origQty": "0.624363",
+                        "executedQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "BUY"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException,
+            BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException,
+            BinanceOrderInactiveSymbolException
+
+        """
+        return self._request_margin_api('post', 'margin/order/oco', signed=True, data=params)
+
+    def cancel_margin_oco_order(self, **params):
+        """Cancel an entire Order List for a margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-oco-trade
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param orderListId: Either orderListId or listClientOrderId must be provided
+        :type orderListId: int
+        :param listClientOrderId: Either orderListId or listClientOrderId must be provided
+        :type listClientOrderId: str
+        :param newClientOrderId: Used to uniquely identify this cancel. Automatically generated by default.
+        :type newClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "orderListId": 0,
+                "contingencyType": "OCO",
+                "listStatusType": "ALL_DONE",
+                "listOrderStatus": "ALL_DONE",
+                "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",
+                "transactionTime": 1574040868128,
+                "symbol": "LTCBTC",
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 2,
+                        "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 3,
+                        "clientOrderId": "TXOvglzXuaubXAaENpaRCB"
+                    }
+                ],
+                "orderReports": [
+                    {
+                        "symbol": "LTCBTC",
+                        "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",
+                        "orderId": 2,
+                        "orderListId": 0,
+                        "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                        "price": "1.00000000",
+                        "origQty": "10.00000000",
+                        "executedQty": "0.00000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "CANCELED",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS_LIMIT",
+                        "side": "SELL",
+                        "stopPrice": "1.00000000"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",
+                        "orderId": 3,
+                        "orderListId": 0,
+                        "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+                        "price": "3.00000000",
+                        "origQty": "10.00000000",
+                        "executedQty": "0.00000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "CANCELED",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "SELL"
+                    }
+                ]
+            }
+
+    """
+        return self._request_margin_api('delete', 'margin/orderList', signed=True, data=params)
+
+    def get_margin_oco_order(self, **params):
+        """Retrieves a specific OCO based on provided optional parameters
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-oco-user_data
+
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param symbol: mandatory for isolated margin, not supported for cross margin
+        :type symbol: str
+        :param orderListId: Either orderListId or listClientOrderId must be provided
+        :type orderListId: int
+        :param listClientOrderId: Either orderListId or listClientOrderId must be provided
+        :type listClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "orderListId": 27,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "h2USkA5YQpaXHPIrkd96xE",
+                "transactionTime": 1565245656253,
+                "symbol": "LTCBTC",
+                "isIsolated": false,       // if isolated margin
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 4,
+                        "clientOrderId": "qD1gy3kc3Gx0rihm9Y3xwS"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 5,
+                        "clientOrderId": "ARzZ9I00CPM8i3NhmU9Ega"
+                    }
+                ]
+            }
+
+    """
+        return self._request_margin_api('get', 'margin/orderList', signed=True, data=params)
+
+    def get_open_margin_oco_orders(self, **params):
+        """Retrieves open OCO trades
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-oco-user_data
+
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
+        :type symbol: str
+        :param symbol: mandatory for isolated margin, not supported for cross margin
+        :type symbol: str
+        :param fromId: If supplied, neither startTime or endTime can be provided
+        :type fromId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional Default Value: 500; Max Value: 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            [
+                {
+                    "orderListId": 29,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "amEEAXryFzFwYF1FeRpUoZ",
+                    "transactionTime": 1565245913483,
+                    "symbol": "LTCBTC",
+                    "isIsolated": true,       // if isolated margin
+                    "orders": [
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 4,
+                            "clientOrderId": "oD7aesZqjEGlZrbtRpy5zB"
+                        },
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 5,
+                            "clientOrderId": "Jr1h6xirOxgeJOUuYQS7V3"
+                        }
+                    ]
+                },
+                {
+                    "orderListId": 28,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "hG7hFNxJV6cZy3Ze4AUT4d",
+                    "transactionTime": 1565245913407,
+                    "symbol": "LTCBTC",
+                    "orders": [
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 2,
+                            "clientOrderId": "j6lFOfbmFMRjTYA7rRJ0LP"
+                        },
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 3,
+                            "clientOrderId": "z0KCjOdditiLS5ekAFtK81"
+                        }
+                    ]
+                }
+            ]
+
+    """
+        return self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
+
+    # Cross-margin
 
     def margin_stream_get_listen_key(self):
         """Start a new cross-margin data stream and return the listen key
@@ -3725,7 +4433,7 @@ class Client(object):
         }
         return self._request_margin_api('delete', 'userDataStream', signed=False, data=params)
 
-    # Isolated margin 
+    # Isolated margin
 
     def isolated_margin_stream_get_listen_key(self, symbol):
         """Start a new isolated margin data stream and return the listen key
@@ -3863,17 +4571,17 @@ class Client(object):
 
         :param asset: optional
         :type asset: str
-		:param type: required - "ACTIVITY", "CUSTOMIZED_FIXED"
-		:type type: str
-		:param status: optional - "ALL", "SUBSCRIBABLE", "UNSUBSCRIBABLE"; default "ALL"
-		:type status: str
-		:param sortBy: optional - "START_TIME", "LOT_SIZE", "INTEREST_RATE", "DURATION"; default "START_TIME"
-		:type sortBy: str
-		:param current: optional - Currently querying page. Start from 1. Default:1
-		:type current: int
-		:param size: optional - Default:10, Max:100
-		:type size: int
-	    :param recvWindow: the number of milliseconds the request is valid for
+        :param type: required - "ACTIVITY", "CUSTOMIZED_FIXED"
+        :type type: str
+        :param status: optional - "ALL", "SUBSCRIBABLE", "UNSUBSCRIBABLE"; default "ALL"
+        :type status: str
+        :param sortBy: optional - "START_TIME", "LOT_SIZE", "INTEREST_RATE", "DURATION"; default "START_TIME"
+        :type sortBy: str
+        :param current: optional - Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: optional - Default:10, Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
         :returns: API response
@@ -3902,7 +4610,7 @@ class Client(object):
             ]
 
         :raises: BinanceRequestException, BinanceAPIException
-        
+
         """
         return self._request_margin_api('get', 'lending/project/list', signed=True, data=params)
 
@@ -3951,17 +4659,15 @@ class Client(object):
     def get_sub_account_list(self, **params):
         """Query Sub-account List.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-sapi-for-master-account
 
-        :param email: optional
+        :param email: optional - Sub-account email
         :type email: str
-        :param startTime: optional
-        :type startTime: int
-        :param endTime: optional
-        :type endTime: int
-        :param page: optional
+        :param isFreeze: optional
+        :type isFreeze: str
+        :param page: optional - Default value: 1
         :type page: int
-        :param limit: optional
+        :param limit: optional - Default value: 1, Max value: 200
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
@@ -3971,22 +4677,15 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success":true,
                 "subAccounts":[
                     {
-                        "email":"123@test.com",
-                        "status":"enabled",
-                        "activated":true,
-                        "mobile":"91605290",
-                        "gAuth":true,
+                        "email":"testsub@gmail.com",
+                        "isFreeze":false,
                         "createTime":1544433328000
                     },
                     {
-                        "email":"321@test.com",
-                        "status":"disabled",
-                        "activated":true,
-                        "mobile":"22501238",
-                        "gAuth":true,
+                        "email":"virtual@oxebmvfonoemail.com",
+                        "isFreeze":false,
                         "createTime":1544433328000
                     }
                 ]
@@ -3995,22 +4694,24 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/list.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/list', True, data=params)
 
     def get_sub_account_transfer_history(self, **params):
         """Query Sub-account Transfer History.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-sapi-for-master-account
 
-        :param email: required
-        :type email: str
+        :param fromEmail: optional
+        :type fromEmail: str
+        :param toEmail: optional
+        :type toEmail: str
         :param startTime: optional
         :type startTime: int
         :param endTime: optional
         :type endTime: int
-        :param page: optional
+        :param page: optional - Default value: 1
         :type page: int
-        :param limit: optional
+        :param limit: optional - Default value: 500
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
@@ -4019,61 +4720,32 @@ class Client(object):
 
         .. code-block:: python
 
-            {
-                "success":true,
-                "transfers":[
-                    {
-                        "from":"aaa@test.com",
-                        "to":"bbb@test.com",
-                        "asset":"BTC",
-                        "qty":"1",
-                        "time":1544433328000
-                    },
-                    {
-                        "from":"bbb@test.com",
-                        "to":"ccc@test.com",
-                        "asset":"ETH",
-                        "qty":"2",
-                        "time":1544433328000
-                    }
-                ]
-            }
+            [
+                {
+                    "from":"aaa@test.com",
+                    "to":"bbb@test.com",
+                    "asset":"BTC",
+                    "qty":"10",
+                    "status": "SUCCESS",
+                    "tranId": 6489943656,
+                    "time":1544433328000
+                },
+                {
+                    "from":"bbb@test.com",
+                    "to":"ccc@test.com",
+                    "asset":"ETH",
+                    "qty":"2",
+                    "status": "SUCCESS",
+                    "tranId": 6489938713,
+                    "time":1544433328000
+                }
+            ]
 
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/transfer/history.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/sub/transfer/history', True, data=params)
 
-    def create_sub_account_transfer(self, **params):
-        """Execute sub-account transfer
-
-        https://binance-docs.github.io/apidocs/spot/en/#sub-account-spot-asset-transfer-for-master-account
-
-        :param fromEmail: required - Sender email
-        :type fromEmail: str
-        :param toEmail: required - Recipient email
-        :type toEmail: str
-        :param asset: required
-        :type asset: str
-        :param amount: required
-        :type amount: decimal
-        :param recvWindow: optional
-        :type recvWindow: int
-
-        :returns: API response
-
-        .. code-block:: python
-
-            {
-                "success":true,
-                "txnId":"2966662589"
-            }
-
-        :raises: BinanceRequestException, BinanceAPIException
-
-        """
-        return self._request_withdraw_api('post', 'sub-account/transfer.html', True, data=params)
-    
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
@@ -4159,12 +4831,10 @@ class Client(object):
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-for-master-account
+        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-sapi-for-master-account
 
         :param email: required
         :type email: str
-        :param symbol: optional
-        :type symbol: str
         :param recvWindow: optional
         :type recvWindow: int
 
@@ -4173,7 +4843,6 @@ class Client(object):
         .. code-block:: python
 
             {
-                "success":true,
                 "balances":[
                     {
                         "asset":"ADA",
@@ -4206,7 +4875,7 @@ class Client(object):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_withdraw_api('get', 'sub-account/assets.html', True, data=params)
+        return self._request_margin_api('get', 'sub-account/assets', True, data=params)
 
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
@@ -4817,7 +5486,7 @@ class Client(object):
         """
         return self._request_margin_api('get', 'sub-account/transfer/subUserHistory', True, data=params)
 
-    def make_universal_transfer(self, **params):
+    def make_subaccount_universal_transfer(self, **params):
         """Universal Transfer (For Master Account)
 
         https://binance-docs.github.io/apidocs/spot/en/#universal-transfer-for-master-account
@@ -4826,9 +5495,9 @@ class Client(object):
         :type fromEmail: str
         :param toEmail: optional
         :type toEmail: str
-        :param fromAccountType: required
+        :param fromAccountType: required - "SPOT","USDT_FUTURE","COIN_FUTURE"
         :type fromAccountType: str
-        :param toAccountType: required
+        :param toAccountType: required - "SPOT","USDT_FUTURE","COIN_FUTURE"
         :type toAccountType: str
         :param asset: required - The asset being transferred, e.g., USDT
         :type asset: str
@@ -4971,6 +5640,51 @@ class Client(object):
         """
         return self._request_futures_api('get', 'klines', data=params)
 
+    def futures_continous_klines(self, **params):
+        """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#continuous-contract-kline-candlestick-data
+
+        """
+        return self._request_futures_api('get', 'continuousKlines', data=params)
+
+    def futures_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
+        """Get historical futures klines from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+
+        :return: list of OHLCV values
+
+        """
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
+
+    def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
+        """Get historical futures klines generator from Binance
+
+        :param symbol: Name of symbol pair e.g BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+
+        :return: generator of OHLCV values
+
+        """
+
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
+
     def futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
 
@@ -5017,15 +5731,23 @@ class Client(object):
         https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders-market_data
 
         """
-        return self._request_futures_api('get', 'ticker/allForceOrders', data=params)
+        return self._request_futures_api('get', 'forceOrders', signed=True, data=params)
+
+    def futures_adl_quantile_estimate(self, **params):
+        """Get Position ADL Quantile Estimate
+
+        https://binance-docs.github.io/apidocs/futures/en/#position-adl-quantile-estimation-user_data
+
+        """
+        return self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
 
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#open-interest-market_data
+        https://binance-docs.github.io/apidocs/futures/en/#open-interest
 
         """
-        return self._request_futures_api('get', 'ticker/openInterest', data=params)
+        return self._request_futures_api('get', 'openInterest', data=params)
 
     def futures_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
@@ -5066,6 +5788,20 @@ class Client(object):
 
         """
         return self._request_futures_api('post', 'order', True, data=params)
+
+    def futures_place_batch_order(self, **params):
+        """Send in new orders.
+
+        https://binance-docs.github.io/apidocs/futures/en/#place-multiple-orders-trade
+
+        To avoid modifying the existing signature generation and parameter order logic,
+        the url encoding is done on the special query param, batchOrders, in the early stage.
+
+        """
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+        return self._request_futures_api('post', 'batchOrders', True, data=params)
 
     def futures_get_order(self, **params):
         """Check an order's status.
@@ -5191,7 +5927,7 @@ class Client(object):
         """Change position mode for authenticated account
 
         https://binance-docs.github.io/apidocs/futures/en/#change-position-mode-trade
-        
+
         """
         return self._request_futures_api('post', 'positionSide/dual', True, data=params)
 
@@ -5199,9 +5935,44 @@ class Client(object):
         """Get position mode for authenticated account
 
         https://binance-docs.github.io/apidocs/futures/en/#get-current-position-mode-user_data
-        
+
         """
         return self._request_futures_api('get', 'positionSide/dual', True, data=params)
+
+    def futures_change_multi_assets_mode(self, multiAssetsMargin: bool):
+        """Change user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
+
+        https://binance-docs.github.io/apidocs/futures/en/#change-multi-assets-mode-trade
+
+        """
+        params = {
+            'true' if multiAssetsMargin else 'false'
+        }
+        return self._request_futures_api('post', 'multiAssetsMargin', True, data=params)
+
+    def futures_get_multi_assets_mode(self):
+        """Get user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
+
+        https://binance-docs.github.io/apidocs/futures/en/#get-current-multi-assets-mode-user_data
+
+        """
+        return self._request_futures_api('get', 'multiAssetsMargin', True)
+
+    def futures_stream_get_listen_key(self):
+        res = self._request_futures_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    def futures_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_api('put', 'listenKey', signed=False, data=params)
+
+    def futures_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_api('delete', 'listenKey', signed=False, data=params)
 
     # COIN Futures API
     def futures_coin_ping(self):
@@ -5336,10 +6107,10 @@ class Client(object):
     def futures_coin_liquidation_orders(self, **params):
         """Get all liquidation orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-all-liquidation-orders
+        https://binance-docs.github.io/apidocs/delivery/en/#user-39-s-force-orders-user_data
 
         """
-        return self._request_futures_coin_api("get", "allForceOrders", data=params)
+        return self._request_futures_coin_api("get", "forceOrders", signed=True, data=params)
 
     def futures_coin_open_interest(self, **params):
         """Get present open interest of a specific symbol.
@@ -5392,6 +6163,21 @@ class Client(object):
 
         """
         return self._request_futures_coin_api("post", "order", True, data=params)
+
+    def futures_coin_place_batch_order(self, **params):
+        """Send in new orders.
+
+        https://binance-docs.github.io/apidocs/delivery/en/#place-multiple-orders-trade
+
+        To avoid modifying the existing signature generation and parameter order logic,
+        the url encoding is done on the special query param, batchOrders, in the early stage.
+
+        """
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+
+        return self._request_futures_coin_api('post', 'batchOrders', True, data=params)
 
     def futures_coin_get_order(self, **params):
         """Check an order's status.
@@ -5539,7 +6325,7 @@ class Client(object):
         https://binance-docs.github.io/apidocs/delivery/en/#change-position-mode-trade
         """
         return self._request_futures_coin_api("post", "positionSide/dual", True, data=params)
-    
+
     def futures_coin_get_position_mode(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
@@ -5547,6 +6333,22 @@ class Client(object):
 
         """
         return self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
+
+    def futures_coin_stream_get_listen_key(self):
+        res = self._request_futures_coin_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    def futures_coin_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_coin_api('put', 'listenKey', signed=False, data=params)
+
+    def futures_coin_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return self._request_futures_coin_api('delete', 'listenKey', signed=False, data=params)
 
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
@@ -5638,12 +6440,11 @@ class Client(object):
         :type limit: int
         :param recvWindow: optional
         :type recvWindow: int
-        :param timestamp: requred
-        :type timestamp: int
 
         :returns: API response
 
         .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message
@@ -5669,7 +6470,11 @@ class Client(object):
                   }
                ]
             }
+
         OR
+
+        .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message
@@ -5696,7 +6501,11 @@ class Client(object):
                   }
                ]
             }
+
         OR
+
+        .. code-block:: python
+
             {
                "code":200, // 200 for success; others are error codes
                "msg":"", // error message
@@ -5730,3 +6539,1800 @@ class Client(object):
 
         """
         return self._request_margin_api('get', 'accountSnapshot', True, data=params)
+
+    def disable_fast_withdraw_switch(self, **params):
+        """Disable Fast Withdraw Switch
+
+        https://binance-docs.github.io/apidocs/spot/en/#disable-fast-withdraw-switch-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'disableFastWithdrawSwitch', True, data=params)
+
+    def enable_fast_withdraw_switch(self, **params):
+        """Enable Fast Withdraw Switch
+
+        https://binance-docs.github.io/apidocs/spot/en/#enable-fast-withdraw-switch-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'enableFastWithdrawSwitch', True, data=params)
+
+    """
+    ====================================================================================================================
+    Options API
+    ====================================================================================================================
+    """
+    # Quoting interface endpoints
+
+    def options_ping(self):
+        """Test connectivity
+
+        https://binance-docs.github.io/apidocs/voptions/en/#test-connectivity
+
+        """
+        return self._request_options_api('get', 'ping')
+
+    def options_time(self):
+        """Get server time
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-server-time
+
+        """
+        return self._request_options_api('get', 'time')
+
+    def options_info(self):
+        """Get current trading pair info
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-current-trading-pair-info
+
+        """
+        return self._request_options_api('get', 'optionInfo')
+
+    def options_exchange_info(self):
+        """Get current limit info and trading pair info
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-current-limit-info-and-trading-pair-info
+
+        """
+        return self._request_options_api('get', 'exchangeInfo')
+
+    def options_index_price(self, **params):
+        """Get the spot index price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-spot-index-price
+
+        :param underlying: required - Spot pair（Option contract underlying asset）- BTCUSDT
+        :type underlying: str
+
+        """
+        return self._request_options_api('get', 'index', data=params)
+
+    def options_price(self, **params):
+        """Get the latest price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-price
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+
+        """
+        return self._request_options_api('get', 'ticker', data=params)
+
+    def options_mark_price(self, **params):
+        """Get the latest mark price
+
+        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-mark-price
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+
+        """
+        return self._request_options_api('get', 'mark', data=params)
+
+    def options_order_book(self, **params):
+        """Depth information
+
+        https://binance-docs.github.io/apidocs/voptions/en/#depth-information
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param limit: optional - Default:100 Max:1000.Optional value:[10, 20, 50, 100, 500, 1000] - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'depth', data=params)
+
+    def options_klines(self, **params):
+        """Candle data
+
+        https://binance-docs.github.io/apidocs/voptions/en/#candle-data
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param interval: required - Time interval - 5m
+        :type interval: str
+        :param startTime: optional - Start Time - 1592317127349
+        :type startTime: int
+        :param endTime: optional - End Time - 1592317127349
+        :type endTime: int
+        :param limit: optional - Number of records Default:500 Max:1500 - 500
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'klines', data=params)
+
+    def options_recent_trades(self, **params):
+        """Recently completed Option trades
+
+        https://binance-docs.github.io/apidocs/voptions/en/#recently-completed-option-trades
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param limit: optional - Number of records Default:100 Max:500 - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'trades', data=params)
+
+    def options_historical_trades(self, **params):
+        """Query trade history
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-trade-history
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param fromId: optional - The deal ID from which to return. The latest deal record is returned by default - 1592317127349
+        :type fromId: int
+        :param limit: optional - Number of records Default:100 Max:500 - 100
+        :type limit: int
+
+        """
+        return self._request_options_api('get', 'historicalTrades', data=params)
+
+    # Account and trading interface endpoints
+
+    def options_account_info(self, **params):
+        """Account asset info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-asset-info-user_data
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'account', signed=True, data=params)
+
+    def options_funds_transfer(self, **params):
+        """Funds transfer (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#funds-transfer-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param type: required - IN: Transfer from spot account to option account OUT: Transfer from option account to spot account - IN
+        :type type: str (ENUM)
+        :param amount: required - Amount - 10000
+        :type amount: float
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'transfer', signed=True, data=params)
+
+    def options_positions(self, **params):
+        """Option holdings info (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-holdings-info-user_data
+
+        :param symbol: optional - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'position', signed=True, data=params)
+
+    def options_bill(self, **params):
+        """Account funding flow (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#account-funding-flow-user_data
+
+        :param currency: required - Asset type - USDT
+        :type currency: str
+        :param recordId: optional - Return the recordId and subsequent data, the latest data is returned by default - 100000
+        :type recordId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'bill', signed=True, data=params)
+
+    def options_place_order(self, **params):
+        """Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param side: required - Buy/sell direction: SELL, BUY - BUY
+        :type side: str (ENUM)
+        :param type: required - Order Type: LIMIT, MARKET - LIMIT
+        :type type: str (ENUM)
+        :param quantity: required - Order Quantity - 3
+        :type quantity: float
+        :param price: optional - Order Price - 1000
+        :type price: float
+        :param timeInForce: optional - Time in force method（Default GTC) - GTC
+        :type timeInForce: str (ENUM)
+        :param reduceOnly: optional - Reduce Only (Default false) - false
+        :type reduceOnly: bool
+        :param postOnly: optional - Post Only (Default false) - false
+        :type postOnly: bool
+        :param newOrderRespType: optional - "ACK", "RESULT", Default "ACK" - ACK
+        :type newOrderRespType: str (ENUM)
+        :param clientOrderId: optional - User-defined order ID cannot be repeated in pending orders - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'order', signed=True, data=params)
+
+    def options_place_batch_order(self, **params):
+        """Place Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#place-multiple-option-orders-trade
+
+        :param orders: required - order list. Max 5 orders - [{"symbol":"BTC-210115-35000-C","price":"100","quantity":"0.0001","side":"BUY","type":"LIMIT"}]
+        :type orders: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('post', 'batchOrders', signed=True, data=params)
+
+    def options_cancel_order(self, **params):
+        """Cancel Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'order', signed=True, data=params)
+
+    def options_cancel_batch_order(self, **params):
+        """Cancel Multiple Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-multiple-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderIds: optional - Order ID - [4611875134427365377,4611875134427365378]
+        :type orderId: list
+        :param clientOrderIds: optional - User-defined order ID - ["my_id_1","my_id_2"]
+        :type clientOrderIds: list
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'batchOrders', signed=True, data=params)
+
+    def options_cancel_all_orders(self, **params):
+        """Cancel all Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#cancel-all-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('delete', 'allOpenOrders', signed=True, data=params)
+
+    def options_query_order(self, **params):
+        """Query Option order (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Order ID - 4611875134427365377
+        :type orderId: str
+        :param clientOrderId: optional - User-defined order ID - 10000
+        :type clientOrderId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'order', signed=True, data=params)
+
+    def options_query_pending_orders(self, **params):
+        """Query current pending Option orders (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-current-pending-option-orders-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'openOrders', signed=True, data=params)
+
+    def options_query_order_history(self, **params):
+        """Query Option order history (TRADE)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-history-trade
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param orderId: optional - Returns the orderId and subsequent orders, the most recent order is returned by default - 100000
+        :type orderId: str
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'historyOrders', signed=True, data=params)
+
+    def options_user_trades(self, **params):
+        """Option Trade List (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/voptions/en/#option-trade-list-user_data
+
+        :param symbol: required - Option trading pair - BTC-200730-9000-C
+        :type symbol: str
+        :param fromId: optional - Trade id to fetch from. Default gets most recent trades. - 4611875134427365376
+        :type fromId: int
+        :param startTime: optional - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: optional - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - Number of result sets returned Default:100 Max:1000 - 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_options_api('get', 'userTrades', signed=True, data=params)
+
+    # Fiat Endpoints
+
+    def get_fiat_deposit_withdraw_history(self, **params):
+        """Get Fiat Deposit/Withdraw History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-fiat-deposit-withdraw-history-user_data
+
+        :param transactionType: required - 0-deposit,1-withdraw
+        :type transactionType: str
+        :param beginTime: optional
+        :type beginTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 500
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    def get_fiat_payments_history(self, **params):
+        """Get Fiat Payments History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-fiat-payments-history-user_data
+
+        :param transactionType: required - 0-buy,1-sell
+        :type transactionType: str
+        :param beginTime: optional
+        :type beginTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 500
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        """
+        return self._request_margin_api('get', 'fiat/payments', signed=True, data=params)
+
+    # C2C Endpoints
+
+    def get_c2c_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-c2c-trade-history-user_data
+
+        :param tradeType: required - BUY, SELL
+        :type tradeType: str
+        :param startTimestamp: optional
+        :type startTime: int
+        :param endTimestamp: optional
+        :type endTimestamp: int
+        :param page: optional - default 1
+        :type page: int
+        :param rows: optional - default 100, max 100
+        :type rows: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "code": "000000",
+                "message": "success",
+                "data": [
+                    {
+                        "orderNumber":"20219644646554779648",
+                        "advNo": "11218246497340923904",
+                        "tradeType": "SELL",
+                        "asset": "BUSD",
+                        "fiat": "CNY",
+                        "fiatSymbol": "￥",
+                        "amount": "5000.00000000",  // Quantity (in Crypto)
+                        "totalPrice": "33400.00000000",
+                        "unitPrice": "6.68", // Unit Price (in Fiat)
+                        "orderStatus": "COMPLETED",  // PENDING, TRADING, BUYER_PAYED, DISTRIBUTING, COMPLETED, IN_APPEAL, CANCELLED, CANCELLED_BY_SYSTEM
+                        "createTime": 1619361369000,
+                        "commission": "0",   // Transaction Fee (in Crypto)
+                        "counterPartNickName": "ab***",
+                        "advertisementRole": "TAKER"
+                    }
+                ],
+                "total": 1,
+                "success": true
+            }
+
+        """
+        return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
+
+    def close_connection(self):
+        if self.session:
+            self.session.close()
+
+    def __del__(self):
+        self.close_connection()
+
+
+class AsyncClient(BaseClient):
+
+    def __init__(
+        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False, loop=None
+    ):
+
+        self.loop = loop or asyncio.get_event_loop()
+        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+
+    @classmethod
+    async def create(
+        cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
+        requests_params: Dict[str, str] = None, tld: str = 'com',
+        testnet: bool = False, loop=None
+    ):
+
+        self = cls(api_key, api_secret, requests_params, tld, testnet, loop)
+
+        try:
+            await self.ping()
+
+            # calculate timestamp offset between local and binance server
+            res = await self.get_server_time()
+            self.timestamp_offset = res['serverTime'] - int(time.time() * 1000)
+
+            return self
+        except Exception:
+            # If ping throw an exception, the current self must be cleaned
+            # else, we can receive a "asyncio:Unclosed client session"
+            await self.close_connection()
+            raise
+
+    def _init_session(self) -> aiohttp.ClientSession:
+
+        session = aiohttp.ClientSession(
+            loop=self.loop,
+            headers=self._get_headers()
+        )
+        return session
+
+    async def close_connection(self):
+        if self.session:
+            assert self.session
+            await self.session.close()
+
+    async def _request(self, method, uri: str, signed: bool, force_params: bool = False, **kwargs):
+
+        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
+
+        async with getattr(self.session, method)(uri, **kwargs) as response:
+            self.response = response
+            return await self._handle_response(response)
+
+    async def _handle_response(self, response: aiohttp.ClientResponse):
+        """Internal helper for handling API responses from the Binance server.
+        Raises the appropriate exceptions when necessary; otherwise, returns the
+        response.
+        """
+        if not str(response.status).startswith('2'):
+            raise BinanceAPIException(response, response.status, await response.text())
+        try:
+            return await response.json()
+        except ValueError:
+            txt = await response.text()
+            raise BinanceRequestException(f'Invalid Response: {txt}')
+
+    async def _request_api(self, method, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+        uri = self._create_api_uri(path, signed, version)
+        return await self._request(method, uri, signed, **kwargs)
+
+    async def _request_futures_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_futures_api_uri(path)
+
+        return await self._request(method, uri, signed, True, **kwargs)
+
+    async def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_futures_data_api_uri(path)
+
+        return await self._request(method, uri, signed, True, **kwargs)
+
+    async def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_futures_coin_api_url(path, version=version)
+
+        return await self._request(method, uri, signed, True, **kwargs)
+
+    async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_futures_coin_data_api_url(path, version=version)
+
+        return await self._request(method, uri, signed, True, **kwargs)
+
+    async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_options_api_uri(path)
+
+        return await self._request(method, uri, signed, True, **kwargs)
+
+    async def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_margin_api_uri(path)
+
+        return await self._request(method, uri, signed, **kwargs)
+
+    async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
+        uri = self._create_website_uri(path)
+        return await self._request(method, uri, signed, **kwargs)
+
+    async def _get(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs):
+        return await self._request_api('get', path, signed, version, **kwargs)
+
+    async def _post(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+        return await self._request_api('post', path, signed, version, **kwargs)
+
+    async def _put(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+        return await self._request_api('put', path, signed, version, **kwargs)
+
+    async def _delete(self, path, signed=False, version=BaseClient.PUBLIC_API_VERSION, **kwargs) -> Dict:
+        return await self._request_api('delete', path, signed, version, **kwargs)
+
+    # Exchange Endpoints
+
+    async def get_products(self) -> Dict:
+        products = await self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
+        return products
+    get_products.__doc__ = Client.get_products.__doc__
+
+    async def get_exchange_info(self) -> Dict:
+        return await self._get('exchangeInfo', version=self.PRIVATE_API_VERSION)
+    get_exchange_info.__doc__ = Client.get_exchange_info.__doc__
+
+    async def get_symbol_info(self, symbol) -> Optional[Dict]:
+        res = await self.get_exchange_info()
+
+        for item in res['symbols']:
+            if item['symbol'] == symbol.upper():
+                return item
+
+        return None
+    get_symbol_info.__doc__ = Client.get_symbol_info.__doc__
+
+    # General Endpoints
+
+    async def ping(self) -> Dict:
+        return await self._get('ping', version=self.PRIVATE_API_VERSION)
+    ping.__doc__ = Client.ping.__doc__
+
+    async def get_server_time(self) -> Dict:
+        return await self._get('time', version=self.PRIVATE_API_VERSION)
+    get_server_time.__doc__ = Client.get_server_time.__doc__
+
+    # Market Data Endpoints
+
+    async def get_all_tickers(self, symbol: Optional[str] = None) -> List[Dict[str, str]]:
+        params = {}
+        if symbol:
+            params['symbol'] = symbol
+        return await self._get('ticker/price', version=self.PRIVATE_API_VERSION, data=params)
+    get_all_tickers.__doc__ = Client.get_all_tickers.__doc__
+
+    async def get_orderbook_tickers(self) -> Dict:
+        return await self._get('ticker/bookTicker', version=self.PRIVATE_API_VERSION)
+    get_orderbook_tickers.__doc__ = Client.get_orderbook_tickers.__doc__
+
+    async def get_order_book(self, **params) -> Dict:
+        return await self._get('depth', data=params, version=self.PRIVATE_API_VERSION)
+    get_order_book.__doc__ = Client.get_order_book.__doc__
+
+    async def get_recent_trades(self, **params) -> Dict:
+        return await self._get('trades', data=params)
+    get_recent_trades.__doc__ = Client.get_recent_trades.__doc__
+
+    async def get_historical_trades(self, **params) -> Dict:
+        return await self._get('historicalTrades', data=params, version=self.PRIVATE_API_VERSION)
+    get_historical_trades.__doc__ = Client.get_historical_trades.__doc__
+
+    async def get_aggregate_trades(self, **params) -> Dict:
+        return await self._get('aggTrades', data=params, version=self.PRIVATE_API_VERSION)
+    get_aggregate_trades.__doc__ = Client.get_aggregate_trades.__doc__
+
+    async def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+        if start_str is not None and last_id is not None:
+            raise ValueError(
+                'start_time and last_id may not be simultaneously specified.')
+
+        # If there's no last_id, get one.
+        if last_id is None:
+            # Without a last_id, we actually need the first trade.  Normally,
+            # we'd get rid of it. See the next loop.
+            if start_str is None:
+                trades = await self.get_aggregate_trades(symbol=symbol, fromId=0)
+            else:
+                # The difference between startTime and endTime should be less
+                # or equal than an hour and the result set should contain at
+                # least one trade.
+                start_ts = convert_ts_str(start_str)
+                # If the resulting set is empty (i.e. no trades in that interval)
+                # then we just move forward hour by hour until we find at least one
+                # trade or reach present moment
+                while True:
+                    end_ts = start_ts + (60 * 60 * 1000)
+                    trades = await self.get_aggregate_trades(
+                        symbol=symbol,
+                        startTime=start_ts,
+                        endTime=end_ts)
+                    if len(trades) > 0:
+                        break
+                    # If we reach present moment and find no trades then there is
+                    # nothing to iterate, so we're done
+                    if end_ts > int(time.time() * 1000):
+                        return
+                    start_ts = end_ts
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
+
+        while True:
+            # There is no need to wait between queries, to avoid hitting the
+            # rate limit. We're using blocking IO, and as long as we're the
+            # only thread running calls like this, Binance will automatically
+            # add the right delay time on their end, forcing us to wait for
+            # data. That really simplifies this function's job. Binance is
+            # fucking awesome.
+            trades = await self.get_aggregate_trades(symbol=symbol, fromId=last_id)
+            # fromId=n returns a set starting with id n, but we already have
+            # that one. So get rid of the first item in the result set.
+            trades = trades[1:]
+            if len(trades) == 0:
+                return
+            for t in trades:
+                yield t
+            last_id = trades[-1][self.AGG_ID]
+    aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
+
+    async def get_klines(self, **params) -> Dict:
+        return await self._get('klines', data=params, version=self.PRIVATE_API_VERSION)
+    get_klines.__doc__ = Client.get_klines.__doc__
+
+    async def _klines(self, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT, **params) -> Dict:
+        if 'endTime' in params and not params['endTime']:
+            del params['endTime']
+        if HistoricalKlinesType.SPOT == klines_type:
+            return await self.get_klines(**params)
+        elif HistoricalKlinesType.FUTURES == klines_type:
+            return await self.futures_klines(**params)
+        else:
+            raise NotImplementedException(klines_type)
+    _klines.__doc__ = Client._klines.__doc__
+
+    async def _get_earliest_valid_timestamp(self, symbol, interval,
+                                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        kline = await self._klines(
+            klines_type=klines_type,
+            symbol=symbol,
+            interval=interval,
+            limit=1,
+            startTime=0,
+            endTime=int(time.time() * 1000)
+        )
+        return kline[0][0]
+    _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
+
+    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                                    klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
+    get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
+
+    async def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                                 klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+
+        # init our list
+        output_data = []
+
+        # convert interval to useful value in seconds
+        timeframe = interval_to_milliseconds(interval)
+
+        # convert our date strings to milliseconds
+        start_ts = convert_ts_str(start_str)
+
+        # establish first available start timestamp
+        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+        start_ts = max(start_ts, first_valid_ts)
+
+        # if an end time was passed convert it
+        end_ts = convert_ts_str(end_str)
+
+        idx = 0
+        while True:
+            # fetch the klines from start_ts up to max 500 entries or the end_ts if set
+            temp_data = await self._klines(
+                klines_type=klines_type,
+                symbol=symbol,
+                interval=interval,
+                limit=limit,
+                startTime=start_ts,
+                endTime=end_ts
+            )
+
+            # handle the case where exactly the limit amount of data was returned last loop
+            if not len(temp_data):
+                break
+
+            # append this loops data to our output data
+            output_data += temp_data
+
+            # set our start timestamp using the last value in the array
+            start_ts = temp_data[-1][0]
+
+            idx += 1
+            # check if we received less than the required limit and exit the loop
+            if len(temp_data) < limit:
+                # exit the while loop
+                break
+
+            # increment next call by our timeframe
+            start_ts += timeframe
+
+            # sleep after every 3rd call to be kind to the API
+            if idx % 3 == 0:
+                await asyncio.sleep(1)
+
+        return output_data
+    _historical_klines.__doc__ = Client._historical_klines.__doc__
+
+    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                              klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
+    get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
+
+    async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+                                           klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+
+        # setup the max limit
+        limit = 500
+
+        # convert interval to useful value in seconds
+        timeframe = interval_to_milliseconds(interval)
+
+        # convert our date strings to milliseconds
+        start_ts = convert_ts_str(start_str)
+
+        # establish first available start timestamp
+        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+        start_ts = max(start_ts, first_valid_ts)
+
+        # if an end time was passed convert it
+        end_ts = convert_ts_str(end_str)
+
+        idx = 0
+        while True:
+            # fetch the klines from start_ts up to max 500 entries or the end_ts if set
+            output_data = await self._klines(
+                klines_type=klines_type,
+                symbol=symbol,
+                interval=interval,
+                limit=limit,
+                startTime=start_ts,
+                endTime=end_ts
+            )
+
+            # handle the case where exactly the limit amount of data was returned last loop
+            if not len(output_data):
+                break
+
+            # yield data
+            for o in output_data:
+                yield o
+
+            # set our start timestamp using the last value in the array
+            start_ts = output_data[-1][0]
+
+            idx += 1
+            # check if we received less than the required limit and exit the loop
+            if len(output_data) < limit:
+                # exit the while loop
+                break
+
+            # increment next call by our timeframe
+            start_ts += timeframe
+
+            # sleep after every 3rd call to be kind to the API
+            if idx % 3 == 0:
+                await asyncio.sleep(1)
+    _historical_klines_generator.__doc__ = Client._historical_klines_generator.__doc__
+
+    async def get_avg_price(self, **params):
+        return await self._get('avgPrice', data=params, version=self.PRIVATE_API_VERSION)
+    get_avg_price.__doc__ = Client.get_avg_price.__doc__
+
+    async def get_ticker(self, **params):
+        return await self._get('ticker/24hr', data=params, version=self.PRIVATE_API_VERSION)
+    get_ticker.__doc__ = Client.get_ticker.__doc__
+
+    async def get_symbol_ticker(self, **params):
+        return await self._get('ticker/price', data=params, version=self.PRIVATE_API_VERSION)
+    get_symbol_ticker.__doc__ = Client.get_symbol_ticker.__doc__
+
+    async def get_orderbook_ticker(self, **params):
+        return await self._get('ticker/bookTicker', data=params, version=self.PRIVATE_API_VERSION)
+    get_orderbook_ticker.__doc__ = Client.get_orderbook_ticker.__doc__
+
+    # Account Endpoints
+
+    async def create_order(self, **params):
+        return await self._post('order', True, data=params)
+    create_order.__doc__ = Client.create_order.__doc__
+
+    async def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        params.update({
+            'type': self.ORDER_TYPE_LIMIT,
+            'timeInForce': timeInForce
+        })
+        return await self.create_order(**params)
+    order_limit.__doc__ = Client.order_limit.__doc__
+
+    async def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        params.update({
+            'side': self.SIDE_BUY,
+        })
+        return await self.order_limit(timeInForce=timeInForce, **params)
+    order_limit_buy.__doc__ = Client.order_limit_buy.__doc__
+
+    async def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        params.update({
+            'side': self.SIDE_SELL
+        })
+        return await self.order_limit(timeInForce=timeInForce, **params)
+    order_limit_sell.__doc__ = Client.order_limit_sell.__doc__
+
+    async def order_market(self, **params):
+        params.update({
+            'type': self.ORDER_TYPE_MARKET
+        })
+        return await self.create_order(**params)
+    order_market.__doc__ = Client.order_market.__doc__
+
+    async def order_market_buy(self, **params):
+        params.update({
+            'side': self.SIDE_BUY
+        })
+        return await self.order_market(**params)
+    order_market_buy.__doc__ = Client.order_market_buy.__doc__
+
+    async def order_market_sell(self, **params):
+        params.update({
+            'side': self.SIDE_SELL
+        })
+        return await self.order_market(**params)
+    order_market_sell.__doc__ = Client.order_market_sell.__doc__
+
+    async def create_oco_order(self, **params):
+        return await self._post('order/oco', True, data=params)
+    create_oco_order.__doc__ = Client.create_oco_order.__doc__
+
+    async def order_oco_buy(self, **params):
+        params.update({
+            'side': self.SIDE_BUY
+        })
+        return await self.create_oco_order(**params)
+    order_oco_buy.__doc__ = Client.order_oco_buy.__doc__
+
+    async def order_oco_sell(self, **params):
+        params.update({
+            'side': self.SIDE_SELL
+        })
+        return await self.create_oco_order(**params)
+    order_oco_sell.__doc__ = Client.order_oco_sell.__doc__
+
+    async def create_test_order(self, **params):
+        return await self._post('order/test', True, data=params)
+    create_test_order.__doc__ = Client.create_test_order.__doc__
+
+    async def get_order(self, **params):
+        return await self._get('order', True, data=params)
+    get_order.__doc__ = Client.get_order.__doc__
+
+    async def get_all_orders(self, **params):
+        return await self._get('allOrders', True, data=params)
+    get_all_orders.__doc__ = Client.get_all_orders.__doc__
+
+    async def cancel_order(self, **params):
+        return await self._delete('order', True, data=params)
+    cancel_order.__doc__ = Client.cancel_order.__doc__
+
+    async def get_open_orders(self, **params):
+        return await self._get('openOrders', True, data=params)
+    get_open_orders.__doc__ = Client.get_open_orders.__doc__
+
+    # User Stream Endpoints
+    async def get_account(self, **params):
+        return await self._get('account', True, data=params)
+    get_account.__doc__ = Client.get_account.__doc__
+
+    async def get_asset_balance(self, asset, **params):
+        res = await self.get_account(**params)
+        # find asset balance in list of balances
+        if "balances" in res:
+            for bal in res['balances']:
+                if bal['asset'].lower() == asset.lower():
+                    return bal
+        return None
+    get_asset_balance.__doc__ = Client.get_asset_balance.__doc__
+
+    async def get_my_trades(self, **params):
+        return await self._get('myTrades', True, data=params)
+    get_my_trades.__doc__ = Client.get_my_trades.__doc__
+
+    async def get_system_status(self):
+        return await self._request_margin_api('get', 'system/status')
+    get_system_status.__doc__ = Client.get_system_status.__doc__
+
+    async def get_account_status(self, **params):
+        return await self._request_margin_api('get', 'account/status', True, data=params)
+    get_account_status.__doc__ = Client.get_account_status.__doc__
+
+    async def get_account_api_trading_status(self, **params):
+        return await self._request_margin_api('get', 'account/apiTradingStatus', True, data=params)
+    get_account_api_trading_status.__doc__ = Client.get_account_api_trading_status.__doc__
+
+    async def get_account_api_permissions(self, **params):
+        return await self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
+    get_account_api_permissions.__doc__ = Client.get_account_api_permissions.__doc__
+
+    async def get_dust_log(self, **params):
+        return await self._request_margin_api('get', 'asset/dribblet', True, data=params)
+    get_dust_log.__doc__ = Client.get_dust_log.__doc__
+
+    async def transfer_dust(self, **params):
+        return await self._request_margin_api('post', 'asset/dust', True, data=params)
+    transfer_dust.__doc__ = Client.transfer_dust.__doc__
+
+    async def get_asset_dividend_history(self, **params):
+        return await self._request_margin_api('get', 'asset/assetDividend', True, data=params)
+    get_asset_dividend_history.__doc__ = Client.get_asset_dividend_history.__doc__
+
+    async def make_universal_transfer(self, **params):
+        return await self._request_margin_api('post', 'asset/transfer', signed=True, data=params)
+    make_universal_transfer.__doc__ = Client.make_universal_transfer.__doc__
+
+    async def query_universal_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'asset/transfer', signed=True, data=params)
+    query_universal_transfer_history.__doc__ = Client.query_universal_transfer_history.__doc__
+
+    async def get_trade_fee(self, **params):
+        return await self._request_margin_api('get', 'asset/tradeFee', True, data=params)
+    get_trade_fee.__doc__ = Client.get_trade_fee.__doc__
+
+    async def get_asset_details(self, **params):
+        return await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
+    get_asset_details.__doc__ = Client.get_asset_details.__doc__
+
+    # Withdraw Endpoints
+
+    async def withdraw(self, **params):
+        # force a name for the withdrawal if one not set
+        if 'coin' in params and 'name' not in params:
+            params['name'] = params['coin']
+        return await self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
+    withdraw.__doc__ = Client.withdraw.__doc__
+
+    async def get_deposit_history(self, **params):
+        return await self._request_margin_api('get', 'capital/deposit/hisrec', True, data=params)
+    get_deposit_history.__doc__ = Client.get_deposit_history.__doc__
+
+    async def get_withdraw_history(self, **params):
+        return await self._request_margin_api('get', 'capital/withdraw/history', True, data=params)
+    get_withdraw_history.__doc__ = Client.get_withdraw_history.__doc__
+
+    async def get_withdraw_history_id(self, withdraw_id, **params):
+        result = await self.get_withdraw_history(**params)
+
+        for entry in result:
+            if 'id' in entry and entry['id'] == withdraw_id:
+                return entry
+
+        raise Exception("There is no entry with withdraw id", result)
+    get_withdraw_history_id.__doc__ = Client.get_withdraw_history_id.__doc__
+
+    async def get_deposit_address(self, coin: str, network: Optional[str] = None, **params):
+        params['coin'] = coin
+        if network:
+            params['network'] = network
+        return await self._request_margin_api('get', 'capital/deposit/address', True, data=params)
+    get_deposit_address.__doc__ = Client.get_deposit_address.__doc__
+
+    # User Stream Endpoints
+
+    async def stream_get_listen_key(self):
+        res = await self._post('userDataStream', False, data={})
+        return res['listenKey']
+    stream_get_listen_key.__doc__ = Client.stream_get_listen_key.__doc__
+
+    async def stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._put('userDataStream', False, data=params)
+    stream_keepalive.__doc__ = Client.stream_keepalive.__doc__
+
+    async def stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._delete('userDataStream', False, data=params)
+    stream_close.__doc__ = Client.stream_close.__doc__
+
+    # Margin Trading Endpoints
+    async def get_margin_account(self, **params):
+        return await self._request_margin_api('get', 'margin/account', True, data=params)
+    get_margin_account.__doc__ = Client.get_margin_account.__doc__
+
+    async def get_isolated_margin_account(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/account', True, data=params)
+
+    async def get_margin_asset(self, **params):
+        return await self._request_margin_api('get', 'margin/asset', data=params)
+
+    async def get_margin_symbol(self, **params):
+        return await self._request_margin_api('get', 'margin/pair', data=params)
+
+    async def get_margin_all_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/allAssets', data=params)
+
+    async def get_margin_all_pairs(self, **params):
+        return await self._request_margin_api('get', 'margin/allPairs', data=params)
+
+    async def create_isolated_margin_account(self, **params):
+        return await self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
+
+    async def get_isolated_margin_symbol(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/pair', signed=True, data=params)
+
+    async def get_all_isolated_margin_symbols(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
+
+    async def toggle_bnb_burn_spot_margin(self, **params):
+        return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
+
+    async def get_bnb_burn_spot_margin(self, **params):
+        return await self._request_margin_api('get', 'bnbBurn', signed=True, data=params)
+
+    async def get_margin_price_index(self, **params):
+        return await self._request_margin_api('get', 'margin/priceIndex', data=params)
+
+    async def transfer_margin_to_spot(self, **params):
+        params['type'] = 2
+        return await self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+
+    async def transfer_spot_to_margin(self, **params):
+        params['type'] = 1
+        return await self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+
+    async def transfer_isolated_margin_to_spot(self, **params):
+        params['transFrom'] = "ISOLATED_MARGIN"
+        params['transTo'] = "SPOT"
+        return await self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
+    async def transfer_spot_to_isolated_margin(self, **params):
+        params['transFrom'] = "SPOT"
+        params['transTo'] = "ISOLATED_MARGIN"
+        return await self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+
+    async def create_margin_loan(self, **params):
+        return await self._request_margin_api('post', 'margin/loan', signed=True, data=params)
+
+    async def repay_margin_loan(self, **params):
+        return await self._request_margin_api('post', 'margin/repay', signed=True, data=params)
+
+    async def create_margin_order(self, **params):
+        return await self._request_margin_api('post', 'margin/order', signed=True, data=params)
+
+    async def cancel_margin_order(self, **params):
+        return await self._request_margin_api('delete', 'margin/order', signed=True, data=params)
+
+    async def get_margin_loan_details(self, **params):
+        return await self._request_margin_api('get', 'margin/loan', signed=True, data=params)
+
+    async def get_margin_repay_details(self, **params):
+        return await self._request_margin_api('get', 'margin/repay', signed=True, data=params)
+
+    async def get_margin_interest_history(self, **params):
+        return await self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
+
+    async def get_margin_force_liquidation_rec(self, **params):
+        return await self._request_margin_api('get', 'margin/forceLiquidationRec', signed=True, data=params)
+
+    async def get_margin_order(self, **params):
+        return await self._request_margin_api('get', 'margin/order', signed=True, data=params)
+
+    async def get_open_margin_orders(self, **params):
+        return await self._request_margin_api('get', 'margin/openOrders', signed=True, data=params)
+
+    async def get_all_margin_orders(self, **params):
+        return await self._request_margin_api('get', 'margin/allOrders', signed=True, data=params)
+
+    async def get_margin_trades(self, **params):
+        return await self._request_margin_api('get', 'margin/myTrades', signed=True, data=params)
+
+    async def get_max_margin_loan(self, **params):
+        return await self._request_margin_api('get', 'margin/maxBorrowable', signed=True, data=params)
+
+    async def get_max_margin_transfer(self, **params):
+        return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    # Margin OCO
+
+    async def create_margin_oco_order(self, **params):
+        return await self._request_margin_api('post', 'margin/order/oco', signed=True, data=params)
+
+    async def cancel_margin_oco_order(self, **params):
+        return await self._request_margin_api('delete', 'margin/orderList', signed=True, data=params)
+
+    async def get_margin_oco_order(self, **params):
+        return await self._request_margin_api('get', 'margin/orderList', signed=True, data=params)
+
+    async def get_open_margin_oco_orders(self, **params):
+        return await self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
+
+    # Cross-margin
+
+    async def margin_stream_get_listen_key(self):
+        res = await self._request_margin_api('post', 'userDataStream', signed=False, data={})
+        return res['listenKey']
+
+    async def margin_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_margin_api('put', 'userDataStream', signed=False, data=params)
+
+    async def margin_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_margin_api('delete', 'userDataStream', signed=False, data=params)
+
+        # Isolated margin
+
+    async def isolated_margin_stream_get_listen_key(self, symbol):
+        params = {
+            'symbol': symbol
+        }
+        res = await self._request_margin_api('post', 'userDataStream/isolated', signed=False, data=params)
+        return res['listenKey']
+
+    async def isolated_margin_stream_keepalive(self, symbol, listenKey):
+        params = {
+            'symbol': symbol,
+            'listenKey': listenKey
+        }
+        return await self._request_margin_api('put', 'userDataStream/isolated', signed=False, data=params)
+
+    async def isolated_margin_stream_close(self, symbol, listenKey):
+        params = {
+            'symbol': symbol,
+            'listenKey': listenKey
+        }
+        return await self._request_margin_api('delete', 'userDataStream/isolated', signed=False, data=params)
+
+    # Lending Endpoints
+
+    async def get_lending_product_list(self, **params):
+        return await self._request_margin_api('get', 'lending/daily/product/list', signed=True, data=params)
+
+    async def get_lending_daily_quota_left(self, **params):
+        return await self._request_margin_api('get', 'lending/daily/userLeftQuota', signed=True, data=params)
+
+    async def purchase_lending_product(self, **params):
+        return await self._request_margin_api('post', 'lending/daily/purchase', signed=True, data=params)
+
+    async def get_lending_daily_redemption_quota(self, **params):
+        return await self._request_margin_api('get', 'lending/daily/userRedemptionQuota', signed=True, data=params)
+
+    async def redeem_lending_product(self, **params):
+        return await self._request_margin_api('post', 'lending/daily/redeem', signed=True, data=params)
+
+    async def get_lending_position(self, **params):
+        return await self._request_margin_api('get', 'lending/daily/token/position', signed=True, data=params)
+
+    async def get_fixed_activity_project_list(self, **params):
+        return await self._request_margin_api('get', 'lending/project/list', signed=True, data=params)
+
+    async def get_lending_account(self, **params):
+        return await self._request_margin_api('get', 'lending/union/account', signed=True, data=params)
+
+    async def get_lending_purchase_history(self, **params):
+        return await self._request_margin_api('get', 'lending/union/purchaseRecord', signed=True, data=params)
+
+    async def get_lending_redemption_history(self, **params):
+        return await self._request_margin_api('get', 'lending/union/redemptionRecord', signed=True, data=params)
+
+    async def get_lending_interest_history(self, **params):
+        return await self._request_margin_api('get', 'lending/union/interestHistory', signed=True, data=params)
+
+    async def change_fixed_activity_to_daily_position(self, **params):
+        return await self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
+
+    # Sub Accounts
+
+    async def get_sub_account_list(self, **params):
+        return await self._request_margin_api('get', 'sub-account/list', True, data=params)
+
+    async def get_sub_account_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'sub-account/sub/transfer/history', True, data=params)
+
+    async def get_sub_account_futures_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'sub-account/futures/internalTransfer', True, data=params)
+
+    async def create_sub_account_futures_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/futures/internalTransfer', True, data=params)
+
+    async def get_sub_account_assets(self, **params):
+        return await self._request_margin_api('get', 'sub-account/assets', True, data=params)
+
+    async def query_subaccount_spot_summary(self, **params):
+        return await self._request_margin_api('get', 'sub-account/spotSummary', True, data=params)
+
+    async def get_subaccount_deposit_address(self, **params):
+        return await self._request_margin_api('get', 'capital/deposit/subAddress', True, data=params)
+
+    async def get_subaccount_deposit_history(self, **params):
+        return await self._request_margin_api('get', 'capital/deposit/subHisrec', True, data=params)
+
+    async def get_subaccount_futures_margin_status(self, **params):
+        return await self._request_margin_api('get', 'sub-account/status', True, data=params)
+
+    async def enable_subaccount_margin(self, **params):
+        return await self._request_margin_api('post', 'sub-account/margin/enable', True, data=params)
+
+    async def get_subaccount_margin_details(self, **params):
+        return await self._request_margin_api('get', 'sub-account/margin/account', True, data=params)
+
+    async def get_subaccount_margin_summary(self, **params):
+        return await self._request_margin_api('get', 'sub-account/margin/accountSummary', True, data=params)
+
+    async def enable_subaccount_futures(self, **params):
+        return await self._request_margin_api('post', 'sub-account/futures/enable', True, data=params)
+
+    async def get_subaccount_futures_details(self, **params):
+        return await self._request_margin_api('get', 'sub-account/futures/account', True, data=params)
+
+    async def get_subaccount_futures_summary(self, **params):
+        return await self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params)
+
+    async def get_subaccount_futures_positionrisk(self, **params):
+        return await self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params)
+
+    async def make_subaccount_futures_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/futures/transfer', True, data=params)
+
+    async def make_subaccount_margin_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/margin/transfer', True, data=params)
+
+    async def make_subaccount_to_subaccount_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/transfer/subToSub', True, data=params)
+
+    async def make_subaccount_to_master_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/transfer/subToMaster', True, data=params)
+
+    async def get_subaccount_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'sub-account/transfer/subUserHistory', True, data=params)
+
+    async def make_subaccount_universal_transfer(self, **params):
+        return await self._request_margin_api('post', 'sub-account/universalTransfer', True, data=params)
+
+    async def get_universal_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'sub-account/universalTransfer', True, data=params)
+
+    # Futures API
+
+    async def futures_ping(self):
+        return await self._request_futures_api('get', 'ping')
+
+    async def futures_time(self):
+        return await self._request_futures_api('get', 'time')
+
+    async def futures_exchange_info(self):
+        return await self._request_futures_api('get', 'exchangeInfo')
+
+    async def futures_order_book(self, **params):
+        return await self._request_futures_api('get', 'depth', data=params)
+
+    async def futures_recent_trades(self, **params):
+        return await self._request_futures_api('get', 'trades', data=params)
+
+    async def futures_historical_trades(self, **params):
+        return await self._request_futures_api('get', 'historicalTrades', data=params)
+
+    async def futures_aggregate_trades(self, **params):
+        return await self._request_futures_api('get', 'aggTrades', data=params)
+
+    async def futures_klines(self, **params):
+        return await self._request_futures_api('get', 'klines', data=params)
+
+    async def futures_continous_klines(self, **params):
+        return await self._request_futures_api('get', 'continuousKlines', data=params)
+
+    async def futures_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
+
+    async def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
+        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
+
+    async def futures_mark_price(self, **params):
+        return await self._request_futures_api('get', 'premiumIndex', data=params)
+
+    async def futures_funding_rate(self, **params):
+        return await self._request_futures_api('get', 'fundingRate', data=params)
+
+    async def futures_ticker(self, **params):
+        return await self._request_futures_api('get', 'ticker/24hr', data=params)
+
+    async def futures_symbol_ticker(self, **params):
+        return await self._request_futures_api('get', 'ticker/price', data=params)
+
+    async def futures_orderbook_ticker(self, **params):
+        return await self._request_futures_api('get', 'ticker/bookTicker', data=params)
+
+    async def futures_liquidation_orders(self, **params):
+        return await self._request_futures_api('get', 'forceOrders', signed=True, data=params)
+
+    async def futures_adl_quantile_estimate(self, **params):
+        return await self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
+
+    async def futures_open_interest(self, **params):
+        return await self._request_futures_api('get', 'openInterest', data=params)
+
+    async def futures_open_interest_hist(self, **params):
+        return await self._request_futures_data_api('get', 'openInterestHist', data=params)
+
+    async def futures_leverage_bracket(self, **params):
+        return await self._request_futures_api('get', 'leverageBracket', True, data=params)
+
+    async def futures_account_transfer(self, **params):
+        return await self._request_margin_api('post', 'futures/transfer', True, data=params)
+
+    async def transfer_history(self, **params):
+        return await self._request_margin_api('get', 'futures/transfer', True, data=params)
+
+    async def futures_create_order(self, **params):
+        return await self._request_futures_api('post', 'order', True, data=params)
+
+    async def futures_place_batch_order(self, **params):
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+        return await self._request_futures_api('post', 'batchOrders', True, data=params)
+
+    async def futures_get_order(self, **params):
+        return await self._request_futures_api('get', 'order', True, data=params)
+
+    async def futures_get_open_orders(self, **params):
+        return await self._request_futures_api('get', 'openOrders', True, data=params)
+
+    async def futures_get_all_orders(self, **params):
+        return await self._request_futures_api('get', 'allOrders', True, data=params)
+
+    async def futures_cancel_order(self, **params):
+        return await self._request_futures_api('delete', 'order', True, data=params)
+
+    async def futures_cancel_all_open_orders(self, **params):
+        return await self._request_futures_api('delete', 'allOpenOrders', True, data=params)
+
+    async def futures_cancel_orders(self, **params):
+        return await self._request_futures_api('delete', 'batchOrders', True, data=params)
+
+    async def futures_account_balance(self, **params):
+        return await self._request_futures_api('get', 'balance', True, data=params)
+
+    async def futures_account(self, **params):
+        return await self._request_futures_api('get', 'account', True, data=params)
+
+    async def futures_change_leverage(self, **params):
+        return await self._request_futures_api('post', 'leverage', True, data=params)
+
+    async def futures_change_margin_type(self, **params):
+        return await self._request_futures_api('post', 'marginType', True, data=params)
+
+    async def futures_change_position_margin(self, **params):
+        return await self._request_futures_api('post', 'positionMargin', True, data=params)
+
+    async def futures_position_margin_history(self, **params):
+        return await self._request_futures_api('get', 'positionMargin/history', True, data=params)
+
+    async def futures_position_information(self, **params):
+        return await self._request_futures_api('get', 'positionRisk', True, data=params)
+
+    async def futures_account_trades(self, **params):
+        return await self._request_futures_api('get', 'userTrades', True, data=params)
+
+    async def futures_income_history(self, **params):
+        return await self._request_futures_api('get', 'income', True, data=params)
+
+    async def futures_change_position_mode(self, **params):
+        return await self._request_futures_api('post', 'positionSide/dual', True, data=params)
+
+    async def futures_get_position_mode(self, **params):
+        return await self._request_futures_api('get', 'positionSide/dual', True, data=params)
+
+    async def futures_change_multi_assets_mode(self, multiAssetsMargin: bool):
+        params = {
+            'true' if multiAssetsMargin else 'false'
+        }
+        return await self._request_futures_api('post', 'multiAssetsMargin', True, data=params)
+
+    async def futures_get_multi_assets_mode(self):
+        return await self._request_futures_api('get', 'multiAssetsMargin', True)
+
+    async def futures_stream_get_listen_key(self):
+        res = await self._request_futures_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    async def futures_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_api('put', 'listenKey', signed=False, data=params)
+
+    async def futures_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_api('delete', 'listenKey', signed=False, data=params)
+
+    # COIN Futures API
+
+    async def futures_coin_ping(self):
+        return await self._request_futures_coin_api("get", "ping")
+
+    async def futures_coin_time(self):
+        return await self._request_futures_coin_api("get", "time")
+
+    async def futures_coin_exchange_info(self):
+        return await self._request_futures_coin_api("get", "exchangeInfo")
+
+    async def futures_coin_order_book(self, **params):
+        return await self._request_futures_coin_api("get", "depth", data=params)
+
+    async def futures_coin_recent_trades(self, **params):
+        return await self._request_futures_coin_api("get", "trades", data=params)
+
+    async def futures_coin_historical_trades(self, **params):
+        return await self._request_futures_coin_api("get", "historicalTrades", data=params)
+
+    async def futures_coin_aggregate_trades(self, **params):
+        return await self._request_futures_coin_api("get", "aggTrades", data=params)
+
+    async def futures_coin_klines(self, **params):
+        return await self._request_futures_coin_api("get", "klines", data=params)
+
+    async def futures_coin_continous_klines(self, **params):
+        return await self._request_futures_coin_api("get", "continuousKlines", data=params)
+
+    async def futures_coin_index_price_klines(self, **params):
+        return await self._request_futures_coin_api("get", "indexPriceKlines", data=params)
+
+    async def futures_coin_mark_price_klines(self, **params):
+        return await self._request_futures_coin_api("get", "markPriceKlines", data=params)
+
+    async def futures_coin_mark_price(self, **params):
+        return await self._request_futures_coin_api("get", "premiumIndex", data=params)
+
+    async def futures_coin_funding_rate(self, **params):
+        return await self._request_futures_coin_api("get", "fundingRate", data=params)
+
+    async def futures_coin_ticker(self, **params):
+        return await self._request_futures_coin_api("get", "ticker/24hr", data=params)
+
+    async def futures_coin_symbol_ticker(self, **params):
+        return await self._request_futures_coin_api("get", "ticker/price", data=params)
+
+    async def futures_coin_orderbook_ticker(self, **params):
+        return await self._request_futures_coin_api("get", "ticker/bookTicker", data=params)
+
+    async def futures_coin_liquidation_orders(self, **params):
+        return await self._request_futures_coin_api("get", "forceOrders", signed=True, data=params)
+
+    async def futures_coin_open_interest(self, **params):
+        return await self._request_futures_coin_api("get", "openInterest", data=params)
+
+    async def futures_coin_open_interest_hist(self, **params):
+        return await self._request_futures_coin_data_api("get", "openInterestHist", data=params)
+
+    async def futures_coin_leverage_bracket(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "leverageBracket", version=2, signed=True, data=params
+        )
+
+    async def new_transfer_history(self, **params):
+        return await self._request_margin_api("get", "asset/transfer", True, data=params)
+
+    async def universal_transfer(self, **params):
+        return await self._request_margin_api(
+            "post", "asset/transfer", signed=True, data=params
+        )
+
+    async def futures_coin_create_order(self, **params):
+        return await self._request_futures_coin_api("post", "order", True, data=params)
+
+    async def futures_coin_place_batch_order(self, **params):
+        query_string = urlencode(params)
+        query_string = query_string.replace('%27', '%22')
+        params['batchOrders'] = query_string[12:]
+
+        return await self._request_futures_coin_api('post', 'batchOrders', True, data=params)
+
+    async def futures_coin_get_order(self, **params):
+        return await self._request_futures_coin_api("get", "order", True, data=params)
+
+    async def futures_coin_get_open_orders(self, **params):
+        return await self._request_futures_coin_api("get", "openOrders", True, data=params)
+
+    async def futures_coin_get_all_orders(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "allOrders", signed=True, data=params
+        )
+
+    async def futures_coin_cancel_order(self, **params):
+        return await self._request_futures_coin_api(
+            "delete", "order", signed=True, data=params
+        )
+
+    async def futures_coin_cancel_all_open_orders(self, **params):
+        return await self._request_futures_coin_api(
+            "delete", "allOpenOrders", signed=True, data=params
+        )
+
+    async def futures_coin_cancel_orders(self, **params):
+        return await self._request_futures_coin_api(
+            "delete", "batchOrders", True, data=params
+        )
+
+    async def futures_coin_account_balance(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "balance", signed=True, data=params
+        )
+
+    async def futures_coin_account(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "account", signed=True, data=params
+        )
+
+    async def futures_coin_change_leverage(self, **params):
+        return await self._request_futures_coin_api(
+            "post", "leverage", signed=True, data=params
+        )
+
+    async def futures_coin_change_margin_type(self, **params):
+        return await self._request_futures_coin_api(
+            "post", "marginType", signed=True, data=params
+        )
+
+    async def futures_coin_change_position_margin(self, **params):
+        return await self._request_futures_coin_api(
+            "post", "positionMargin", True, data=params
+        )
+
+    async def futures_coin_position_margin_history(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "positionMargin/history", True, data=params
+        )
+
+    async def futures_coin_position_information(self, **params):
+        return await self._request_futures_coin_api("get", "positionRisk", True, data=params)
+
+    async def futures_coin_account_trades(self, **params):
+        return await self._request_futures_coin_api("get", "userTrades", True, data=params)
+
+    async def futures_coin_income_history(self, **params):
+        return await self._request_futures_coin_api("get", "income", True, data=params)
+
+    async def futures_coin_change_position_mode(self, **params):
+        return await self._request_futures_coin_api("post", "positionSide/dual", True, data=params)
+
+    async def futures_coin_get_position_mode(self, **params):
+        return await self._request_futures_coin_api("get", "positionSide/dual", True, data=params)
+
+    async def futures_coin_stream_get_listen_key(self):
+        res = await self._request_futures_coin_api('post', 'listenKey', signed=False, data={})
+        return res['listenKey']
+
+    async def futures_coin_stream_keepalive(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_coin_api('put', 'listenKey', signed=False, data=params)
+
+    async def futures_coin_stream_close(self, listenKey):
+        params = {
+            'listenKey': listenKey
+        }
+        return await self._request_futures_coin_api('delete', 'listenKey', signed=False, data=params)
+
+    async def get_all_coins_info(self, **params):
+        return await self._request_margin_api('get', 'capital/config/getall', True, data=params)
+
+    async def get_account_snapshot(self, **params):
+        return await self._request_margin_api('get', 'accountSnapshot', True, data=params)
+
+    async def disable_fast_withdraw_switch(self, **params):
+        return await self._request_margin_api('post', 'disableFastWithdrawSwitch', True, data=params)
+
+    async def enable_fast_withdraw_switch(self, **params):
+        return await self._request_margin_api('post', 'enableFastWithdrawSwitch', True, data=params)
+
+    """
+    ====================================================================================================================
+    Options API
+    ====================================================================================================================
+    """
+
+    # Quoting interface endpoints
+
+    async def options_ping(self):
+        return await self._request_options_api('get', 'ping')
+
+    async def options_time(self):
+        return await self._request_options_api('get', 'time')
+
+    async def options_info(self):
+        return await self._request_options_api('get', 'optionInfo')
+
+    async def options_exchange_info(self):
+        return await self._request_options_api('get', 'exchangeInfo')
+
+    async def options_index_price(self, **params):
+        return await self._request_options_api('get', 'index', data=params)
+
+    async def options_price(self, **params):
+        return await self._request_options_api('get', 'ticker', data=params)
+
+    async def options_mark_price(self, **params):
+        return await self._request_options_api('get', 'mark', data=params)
+
+    async def options_order_book(self, **params):
+        return await self._request_options_api('get', 'depth', data=params)
+
+    async def options_klines(self, **params):
+        return await self._request_options_api('get', 'klines', data=params)
+
+    async def options_recent_trades(self, **params):
+        return await self._request_options_api('get', 'trades', data=params)
+
+    async def options_historical_trades(self, **params):
+        return await self._request_options_api('get', 'historicalTrades', data=params)
+
+    # Account and trading interface endpoints
+
+    async def options_account_info(self, **params):
+        return await self._request_options_api('get', 'account', signed=True, data=params)
+
+    async def options_funds_transfer(self, **params):
+        return await self._request_options_api('post', 'transfer', signed=True, data=params)
+
+    async def options_positions(self, **params):
+        return await self._request_options_api('get', 'position', signed=True, data=params)
+
+    async def options_bill(self, **params):
+        return await self._request_options_api('post', 'bill', signed=True, data=params)
+
+    async def options_place_order(self, **params):
+        return await self._request_options_api('post', 'order', signed=True, data=params)
+
+    async def options_place_batch_order(self, **params):
+        return await self._request_options_api('post', 'batchOrders', signed=True, data=params)
+
+    async def options_cancel_order(self, **params):
+        return await self._request_options_api('delete', 'order', signed=True, data=params)
+
+    async def options_cancel_batch_order(self, **params):
+        return await self._request_options_api('delete', 'batchOrders', signed=True, data=params)
+
+    async def options_cancel_all_orders(self, **params):
+        return await self._request_options_api('delete', 'allOpenOrders', signed=True, data=params)
+
+    async def options_query_order(self, **params):
+        return await self._request_options_api('get', 'order', signed=True, data=params)
+
+    async def options_query_pending_orders(self, **params):
+        return await self._request_options_api('get', 'openOrders', signed=True, data=params)
+
+    async def options_query_order_history(self, **params):
+        return await self._request_options_api('get', 'historyOrders', signed=True, data=params)
+
+    async def options_user_trades(self, **params):
+        return await self._request_options_api('get', 'userTrades', signed=True, data=params)
+
+    # Fiat Endpoints
+
+    async def get_fiat_deposit_withdraw_history(self, **params):
+        return await self._request_margin_api('get', 'fiat/orders', signed=True, data=params)
+
+    async def get_fiat_payments_history(self, **params):
+        return await self._request_margin_api('get', 'fiat/payments', signed=True, data=params)
+
+    # C2C Endpoints
+
+    async def get_c2c_trade_history(self, **params):
+        return await self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)

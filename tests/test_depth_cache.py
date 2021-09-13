@@ -1,4 +1,5 @@
 from binance.depthcache import DepthCache
+from decimal import Decimal
 import pytest
 
 TEST_SYMBOL = "BNBBTC"
@@ -6,7 +7,7 @@ TEST_SYMBOL = "BNBBTC"
 
 @pytest.fixture
 def fresh_cache():
-    return DepthCache(TEST_SYMBOL)
+    return DepthCache(TEST_SYMBOL, Decimal)
 
 
 def test_add_bids(fresh_cache):
@@ -22,6 +23,9 @@ def test_add_bids(fresh_cache):
     assert len(bids) == 3
 
     assert bids == sorted(bids, reverse=True)
+
+    assert isinstance(bids[0][0], Decimal)
+    assert isinstance(bids[0][1], Decimal)
 
 
 def test_add_asks(fresh_cache):
@@ -40,3 +44,6 @@ def test_add_asks(fresh_cache):
 
     # Lowest ask price should be first (ascending order)
     assert asks == sorted(asks)
+
+    assert isinstance(asks[0][0], Decimal)
+    assert isinstance(asks[0][1], Decimal)
