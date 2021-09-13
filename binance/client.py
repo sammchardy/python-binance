@@ -5762,30 +5762,6 @@ class Client(BaseClient):
         """
         return self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
 
-    def futures_top_longshort_account_ratio(self, **params):
-        """Get present long to short ratio for top accounts of a specific symbol.
-
-        https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-accounts-market_data
-
-        """
-        return self._request_futures_api('get', 'topLongShortAccountRatio', data=params)
-
-    def futures_top_longshort_position_ratio(self, **params):
-        """Get present long to short ratio for top positions of a specific symbol.
-
-        https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-positions
-
-        """
-        return self._request_futures_api('get', 'topLongShortPositionRatio', data=params)
-
-    def futures_global_longshort_ratio(self, **params):
-        """Get present global long to short ratio of a specific symbol.
-
-        https://binance-docs.github.io/apidocs/futures/en/#long-short-ratio
-
-        """
-        return self._request_futures_api('get', 'globalLongShortAccountRatio', data=params)
-
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
