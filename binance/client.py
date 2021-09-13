@@ -5706,21 +5706,21 @@ class Client(BaseClient):
         
         https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-accounts-market_data
         """
-        return self._request_futures_api('get', 'topLongShortAccountRatio', data=params)
+        return self._request_futures_data_api('get', 'topLongShortAccountRatio', data=params)
     
     def futures_top_longshort_position_ratio(self, **params):
         """Get present long to short ratio for top positions of a specific symbol.
         
         https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-positions
         """
-        return self._request_futures_api('get', 'topLongShortPositionRatio', data=params)
+        return self._request_futures_data_api('get', 'topLongShortPositionRatio', data=params)
     
     def futures_global_longshort_ratio(self, **params):
         """Get present global long to short ratio of a specific symbol.
         
         https://binance-docs.github.io/apidocs/futures/en/#long-short-ratio
         """
-        return self._request_futures_api('get', 'globalLongShortAccountRatio', data=params)
+        return self._request_futures_data_api('get', 'globalLongShortAccountRatio', data=params)
 
     def futures_ticker(self, **params):
         """24 hour rolling window price change statistics.
