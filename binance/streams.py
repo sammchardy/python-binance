@@ -559,7 +559,7 @@ class BinanceSocketManager:
             <pair>_<contractType>@continuousKline_<interval>
         """
 
-        path = f'{symbol.lower()}_{contract_type}@continuousKline_{interval}'
+        path = f'{symbol.lower()}_{contract_type.value}@continuousKline_{interval}'
         return self._get_futures_socket(path, futures_type=futures_type)
 
     def miniticker_socket(self, update_time: int = 1000):
