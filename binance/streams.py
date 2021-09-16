@@ -135,8 +135,6 @@ class ReconnectingWebsocket:
                         continue
                     elif self.ws.state == ws.protocol.State.CLOSED:
                         await self._reconnect()
-                        self.ws_state = WSListenerState.RECONNECTING
-
                     elif self.ws_state == WSListenerState.STREAMING:
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
                         res = self._handle_message(res)
@@ -216,10 +214,10 @@ class ReconnectingWebsocket:
 
     def _no_message_received_reconnect(self):
         self._log.debug('No message received, reconnecting')
-        self._ws_state = WSListenerState.RECONNECTING
+        self.ws_state = WSListenerState.RECONNECTING
 
     async def _reconnect(self):
-        self._ws_state = WSListenerState.RECONNECTING
+        self.ws_state = WSListenerState.RECONNECTING
 
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
