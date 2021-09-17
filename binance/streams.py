@@ -99,7 +99,7 @@ class ReconnectingWebsocket:
     async def _kill_read_loop(self):
         self.ws_state = WSListenerState.EXITING
         while self._handle_read_loop:
-            await sleep(0)
+            await sleep(0.1)
 
     async def _before_connect(self):
         pass
@@ -132,6 +132,7 @@ class ReconnectingWebsocket:
                     elif self.ws_state == WSListenerState.EXITING:
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:
+                        await asyncio.sleep(0.1)
                         continue
                     elif self.ws.state == ws.protocol.State.CLOSED:
                         await self._reconnect()
@@ -200,7 +201,7 @@ class ReconnectingWebsocket:
 
     async def _wait_for_reconnect(self):
         while self.ws_state != WSListenerState.STREAMING:
-            await sleep(0)
+            await sleep(0.1)
 
     def _get_reconnect_wait(self, attempts: int) -> int:
         expo = 2 ** attempts
