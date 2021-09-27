@@ -99,7 +99,7 @@ class ReconnectingWebsocket:
     async def _kill_read_loop(self):
         self.ws_state = WSListenerState.EXITING
         while self._handle_read_loop:
-            await sleep(0)
+            await sleep(0.1)
 
     async def _before_connect(self):
         pass
@@ -132,11 +132,10 @@ class ReconnectingWebsocket:
                     elif self.ws_state == WSListenerState.EXITING:
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:
+                        await asyncio.sleep(0.1)
                         continue
                     elif self.ws.state == ws.protocol.State.CLOSED:
                         await self._reconnect()
-                        self.ws_state = WSListenerState.RECONNECTING
-
                     elif self.ws_state == WSListenerState.STREAMING:
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
                         res = self._handle_message(res)
@@ -202,7 +201,7 @@ class ReconnectingWebsocket:
 
     async def _wait_for_reconnect(self):
         while self.ws_state != WSListenerState.STREAMING:
-            await sleep(0)
+            await sleep(0.1)
 
     def _get_reconnect_wait(self, attempts: int) -> int:
         expo = 2 ** attempts
@@ -216,10 +215,10 @@ class ReconnectingWebsocket:
 
     def _no_message_received_reconnect(self):
         self._log.debug('No message received, reconnecting')
-        self._ws_state = WSListenerState.RECONNECTING
+        self.ws_state = WSListenerState.RECONNECTING
 
     async def _reconnect(self):
-        self._ws_state = WSListenerState.RECONNECTING
+        self.ws_state = WSListenerState.RECONNECTING
 
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
@@ -560,7 +559,7 @@ class BinanceSocketManager:
         """
 
         path = f'{symbol.lower()}_{contract_type.value}@continuousKline_{interval}'
-        return self._get_futures_socket(path, futures_type=futures_type)
+        return self._get_futures_socket(path, prefix='ws/', futures_type=futures_type)
 
     def miniticker_socket(self, update_time: int = 1000):
         """Start a miniticker websocket for all trades
@@ -1232,8 +1231,8 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             params={
                 'symbol': symbol,
                 'interval': interval,
-                'futures_type': futures_type.value,
-                'contract_type': contract_type.value
+                'futures_type': futures_type,
+                'contract_type': contract_type
             }
         )
 
