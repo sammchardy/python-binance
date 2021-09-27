@@ -1,6 +1,22 @@
 Changelog
 =========
 
+v1.0.15 - 2021-09-27
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Enable/disable margin account for symbol endpoints
+- Top trader long/short positions endpoint
+- Global long/short ratio endpoint
+
+**Fixed**
+
+- fix websockets to 9.1
+- websocket reconnect updates
+- fix futures kline sockets
+
+
 v1.0.14 - 2021-09-08
 ^^^^^^^^^^^^^^^^^^^^
 
