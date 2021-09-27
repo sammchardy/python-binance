@@ -5744,21 +5744,21 @@ class Client(BaseClient):
 
     def futures_top_longshort_account_ratio(self, **params):
         """Get present long to short ratio for top accounts of a specific symbol.
-        
+
         https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-accounts-market_data
         """
         return self._request_futures_data_api('get', 'topLongShortAccountRatio', data=params)
-    
+
     def futures_top_longshort_position_ratio(self, **params):
         """Get present long to short ratio for top positions of a specific symbol.
-        
+
         https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-positions
         """
         return self._request_futures_data_api('get', 'topLongShortPositionRatio', data=params)
-    
+
     def futures_global_longshort_ratio(self, **params):
         """Get present global long to short ratio of a specific symbol.
-        
+
         https://binance-docs.github.io/apidocs/futures/en/#long-short-ratio
         """
         return self._request_futures_data_api('get', 'globalLongShortAccountRatio', data=params)
@@ -8013,6 +8013,15 @@ class AsyncClient(BaseClient):
 
     async def futures_funding_rate(self, **params):
         return await self._request_futures_api('get', 'fundingRate', data=params)
+
+    async def futures_top_longshort_account_ratio(self, **params):
+        return await self._request_futures_data_api('get', 'topLongShortAccountRatio', data=params)
+
+    async def futures_top_longshort_position_ratio(self, **params):
+        return await self._request_futures_data_api('get', 'topLongShortPositionRatio', data=params)
+
+    async def futures_global_longshort_ratio(self, **params):
+        return await self._request_futures_data_api('get', 'globalLongShortAccountRatio', data=params)
 
     async def futures_ticker(self, **params):
         return await self._request_futures_api('get', 'ticker/24hr', data=params)
