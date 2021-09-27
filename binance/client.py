@@ -949,8 +949,6 @@ class Client(BaseClient):
         :type end_str: None|str|int
         :param limit: Default 500; max 1000.
         :type limit: int
-        :param limit: Default 500; max 1000.
-        :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
