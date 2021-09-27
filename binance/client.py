@@ -2940,6 +2940,49 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolated/account', True, data=params)
 
+    def enable_isolated_margin_account(self, **params):
+        """Enable isolated margin account for a specific symbol.
+
+        https://binance-docs.github.io/apidocs/spot/en/#enable-isolated-margin-account-trade
+
+        :param symbol:
+        :type asset: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+              "success": true,
+              "symbol": "BTCUSDT"
+            }
+
+
+        """
+        return self._request_margin_api('post', 'margin/isolated/account', True, data=params)
+
+    def disable_isolated_margin_account(self, **params):
+        """Disable isolated margin account for a specific symbol. Each trading pair can only
+        be deactivated once every 24 hours.
+
+        https://binance-docs.github.io/apidocs/spot/en/#disable-isolated-margin-account-trade
+
+        :param symbol:
+        :type asset: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+              "success": true,
+              "symbol": "BTCUSDT"
+            }
+
+
+        """
+        return self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
+
     def get_margin_asset(self, **params):
         """Query cross-margin asset
 
@@ -7669,6 +7712,12 @@ class AsyncClient(BaseClient):
 
     async def get_isolated_margin_account(self, **params):
         return await self._request_margin_api('get', 'margin/isolated/account', True, data=params)
+
+    async def enable_isolated_margin_account(self, **params):
+        return await self._request_margin_api('post', 'margin/isolated/account', True, data=params)
+
+    async def disable_isolated_margin_account(self, **params):
+        return await self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
 
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
