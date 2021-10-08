@@ -58,6 +58,10 @@ WEBSOCKET_DEPTH_5 = '5'
 WEBSOCKET_DEPTH_10 = '10'
 WEBSOCKET_DEPTH_20 = '20'
 
+NO_SIDE_EFFECT_TYPE = 'NO_SIDE_EFFECT'
+MARGIN_BUY_TYPE = 'MARGIN_BUY'
+AUTO_REPAY_TYPE = 'AUTO_REPAY'
+
 
 class HistoricalKlinesType(Enum):
     SPOT = 1
@@ -68,3 +72,9 @@ class HistoricalKlinesType(Enum):
 class FuturesType(Enum):
     USD_M = 1
     COIN_M = 2
+
+
+class ContractType(Enum):
+    PERPETUAL = "perpetual"
+    CURRENT_QUARTER = "current_quarter"
+    NEXT_QUARTER = "next_quarter"
