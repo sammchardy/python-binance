@@ -429,7 +429,7 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
     ) -> str:
 
         while not self._client:
-            time.sleep(0.1)
+            time.sleep(0.01)
             
         dcm = dcm_class(
             client=self._client,
