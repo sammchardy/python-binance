@@ -6010,7 +6010,7 @@ class Client(BaseClient):
 
         """
         params = {
-            'true' if multiAssetsMargin else 'false'
+            'multiAssetsMargin': 'true' if multiAssetsMargin else 'false'
         }
         return self._request_futures_api('post', 'multiAssetsMargin', True, data=params)
 
@@ -6020,7 +6020,7 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#get-current-multi-assets-mode-user_data
 
         """
-        return self._request_futures_api('get', 'multiAssetsMargin', True)
+        return self._request_futures_api('get', 'multiAssetsMargin', True, data={})
 
     def futures_stream_get_listen_key(self):
         res = self._request_futures_api('post', 'listenKey', signed=False, data={})
@@ -8117,12 +8117,12 @@ class AsyncClient(BaseClient):
 
     async def futures_change_multi_assets_mode(self, multiAssetsMargin: bool):
         params = {
-            'true' if multiAssetsMargin else 'false'
+            'multiAssetsMargin': 'true' if multiAssetsMargin else 'false'
         }
         return await self._request_futures_api('post', 'multiAssetsMargin', True, data=params)
 
     async def futures_get_multi_assets_mode(self):
-        return await self._request_futures_api('get', 'multiAssetsMargin', True)
+        return await self._request_futures_api('get', 'multiAssetsMargin', True, data={})
 
     async def futures_stream_get_listen_key(self):
         res = await self._request_futures_api('post', 'listenKey', signed=False, data={})
