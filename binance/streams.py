@@ -82,7 +82,6 @@ class ReconnectingWebsocket:
     async def connect(self):
         await self._before_connect()
         assert self._path
-        self.ws_state = WSListenerState.STREAMING
         ws_url = self._url + self._prefix + self._path
         self._conn = ws.connect(ws_url, close_timeout=0.1)
         try:
@@ -90,6 +89,7 @@ class ReconnectingWebsocket:
         except:  # noqa
             await self._reconnect()
             return
+        self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
         # To manage the "cannot call recv while another coroutine is already waiting for the next message"
@@ -123,13 +123,11 @@ class ReconnectingWebsocket:
         try:
             while True:
                 try:
-                    if self.ws_state == WSListenerState.RECONNECTING:
+                    while self.ws_state == WSListenerState.RECONNECTING:
                         await self._run_reconnect()
 
-                    if not self.ws or self.ws_state != WSListenerState.STREAMING:
-                        await self._wait_for_reconnect()
-                        break
-                    elif self.ws_state == WSListenerState.EXITING:
+                    if self.ws_state == WSListenerState.EXITING:
+                        self._log.debug(f"_read_loop {self._path} break for {self.ws_state}")
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:
                         await asyncio.sleep(0.1)
