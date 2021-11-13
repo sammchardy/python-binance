@@ -1007,8 +1007,8 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
-                                        klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None, limit=500,
+                                        klines_type:HistoricalKlinesType=HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
         :param symbol: Name of symbol pair e.g BNBBTC
@@ -1019,17 +1019,21 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: amount of candles to return per request
+        :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
+        :param limit: amount of candles to return per request
+        :type limit: int
 
         :return: generator of OHLCV values
 
         """
 
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str, limit, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
-                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+    def _historical_klines_generator(self, symbol, interval, start_str, end_str, limit,
+                                     klines_type:HistoricalKlinesType=HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
         See dateparser docs for valid start and end string formats http://dateparser.readthedocs.io/en/latest/
@@ -1044,14 +1048,14 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: amount of candles to return per request
+        :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
         :return: generator of OHLCV values
 
         """
-        # setup the max limit
-        limit = 500
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
@@ -1068,7 +1072,7 @@ class Client(BaseClient):
 
         idx = 0
         while True:
-            # fetch the klines from start_ts up to max 500 entries or the end_ts if set
+            # fetch the klines from start_ts up to max 1000 entries or the end_ts if set
             output_data = self._klines(
                 klines_type=klines_type,
                 symbol=symbol,
