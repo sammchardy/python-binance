@@ -1023,8 +1023,6 @@ class Client(BaseClient):
         :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
-        :param limit: amount of candles to return per request
-        :type limit: int
 
         :return: generator of OHLCV values
 
