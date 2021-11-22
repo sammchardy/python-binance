@@ -200,7 +200,7 @@ class ReconnectingWebsocket:
         return res
 
     async def _wait_for_reconnect(self):
-        while self.ws_state != WSListenerState.STREAMING:
+        while self.ws_state != WSListenerState.STREAMING and self.ws_state != WSListenerState.EXITING:
             await sleep(0.1)
 
     def _get_reconnect_wait(self, attempts: int) -> int:
