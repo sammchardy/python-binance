@@ -3807,6 +3807,9 @@ class Client(BaseClient):
     def get_margin_interest_rate_history(self, **params):
         return self._request_margin_api('get', 'margin/interestRateHistory', signed=True, data=params)
 
+    def get_margin_iso_interest_rate_history(self, **params):
+        return self._request_margin_api('get', 'margin/isolatedMarginData', signed=True, data=params)
+
     def get_margin_force_liquidation_rec(self, **params):
         """Get Force Liquidation Record (USER_DATA)
 
