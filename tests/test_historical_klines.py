@@ -5,7 +5,6 @@ from binance.client import Client
 import pytest
 import requests_mock
 
-
 client = Client("api_key", "api_secret")
 
 
@@ -280,3 +279,6 @@ def test_historical_kline_generator_empty_response():
 
         with pytest.raises(StopIteration):
             next(klines)
+
+
+#def test_ohlc_decorators():
