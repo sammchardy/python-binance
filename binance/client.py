@@ -8,12 +8,12 @@ import requests
 import time
 from operator import itemgetter
 from urllib.parse import urlencode
-
+from pandas import DataFrame
 
 from .helpers import interval_to_milliseconds, convert_ts_str
 from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
-from .enums import HistoricalKlinesType
-
+from .enums import HistoricalKlinesType, OHLC_COLUMNS
+from .decorators import HistoricalKlinesData
 
 class BaseClient:
 
@@ -910,6 +910,7 @@ class Client(BaseClient):
         return kline[0][0]
 
     def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                              output_format='list',
                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
@@ -923,15 +924,20 @@ class Client(BaseClient):
         :type end_str: str|int
         :param limit: Default 500; max 1000.
         :type limit: int
+
+        :param output_format: 'list' or 'df' or 'decorated' (default is 'list')
+        :type output_format: str
+
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
         :return: list of OHLCV values
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
+        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, output_format=output_format, klines_type=klines_type)
 
     def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+                           output_format='list',
                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
@@ -949,6 +955,10 @@ class Client(BaseClient):
         :type end_str: None|str|int
         :param limit: Default 500; max 1000.
         :type limit: int
+
+        :param output_format: 'list' or 'df' or 'decorated' (default is 'list')
+        :type output_format: str
+
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
@@ -1005,7 +1015,12 @@ class Client(BaseClient):
             if idx % 3 == 0:
                 time.sleep(1)
 
-        return output_data
+        if output_format == "df":
+            return DataFrame(output_data, columns=OHLC_COLUMNS)
+        elif output_format == "decorated":
+            return [HistoricalKlinesData(row) for row in output_data]
+        else:
+            return output_data
 
     def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
                                         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
