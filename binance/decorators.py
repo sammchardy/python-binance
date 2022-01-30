@@ -1,7 +1,7 @@
 
 
 
-# from functools import cached_property
+from functools import cached_property
 from datetime import datetime
 
 class HistoricalKlinesData():
@@ -25,11 +25,11 @@ class HistoricalKlinesData():
     def __init__(self, raw_data):
         self.raw_data = raw_data
 
-    @property
+    @cached_property
     def open_at(self):
         return datetime.fromtimestamp(self.raw_data[0] / 1000)
 
-    @property
+    @cached_property
     def close_at(self):
         return datetime.fromtimestamp(self.raw_data[6] / 1000)
 
