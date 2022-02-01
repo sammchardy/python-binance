@@ -7417,7 +7417,11 @@ class AsyncClient(BaseClient):
 
             # increment next call by our timeframe
             start_ts += timeframe
-
+            
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if start_ts > end_ts:
+                break
+                
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
                 await asyncio.sleep(1)
@@ -7479,7 +7483,11 @@ class AsyncClient(BaseClient):
                 break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            start_ts += timeframe            
+            
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if start_ts > end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
