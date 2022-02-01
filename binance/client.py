@@ -7419,7 +7419,7 @@ class AsyncClient(BaseClient):
             start_ts += timeframe
             
             # exit loop if we reached end_ts before reaching <limit> klines
-            if end_ts is not None and start_ts > end_ts:
+            if end_ts is not None and start_ts >= end_ts:
                 break
                 
             # sleep after every 3rd call to be kind to the API
@@ -7486,7 +7486,7 @@ class AsyncClient(BaseClient):
             start_ts += timeframe            
             
             # exit loop if we reached end_ts before reaching <limit> klines
-            if end_ts is not None and start_ts > end_ts:
+            if end_ts is not None and start_ts >= end_ts:
                 break
 
             # sleep after every 3rd call to be kind to the API
