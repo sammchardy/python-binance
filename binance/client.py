@@ -8005,7 +8005,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'continuousKlines', data=params)
 
     async def futures_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
+        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
 
     async def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
         return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
