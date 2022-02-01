@@ -3759,6 +3759,37 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/repay', signed=True, data=params)
 
+    def get_cross_margin_data(self, **params):
+        """Query Cross Margin Fee Data (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-fee-data-user_data
+        :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
+        :type vipLevel: int
+        :param coin
+        :type coin: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: API response (example):
+            [
+                {
+                    "vipLevel": 0,
+                    "coin": "BTC",
+                    "transferIn": true,
+                    "borrowable": true,
+                    "dailyInterest": "0.00026125",
+                    "yearlyInterest": "0.0953",
+                    "borrowLimit": "180",
+                    "marginablePairs": [
+                        "BNBBTC",
+                        "TRXBTC",
+                        "ETHBTC",
+                        "BTCUSDT"
+                    ]
+                }
+            ]
+        """
+        return self._request_margin_api('get', 'margin/crossMarginData', signed=True, data=params)
+
     def get_margin_interest_history(self, **params):
         """Get Interest History (USER_DATA)
 
