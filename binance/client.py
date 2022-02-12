@@ -986,26 +986,25 @@ class Client(BaseClient):
                 endTime=end_ts
             )
 
-            # handle the case where exactly the limit amount of data was returned last loop
-            if not len(temp_data):
-                break
-
             # append this loops data to our output data
-            output_data += temp_data
+            if temp_data:
+                output_data += temp_data
 
-            # set our start timestamp using the last value in the array
-            start_ts = temp_data[-1][0]
-
-            idx += 1
+            # handle the case where exactly the limit amount of data was returned last loop
             # check if we received less than the required limit and exit the loop
-            if len(temp_data) < limit:
+            if not len(temp_data) or len(temp_data) < limit:
                 # exit the while loop
                 break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            start_ts = temp_data[-1][0] + timeframe
+
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if end_ts and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
+            idx += 1
             if idx % 3 == 0:
                 time.sleep(1)
 
@@ -1083,27 +1082,27 @@ class Client(BaseClient):
                 endTime=end_ts
             )
 
-            # handle the case where exactly the limit amount of data was returned last loop
-            if not len(output_data):
-                break
-
             # yield data
-            for o in output_data:
-                yield o
+            if output_data:
+                for o in output_data:
+                    yield o
 
-            # set our start timestamp using the last value in the array
-            start_ts = output_data[-1][0]
-
-            idx += 1
+            # handle the case where exactly the limit amount of data was returned last loop
             # check if we received less than the required limit and exit the loop
-            if len(output_data) < limit:
+            if not len(output_data) or len(output_data) < limit:
                 # exit the while loop
                 break
 
+            # set our start timestamp using the last value in the array
             # increment next call by our timeframe
-            start_ts += timeframe
+            start_ts = output_data[-1][0] + timeframe
+
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if end_ts and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
+            idx += 1
             if idx % 3 == 0:
                 time.sleep(1)
 
@@ -7476,10 +7475,8 @@ class AsyncClient(BaseClient):
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # if a start time was passed convert it
-        start_ts = convert_ts_str(start_str)
-
         # establish first available start timestamp
+        start_ts = convert_ts_str(start_str)
         if start_ts is not None:
             first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
@@ -7499,26 +7496,26 @@ class AsyncClient(BaseClient):
                 endTime=end_ts
             )
 
-            # handle the case where exactly the limit amount of data was returned last loop
-            if not len(temp_data):
-                break
-
             # append this loops data to our output data
-            output_data += temp_data
+            if temp_data:
+                output_data += temp_data
 
-            # set our start timestamp using the last value in the array
-            start_ts = temp_data[-1][0]
-
-            idx += 1
-            # check if we received less than the required limit and exit the loop
-            if len(temp_data) < limit:
+            # handle the case where exactly the limit amount of data was returned last loop
+            # or check if we received less than the required limit and exit the loop
+            if not len(temp_data) or len(temp_data) < limit:
                 # exit the while loop
                 break
 
-            # increment next call by our timeframe
-            start_ts += timeframe
+            # set our start timestamp using the last value in the array
+            # and increment next call by our timeframe
+            start_ts = temp_data[-1][0] + timeframe
+
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if end_ts and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
+            idx += 1
             if idx % 3 == 0:
                 await asyncio.sleep(1)
 
@@ -7562,27 +7559,26 @@ class AsyncClient(BaseClient):
                 endTime=end_ts
             )
 
-            # handle the case where exactly the limit amount of data was returned last loop
-            if not len(output_data):
-                break
-
             # yield data
-            for o in output_data:
-                yield o
+            if output_data:
+                for o in output_data:
+                    yield o
 
-            # set our start timestamp using the last value in the array
-            start_ts = output_data[-1][0]
-
-            idx += 1
+            # handle the case where exactly the limit amount of data was returned last loop
             # check if we received less than the required limit and exit the loop
-            if len(output_data) < limit:
+            if not len(output_data) or len(output_data) < limit:
                 # exit the while loop
                 break
 
             # increment next call by our timeframe
-            start_ts += timeframe
+            start_ts = output_data[-1][0] + timeframe
+
+            # exit loop if we reached end_ts before reaching <limit> klines
+            if end_ts and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
+            idx += 1
             if idx % 3 == 0:
                 await asyncio.sleep(1)
     _historical_klines_generator.__doc__ = Client._historical_klines_generator.__doc__
