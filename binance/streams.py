@@ -45,9 +45,9 @@ class ReconnectingWebsocket:
     MAX_QUEUE_SIZE = 100
 
     def __init__(
-        self, loop, url: str, path: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False, exit_coro=None
+        self, url: str, path: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False, exit_coro=None
     ):
-        self._loop = loop or asyncio.get_event_loop()
+        self._loop = asyncio.get_event_loop()
         self._log = logging.getLogger(__name__)
         self._path = path
         self._url = url
@@ -59,7 +59,7 @@ class ReconnectingWebsocket:
         self._socket = None
         self.ws: Optional[ws.WebSocketClientProtocol] = None
         self.ws_state = WSListenerState.INITIALISING
-        self._queue = asyncio.Queue(loop=self._loop)
+        self._queue = asyncio.Queue()
         self._handle_read_loop = None
 
     async def __aenter__(self):
@@ -224,10 +224,10 @@ class ReconnectingWebsocket:
 class KeepAliveWebsocket(ReconnectingWebsocket):
 
     def __init__(
-        self, client: AsyncClient, loop, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None,
+        self, client: AsyncClient, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None,
         user_timeout=None
     ):
-        super().__init__(loop=loop, path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
+        super().__init__(path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
         self._keepalive_type = keepalive_type
         self._client = client
         self._user_timeout = user_timeout or KEEPALIVE_TIMEOUT
@@ -309,7 +309,7 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_10 = '10'
     WEBSOCKET_DEPTH_20 = '20'
 
-    def __init__(self, client: AsyncClient, loop=None, user_timeout=KEEPALIVE_TIMEOUT):
+    def __init__(self, client: AsyncClient, user_timeout=KEEPALIVE_TIMEOUT):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
@@ -323,7 +323,7 @@ class BinanceSocketManager:
         self.VSTREAM_TESTNET_URL = self.VSTREAM_TESTNET_URL.format(client.tld)
 
         self._conns = {}
-        self._loop = loop or asyncio.get_event_loop()
+        self._loop = asyncio.get_event_loop()
         self._client = client
         self._user_timeout = user_timeout
 
@@ -344,7 +344,6 @@ class BinanceSocketManager:
         conn_id = f'{socket_type}_{path}'
         if conn_id not in self._conns:
             self._conns[conn_id] = ReconnectingWebsocket(
-                loop=self._loop,
                 path=path,
                 url=self._get_stream_url(stream_url),
                 prefix=prefix,
@@ -361,7 +360,6 @@ class BinanceSocketManager:
         if conn_id not in self._conns:
             self._conns[conn_id] = KeepAliveWebsocket(
                 client=self._client,
-                loop=self._loop,
                 url=self._get_stream_url(stream_url),
                 keepalive_type=path,
                 prefix=prefix,
@@ -1185,7 +1183,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
 
     async def _before_socket_listener_start(self):
         assert self._client
-        self._bsm = BinanceSocketManager(client=self._client, loop=self._loop)
+        self._bsm = BinanceSocketManager(client=self._client)
 
     def _start_async_socket(
         self, callback: Callable, socket_name: str, params: Dict[str, Any], path: Optional[str] = None
