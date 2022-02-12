@@ -911,7 +911,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
+    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
@@ -923,7 +923,7 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
-        :param limit: Default 500; max 1000.
+        :param limit: Default 1000; max 1000.
         :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
@@ -931,9 +931,11 @@ class Client(BaseClient):
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
 
         """
-        return self._historical_klines(symbol, interval, start_str=start_str, end_str=end_str, limit=limit, klines_type=klines_type)
+        return self._historical_klines(
+            symbol, interval, start_str=start_str, end_str=end_str, limit=limit, klines_type=klines_type
+        )
 
-    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
+    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
@@ -949,7 +951,7 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: None|str|int
-        :param limit: Default 500; max 1000.
+        :param limit: Default 1000; max 1000.
         :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
@@ -1012,7 +1014,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
+    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
@@ -1024,6 +1026,8 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
+        :param limit: amount of candles to return per request (default 1000)
+        :type limit: int
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
@@ -1031,9 +1035,9 @@ class Client(BaseClient):
 
         """
 
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
+        return self._historical_klines_generator(symbol, interval, start_str, end_str, limit, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
+    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                      klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
@@ -1055,8 +1059,6 @@ class Client(BaseClient):
         :return: generator of OHLCV values
 
         """
-        # setup the max limit
-        limit = 1000
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
@@ -7494,12 +7496,12 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
+    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
-    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
+    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                  klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # init our list
@@ -7557,16 +7559,15 @@ class AsyncClient(BaseClient):
         return output_data
     _historical_klines.__doc__ = Client._historical_klines.__doc__
 
-    async def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
+    async def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
-        return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
+        return self._historical_klines_generator(
+            symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type
+        )
     get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
 
-    async def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
+    async def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
                                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
-
-        # setup the max limit
-        limit = 1000
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
