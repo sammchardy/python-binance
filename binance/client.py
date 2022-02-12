@@ -2168,6 +2168,35 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
 
+    def get_dust_assets(self, **params):
+        """Get assets that can be converted into BNB
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-assets-that-can-be-converted-into-bnb-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "details": [
+                    {
+                        "asset": "ADA",
+                        "assetFullName": "ADA",
+                        "amountFree": "6.21",   //Convertible amount
+                        "toBTC": "0.00016848",  //BTC amount
+                        "toBNB": "0.01777302",  //BNB amount（Not deducted commission fee）
+                        "toBNBOffExchange": "0.01741756", //BNB amount（Deducted commission fee）
+                        "exchange": "0.00035546" //Commission fee
+                    }
+                ],
+                "totalTransferBtc": "0.00016848",
+                "totalTransferBNB": "0.01777302",
+                "dribbletPercentage": "0.02"     //Commission fee
+            }
+
+        """
+        return self._request_margin_api('post', 'asset/dust-btc', True, data=params)
+
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
@@ -7720,6 +7749,10 @@ class AsyncClient(BaseClient):
     async def get_account_api_permissions(self, **params):
         return await self._request_margin_api('get', 'account/apiRestrictions', True, data=params)
     get_account_api_permissions.__doc__ = Client.get_account_api_permissions.__doc__
+
+    async def get_dust_assets(self, **params):
+        return await self._request_margin_api('post', 'asset/dust-btc', True, data=params)
+    get_dust_assets.__doc__ = Client.get_dust_assets.__doc__
 
     async def get_dust_log(self, **params):
         return await self._request_margin_api('get', 'asset/dribblet', True, data=params)
