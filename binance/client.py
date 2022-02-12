@@ -962,7 +962,7 @@ class Client(BaseClient):
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
-        
+
         # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
@@ -1011,7 +1011,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
                                         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
@@ -1019,7 +1019,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :param start_str: optional - Start date string in UTC format or timestamp in milliseconds
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
@@ -1032,7 +1032,7 @@ class Client(BaseClient):
 
         return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
                                      klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
@@ -1044,7 +1044,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :param start_str: optional - Start date string in UTC format or timestamp in milliseconds
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
@@ -1060,12 +1060,13 @@ class Client(BaseClient):
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
+        # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
-        start_ts = max(start_ts, first_valid_ts)
+        if start_ts is not None:
+            first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+            start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
@@ -7461,12 +7462,12 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
-    async def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
                                  klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # init our list
@@ -7475,12 +7476,13 @@ class AsyncClient(BaseClient):
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
+        # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
-        start_ts = max(start_ts, first_valid_ts)
+        if start_ts is not None:
+            first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+            start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
@@ -7523,12 +7525,12 @@ class AsyncClient(BaseClient):
         return output_data
     _historical_klines.__doc__ = Client._historical_klines.__doc__
 
-    async def get_historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+    async def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
                                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=klines_type)
     get_historical_klines_generator.__doc__ = Client.get_historical_klines_generator.__doc__
 
-    async def _historical_klines_generator(self, symbol, interval, start_str, end_str=None,
+    async def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None,
                                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # setup the max limit
@@ -7537,12 +7539,13 @@ class AsyncClient(BaseClient):
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
 
-        # convert our date strings to milliseconds
+        # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
-        start_ts = max(start_ts, first_valid_ts)
+        if start_ts is not None:
+            first_valid_ts = await self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+            start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
@@ -8103,7 +8106,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'continuousKlines', data=params)
 
     async def futures_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500):
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
+        return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=HistoricalKlinesType.FUTURES)
 
     async def futures_historical_klines_generator(self, symbol, interval, start_str, end_str=None):
         return self._historical_klines_generator(symbol, interval, start_str, end_str=end_str, klines_type=HistoricalKlinesType.FUTURES)
