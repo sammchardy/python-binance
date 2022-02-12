@@ -3429,6 +3429,67 @@ class Client(BaseClient):
         params['transTo'] = "ISOLATED_MARGIN"
         return self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
 
+    def get_isolated_margin_tranfer_history(self, **params):
+        """Get transfers to isolated margin account.
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-isolated-margin-transfer-history-user_data
+
+        :param asset: name of the asset
+        :type asset: str
+        :param symbol: pair required
+        :type symbol: str
+        :param transFrom: optional SPOT, ISOLATED_MARGIN
+        :param transFrom: str SPOT, ISOLATED_MARGIN
+        :param transTo: optional
+        :param transTo: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        .. code:: python
+
+            transfer = client.transfer_spot_to_isolated_margin(symbol='ETHBTC')
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+              "rows": [
+                {
+                  "amount": "0.10000000",
+                  "asset": "BNB",
+                  "status": "CONFIRMED",
+                  "timestamp": 1566898617000,
+                  "txId": 5240372201,
+                  "transFrom": "SPOT",
+                  "transTo": "ISOLATED_MARGIN"
+                },
+                {
+                  "amount": "5.00000000",
+                  "asset": "USDT",
+                  "status": "CONFIRMED",
+                  "timestamp": 1566888436123,
+                  "txId": 5239810406,
+                  "transFrom": "ISOLATED_MARGIN",
+                  "transTo": "SPOT"
+                }
+              ],
+              "total": 2
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/transfer', signed=True, data=params)
+
     def create_margin_loan(self, **params):
         """Apply for a loan in cross-margin or isolated-margin account.
 
