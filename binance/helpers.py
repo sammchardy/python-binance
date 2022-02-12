@@ -60,8 +60,8 @@ def round_step_size(quantity: Union[float, Decimal], step_size: Union[float, Dec
 
     :return: decimal
     """
-    precision: int = int(round(-math.log(step_size, 10), 0))
-    return float(round(quantity, precision))
+    quantity = Decimal(str(quantity))
+    return float(quantity - quantity % Decimal(str(step_size)))
 
 
 def convert_ts_str(ts_str):
