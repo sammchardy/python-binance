@@ -973,6 +973,8 @@ class Client(BaseClient):
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
+        if end_ts and start_ts and end_ts <= start_ts:
+            return output_data
 
         idx = 0
         while True:
@@ -1069,6 +1071,8 @@ class Client(BaseClient):
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
+        if end_ts and start_ts and end_ts <= start_ts:
+            return
 
         idx = 0
         while True:
@@ -7512,6 +7516,8 @@ class AsyncClient(BaseClient):
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
+        if end_ts and start_ts and end_ts <= start_ts:
+            return output_data
 
         idx = 0
         while True:
@@ -7575,6 +7581,8 @@ class AsyncClient(BaseClient):
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
+        if end_ts and start_ts and end_ts <= start_ts:
+            return
 
         idx = 0
         while True:
