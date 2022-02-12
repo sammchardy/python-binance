@@ -1051,7 +1051,7 @@ class Client(BaseClient):
 
         """
         # setup the max limit
-        limit = 500
+        limit = 1000
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
@@ -7465,7 +7465,7 @@ class AsyncClient(BaseClient):
                                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
 
         # setup the max limit
-        limit = 500
+        limit = 1000
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
