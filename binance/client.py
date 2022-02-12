@@ -961,11 +961,11 @@ class Client(BaseClient):
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
         
-        # if an end time was passed convert it
+        # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        if start_ts != None:
+        if start_ts is not None:
             first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
             start_ts = max(start_ts, first_valid_ts)
 
