@@ -883,6 +883,8 @@ class Client(BaseClient):
             return self.get_klines(**params)
         elif HistoricalKlinesType.FUTURES == klines_type:
             return self.futures_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN == klines_type:
+            return self.futures_coin_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -7440,6 +7442,8 @@ class AsyncClient(BaseClient):
             return await self.get_klines(**params)
         elif HistoricalKlinesType.FUTURES == klines_type:
             return await self.futures_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN == klines_type:
+            return await self.futures_coin_klines(**params)
         else:
             raise NotImplementedException(klines_type)
     _klines.__doc__ = Client._klines.__doc__
