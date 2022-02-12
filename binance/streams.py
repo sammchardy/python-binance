@@ -1043,18 +1043,6 @@ class BinanceSocketManager:
         path = f'streams={"/".join(streams)}'
         return self._get_futures_socket(path, prefix='stream?', futures_type=futures_type)
 
-    def futures_depth_socket(self, symbol: str, depth: str = '10', futures_type: FuturesType = FuturesType.USD_M):
-        """Subscribe to a depth data stream
-
-        https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
-
-        :param symbol: required
-        :type symbol: str
-        :param depth: optional Number of depth entries to return, default 10.
-        :type depth: str
-        """
-        return self._get_futures_socket(symbol.lower() + '@depth' + str(depth), futures_type=futures_type)
-
     def user_socket(self):
         """Start a websocket for user data
 
@@ -1110,7 +1098,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('coin_futures', stream_url=self.DSTREAM_URL)
+        stream_url = self.DSTREAM_URL
+        if self.testnet:
+            stream_url = self.DSTREAM_TESTNET_URL
+        return self._get_account_socket('coin_futures', stream_url=stream_url)
 
     def isolated_margin_socket(self, symbol: str):
         """Start a websocket for isolated margin data
@@ -1431,7 +1422,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             socket_name='user_socket',
             params={}
         )
-    
+
     def start_futures_user_socket(self, callback: Callable) -> str:
         return self._start_async_socket(
             callback=callback,
