@@ -909,7 +909,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
@@ -917,7 +917,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :param start_str: optional - start date string in UTC format or timestamp in milliseconds
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
@@ -929,9 +929,9 @@ class Client(BaseClient):
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
 
         """
-        return self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
+        return self._historical_klines(symbol, interval, start_str=start_str, end_str=end_str, limit=limit, klines_type=klines_type)
 
-    def _historical_klines(self, symbol, interval, start_str, end_str=None, limit=500,
+    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=500,
                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
@@ -943,7 +943,7 @@ class Client(BaseClient):
         :type symbol: str
         :param interval: Binance Kline interval
         :type interval: str
-        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :param start_str: optional - start date string in UTC format or timestamp in milliseconds
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: None|str|int
@@ -960,12 +960,14 @@ class Client(BaseClient):
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
-
+        
+        # if a start time was passed convert it
         start_ts = convert_ts_str(start_str)
 
         # establish first available start timestamp
-        first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
-        start_ts = max(start_ts, first_valid_ts)
+        if start_ts is not None:
+            first_valid_ts = self._get_earliest_valid_timestamp(symbol, interval, klines_type)
+            start_ts = max(start_ts, first_valid_ts)
 
         # if an end time was passed convert it
         end_ts = convert_ts_str(end_str)
