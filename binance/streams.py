@@ -393,7 +393,7 @@ class BinanceSocketManager:
     async def _exit_socket(self, path: str):
         await self._stop_socket(path)
 
-    def depth_socket(self, symbol: str, depth: Optional[str] = None, interval: Optional[int] = 100):
+    def depth_socket(self, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None):
         """Start a websocket for symbol market depth returning either a diff or a partial book
 
         https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md#partial-book-depth-streams
