@@ -7926,6 +7926,9 @@ class AsyncClient(BaseClient):
     async def get_margin_repay_details(self, **params):
         return await self._request_margin_api('get', 'margin/repay', signed=True, data=params)
 
+    async def get_cross_margin_data(self, **params):
+        return await self._request_margin_api('get', 'margin/crossMarginData', signed=True, data=params)
+
     async def get_margin_interest_history(self, **params):
         return await self._request_margin_api('get', 'margin/interestHistory', signed=True, data=params)
 
