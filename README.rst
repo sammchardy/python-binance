@@ -83,17 +83,31 @@ Quick Start
 
 `Generate an API Key <https://www.binance.com/en/my/settings/api-management>`_ and assign relevant permissions.
 
-If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
-client.
 
-To use the `Spot <https://testnet.binance.vision/>`_ or `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
-pass `testnet=True` when creating the client.
+Installation
+-----------
 
+Install the package:
 
 .. code:: bash
 
     pip install python-binance
 
+Optionally install with pandas dependencies, to use pandas functionality like the _____________:
+
+.. code:: bash
+
+    pip install python-binance[pandas]
+
+
+Code Example
+-----------
+
+If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
+client.
+
+To use the `Spot <https://testnet.binance.vision/>`_ or `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
+pass `testnet=True` when creating the client.
 
 .. code:: python
 
