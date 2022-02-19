@@ -272,6 +272,35 @@ for more information.
         loop.run_until_complete(main())
 
 
+
+
+
+
+DataFrame Example
+-------------
+
+If you would like to work with response data in pandas DataFrame format, use the `DataClient` class instead of the `Client`, and invoke the desired method as you would normally do:
+
+.. code:: python
+
+    from binance.data_client import DataClient
+    from binance.enums import KLINE_INTERVAL_1MINUTE
+
+
+    client = DataClient(api_key, api_secret)
+
+    df = client.get_historical_klines(
+        symbol="BNBBTC",
+        interval=KLINE_INTERVAL_1MINUTE,
+        start_str="1st March 2018"
+    )
+    print(type(df)) #> <class 'pandas.core.frame.DataFrame'>
+    print(df.columns.tolist()) #> ['open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'ignore']
+
+
+Note: this requires you to install with the "extras" option.
+
+
 Donate
 ------
 
