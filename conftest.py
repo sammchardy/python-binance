@@ -3,11 +3,19 @@ import pytest
 import requests_mock
 
 from binance.client import Client
+from binance.data_client import DataClient
+from binance.enums import KLINE_INTERVAL_1MINUTE
 
 
 @pytest.fixture(scope="module")
-def test_client():
+def client():
+    """Returns a client to use for testing purposes"""
     return Client("api_key", "api_secret")
+
+@pytest.fixture(scope="module")
+def data_client():
+    """Returns a data client to use for testing purposes"""
+    return DataClient("api_key", "api_secret")
 
 
 klines_row_1 = [
@@ -42,7 +50,7 @@ klines_row_2 = [
 
 
 @pytest.fixture(scope="module")
-def historical_klines_response(test_client):
+def historical_klines_response(client):
     url_1 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1&startTime=0&symbol=BNBBTC"
     url_2 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC"
     url_3 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC"
@@ -56,9 +64,32 @@ def historical_klines_response(test_client):
         mock.get(url_2, json=response_2)
         mock.get(url_3, json=response_3)
 
-        klines = test_client.get_historical_klines(
+        klines = client.get_historical_klines(
             symbol="BNBBTC",
-            interval=Client.KLINE_INTERVAL_1MINUTE,
+            interval=KLINE_INTERVAL_1MINUTE,
+            start_str="1st March 2018"
+        )
+        #print(klines)
+        return klines
+
+@pytest.fixture(scope="module")
+def historical_klines_response_df(data_client):
+    url_1 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1&startTime=0&symbol=BNBBTC"
+    url_2 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC"
+    url_3 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC"
+
+    response_1 = [klines_row_1]
+    response_2 = [klines_row_2 for _ in range(0,500)]
+    response_3 = []
+
+    with requests_mock.mock() as mock:
+        mock.get(url_1, json=response_1)
+        mock.get(url_2, json=response_2)
+        mock.get(url_3, json=response_3)
+
+        klines = data_client.get_historical_klines(
+            symbol="BNBBTC",
+            interval=KLINE_INTERVAL_1MINUTE,
             start_str="1st March 2018"
         )
         #print(klines)

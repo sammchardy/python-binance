@@ -62,6 +62,14 @@ NO_SIDE_EFFECT_TYPE = 'NO_SIDE_EFFECT'
 MARGIN_BUY_TYPE = 'MARGIN_BUY'
 AUTO_REPAY_TYPE = 'AUTO_REPAY'
 
+# the names of klines response columns, in exact order
+# https://github.com/binance-us/binance-official-api-docs/blob/master/rest-api.md#klinecandlestick-data
+KLINES_RESPONSE_COLUMNS = [
+    'open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time',
+    'quote_asset_volume', 'number_of_trades',
+    'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume',
+    'ignore'
+]
 
 class HistoricalKlinesType(Enum):
     SPOT = 1
