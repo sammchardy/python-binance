@@ -18,6 +18,11 @@ def data_client():
     return DataClient("api_key", "api_secret")
 
 
+#
+# KLINES RESPONSE DATA
+#
+
+
 klines_row_1 = [
     1500004800000,
     "0.00005000",
@@ -48,17 +53,16 @@ klines_row_2 = [
     "0",
 ]
 
+url_1 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1&startTime=0&symbol=BNBBTC"
+url_2 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC"
+url_3 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC"
+
+response_1 = [klines_row_1]
+response_2 = [klines_row_2 for _ in range(0,500)]
+response_3 = []
 
 @pytest.fixture(scope="module")
 def historical_klines_response(client):
-    url_1 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1&startTime=0&symbol=BNBBTC"
-    url_2 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC"
-    url_3 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC"
-
-    response_1 = [klines_row_1]
-    response_2 = [klines_row_2 for _ in range(0,500)]
-    response_3 = []
-
     with requests_mock.mock() as mock:
         mock.get(url_1, json=response_1)
         mock.get(url_2, json=response_2)
@@ -74,14 +78,6 @@ def historical_klines_response(client):
 
 @pytest.fixture(scope="module")
 def historical_klines_response_df(data_client):
-    url_1 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1&startTime=0&symbol=BNBBTC"
-    url_2 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC"
-    url_3 = "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC"
-
-    response_1 = [klines_row_1]
-    response_2 = [klines_row_2 for _ in range(0,500)]
-    response_3 = []
-
     with requests_mock.mock() as mock:
         mock.get(url_1, json=response_1)
         mock.get(url_2, json=response_2)
