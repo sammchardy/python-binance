@@ -34,7 +34,7 @@ setup(
         'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets==9.1'
     ],
     extras_require = {
-        'pandas': ['pandas']
+        'extras': ['pandas']
     },
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[

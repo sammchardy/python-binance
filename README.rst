@@ -93,11 +93,11 @@ Install the package:
 
     pip install python-binance
 
-Optionally install with pandas dependencies, to use pandas functionality like the _____________:
+Optionally install with extra dependencies, for example to interface with pandas dataframes:
 
 .. code:: bash
 
-    pip install python-binance[pandas]
+    pip install python-binance[extras]
 
 
 Code Example
