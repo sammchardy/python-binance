@@ -9,9 +9,8 @@ import requests_mock
 client = Client("api_key", "api_secret")
 
 
-def test_exact_amount(historical_klines_response):
+def test_exact_amount(klines):
     """Test Exact amount returned"""
-    klines = historical_klines_response
     assert len(klines) == 500
 
 

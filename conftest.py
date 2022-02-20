@@ -90,3 +90,13 @@ def historical_klines_response_df(data_client):
         )
         #print(klines)
         return klines
+
+@pytest.fixture(scope="module")
+def klines(historical_klines_response):
+    """Alias method"""
+    return historical_klines_response
+
+@pytest.fixture(scope="module")
+def klines_df(historical_klines_response_df):
+    """Alias method"""
+    return historical_klines_response_df
