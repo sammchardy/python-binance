@@ -507,7 +507,7 @@ class Client(BaseClient):
 
         return None
     
-    def get_latest_price(self,symbol) -> int:
+    def get_latest_price_by_symbol(self,symbol) -> int:
         """Latest price for One specific symbols.
 
         Reference Document : https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
