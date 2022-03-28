@@ -835,6 +835,10 @@ class Client(object):
                 start_ts = increment_month(start_ts)
             else:
                 start_ts += timeframe
+                
+            # check if end_ts is reached
+            if end_ts is not None and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
@@ -919,6 +923,10 @@ class Client(object):
                 start_ts = increment_month(start_ts)
             else:
                 start_ts += timeframe
+                
+            # check if end_ts is reached
+            if end_ts is not None and start_ts >= end_ts:
+                break
 
             # sleep after every 3rd call to be kind to the API
             if idx % 3 == 0:
