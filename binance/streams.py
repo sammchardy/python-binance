@@ -251,8 +251,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
     def _start_socket_timer(self):
         self._timer = self._loop.call_later(
             self._user_timeout,
-            asyncio.create_task,
-            self._keepalive_socket()
+            lambda: asyncio.create_task(self._keepalive_socket())
         )
 
     async def _get_listen_key(self):
