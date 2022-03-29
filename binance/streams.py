@@ -208,7 +208,7 @@ class ReconnectingWebsocket:
         return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def before_reconnect(self):
-        if self.ws:
+        if self.ws and self._conn:
             await self._conn.__aexit__(None, None, None)
             self.ws = None
         self._reconnects += 1
@@ -1178,7 +1178,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
@@ -1194,10 +1194,10 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         while not self._bsm:
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
-        path = path or socket._path  # noqa
-        self._socket_running[path] = True
-        self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket._path, callback))
-        return path
+        socket_path: str = path or socket._path  # noqa
+        self._socket_running[socket_path] = True
+        self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket_path, callback))
+        return socket_path
 
     def start_depth_socket(
         self, callback: Callable, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None

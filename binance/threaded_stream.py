@@ -9,7 +9,7 @@ class ThreadedApiManager(threading.Thread):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
         """Initialise the BinanceSocketManager
@@ -60,6 +60,8 @@ class ThreadedApiManager(threading.Thread):
             self._socket_running[socket_name] = False
 
     async def stop_client(self):
+        if not self._client:
+            return
         await self._client.close_connection()
 
     def stop(self):

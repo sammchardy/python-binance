@@ -10,7 +10,7 @@ from .threaded_stream import ThreadedApiManager
 
 class DepthCache(object):
 
-    def __init__(self, symbol, conv_type=float):
+    def __init__(self, symbol, conv_type: Callable = float):
         """Initialise the DepthCache
 
         :param symbol: Symbol to create depth cache for
@@ -23,7 +23,7 @@ class DepthCache(object):
         self._bids = {}
         self._asks = {}
         self.update_time = None
-        self.conv_type = conv_type
+        self.conv_type: Callable = conv_type
         self._log = logging.getLogger(__name__)
 
     def add_bid(self, bid):
@@ -115,7 +115,7 @@ class DepthCache(object):
         return DepthCache.sort_depth(self._asks, reverse=False, conv_type=self.conv_type)
 
     @staticmethod
-    def sort_depth(vals, reverse=False, conv_type=float):
+    def sort_depth(vals, reverse=False, conv_type: Callable = float):
         """Sort bids or asks by price
         """
         if isinstance(vals, dict):
@@ -250,6 +250,7 @@ class BaseDepthCacheManager:
         return res
 
     def _apply_orders(self, msg):
+        assert self._depth_cache
         for bid in msg.get('b', []) + msg.get('bids', []):
             self._depth_cache.add_bid(bid)
         for ask in msg.get('a', []) + msg.get('asks', []):
@@ -321,6 +322,7 @@ class DepthCacheManager(BaseDepthCacheManager):
 
         # process bid and asks from the order book
         self._apply_orders(res)
+        assert self._depth_cache
         for bid in res['bids']:
             self._depth_cache.add_bid(bid)
         for ask in res['asks']:
@@ -397,6 +399,7 @@ class FuturesDepthCacheManager(BaseDepthCacheManager):
         return await super()._process_depth_message(msg)
 
     def _apply_orders(self, msg):
+        assert self._depth_cache
         self._depth_cache._bids = msg.get('b', [])
         self._depth_cache._asks = msg.get('a', [])
 
@@ -418,7 +421,7 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
@@ -430,7 +433,7 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
 
         while not self._client:
             time.sleep(0.01)
-            
+
         dcm = dcm_class(
             client=self._client,
             symbol=symbol,

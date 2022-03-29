@@ -124,7 +124,7 @@ class BaseClient:
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
         """Binance API Client constructor
@@ -217,7 +217,7 @@ class BaseClient:
         return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
     def _generate_signature(self, data: Dict) -> str:
-
+        assert self.API_SECRET, "API Secret required for private endpoints"
         ordered_data = self._order_params(data)
         query_string = '&'.join([f"{d[0]}={d[1]}" for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
@@ -290,7 +290,7 @@ class Client(BaseClient):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
 
@@ -7238,7 +7238,7 @@ class AsyncClient(BaseClient):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False, loop=None
     ):
 
@@ -7248,7 +7248,7 @@ class AsyncClient(BaseClient):
     @classmethod
     async def create(
         cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Dict[str, str] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False, loop=None
     ):
 
