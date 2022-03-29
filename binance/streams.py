@@ -57,7 +57,7 @@ class ReconnectingWebsocket:
         self._is_binary = is_binary
         self._conn = None
         self._socket = None
-        self.ws: Optional[ws.WebSocketClientProtocol] = None
+        self.ws: Optional[ws.WebSocketClientProtocol] = None  # type: ignore
         self.ws_state = WSListenerState.INITIALISING
         self._queue = asyncio.Queue()
         self._handle_read_loop = None
@@ -84,7 +84,7 @@ class ReconnectingWebsocket:
         assert self._path
         self.ws_state = WSListenerState.STREAMING
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url, close_timeout=0.1)
+        self._conn = ws.connect(ws_url, close_timeout=0.1)  # type: ignore
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
@@ -131,10 +131,10 @@ class ReconnectingWebsocket:
                         break
                     elif self.ws_state == WSListenerState.EXITING:
                         break
-                    elif self.ws.state == ws.protocol.State.CLOSING:
+                    elif self.ws.state == ws.protocol.State.CLOSING:  # type: ignore
                         await asyncio.sleep(0.1)
                         continue
-                    elif self.ws.state == ws.protocol.State.CLOSED:
+                    elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
                         await self._reconnect()
                     elif self.ws_state == WSListenerState.STREAMING:
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
