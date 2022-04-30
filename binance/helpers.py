@@ -2,10 +2,11 @@ from decimal import Decimal
 from typing import Union, Optional, Dict
 
 import dateparser
-import math
 import pytz
 
 from datetime import datetime
+
+from binance.exceptions import UnknownDateFormat
 
 
 def date_to_milliseconds(date_str: str) -> int:
@@ -21,6 +22,9 @@ def date_to_milliseconds(date_str: str) -> int:
     epoch: datetime = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
     # parse our date string
     d: Optional[datetime] = dateparser.parse(date_str, settings={'TIMEZONE': "UTC"})
+    if not d:
+        raise UnknownDateFormat(date_str)
+
     # if the date is not timezone aware apply UTC timezone
     if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
         d = d.replace(tzinfo=pytz.utc)
@@ -60,8 +64,8 @@ def round_step_size(quantity: Union[float, Decimal], step_size: Union[float, Dec
 
     :return: decimal
     """
-    precision: int = int(round(-math.log(step_size, 10), 0))
-    return float(round(quantity, precision))
+    quantity = Decimal(str(quantity))
+    return float(quantity - quantity % Decimal(str(step_size)))
 
 
 def convert_ts_str(ts_str):

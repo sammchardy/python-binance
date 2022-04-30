@@ -1,6 +1,29 @@
 Changelog
 =========
 
+v1.0.16 - 2022-04-09
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- pass limit param to all kline functions
+- increase default for kline functions from 500 to 1000
+- add HistoricalKlinesType.FUTURES_COIN as option for kline functions
+- testnet URL for coin_futures_socket
+
+**Updated**
+
+- round_step_size more accurate
+
+**Fixed**
+
+- remove deprecated loop param
+- websockets unpinned
+- hanging websockets in exiting state
+- check start_ts after end_ts for klines
+- multi assets margin params
+
+
 v1.0.15 - 2021-09-27
 ^^^^^^^^^^^^^^^^^^^^
 
