@@ -66,7 +66,6 @@ AUTO_REPAY_TYPE = 'AUTO_REPAY'
 class HistoricalKlinesType(Enum):
     SPOT = 1
     FUTURES = 2
-    FUTURES_COIN = 3
 
 
 class FuturesType(Enum):

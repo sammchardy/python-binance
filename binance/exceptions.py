@@ -82,7 +82,3 @@ class NotImplementedException(Exception):
     def __init__(self, value):
         message = f'Not implemented: {value}'
         super().__init__(message)
-
-
-class UnknownDateFormat(Exception):
-    ...
