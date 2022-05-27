@@ -56,11 +56,11 @@ def test_exact_amount():
             json=first_available_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519862400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&symbol=BNBBTC",
             json=first_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519892400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519892400000&symbol=BNBBTC",
             json=second_res,
         )
         klines = client.get_historical_klines(
@@ -113,7 +113,7 @@ def test_start_and_end_str():
             json=first_available_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
             json=first_res,
         )
         klines = client.get_historical_klines(
@@ -169,7 +169,7 @@ def test_start_and_end_timestamp():
             json=first_available_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
             json=first_res,
         )
         klines = client.get_historical_klines(
@@ -225,7 +225,7 @@ def test_historical_kline_generator():
             json=first_available_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
             json=first_res,
         )
         klines = client.get_historical_klines_generator(
@@ -268,7 +268,7 @@ def test_historical_kline_generator_empty_response():
             json=first_available_res,
         )
         m.get(
-            "https://api.binance.com/api/v3/klines?interval=1m&limit=500&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
+            "https://api.binance.com/api/v3/klines?interval=1m&limit=1000&startTime=1519862400000&endTime=1519880400000&symbol=BNBBTC",
             json=first_res,
         )
         klines = client.get_historical_klines_generator(
