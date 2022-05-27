@@ -5759,6 +5759,9 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'sub-account/universalTransfer', True, data=params)
 
+    def get_portfolio_account(self):
+        return self._request_margin_api('get', '/portfolio/account', True, data={})
+
     # Futures API
 
     def futures_ping(self):
