@@ -1055,7 +1055,7 @@ class BinanceSocketManager:
         return self._get_account_socket('user')
 
     def futures_user_socket(self):
-        """Start a websocket for coin futures user data
+        """Start a websocket for futures user data
 
         https://binance-docs.github.io/apidocs/futures/en/#user-data-streams
 
@@ -1065,6 +1065,18 @@ class BinanceSocketManager:
         """
 
         return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+
+    def coin_futures_user_socket(self):
+        """Start a websocket for coin futures user data
+
+        https://binance-docs.github.io/apidocs/delivery/en/#user-data-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binanace API docs for all types
+        """
+
+        return self._get_account_socket('coin_futures', stream_url=self.DSTREAM_URL)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1426,6 +1438,13 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         return self._start_async_socket(
             callback=callback,
             socket_name='futures_user_socket',
+            params={}
+        )
+
+    def start_coin_futures_user_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='coin_futures_user_socket',
             params={}
         )
 
