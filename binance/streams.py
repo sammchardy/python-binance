@@ -1052,7 +1052,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('user')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('user', stream_url=stream_url)
 
     def futures_user_socket(self):
         """Start a websocket for coin futures user data
@@ -1063,8 +1066,10 @@ class BinanceSocketManager:
 
         Message Format - see Binanace API docs for all types
         """
-
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1075,7 +1080,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('margin')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('margin', stream_url=stream_url)
 
     def futures_socket(self):
         """Start a websocket for futures data
@@ -1086,7 +1094,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def coin_futures_socket(self):
         """Start a websocket for coin futures data
@@ -1114,7 +1125,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket(symbol)
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket(symbol, stream_url=stream_url)
 
     def options_ticker_socket(self, symbol: str):
         """Subscribe to a 24 hour ticker info stream
