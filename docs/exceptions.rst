@@ -24,5 +24,5 @@ The exception provides access to the
     try:
         client.get_all_orders()
     except BinanceAPIException as e:
-        print e.status_code
-        print e.message
+        print(e.status_code)
+        print(e.message)
