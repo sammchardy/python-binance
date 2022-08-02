@@ -1926,7 +1926,41 @@ class Client(BaseClient):
 
         """
         return self._get('openOrders', True, data=params)
-
+    
+    def get_open_oco_orders(self, **params):
+        """Get all open orders on a symbol.
+        https://binance-docs.github.io/apidocs/spot/en/#query-open-oco-user_data
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: API response
+        .. code-block:: python
+            [
+                {
+                    "orderListId": 31,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "wuB13fmulKj3YjdqWEcsnp",
+                    "transactionTime": 1565246080644,
+                    "symbol": "LTCBTC",
+                    "orders": [
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 4,
+                            "clientOrderId": "r3EH2N76dHfLoSZWIUw1bT"
+                        },
+                        {
+                            "symbol": "LTCBTC",
+                            "orderId": 5,
+                            "clientOrderId": "Cv1SnyPD3qhqpbjpYEHbd2"
+                        }
+                    ]
+                }
+            ]
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._get('openOrderList', True, data=params)
+    
     # User Stream Endpoints
     def get_account(self, **params):
         """Get current account information.
