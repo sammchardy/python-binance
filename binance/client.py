@@ -5951,7 +5951,7 @@ class Client(BaseClient):
 
         """
         return self._request_futures_api('get', 'indexInfo', data=params)
-    
+
     def futures_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
 
