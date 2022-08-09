@@ -5944,6 +5944,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api('get', 'openInterest', data=params)
 
+    def futures_index_info(self, **params):
+        """Get index_info
+
+        https://binance-docs.github.io/apidocs/futures/en/#indexInfo
+
+        """
+        return self._request_futures_api('get', 'indexInfo', data=params)
+    
     def futures_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
 
