@@ -7272,7 +7272,49 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get','pay/transactions', signed=True, data=params)
-    
+
+    # Convert Endpoints
+
+    def get_convert_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+
+        :param startTime: required - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: required - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - default 100, max 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+               "list": [
+                    {
+                        "quoteId": "f3b91c525b2644c7bc1e1cd31b6e1aa6",
+                        "orderId": 940708407462087195,
+                        "orderStatus": "SUCCESS",  // order status
+                        "fromAsset": "USDT",       // from asset
+                        "fromAmount": "20",        // from amount
+                        "toAsset": "BNB",          // to asset
+                        "toAmount": "0.06154036",  // to amount
+                        "ratio": "0.00307702",     // price ratio
+                        "inverseRatio": "324.99",  // inverse price
+                        "createTime": 1624248872184
+                    }
+               ],
+                "startTime": 1623824139000,
+                "endTime": 1626416139000,
+                "limit": 100,
+                "moreData": false
+            }
+
+        """
+        return self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
+
     def close_connection(self):
         if self.session:
             self.session.close()
