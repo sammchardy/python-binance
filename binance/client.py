@@ -257,7 +257,6 @@ class BaseClient:
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
             kwargs['data'] = data
-
             # find any requests params passed and apply them
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
@@ -282,7 +281,6 @@ class BaseClient:
         if data and (method == 'get' or force_params):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del(kwargs['data'])
-
         return kwargs
 
 
@@ -7244,32 +7242,6 @@ class Client(BaseClient):
 
         :returns: API response
 
-            {
-            "code": "000000",
-            "message": "success",
-            "data": [
-            {
-                "orderType": "C2C",  // Enum: PAY(C2B Merchant Acquiring Payment), PAY_REFUND(C2B Merchant Acquiring Payment,refund), C2C(C2C Transfer Payment),CRYPTO_BOX(Crypto box), CRYPTO_BOX_RF(Crypto Box, refund), C2C_HOLDING(Transfer to new Binance user), C2C_HOLDING_RF(Transfer to new Binance user,refund), PAYOUT(B2C Disbursement Payment)
-                "transactionId": "M_P_71505104267788288",  
-                "transactionTime": 1610090460133,  //trade timestamp
-                "amount": "23.72469206",  //order amount(up to 8 decimal places), positive is income, negative is expenditure
-                "currency": "BNB",
-                "walletType": 1,  // 1 for funding wallet and 2 for spot wallet
-                "fundsDetail": [
-                        {
-                            "currency": "USDT",  //asset
-                            "amount": "1.2" 
-                            },
-                            {
-                            "currency": "ETH",
-                            "amount": "0.0001"
-                            }
-                    ]
-                }
-            ],
-            "success": true
-            }
-
         """
         return self._request_margin_api('get', 'pay/transactions', signed=True, data=params)
 
@@ -7290,27 +7262,6 @@ class Client(BaseClient):
         :type recvWindow: int
 
         :returns: API response
-
-            {
-               "list": [
-                    {
-                        "quoteId": "f3b91c525b2644c7bc1e1cd31b6e1aa6",
-                        "orderId": 940708407462087195,
-                        "orderStatus": "SUCCESS",   // order status
-                        "fromAsset": "USDT",        // from asset
-                        "fromAmount": "20",         // from amount
-                        "toAsset": "BNB",           // to asset
-                        "toAmount": "0.06154036",   // to amount
-                        "ratio": "0.00307702",      // price ratio
-                        "inverseRatio": "324.99",   // inverse price
-                        "createTime": 1624248872184
-                    }
-               ],
-                "startTime": 1623824139000,
-                "endTime": 1626416139000,
-                "limit": 100,
-                "moreData": false
-            }
 
         """
         return self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
