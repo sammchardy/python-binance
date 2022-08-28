@@ -7226,6 +7226,53 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
 
+    # Pay Endpoints
+
+    def get_pay_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional - default 100, max 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+            "code": "000000",
+            "message": "success",
+            "data": [
+            {
+                "orderType": "C2C", // Enum: PAY(C2B Merchant Acquiring Payment), PAY_REFUND(C2B Merchant Acquiring Payment,refund), C2C(C2C Transfer Payment),CRYPTO_BOX(Crypto box), CRYPTO_BOX_RF(Crypto Box, refund), C2C_HOLDING(Transfer to new Binance user), C2C_HOLDING_RF(Transfer to new Binance user,refund), PAYOUT(B2C Disbursement Payment)
+                "transactionId": "M_P_71505104267788288",  
+                "transactionTime": 1610090460133, //trade timestamp
+                "amount": "23.72469206", //order amount(up to 8 decimal places), positive is income, negative is expenditure
+                "currency": "BNB",
+                "walletType": 1, // 1 for funding wallet and 2 for spot wallet 
+                "fundsDetail": [ //ddetails
+                        {
+                            "currency": "USDT", //asset 
+                            "amount": "1.2" 
+                            },
+                            {
+                            "currency": "ETH",
+                            "amount": "0.0001"
+                            }
+                    ]
+                }
+            ],
+            "success": true
+            }
+
+        """
+        return self._request_margin_api('get','pay/transactions', signed=True, data=params)
+    
     def close_connection(self):
         if self.session:
             self.session.close()
