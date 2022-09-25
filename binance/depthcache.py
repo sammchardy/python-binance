@@ -4,6 +4,7 @@ import asyncio
 import time
 from typing import Optional, Dict, Callable
 
+from .listeners import AbstractListener
 from .streams import BinanceSocketManager
 from .threaded_stream import ThreadedApiManager
 
@@ -128,7 +129,7 @@ class DepthCache(object):
         return lst
 
 
-class BaseDepthCacheManager:
+class BaseDepthCacheManager(AbstractListener):
     DEFAULT_REFRESH = 60 * 30  # 30 minutes
     TIMEOUT = 60
 
@@ -445,7 +446,7 @@ class ThreadedDepthCacheManager(ThreadedApiManager):
             **kwargs
         )
         path = symbol.lower() + '@depth' + str(limit)
-        self._socket_running[path] = True
+        self._listener_running[path] = True
         self._loop.call_soon(asyncio.create_task, self.start_listener(dcm, path, callback))
         return path
 

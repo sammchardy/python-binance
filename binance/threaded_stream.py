@@ -1,5 +1,6 @@
 import asyncio
 import threading
+from contextlib import AbstractAsyncContextManager
 from typing import Optional, Dict
 
 from .client import AsyncClient
@@ -12,14 +13,14 @@ class ThreadedApiManager(threading.Thread):
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
         testnet: bool = False
     ):
-        """Initialise the BinanceSocketManager
+        """Initialise the ThreadedApiManager
 
         """
         super().__init__()
         self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
-        self._socket_running: Dict[str, bool] = {}
+        self._listener_running: Dict[str, bool] = {}
         self._client_params = {
             'api_key': api_key,
             'api_secret': api_secret,
@@ -28,36 +29,36 @@ class ThreadedApiManager(threading.Thread):
             'testnet': testnet
         }
 
-    async def _before_socket_listener_start(self):
+    async def _before_listener_start(self):
         ...
 
-    async def socket_listener(self):
+    async def listener(self):
         self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
-        await self._before_socket_listener_start()
+        await self._before_listener_start()
         while self._running:
             await asyncio.sleep(0.2)
-        while self._socket_running:
+        while self._listener_running:
             await asyncio.sleep(0.2)
 
-    async def start_listener(self, socket, path: str, callback):
-        async with socket as s:
-            while self._socket_running[path]:
+    async def start_listener(self, listener: AbstractAsyncContextManager, path: str, callback):
+        async with listener as l:
+            while self._listener_running[path]:
                 try:
-                    msg = await asyncio.wait_for(s.recv(), 3)
+                    msg = await asyncio.wait_for(l.recv(), 3)
                 except asyncio.TimeoutError:
                     ...
                     continue
                 if not msg:
                     continue
                 callback(msg)
-        del self._socket_running[path]
+        del self._listener_running[path]
 
     def run(self):
-        self._loop.run_until_complete(self.socket_listener())
+        self._loop.run_until_complete(self.listener())
 
-    def stop_socket(self, socket_name):
-        if socket_name in self._socket_running:
-            self._socket_running[socket_name] = False
+    def listener_name(self, listener_name):
+        if listener_name in self._listener_running:
+            self._listener_running[listener_name] = False
 
     async def stop_client(self):
         if not self._client:
@@ -69,5 +70,5 @@ class ThreadedApiManager(threading.Thread):
             return
         self._running = False
         self._loop.call_soon(asyncio.create_task, self.stop_client())
-        for socket_name in self._socket_running.keys():
-            self._socket_running[socket_name] = False
+        for listener_name in self._listener_running.keys():
+            self._listener_running[listener_name] = False

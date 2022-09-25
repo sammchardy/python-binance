@@ -16,6 +16,7 @@ from .client import AsyncClient
 from .enums import FuturesType
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import ContractType
+from .listeners import AbstractListener
 from .threaded_stream import ThreadedApiManager
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
@@ -36,7 +37,7 @@ class BinanceSocketType(str, Enum):
     ACCOUNT = 'Account'
 
 
-class ReconnectingWebsocket:
+class ReconnectingWebsocket(AbstractListener):
     MAX_RECONNECTS = 5
     MAX_RECONNECT_SECONDS = 60
     MIN_RECONNECT_WAIT = 0.1
@@ -346,7 +347,7 @@ class BinanceSocketManager:
                 path=path,
                 url=self._get_stream_url(stream_url),
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=self._exit_listener,
                 is_binary=is_binary
             )
 
@@ -362,7 +363,7 @@ class BinanceSocketManager:
                 url=self._get_stream_url(stream_url),
                 keepalive_type=path,
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=self._exit_listener,
                 is_binary=is_binary,
                 user_timeout=self._user_timeout
             )
@@ -387,8 +388,8 @@ class BinanceSocketManager:
             stream_url = self.VSTREAM_TESTNET_URL
         return self._get_socket(path, stream_url, prefix, is_binary=True, socket_type=BinanceSocketType.OPTIONS)
 
-    async def _exit_socket(self, path: str):
-        await self._stop_socket(path)
+    async def _exit_listener(self, path: str):
+        await self._stop_listener(path)
 
     def depth_socket(self, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None):
         """Start a websocket for symbol market depth returning either a diff or a partial book
@@ -1160,7 +1161,7 @@ class BinanceSocketManager:
         """
         return self._get_options_socket(symbol.lower() + '@depth' + str(depth))
 
-    async def _stop_socket(self, conn_key):
+    async def _stop_listener(self, conn_key):
         """Stop a websocket given the connection key
 
         :param conn_key: Socket connection key
@@ -1184,7 +1185,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
         self._bsm: Optional[BinanceSocketManager] = None
 
-    async def _before_socket_listener_start(self):
+    async def _before_listener_start(self):
         assert self._client
         self._bsm = BinanceSocketManager(client=self._client)
 
@@ -1195,7 +1196,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
         socket_path: str = path or socket._path  # noqa
-        self._socket_running[socket_path] = True
+        self._listener_running[socket_path] = True
         self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket_path, callback))
         return socket_path
 
