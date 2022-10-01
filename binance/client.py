@@ -262,7 +262,7 @@ class BaseClient:
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
                 kwargs.update(kwargs['data']['requests_params'])
-                del(kwargs['data']['requests_params'])
+                del kwargs['data']['requests_params']
 
         if signed:
             # generate signature
@@ -281,7 +281,7 @@ class BaseClient:
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
-            del(kwargs['data'])
+            del kwargs['data']
 
         return kwargs
 
@@ -4827,7 +4827,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
-    
+
     # Staking Endpoints
 
     def get_staking_product_list(self, **params):
@@ -4837,7 +4837,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'staking/productList', signed=True, data=params)
- 
+
     def purchase_staking_product(self, **params):
         """Purchase Staking Product
 
@@ -4845,7 +4845,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('post', 'staking/purchase', signed=True, data=params)
-    
+
     def redeem_staking_product(self, **params):
         """Redeem Staking Product
 
@@ -4853,7 +4853,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('post', 'staking/redeem', signed=True, data=params)
-    
+
     def get_staking_position(self, **params):
         """Get Staking Product Position
 
@@ -4869,7 +4869,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'staking/purchaseRecord', signed=True, data=params)
-    
+
     def set_auto_staking(self, **params):
         """Set Auto Staking on Locked Staking or Locked DeFi Staking
 
@@ -4877,7 +4877,7 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('post', 'staking/setAutoStaking', signed=True, data=params)
-    
+
     def get_personal_left_quota(self, **params):
         """Get Personal Left Quota of Staking Product
 
