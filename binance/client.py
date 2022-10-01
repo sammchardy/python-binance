@@ -8123,10 +8123,10 @@ class AsyncClient(BaseClient):
 
     async def set_auto_staking(self, **params):
         return await self._request_margin_api('post', 'staking/setAutoStaking', signed=True, data=params)
-    
+
     async def get_personal_left_quota(self, **params):
         return await self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
-    
+
     # Sub Accounts
 
     async def get_sub_account_list(self, **params):
