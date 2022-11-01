@@ -2509,6 +2509,15 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
+    def get_staking_balance(self, **params):
+        """Get staking balance
+
+        https://docs.binance.us/#get-staking-balance
+
+        """
+
+        return self._request_margin_api("get", "staking/stakingBalance", True, data=params)
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):
