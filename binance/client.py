@@ -297,7 +297,7 @@ class Client(BaseClient):
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
 
         # init DNS and SSL cert
-        self.ping()
+        # self.ping()
 
     def _init_session(self) -> requests.Session:
 
