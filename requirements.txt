@@ -1,5 +1,5 @@
 aiohttp
 dateparser
 requests
-ujson
+orjson
 websockets

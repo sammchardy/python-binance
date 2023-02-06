@@ -1,5 +1,5 @@
 # coding=utf-8
-import json
+import orjson as json
 
 
 class BinanceAPIException(Exception):
