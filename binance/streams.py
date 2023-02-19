@@ -135,6 +135,7 @@ class ReconnectingWebsocket:
                     elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
                         await self._reconnect()
                     elif self.ws_state == WSListenerState.STREAMING:
+                        assert self.ws
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
                         res = self._handle_message(res)
                         if res:

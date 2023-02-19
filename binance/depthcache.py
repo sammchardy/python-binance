@@ -158,7 +158,7 @@ class BaseDepthCacheManager:
         self._symbol = symbol
         self._limit = limit
         self._last_update_id = None
-        self._bm = bm or BinanceSocketManager(self._client, self._loop)
+        self._bm = bm or BinanceSocketManager(self._client)
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
         self._conn_key = None
         self._conv_type = conv_type
