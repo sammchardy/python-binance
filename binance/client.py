@@ -7239,20 +7239,21 @@ class AsyncClient(BaseClient):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False, loop=None
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None
     ):
 
         self.loop = loop or asyncio.get_event_loop()
+        self._session_params = session_params
         super().__init__(api_key, api_secret, requests_params, tld, testnet)
 
     @classmethod
     async def create(
         cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False, loop=None
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None
     ):
 
-        self = cls(api_key, api_secret, requests_params, tld, testnet, loop)
+        self = cls(api_key, api_secret, requests_params, tld, testnet, loop, session_params)
 
         try:
             await self.ping()
@@ -7272,7 +7273,8 @@ class AsyncClient(BaseClient):
 
         session = aiohttp.ClientSession(
             loop=self.loop,
-            headers=self._get_headers()
+            headers=self._get_headers(),
+            **self._session_params
         )
         return session
 
