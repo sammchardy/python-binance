@@ -85,7 +85,7 @@ Fetch klines using a generator
 
 .. code:: python
 
-    for kline in client.get_historical_klines_generator("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+    for kline in client.get_historical_klines_generator("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC"):
         print(kline)
         # do something with the kline
 

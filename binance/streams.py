@@ -82,7 +82,6 @@ class ReconnectingWebsocket:
     async def connect(self):
         await self._before_connect()
         assert self._path
-        self.ws_state = WSListenerState.STREAMING
         ws_url = self._url + self._prefix + self._path
         self._conn = ws.connect(ws_url, close_timeout=0.1)  # type: ignore
         try:
@@ -90,6 +89,7 @@ class ReconnectingWebsocket:
         except:  # noqa
             await self._reconnect()
             return
+        self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
         # To manage the "cannot call recv while another coroutine is already waiting for the next message"
@@ -123,13 +123,11 @@ class ReconnectingWebsocket:
         try:
             while True:
                 try:
-                    if self.ws_state == WSListenerState.RECONNECTING:
+                    while self.ws_state == WSListenerState.RECONNECTING:
                         await self._run_reconnect()
 
-                    if not self.ws or self.ws_state != WSListenerState.STREAMING:
-                        await self._wait_for_reconnect()
-                        break
-                    elif self.ws_state == WSListenerState.EXITING:
+                    if self.ws_state == WSListenerState.EXITING:
+                        self._log.debug(f"_read_loop {self._path} break for {self.ws_state}")
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:  # type: ignore
                         await asyncio.sleep(0.1)
@@ -137,6 +135,7 @@ class ReconnectingWebsocket:
                     elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
                         await self._reconnect()
                     elif self.ws_state == WSListenerState.STREAMING:
+                        assert self.ws
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
                         res = self._handle_message(res)
                         if res:
@@ -1052,7 +1051,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('user')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('user', stream_url=stream_url)
 
     def futures_user_socket(self):
         """Start a websocket for coin futures user data
@@ -1064,7 +1066,10 @@ class BinanceSocketManager:
         Message Format - see Binanace API docs for all types
         """
 
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1075,7 +1080,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('margin')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('margin', stream_url=stream_url)
 
     def futures_socket(self):
         """Start a websocket for futures data
@@ -1086,7 +1094,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def coin_futures_socket(self):
         """Start a websocket for coin futures data
@@ -1114,7 +1125,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket(symbol)
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket(symbol, stream_url=stream_url)
 
     def options_ticker_socket(self, symbol: str):
         """Subscribe to a 24 hour ticker info stream

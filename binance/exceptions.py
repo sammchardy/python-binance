@@ -11,8 +11,8 @@ class BinanceAPIException(Exception):
         except ValueError:
             self.message = 'Invalid JSON error message from Binance: {}'.format(response.text)
         else:
-            self.code = json_res['code']
-            self.message = json_res['msg']
+            self.code = json_res.get('code')
+            self.message = json_res.get('msg')
         self.status_code = status_code
         self.response = response
         self.request = getattr(response, 'request', None)
