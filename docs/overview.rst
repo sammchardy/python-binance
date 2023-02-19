@@ -14,7 +14,7 @@ Install with ``pip``:
 Register on Binance
 -------------------
 
-Firstly `register an account with Binance <https://www.binance.com/register.html?ref=10099792>`_.
+Firstly `register an account with Binance <https://accounts.binance.com/en/register?ref=10099792>`_.
 
 Generate an API Key
 -------------------
