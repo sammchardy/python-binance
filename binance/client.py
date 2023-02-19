@@ -262,7 +262,7 @@ class BaseClient:
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
                 kwargs.update(kwargs['data']['requests_params'])
-                del(kwargs['data']['requests_params'])
+                del kwargs['data']['requests_params']
 
         if signed:
             # generate signature
@@ -281,7 +281,7 @@ class BaseClient:
         # if get request assign data array to params value for requests lib
         if data and (method == 'get' or force_params):
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
-            del(kwargs['data'])
+            del kwargs['data']
 
         return kwargs
 
@@ -4862,6 +4862,64 @@ class Client(BaseClient):
         """
         return self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
 
+    # Staking Endpoints
+
+    def get_staking_product_list(self, **params):
+        """Get Staking Product List
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-staking-product-list-user_data
+
+        """
+        return self._request_margin_api('get', 'staking/productList', signed=True, data=params)
+
+    def purchase_staking_product(self, **params):
+        """Purchase Staking Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#purchase-staking-product-user_data
+
+        """
+        return self._request_margin_api('post', 'staking/purchase', signed=True, data=params)
+
+    def redeem_staking_product(self, **params):
+        """Redeem Staking Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#redeem-staking-product-user_data
+
+        """
+        return self._request_margin_api('post', 'staking/redeem', signed=True, data=params)
+
+    def get_staking_position(self, **params):
+        """Get Staking Product Position
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-staking-product-position-user_data
+
+        """
+        return self._request_margin_api('get', 'staking/position', signed=True, data=params)
+
+    def get_staking_purchase_history(self, **params):
+        """Get Staking Purchase History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-staking-history-user_data
+
+        """
+        return self._request_margin_api('get', 'staking/purchaseRecord', signed=True, data=params)
+
+    def set_auto_staking(self, **params):
+        """Set Auto Staking on Locked Staking or Locked DeFi Staking
+
+        https://binance-docs.github.io/apidocs/spot/en/#set-auto-staking-user_data
+
+        """
+        return self._request_margin_api('post', 'staking/setAutoStaking', signed=True, data=params)
+
+    def get_personal_left_quota(self, **params):
+        """Get Personal Left Quota of Staking Product
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-personal-left-quota-of-staking-product-user_data
+
+        """
+        return self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
+
     # Sub Accounts
 
     def get_sub_account_list(self, **params):
@@ -8081,6 +8139,29 @@ class AsyncClient(BaseClient):
 
     async def change_fixed_activity_to_daily_position(self, **params):
         return await self._request_margin_api('post', 'lending/positionChanged', signed=True, data=params)
+
+    # Staking Endpoints
+
+    async def get_staking_product_list(self, **params):
+        return await self._request_margin_api('get', 'staking/productList', signed=True, data=params)
+
+    async def purchase_staking_product(self, **params):
+        return await self._request_margin_api('post', 'staking/purchase', signed=True, data=params)
+
+    async def redeem_staking_product(self, **params):
+        return await self._request_margin_api('post', 'staking/redeem', signed=True, data=params)
+
+    async def get_staking_position(self, **params):
+        return await self._request_margin_api('get', 'staking/position', signed=True, data=params)
+
+    async def get_staking_purchase_history(self, **params):
+        return await self._request_margin_api('get', 'staking/purchaseRecord', signed=True, data=params)
+
+    async def set_auto_staking(self, **params):
+        return await self._request_margin_api('post', 'staking/setAutoStaking', signed=True, data=params)
+
+    async def get_personal_left_quota(self, **params):
+        return await self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
 
     # Sub Accounts
 
