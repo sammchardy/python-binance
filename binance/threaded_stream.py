@@ -16,7 +16,7 @@ class ThreadedApiManager(threading.Thread):
 
         """
         super().__init__()
-        self._loop: asyncio.AbstractEventLoop = asyncio.new_event_loop()
+        self._loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
