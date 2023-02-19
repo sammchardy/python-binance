@@ -2549,15 +2549,6 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
-    def get_us_staking_balance(self, **params):
-        """Get staking balance
-
-        https://docs.binance.us/#get-staking-balance
-
-        """
-        assert self.tld == "us", "Endpoint only available on binance.us"
-        return self._request_margin_api("get", "staking/stakingBalance", True, data=params)
-
     # Withdraw Endpoints
 
     def withdraw(self, **params):
@@ -4934,6 +4925,62 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
+
+    # US Staking Endpoints
+
+    def get_staking_asset_us(self, **params):
+        """Get staking information for a supported asset (or assets)
+
+        https://docs.binance.us/#get-staking-asset-information
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("get", "staking/asset", True, data=params)
+
+    def stake_asset_us(self, **params):
+        """Stake a supported asset.
+
+        https://docs.binance.us/#stake-asset
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("post", "staking/stake", True, data=params)
+
+    def unstake_asset_us(self, **params):
+        """Unstake a staked asset
+
+        https://docs.binance.us/#unstake-asset
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("post", "staking/unstake", True, data=params)
+
+    def get_staking_balance_us(self, **params):
+        """Get staking balance
+
+        https://docs.binance.us/#get-staking-balance
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("get", "staking/stakingBalance", True, data=params)
+
+    def get_staking_history_us(self, **params):
+        """Get staking history
+
+        https://docs.binance.us/#get-staking-history
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("get", "staking/history", True, data=params)
+
+    def get_staking_rewards_history_us(self, **params):
+        """Get staking rewards history for an asset(or assets) within a given time range.
+
+        https://docs.binance.us/#get-staking-rewards-history
+
+        """
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return self._request_margin_api("get", "staking/stakingRewardsHistory", True, data=params)
 
     # Sub Accounts
 
@@ -8236,6 +8283,38 @@ class AsyncClient(BaseClient):
 
     async def get_personal_left_quota(self, **params):
         return await self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
+
+    # US Staking Endpoints
+
+    async def get_staking_asset_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("get", "staking/asset", True, data=params)
+    get_staking_asset_us.__doc__ = Client.get_staking_asset_us.__doc__
+
+    async def stake_asset_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("post", "staking/stake", True, data=params)
+    stake_asset_us.__doc__ = Client.stake_asset_us.__doc__
+
+    async def unstake_asset_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("post", "staking/unstake", True, data=params)
+    unstake_asset_us.__doc__ = Client.unstake_asset_us.__doc__
+
+    async def get_staking_balance_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("get", "staking/stakingBalance", True, data=params)
+    get_staking_balance_us.__doc__ = Client.get_staking_balance_us.__doc__
+
+    async def get_staking_history_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("get", "staking/history", True, data=params)
+    get_staking_history_us.__doc__ = Client.get_staking_history_us.__doc__
+
+    async def get_staking_rewards_history_us(self, **params):
+        assert self.tld == "us", "Endpoint only available on binance.us"
+        return await self._request_margin_api("get", "staking/stakingRewardsHistory", True, data=params)
+    get_staking_rewards_history_us.__doc__ = Client.get_staking_rewards_history_us.__doc__
 
     # Sub Accounts
 
