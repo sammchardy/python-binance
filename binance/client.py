@@ -7838,6 +7838,10 @@ class AsyncClient(BaseClient):
         return await self._get('openOrders', True, data=params)
     get_open_orders.__doc__ = Client.get_open_orders.__doc__
 
+    async def get_open_oco_orders(self, **params):
+        return await self._get('openOrderList', True, data=params)
+    get_open_oco_orders.__doc__ = Client.get_open_oco_orders.__doc__
+
     # User Stream Endpoints
     async def get_account(self, **params):
         return await self._get('account', True, data=params)
@@ -8321,6 +8325,9 @@ class AsyncClient(BaseClient):
 
     async def futures_open_interest(self, **params):
         return await self._request_futures_api('get', 'openInterest', data=params)
+
+    async def futures_index_info(self, **params):
+        return await self._request_futures_api('get', 'indexInfo', data=params)
 
     async def futures_open_interest_hist(self, **params):
         return await self._request_futures_data_api('get', 'openInterestHist', data=params)
