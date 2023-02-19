@@ -257,7 +257,6 @@ class BaseClient:
         data = kwargs.get('data', None)
         if data and isinstance(data, dict):
             kwargs['data'] = data
-
             # find any requests params passed and apply them
             if 'requests_params' in kwargs['data']:
                 # merge requests params into kwargs
@@ -7332,6 +7331,48 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
+
+    # Pay Endpoints
+
+    def get_pay_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional - default 100, max 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'pay/transactions', signed=True, data=params)
+
+    # Convert Endpoints
+
+    def get_convert_trade_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+
+        :param startTime: required - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: required - End Time - 1593511200000
+        :type endTime: int
+        :param limit: optional - default 100, max 100
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
 
     def close_connection(self):
         if self.session:
