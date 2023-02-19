@@ -8742,3 +8742,15 @@ class AsyncClient(BaseClient):
 
     async def get_c2c_trade_history(self, **params):
         return await self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
+
+    # Pay Endpoints
+
+    async def get_pay_trade_history(self, **params):
+        return await self._request_margin_api('get', 'pay/transactions', signed=True, data=params)
+    get_pay_trade_history.__doc__ = Client.get_pay_trade_history.__doc__
+
+    # Convert Endpoints
+
+    async def get_convert_trade_history(self, **params):
+        return await self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
+    get_convert_trade_history.__doc__ = Client.get_convert_trade_history.__doc__
