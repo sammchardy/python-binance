@@ -5605,7 +5605,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'sub-account/futures/account', True, data=params)
+        return self._request_margin_api('get', 'sub-account/futures/account', True, data=params, version=2)
 
     def get_subaccount_futures_summary(self, **params):
         """Get Summary of Sub-account's Futures Account (For Master Account)
@@ -5657,7 +5657,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params)
+        return self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params, version=2)
 
     def get_subaccount_futures_positionrisk(self, **params):
         """Get Futures Position-Risk of Sub-account (For Master Account)
@@ -5689,7 +5689,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params)
+        return self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params, version=2)
 
     def make_subaccount_futures_transfer(self, **params):
         """Futures Transfer for Sub-account (For Master Account)
@@ -8414,13 +8414,13 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('post', 'sub-account/futures/enable', True, data=params)
 
     async def get_subaccount_futures_details(self, **params):
-        return await self._request_margin_api('get', 'sub-account/futures/account', True, data=params)
+        return await self._request_margin_api('get', 'sub-account/futures/account', True, data=params, version=2)
 
     async def get_subaccount_futures_summary(self, **params):
-        return await self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params)
+        return await self._request_margin_api('get', 'sub-account/futures/accountSummary', True, data=params, version=2)
 
     async def get_subaccount_futures_positionrisk(self, **params):
-        return await self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params)
+        return await self._request_margin_api('get', 'sub-account/futures/positionRisk', True, data=params, version=2)
 
     async def make_subaccount_futures_transfer(self, **params):
         return await self._request_margin_api('post', 'sub-account/futures/transfer', True, data=params)
