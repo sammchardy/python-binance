@@ -6557,7 +6557,12 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api("get", "asset/transfer", True, data=params)
-        # return self._request_margin_api("get", "futures/transfer", True, data=params)
+
+    def funding_wallet(self, **params):
+        return self._request_margin_api("get", "asset/get-funding-asset", True, data=params)
+
+    def get_user_asset(self, **params):
+        return self._request_margin_api("get", "asset/getUserAsset", True, data=params, version=3)
 
     def universal_transfer(self, **params):
         """Unviversal transfer api accross different binance account types
@@ -8695,6 +8700,12 @@ class AsyncClient(BaseClient):
 
     async def new_transfer_history(self, **params):
         return await self._request_margin_api("get", "asset/transfer", True, data=params)
+
+    async def funding_wallet(self, **params):
+        return await self._request_margin_api("get", "asset/get-funding-asset", True, data=params)
+
+    async def get_user_asset(self, **params):
+        return await self._request_margin_api("get", "asset/getUserAsset", True, data=params, version=3)
 
     async def universal_transfer(self, **params):
         return await self._request_margin_api(
