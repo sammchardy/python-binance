@@ -1,4 +1,6 @@
-from typing import Dict, Optional, List, Tuple
+from base64 import b64encode
+from pathlib import Path
+from typing import Dict, Optional, List, Tuple, Union
 
 import aiohttp
 import asyncio
@@ -6,9 +8,11 @@ import hashlib
 import hmac
 import requests
 import time
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA256
+from Crypto.Signature import pkcs1_15
 from operator import itemgetter
 from urllib.parse import urlencode
-
 
 from .helpers import interval_to_milliseconds, convert_ts_str
 from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
@@ -125,7 +129,7 @@ class BaseClient:
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False
+        testnet: bool = False, private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
         """Binance API Client constructor
 
@@ -137,6 +141,10 @@ class BaseClient:
         :type requests_params: dict.
         :param testnet: Use testnet environment - only available for vanilla options at the moment
         :type testnet: bool
+        :param private_key: Path to private key, or string of file contents
+        :type private_key: optional - str or Path
+        :param private_key_pass: Password of private key
+        :type private_key_pass: optional - str
 
         """
 
@@ -153,6 +161,7 @@ class BaseClient:
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
+        self.PRIVATE_KEY = self._init_private_key(private_key, private_key_pass)
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
@@ -171,6 +180,14 @@ class BaseClient:
 
     def _init_session(self):
         raise NotImplementedError
+
+    def _init_private_key(self, private_key: Optional[Union[str, Path]], private_key_pass: Optional[str] = None):
+        if not private_key:
+            return
+        if isinstance(private_key, Path):
+            with open(private_key, "r") as f:
+                private_key = f.read()
+        return RSA.import_key(private_key, passphrase=private_key_pass)
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
@@ -216,12 +233,23 @@ class BaseClient:
             url = self.OPTIONS_TESTNET_URL
         return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
-    def _generate_signature(self, data: Dict) -> str:
+    def _rsa_signature(self, query_string: str):
+        assert self.PRIVATE_KEY
+        h = SHA256.new(query_string.encode("utf-8"))
+        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
+        return b64encode(signature).decode()
+
+    def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
-        ordered_data = self._order_params(data)
-        query_string = '&'.join([f"{d[0]}={d[1]}" for d in ordered_data])
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
         return m.hexdigest()
+
+    def _generate_signature(self, data: Dict) -> str:
+        sig_func = self._hmac_signature
+        if self.PRIVATE_KEY:
+            sig_func = self._rsa_signature
+        query_string = '&'.join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
+        return sig_func(query_string)
 
     @staticmethod
     def _order_params(data: Dict) -> List[Tuple[str, str]]:
@@ -290,10 +318,10 @@ class Client(BaseClient):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False
+        testnet: bool = False, private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
 
-        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet, private_key, private_key_pass)
 
         # init DNS and SSL cert
         self.ping()
@@ -7443,12 +7471,13 @@ class AsyncClient(BaseClient):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None,
+        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
     ):
 
         self.loop = loop or asyncio.get_event_loop()
         self._session_params: Dict[str, str] = session_params or {}
-        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet, private_key, private_key_pass)
 
     @classmethod
     async def create(
