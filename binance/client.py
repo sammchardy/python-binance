@@ -6175,6 +6175,24 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'futures/transfer', True, data=params)
 
+    def futures_loan_borrow_history(self, **params):
+        return self._request_margin_api('get', 'futures/loan/borrow/history', True, data=params)
+
+    def futures_loan_repay_history(self, **params):
+        return self._request_margin_api('get', 'futures/loan/repay/history', True, data=params)
+
+    def futures_loan_wallet(self, **params):
+        return self._request_margin_api('get', 'futures/loan/wallet', True, data=params, version=2)
+
+    def futures_cross_collateral_adjust_history(self, **params):
+        return self._request_margin_api('get', 'futures/loan/adjustCollateral/history', True, data=params)
+
+    def futures_cross_collateral_liquidation_history(self, **params):
+        return self._request_margin_api('get', 'futures/loan/liquidationHistory', True, data=params)
+
+    def futures_loan_interest_history(self, **params):
+        return self._request_margin_api('get', 'futures/loan/interestHistory', True, data=params)
+
     def futures_create_order(self, **params):
         """Send in a new order.
 
@@ -7575,8 +7593,8 @@ class AsyncClient(BaseClient):
 
         return await self._request(method, uri, signed, True, **kwargs)
 
-    async def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
-        uri = self._create_margin_api_uri(path)
+    async def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_margin_api_uri(path, version)
 
         return await self._request(method, uri, signed, **kwargs)
 
@@ -8507,6 +8525,24 @@ class AsyncClient(BaseClient):
 
     async def transfer_history(self, **params):
         return await self._request_margin_api('get', 'futures/transfer', True, data=params)
+
+    async def futures_loan_borrow_history(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/borrow/history', True, data=params)
+
+    async def futures_loan_repay_history(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/repay/history', True, data=params)
+
+    async def futures_loan_wallet(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/wallet', True, data=params, version=2)
+
+    async def futures_cross_collateral_adjust_history(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/adjustCollateral/history', True, data=params)
+
+    async def futures_cross_collateral_liquidation_history(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/liquidationHistory', True, data=params)
+
+    async def futures_loan_interest_history(self, **params):
+        return await self._request_margin_api('get', 'futures/loan/interestHistory', True, data=params)
 
     async def futures_create_order(self, **params):
         return await self._request_futures_api('post', 'order', True, data=params)
