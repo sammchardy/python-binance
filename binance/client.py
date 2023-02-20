@@ -38,6 +38,9 @@ class BaseClient:
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
+    MARGIN_API_VERSION2 = 'v2'
+    MARGIN_API_VERSION3 = 'v3'
+    MARGIN_API_VERSION4 = 'v4'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
     OPTIONS_API_VERSION = 'v1'
@@ -196,8 +199,14 @@ class BaseClient:
         v = self.PRIVATE_API_VERSION if signed else version
         return url + '/' + v + '/' + path
 
-    def _create_margin_api_uri(self, path: str, version: str = MARGIN_API_VERSION) -> str:
-        return self.MARGIN_API_URL + '/' + version + '/' + path
+    def _create_margin_api_uri(self, path: str, version: int = 1) -> str:
+        options = {
+            1: self.MARGIN_API_VERSION,
+            2: self.MARGIN_API_VERSION2,
+            3: self.MARGIN_API_VERSION3,
+            4: self.MARGIN_API_VERSION4,
+        }
+        return self.MARGIN_API_URL + '/' + options[version] + '/' + path
 
     def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
@@ -385,8 +394,8 @@ class Client(BaseClient):
 
         return self._request(method, uri, signed, True, **kwargs)
 
-    def _request_margin_api(self, method, path, signed=False, **kwargs) -> Dict:
-        uri = self._create_margin_api_uri(path)
+    def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_margin_api_uri(path, version)
 
         return self._request(method, uri, signed, **kwargs)
 
