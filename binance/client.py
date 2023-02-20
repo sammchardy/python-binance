@@ -5240,7 +5240,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._request_margin_api('get', 'sub-account/assets', True, data=params)
+        return self._request_margin_api('get', 'sub-account/assets', True, data=params, version=4)
 
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
@@ -8392,7 +8392,7 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('post', 'sub-account/futures/internalTransfer', True, data=params)
 
     async def get_sub_account_assets(self, **params):
-        return await self._request_margin_api('get', 'sub-account/assets', True, data=params)
+        return await self._request_margin_api('get', 'sub-account/assets', True, data=params, version=4)
 
     async def query_subaccount_spot_summary(self, **params):
         return await self._request_margin_api('get', 'sub-account/spotSummary', True, data=params)
