@@ -21,9 +21,9 @@ from .enums import HistoricalKlinesType
 
 class BaseClient:
 
-    API_URL = 'https://api.binance.{}/api'
+    API_URL = 'https://api{}.binance.{}/api'
     API_TESTNET_URL = 'https://testnet.binance.vision/api'
-    MARGIN_API_URL = 'https://api.binance.{}/sapi'
+    MARGIN_API_URL = 'https://api{}.binance.{}/sapi'
     WEBSITE_URL = 'https://www.binance.{}'
     FUTURES_URL = 'https://fapi.binance.{}/fapi'
     FUTURES_TESTNET_URL = 'https://testnet.binancefuture.com/fapi'
@@ -44,6 +44,12 @@ class BaseClient:
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = "v2"
     OPTIONS_API_VERSION = 'v1'
+
+    BASE_ENDPOINT_DEFAULT = ''
+    BASE_ENDPOINT_1 = '1'
+    BASE_ENDPOINT_2 = '2'
+    BASE_ENDPOINT_3 = '3'
+    BASE_ENDPOINT_4 = '4'
 
     REQUEST_TIMEOUT: float = 10
 
@@ -131,7 +137,7 @@ class BaseClient:
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com', base_endpoint: str = BASE_ENDPOINT_DEFAULT,
         testnet: bool = False, private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
         """Binance API Client constructor
@@ -152,8 +158,8 @@ class BaseClient:
         """
 
         self.tld = tld
-        self.API_URL = self.API_URL.format(tld)
-        self.MARGIN_API_URL = self.MARGIN_API_URL.format(tld)
+        self.API_URL = self.API_URL.format(base_endpoint, tld)
+        self.MARGIN_API_URL = self.MARGIN_API_URL.format(base_endpoint, tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
         self.FUTURES_URL = self.FUTURES_URL.format(tld)
         self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
@@ -327,10 +333,11 @@ class Client(BaseClient):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False, private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
+        base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT, testnet: bool = False,
+        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
 
-        super().__init__(api_key, api_secret, requests_params, tld, testnet, private_key, private_key_pass)
+        super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
         # init DNS and SSL cert
         self.ping()
@@ -7503,22 +7510,24 @@ class AsyncClient(BaseClient):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None,
         private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
     ):
 
         self.loop = loop or asyncio.get_event_loop()
         self._session_params: Dict[str, str] = session_params or {}
-        super().__init__(api_key, api_secret, requests_params, tld, testnet, private_key, private_key_pass)
+        super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
     @classmethod
     async def create(
         cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None
     ):
 
-        self = cls(api_key, api_secret, requests_params, tld, testnet, loop, session_params)
+        self = cls(api_key, api_secret, requests_params, tld, base_endpoint, testnet, loop, session_params)
 
         try:
             await self.ping()
