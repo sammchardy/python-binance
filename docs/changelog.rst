@@ -1,6 +1,34 @@
 Changelog
 =========
 
+v1.0.17 - 2023-02-21
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- RSA key authentication
+- Support for api1, api2, api3, api4 base endpoints
+- binance.us staking endpoints
+- Options ticker by expiration socket
+- Staking endpoints
+- Pay and Convert endpoints
+- Futures index info endpoint
+- Open OCO Orders endpoint
+- Param to pass session params to aiohttp.ClientSession
+
+
+**Updated**
+
+- Some margin endpoint versions
+- Support testnet for more streams
+
+**Fixed**
+
+- Indefinite websocket reconnect loop
+- Crash on parsing code from some errors
+
+**Added**
+
 v1.0.16 - 2022-04-09
 ^^^^^^^^^^^^^^^^^^^^
 
