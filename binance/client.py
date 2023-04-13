@@ -7517,7 +7517,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'convert/getQuote', signed=True, data=params)
+        return self._request_margin_api('post', 'convert/getQuote', signed=True, data=params)
 
     def convert_accept_quote(self, **params):
         """Accept the offered quote by quote ID.
@@ -7533,7 +7533,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'convert/acceptQuote', signed=True, data=params)
+        return self._request_margin_api('post', 'convert/acceptQuote', signed=True, data=params)
 
     def close_connection(self):
         if self.session:
