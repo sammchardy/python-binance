@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v1.0.17.1 - 2023-04-12
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+- Convert endpoints (request quote and accept quote)
+
+
 v1.0.17 - 2023-02-21
 ^^^^^^^^^^^^^^^^^^^^
 
