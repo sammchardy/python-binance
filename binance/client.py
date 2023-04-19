@@ -6569,7 +6569,7 @@ class Client(BaseClient):
         return self._request_margin_api("get", "asset/get-funding-asset", True, data=params)
 
     def get_user_asset(self, **params):
-        return self._request_margin_api("get", "asset/getUserAsset", True, data=params, version=3)
+        return self._request_margin_api("post", "asset/getUserAsset", True, data=params, version=3)
 
     def universal_transfer(self, **params):
         """Unviversal transfer api accross different binance account types
