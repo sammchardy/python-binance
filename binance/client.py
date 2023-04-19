@@ -1,6 +1,6 @@
 from base64 import b64encode
 from pathlib import Path
-from typing import Dict, Optional, List, Tuple, Union
+from typing import Dict, Optional, List, Tuple, Union, Any
 
 import aiohttp
 import asyncio
@@ -137,7 +137,7 @@ class BaseClient:
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com', base_endpoint: str = BASE_ENDPOINT_DEFAULT,
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com', base_endpoint: str = BASE_ENDPOINT_DEFAULT,
         testnet: bool = False, private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
         """Binance API Client constructor
@@ -333,7 +333,7 @@ class Client(BaseClient):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT, testnet: bool = False,
         private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
     ):
@@ -7548,22 +7548,22 @@ class AsyncClient(BaseClient):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
-        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None,
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
     ):
 
         self.loop = loop or get_loop()
-        self._session_params: Dict[str, str] = session_params or {}
+        self._session_params: Dict[str, Any] = session_params or {}
         super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
     @classmethod
     async def create(
         cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
-        testnet: bool = False, loop=None, session_params: Optional[Dict[str, str]] = None
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, Any]] = None
     ):
 
         self = cls(api_key, api_secret, requests_params, tld, base_endpoint, testnet, loop, session_params)
