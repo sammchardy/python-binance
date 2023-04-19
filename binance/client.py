@@ -33,7 +33,7 @@ class BaseClient:
     FUTURES_COIN_TESTNET_URL = 'https://testnet.binancefuture.com/dapi'
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
     FUTURES_COIN_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
-    OPTIONS_URL = 'https://vapi.binance.{}/vapi'
+    OPTIONS_URL = 'https://eapi.binance.{}/eapi'
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/vapi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
