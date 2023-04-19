@@ -3,9 +3,9 @@ import threading
 from typing import Optional, Dict
 
 from .client import AsyncClient
+from .helpers import get_loop
 
 
-        
 class ThreadedApiManager(threading.Thread):
 
     def __init__(
@@ -72,19 +72,3 @@ class ThreadedApiManager(threading.Thread):
         self._loop.call_soon(asyncio.create_task, self.stop_client())
         for socket_name in self._socket_running.keys():
             self._socket_running[socket_name] = False
-
-
-def get_loop():
-    ''' check if there is an event loop in the current thread, if not create one
-    inspired by https://stackoverflow.com/questions/46727787/runtimeerror-there-is-no-current-event-loop-in-thread-in-async-apscheduler
-    '''
-    try:
-        loop = asyncio.get_event_loop()
-        return loop
-    except RuntimeError as e:
-        if str(e).startswith('There is no current event loop in thread'):
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            return loop
-        else:
-            raise

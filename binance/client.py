@@ -14,7 +14,7 @@ from Crypto.Signature import pkcs1_15
 from operator import itemgetter
 from urllib.parse import urlencode
 
-from .helpers import interval_to_milliseconds, convert_ts_str
+from .helpers import interval_to_milliseconds, convert_ts_str, get_loop
 from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
 from .enums import HistoricalKlinesType
 
@@ -7515,7 +7515,7 @@ class AsyncClient(BaseClient):
         private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
     ):
 
-        self.loop = loop or asyncio.get_event_loop()
+        self.loop = loop or get_loop()
         self._session_params: Dict[str, str] = session_params or {}
         super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
