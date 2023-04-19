@@ -7497,6 +7497,44 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
 
+    def convert_request_quote(self, **params):
+        """Request a quote for the requested token pairs
+
+        https://binance-docs.github.io/apidocs/spot/en/#send-quote-request-user_data
+
+        :param fromAsset: required - Asset to convert from - BUSD
+        :type fromAsset: str
+        :param toAsset: required - Asset to convert to - BTC
+        :type toAsset: str
+        :param fromAmount: EITHER - When specified, it is the amount you will be debited after the conversion
+        :type fromAmount: decimal
+        :param toAmount: EITHER - When specified, it is the amount you will be credited after the conversion
+        :type toAmount: decimal
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'convert/getQuote', signed=True, data=params)
+
+    def convert_accept_quote(self, **params):
+        """Accept the offered quote by quote ID.
+
+        https://binance-docs.github.io/apidocs/spot/en/#accept-quote-trade
+
+        :param quoteId: required - 457235734584567
+        :type quoteId: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'convert/acceptQuote', signed=True, data=params)
+
     def close_connection(self):
         if self.session:
             self.session.close()
@@ -8936,3 +8974,11 @@ class AsyncClient(BaseClient):
     async def get_convert_trade_history(self, **params):
         return await self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
     get_convert_trade_history.__doc__ = Client.get_convert_trade_history.__doc__
+
+    async def convert_request_quote(self, **params):
+        return await self._request_margin_api('post', 'convert/getQuote', signed=True, data=params)
+    convert_request_quote.__doc__ = Client.convert_request_quote.__doc__
+
+    async def convert_accept_quote(self, **params):
+        return await self._request_margin_api('post', 'convert/acceptQuote', signed=True, data=params)
+    convert_accept_quote.__doc__ = Client.convert_accept_quote.__doc__
