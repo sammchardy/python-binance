@@ -1,6 +1,6 @@
-aiohttp
-dateparser
-pycryptodome
-requests
-ujson
-websockets
+aiohttp==3.8.4
+dateparser==1.1.8
+pycryptodome==3.18.0
+requests==2.31.0
+ujson==5.8.0
+websockets==11.0.3
