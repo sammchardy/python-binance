@@ -5762,6 +5762,12 @@ class Client(BaseClient):
     def get_portfolio_account(self):
         return self._request_margin_api('get', '/portfolio/account', True, data={})
 
+    def post_portfolio_auto_collection(self):
+        return self._request_margin_api('post', '/portfolio/auto-collection', True, data={})
+
+    def post_portfolio_bnb_transfer(self, amount, transfer_side):
+        return self._request_margin_api('post', '/portfolio/bnb-transfer', True, data={'amount': amount, 'transferSide': transfer_side})
+
     # Futures API
 
     def futures_ping(self):
