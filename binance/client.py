@@ -5762,6 +5762,10 @@ class Client(BaseClient):
     def get_portfolio_account(self):
         return self._request_margin_api('get', '/portfolio/account', True, data={})
 
+    def get_portfolio_interest_history(self, asset=None, start_time=None, end_time=None, size=100):
+        return self._request_margin_api('post', '/portfolio/interest-history', True,
+                                        data={'asset': asset, 'startTime': start_time, 'endTime': end_time, 'size': size})
+
     def post_portfolio_auto_collection(self):
         return self._request_margin_api('post', '/portfolio/auto-collection', True, data={})
 
