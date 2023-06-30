@@ -346,7 +346,7 @@ class BinanceSocketManager:
                 path=path,
                 url=self._get_stream_url(stream_url),
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=lambda p: self._exit_socket(f'{socket_type}_{p}'),
                 is_binary=is_binary
             )
 

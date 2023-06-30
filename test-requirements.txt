@@ -1,6 +1,7 @@
 coverage
 flake8
 pytest
+pytest-asyncio
 pytest-cov
 pytest-flake8
 python-coveralls
