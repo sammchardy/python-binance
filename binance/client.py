@@ -5772,6 +5772,18 @@ class Client(BaseClient):
     def post_portfolio_bnb_transfer(self, amount, transfer_side):
         return self._request_margin_api('post', '/portfolio/bnb-transfer', True, data={'amount': amount, 'transferSide': transfer_side})
 
+    def get_repay_futures_switch(self):
+        url_path = '/portfolio/repay-futures-switch'
+        return self._request_margin_api('GET', url_path, True)
+
+    def post_repay_futures_switch(self, auto_repay):
+        url_path = '/portfolio/repay-futures-switch'
+        return self._request_margin_api('POST', url_path, True, data={'autoRepay': auto_repay})
+
+    def post_repay_futures_negative_balance(self, ):
+        url_path = '/portfolio/repay-futures-negative-balance'
+        return self._request_margin_api('POST', url_path, True, )
+
     # Futures API
 
     def futures_ping(self):
