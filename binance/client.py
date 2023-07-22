@@ -6566,7 +6566,7 @@ class Client(BaseClient):
         return self._request_margin_api("get", "asset/transfer", True, data=params)
 
     def funding_wallet(self, **params):
-        return self._request_margin_api("get", "asset/get-funding-asset", True, data=params)
+        return self._request_margin_api("post", "asset/get-funding-asset", True, data=params)
 
     def get_user_asset(self, **params):
         return self._request_margin_api("post", "asset/getUserAsset", True, data=params, version=3)
@@ -8749,10 +8749,10 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api("get", "asset/transfer", True, data=params)
 
     async def funding_wallet(self, **params):
-        return await self._request_margin_api("get", "asset/get-funding-asset", True, data=params)
+        return await self._request_margin_api("post", "asset/get-funding-asset", True, data=params)
 
     async def get_user_asset(self, **params):
-        return await self._request_margin_api("get", "asset/getUserAsset", True, data=params, version=3)
+        return await self._request_margin_api("post", "asset/getUserAsset", True, data=params, version=3)
 
     async def universal_transfer(self, **params):
         return await self._request_margin_api(
