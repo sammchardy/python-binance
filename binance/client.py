@@ -5774,15 +5774,15 @@ class Client(BaseClient):
 
     def get_repay_futures_switch(self):
         url_path = 'portfolio/repay-futures-switch'
-        return self._request_margin_api('get', url_path, True)
+        return self._request_margin_api('get', url_path, True, data={})
 
     def post_repay_futures_switch(self, auto_repay):
         url_path = 'portfolio/repay-futures-switch'
         return self._request_margin_api('post', url_path, True, data={'autoRepay': auto_repay})
 
-    def post_repay_futures_negative_balance(self, ):
+    def post_repay_futures_negative_balance(self):
         url_path = 'portfolio/repay-futures-negative-balance'
-        return self._request_margin_api('post', url_path, True, )
+        return self._request_margin_api('post', url_path, True, data={})
 
     # Futures API
 
