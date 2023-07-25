@@ -5760,29 +5760,29 @@ class Client(BaseClient):
         return self._request_margin_api('get', 'sub-account/universalTransfer', True, data=params)
 
     def get_portfolio_account(self):
-        return self._request_margin_api('get', '/portfolio/account', True, data={})
+        return self._request_margin_api('get', 'portfolio/account', True, data={})
 
     def get_portfolio_interest_history(self, asset=None, start_time=None, end_time=None, size=100):
-        return self._request_margin_api('get', '/portfolio/interest-history', True,
+        return self._request_margin_api('get', 'portfolio/interest-history', True,
                                         data={'asset': asset, 'startTime': start_time, 'endTime': end_time, 'size': size})
 
     def post_portfolio_auto_collection(self):
-        return self._request_margin_api('post', '/portfolio/auto-collection', True, data={})
+        return self._request_margin_api('post', 'portfolio/auto-collection', True, data={})
 
     def post_portfolio_bnb_transfer(self, amount, transfer_side):
-        return self._request_margin_api('post', '/portfolio/bnb-transfer', True, data={'amount': amount, 'transferSide': transfer_side})
+        return self._request_margin_api('post', 'portfolio/bnb-transfer', True, data={'amount': amount, 'transferSide': transfer_side})
 
     def get_repay_futures_switch(self):
-        url_path = '/portfolio/repay-futures-switch'
-        return self._request_margin_api('GET', url_path, True)
+        url_path = 'portfolio/repay-futures-switch'
+        return self._request_margin_api('get', url_path, True)
 
     def post_repay_futures_switch(self, auto_repay):
-        url_path = '/portfolio/repay-futures-switch'
-        return self._request_margin_api('POST', url_path, True, data={'autoRepay': auto_repay})
+        url_path = 'portfolio/repay-futures-switch'
+        return self._request_margin_api('post', url_path, True, data={'autoRepay': auto_repay})
 
     def post_repay_futures_negative_balance(self, ):
-        url_path = '/portfolio/repay-futures-negative-balance'
-        return self._request_margin_api('POST', url_path, True, )
+        url_path = 'portfolio/repay-futures-negative-balance'
+        return self._request_margin_api('post', url_path, True, )
 
     # Futures API
 
