@@ -339,14 +339,14 @@ class BinanceSocketManager:
     def _get_socket(
         self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False,
         socket_type: BinanceSocketType = BinanceSocketType.SPOT
-    ) -> str:
+    ) -> ReconnectingWebsocket:
         conn_id = f'{socket_type}_{path}'
         if conn_id not in self._conns:
             self._conns[conn_id] = ReconnectingWebsocket(
                 path=path,
                 url=self._get_stream_url(stream_url),
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=lambda p: self._exit_socket(f'{socket_type}_{p}'),
                 is_binary=is_binary
             )
 
