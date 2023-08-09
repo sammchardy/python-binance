@@ -42,7 +42,7 @@ class BaseClient:
     MARGIN_API_VERSION3 = 'v3'
     MARGIN_API_VERSION4 = 'v4'
     FUTURES_API_VERSION = 'v1'
-    FUTURES_API_VERSION2 = "v2"
+    FUTURES_API_VERSION2 = 'v2'
     OPTIONS_API_VERSION = 'v1'
 
     BASE_ENDPOINT_DEFAULT = ''
@@ -230,14 +230,14 @@ class BaseClient:
             url = self.FUTURES_DATA_TESTNET_URL
         return url + '/' + path
 
-    def _create_futures_coin_api_url(self, path: str, version=1) -> str:
+    def _create_futures_coin_api_url(self, path: str, version: int = 1) -> str:
         url = self.FUTURES_COIN_URL
         if self.testnet:
             url = self.FUTURES_COIN_TESTNET_URL
         options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
         return url + "/" + options[version] + "/" + path
 
-    def _create_futures_coin_data_api_url(self, path: str, version=1) -> str:
+    def _create_futures_coin_data_api_url(self, path: str, version: int = 1) -> str:
         url = self.FUTURES_COIN_DATA_URL
         if self.testnet:
             url = self.FUTURES_COIN_DATA_TESTNET_URL
