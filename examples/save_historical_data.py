@@ -22,10 +22,15 @@ def date_to_milliseconds(date_str):
     # parse our date string
     d = dateparser.parse(date_str)
     # if the date is not timezone aware apply UTC timezone
-    if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
+    if d is None:
+        # 日期解析失败，返回错误或采取适当的处理方式
+        return None
+    
+    # 如果日期没有时区信息，则应用UTC时区
+    if d.tzinfo is None:
         d = d.replace(tzinfo=pytz.utc)
 
-    # return the difference in time
+    # 返回时间差的毫秒数
     return int((d - epoch).total_seconds() * 1000.0)
 
 
@@ -121,7 +126,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
             start_ts = temp_data[len(temp_data) - 1][0] + timeframe
         else:
             # it wasn't listed yet, increment our start date
-            start_ts += timeframe
+            start_ts += timeframe # type: ignore
 
         idx += 1
         # check if we received less than the required limit and exit the loop
