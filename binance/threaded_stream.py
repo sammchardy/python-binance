@@ -1,6 +1,6 @@
 import asyncio
 import threading
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 
 from .client import AsyncClient
 from .helpers import get_loop
@@ -10,8 +10,8 @@ class ThreadedApiManager(threading.Thread):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
+        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None
     ):
         """Initialise the BinanceSocketManager
 
@@ -26,7 +26,8 @@ class ThreadedApiManager(threading.Thread):
             'api_secret': api_secret,
             'requests_params': requests_params,
             'tld': tld,
-            'testnet': testnet
+            'testnet': testnet,
+            'session_params': session_params,
         }
 
     async def _before_socket_listener_start(self):
