@@ -48,9 +48,10 @@ class ThreadedApiManager(threading.Thread):
                 except asyncio.TimeoutError:
                     ...
                     continue
-                if not msg:
-                    continue
-                callback(msg)
+                else:
+                    if not msg:
+                        continue
+                    callback(msg)
         del self._socket_running[path]
 
     def run(self):
