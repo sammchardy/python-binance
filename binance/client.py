@@ -2122,6 +2122,116 @@ class Client(BaseClient):
         """
         return self._get('myTrades', True, data=params)
 
+    def get_current_order_count(self):
+        """Displays the user's current order count usage for all intervals.
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-current-order-count-usage-trade
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+
+                {
+                    "rateLimitType": "ORDERS",
+                    "interval": "SECOND",
+                    "intervalNum": 10,
+                    "limit": 10000,
+                    "count": 0
+                },
+                {
+                    "rateLimitType": "ORDERS",
+                    "interval": "DAY",
+                    "intervalNum": 1,
+                    "limit": 20000,
+                    "count": 0
+                }
+            ]
+
+        """
+        return self._get('rateLimit/order', True)
+
+    def get_prevented_matches(self, **params):
+        """Displays the list of orders that were expired because of STP.
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-prevented-matches-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param preventedMatchId: optional
+        :type preventedMatchId: int
+        :param orderId: optional
+        :type orderId: int
+        :param fromPreventedMatchId: optional
+        :type fromPreventedMatchId: int
+        :param limit: optional, Default: 500; Max: 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "symbol": "BTCUSDT",
+                    "preventedMatchId": 1,
+                    "takerOrderId": 5,
+                    "makerOrderId": 3,
+                    "tradeGroupId": 1,
+                    "selfTradePreventionMode": "EXPIRE_MAKER",
+                    "price": "1.100000",
+                    "makerPreventedQuantity": "1.300000",
+                    "transactTime": 1669101687094
+                }
+            ]
+        """
+        return self._get('myPreventedMatches', True, data=params)
+
+    def get_allocations(self, **params):
+        """Retrieves allocations resulting from SOR order placement.
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-allocations-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param fromAllocationId: optional
+        :type fromAllocationId: int
+        :param orderId: optional
+        :type orderId: int
+        :param limit: optional, Default: 500; Max: 1000
+        :type limit: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "symbol": "BTCUSDT",
+                    "allocationId": 0,
+                    "allocationType": "SOR",
+                    "orderId": 1,
+                    "orderListId": -1,
+                    "price": "1.00000000",
+                    "qty": "5.00000000",
+                    "quoteQty": "5.00000000",
+                    "commission": "0.00000000",
+                    "commissionAsset": "BTC",
+                    "time": 1687506878118,
+                    "isBuyer": true,
+                    "isMaker": false,
+                    "isAllocator": false
+                }
+            ]
+        """
+        return self._get('myAllocations', True, data=params)
+
     def get_system_status(self):
         """Get system status detail.
 
@@ -3851,6 +3961,84 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('delete', 'margin/order', signed=True, data=params)
+
+    def set_margin_max_leverage(self, **params):
+        """Adjust cross margin max leverage
+
+        https://binance-docs.github.io/apidocs/spot/en/#adjust-cross-margin-max-leverage-user_data
+
+        :param maxLeverage: required Can only adjust 3 or 5，Example: maxLeverage=3
+        :type maxLeverage: int
+
+        :returns: API response
+
+            {
+                "success": true
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('post', 'margin/max-leverage', signed=True, data=params)
+
+    def get_margin_transfer_history(self, **params):
+        """Query margin transfer history
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-cross-margin-transfer-history-user_data
+
+        :param asset: optional
+        :type asset: str
+        :param type: optional Transfer Type: ROLL_IN, ROLL_OUT
+        :type type: str
+        :param archived: optional Default: false. Set to true for archived data from 6 months ago
+        :type archived: str
+        :param startTime: earliest timestamp to filter transactions
+        :type startTime: str
+        :param endTime: Used to uniquely identify this cancel. Automatically generated by default.
+        :type endTime: str
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: str
+        :param size: Default:10 Max:100
+        :type size: int
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+            {
+                "rows": [
+                    {
+                        "amount": "0.10000000",
+                        "asset": "BNB",
+                        "status": "CONFIRMED",
+                        "timestamp": 1566898617,
+                        "txId": 5240372201,
+                        "type": "ROLL_IN"
+                    },
+                    {
+                        "amount": "5.00000000",
+                        "asset": "USDT",
+                        "status": "CONFIRMED",
+                        "timestamp": 1566888436,
+                        "txId": 5239810406,
+                        "type": "ROLL_OUT"
+                    },
+                    {
+                        "amount": "1.00000000",
+                        "asset": "EOS",
+                        "status": "CONFIRMED",
+                        "timestamp": 1566888403,
+                        "txId": 5239808703,
+                        "type": "ROLL_IN"
+                    }
+                ],
+                "total": 3
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_margin_api('get', 'margin/transfer', signed=True, data=params)
 
     def get_margin_loan_details(self, **params):
         """Query loan record
@@ -6127,6 +6315,112 @@ class Client(BaseClient):
         """
         return self._request_futures_api('get', 'forceOrders', signed=True, data=params)
 
+    def futures_api_trading_status(self, **params):
+        """Get Position ADL Quantile Estimate
+
+        https://binance-docs.github.io/apidocs/futures/en/#futures-trading-quantitative-rules-indicators-user_data
+
+        :param symbol: optional
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "indicators": { // indicator: quantitative rules indicators, value: user's indicators value, triggerValue: trigger indicator value threshold of quantitative rules.
+                    "BTCUSDT": [
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "UFR",  // Unfilled Ratio (UFR)
+                            "value": 0.05,  // Current value
+                            "triggerValue": 0.995  // Trigger value
+                        },
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "IFER",  // IOC/FOK Expiration Ratio (IFER)
+                            "value": 0.99,  // Current value
+                            "triggerValue": 0.99  // Trigger value
+                        },
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "GCR",  // GTC Cancellation Ratio (GCR)
+                            "value": 0.99,  // Current value
+                            "triggerValue": 0.99  // Trigger value
+                        },
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "DR",  // Dust Ratio (DR)
+                            "value": 0.99,  // Current value
+                            "triggerValue": 0.99  // Trigger value
+                        }
+                    ],
+                    "ETHUSDT": [
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "UFR",
+                            "value": 0.05,
+                            "triggerValue": 0.995
+                        },
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "IFER",
+                            "value": 0.99,
+                            "triggerValue": 0.99
+                        },
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "GCR",
+                            "value": 0.99,
+                            "triggerValue": 0.99
+                        }
+                        {
+                            "isLocked": true,
+                            "plannedRecoverTime": 1545741270000,
+                            "indicator": "DR",
+                            "value": 0.99,
+                            "triggerValue": 0.99
+                        }
+                    ]
+                },
+                "updateTime": 1545741270000
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_api('get', 'apiTradingStatus', signed=True, data=params)
+
+    def futures_comission_rate(self, **params):
+        """Get Futures commission rate
+
+        https://binance-docs.github.io/apidocs/futures/en/#user-commission-rate-user_data
+
+        :param symbol: required
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "symbol": "BTCUSDT",
+                "makerCommissionRate": "0.0002",  // 0.02%
+                "takerCommissionRate": "0.0004"   // 0.04%
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_api('get', 'commissionRate', signed=True, data=params)
+
     def futures_adl_quantile_estimate(self, **params):
         """Get Position ADL Quantile Estimate
 
@@ -8067,6 +8361,18 @@ class AsyncClient(BaseClient):
         return await self._get('myTrades', True, data=params)
     get_my_trades.__doc__ = Client.get_my_trades.__doc__
 
+    async def get_current_order_count(self):
+        return await self._get('rateLimit/order', True)
+    get_current_order_count.__doc__ = Client.get_current_order_count.__doc__
+
+    async def get_prevented_matches(self, **params):
+        return await self._get('myPreventedMatches', True, data=params)
+    get_prevented_matches.__doc__ = Client.get_prevented_matches.__doc__
+
+    async def get_allocations(self, **params):
+        return await self._get('myAllocations', True, data=params)
+    get_allocations.__doc__ = Client.get_allocations.__doc__
+
     async def get_system_status(self):
         return await self._request_margin_api('get', 'system/status')
     get_system_status.__doc__ = Client.get_system_status.__doc__
@@ -8177,75 +8483,105 @@ class AsyncClient(BaseClient):
 
     async def get_isolated_margin_account(self, **params):
         return await self._request_margin_api('get', 'margin/isolated/account', True, data=params)
+    get_isolated_margin_account.__doc__ = Client.get_isolated_margin_account.__doc__
 
     async def enable_isolated_margin_account(self, **params):
         return await self._request_margin_api('post', 'margin/isolated/account', True, data=params)
+    enable_isolated_margin_account.__doc__ = Client.enable_isolated_margin_account.__doc__
 
     async def disable_isolated_margin_account(self, **params):
         return await self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
+    disable_isolated_margin_account.__doc__ = Client.disable_isolated_margin_account.__doc__
 
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
+    get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
 
     async def get_margin_symbol(self, **params):
         return await self._request_margin_api('get', 'margin/pair', data=params)
+    get_margin_symbol.__doc__ = Client.get_margin_symbol.__doc__
 
     async def get_margin_all_assets(self, **params):
         return await self._request_margin_api('get', 'margin/allAssets', data=params)
+    get_margin_all_assets.__doc__ = Client.get_margin_all_assets.__doc__
 
     async def get_margin_all_pairs(self, **params):
         return await self._request_margin_api('get', 'margin/allPairs', data=params)
+    get_margin_all_pairs.__doc__ = Client.get_margin_all_pairs.__doc__
 
     async def create_isolated_margin_account(self, **params):
         return await self._request_margin_api('post', 'margin/isolated/create', signed=True, data=params)
+    create_isolated_margin_account.__doc__ = Client.create_isolated_margin_account.__doc__
 
     async def get_isolated_margin_symbol(self, **params):
         return await self._request_margin_api('get', 'margin/isolated/pair', signed=True, data=params)
+    get_isolated_margin_symbol.__doc__ = Client.get_isolated_margin_symbol.__doc__
 
     async def get_all_isolated_margin_symbols(self, **params):
         return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
+    get_all_isolated_margin_symbols.__doc__ = Client.get_all_isolated_margin_symbols.__doc__
 
     async def toggle_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
+    toggle_bnb_burn_spot_margin.__doc__ = Client.toggle_bnb_burn_spot_margin.__doc__
 
     async def get_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('get', 'bnbBurn', signed=True, data=params)
+    get_bnb_burn_spot_margin.__doc__ = Client.get_bnb_burn_spot_margin.__doc__
 
     async def get_margin_price_index(self, **params):
         return await self._request_margin_api('get', 'margin/priceIndex', data=params)
+    get_margin_price_index.__doc__ = Client.get_margin_price_index.__doc__
 
     async def transfer_margin_to_spot(self, **params):
         params['type'] = 2
         return await self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+    transfer_margin_to_spot.__doc__ = Client.transfer_margin_to_spot.__doc__
 
     async def transfer_spot_to_margin(self, **params):
         params['type'] = 1
         return await self._request_margin_api('post', 'margin/transfer', signed=True, data=params)
+    transfer_spot_to_margin.__doc__ = Client.transfer_spot_to_margin.__doc__
 
     async def transfer_isolated_margin_to_spot(self, **params):
         params['transFrom'] = "ISOLATED_MARGIN"
         params['transTo'] = "SPOT"
         return await self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+    transfer_isolated_margin_to_spot.__doc__ = Client.transfer_isolated_margin_to_spot.__doc__
 
     async def transfer_spot_to_isolated_margin(self, **params):
         params['transFrom'] = "SPOT"
         params['transTo'] = "ISOLATED_MARGIN"
         return await self._request_margin_api('post', 'margin/isolated/transfer', signed=True, data=params)
+    transfer_spot_to_isolated_margin.__doc__ = Client.transfer_spot_to_isolated_margin.__doc__
 
     async def create_margin_loan(self, **params):
         return await self._request_margin_api('post', 'margin/loan', signed=True, data=params)
+    create_margin_loan.__doc__ = Client.create_margin_loan.__doc__
 
     async def repay_margin_loan(self, **params):
         return await self._request_margin_api('post', 'margin/repay', signed=True, data=params)
+    repay_margin_loan.__doc__ = Client.repay_margin_loan.__doc__
 
     async def create_margin_order(self, **params):
         return await self._request_margin_api('post', 'margin/order', signed=True, data=params)
+    create_margin_order.__doc__ = Client.create_margin_order.__doc__
 
     async def cancel_margin_order(self, **params):
         return await self._request_margin_api('delete', 'margin/order', signed=True, data=params)
+    cancel_margin_order.__doc__ = Client.cancel_margin_order.__doc__
+
+    async def set_margin_max_leverage(self, **params):
+        return await self._request_margin_api('post', 'margin/max-leverage', signed=True, data=params)
+    set_margin_max_leverage.__doc__ = Client.set_margin_max_leverage.__doc__
+
+    async def get_margin_transfer_history(self, **params):
+        return await self._request_margin_api('get', 'margin/transfer', signed=True, data=params)
+    get_margin_transfer_history.__doc__ = Client.get_margin_transfer_history.__doc__
 
     async def get_margin_loan_details(self, **params):
         return await self._request_margin_api('get', 'margin/loan', signed=True, data=params)
+    get_margin_loan_details.__doc__ = Client.get_margin_loan_details.__doc__
 
     async def get_margin_repay_details(self, **params):
         return await self._request_margin_api('get', 'margin/repay', signed=True, data=params)
@@ -8557,6 +8893,12 @@ class AsyncClient(BaseClient):
 
     async def futures_liquidation_orders(self, **params):
         return await self._request_futures_api('get', 'forceOrders', signed=True, data=params)
+
+    async def futures_api_trading_status(self, **params):
+        return await self._request_futures_api('get', 'apiTradingStatus', signed=True, data=params)
+
+    async def futures_comission_rate(self, **params):
+        return await self._request_futures_api('get', 'commissionRate', signed=True, data=params)
 
     async def futures_adl_quantile_estimate(self, **params):
         return await self._request_futures_api('get', 'adlQuantile', signed=True, data=params)
