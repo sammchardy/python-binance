@@ -217,7 +217,7 @@ class BaseClient:
     def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
 
-    def _create_futures_api_uri(self, path: str, version=1) -> str:
+    def _create_futures_api_uri(self, path: str, version: int = 1) -> str:
         url = self.FUTURES_URL
         if self.testnet:
             url = self.FUTURES_TESTNET_URL
@@ -377,7 +377,7 @@ class Client(BaseClient):
         uri = self._create_api_uri(path, signed, version)
         return self._request(method, uri, signed, **kwargs)
 
-    def _request_futures_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+    def _request_futures_api(self, method, path, signed=False, version: int = 1, **kwargs) -> Dict:
         uri = self._create_futures_api_uri(path, version)
 
         return self._request(method, uri, signed, True, **kwargs)
