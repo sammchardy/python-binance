@@ -1,6 +1,20 @@
 Changelog
 =========
 
+v1.0.19 - 2023-08-11
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- some new futures and margin endpoints
+- pass session_params to streams for AsyncClient
+
+**Fixed**
+
+- removed debug statements
+- options testnet URL
+- accessing msg variable before assignment
+
 v1.0.18 - 2023-08-09
 ^^^^^^^^^^^^^^^^^^^^
 
