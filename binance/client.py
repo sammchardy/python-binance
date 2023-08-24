@@ -3455,6 +3455,72 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
+    def  isolated_margin_fee_data(self, **params):
+        """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
+        
+        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
+
+        :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
+        :type vipLevel: int
+        :param symbol: optional
+        :type symbol: str
+        :param recvWindow: optional: No more tahn 60000
+        :type recvWindow: long
+
+
+        :returns: API response 
+
+            [
+                {
+                    "vipLevel": 0,
+                    "symbol": "BTCUSDT",
+                    "leverage": "10",
+                    "data": [
+                        {
+                            "coin": "BTC",
+                            "dailyInterest": "0.00026125",
+                            "borrowLimit": "270"
+                        },
+                        {
+                            "coin": "USDT",
+                            "dailyInterest": "0.000475",
+                            "borrowLimit": "2100000"
+                        }
+                    ]
+                }
+            ]
+        """
+        return self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
+
+    def isolated_margin_tier_data(self, **params):
+        """
+
+        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-tier-data-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param tier: All margin tier data will be returned if tier is omitted
+        :type tier: int
+        :param recvWindow: optional: No more than 60000
+        :type recvWindow:
+
+        :returns: API response
+
+            [
+                {
+                    "symbol": "BTCUSDT",
+                    "tier": 1,
+                    "effectiveMultiple": "10",
+                    "initialRiskRatio": "1.111",
+                    "liquidationRiskRatio": "1.05",
+                    "baseAssetMaxBorrowable": "9",
+                    "quoteAssetMaxBorrowable": "70000"
+                }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
+
     def toggle_bnb_burn_spot_margin(self, **params):
         """Toggle BNB Burn On Spot Trade And Margin Interest
 
