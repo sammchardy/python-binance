@@ -6395,7 +6395,7 @@ class Client(BaseClient):
         """
         return self._request_futures_api('get', 'apiTradingStatus', signed=True, data=params)
 
-    def futures_comission_rate(self, **params):
+    def futures_commission_rate(self, **params):
         """Get Futures commission rate
 
         https://binance-docs.github.io/apidocs/futures/en/#user-commission-rate-user_data
@@ -8894,7 +8894,7 @@ class AsyncClient(BaseClient):
     async def futures_api_trading_status(self, **params):
         return await self._request_futures_api('get', 'apiTradingStatus', signed=True, data=params)
 
-    async def futures_comission_rate(self, **params):
+    async def futures_commission_rate(self, **params):
         return await self._request_futures_api('get', 'commissionRate', signed=True, data=params)
 
     async def futures_adl_quantile_estimate(self, **params):
