@@ -2745,9 +2745,6 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        # force a name for the withdrawal if one not set
-        if 'coin' in params and 'name' not in params:
-            params['name'] = params['coin']
         return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
     def get_deposit_history(self, **params):
