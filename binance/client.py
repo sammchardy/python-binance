@@ -435,7 +435,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        products = self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
+        products = self._request_website('get', 'bapi/asset/v2/public/asset-service/product/get-products?includeEtf=true')
         return products
 
     def get_exchange_info(self) -> Dict:
