@@ -3452,9 +3452,9 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
-    def  isolated_margin_fee_data(self, **params):
+    def isolated_margin_fee_data(self, **params):
         """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
-        
+
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
 
         :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
@@ -3464,8 +3464,7 @@ class Client(BaseClient):
         :param recvWindow: optional: No more tahn 60000
         :type recvWindow: long
 
-
-        :returns: API response 
+        :returns: API response
 
             [
                 {
@@ -8583,6 +8582,14 @@ class AsyncClient(BaseClient):
     async def get_all_isolated_margin_symbols(self, **params):
         return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
     get_all_isolated_margin_symbols.__doc__ = Client.get_all_isolated_margin_symbols.__doc__
+
+    async def isolated_margin_fee_data(self, **params):
+        return await self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
+    isolated_margin_fee_data.__doc__ = Client.isolated_margin_fee_data.__doc__
+
+    async def isolated_margin_tier_data(self, **params):
+        return await self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
+    isolated_margin_tier_data.__doc__ = Client.isolated_margin_tier_data.__doc__
 
     async def toggle_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
