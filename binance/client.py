@@ -8268,7 +8268,7 @@ class AsyncClient(BaseClient):
     # Exchange Endpoints
 
     async def get_products(self) -> Dict:
-        products = await self._request_website('get', 'exchange-api/v1/public/asset-service/product/get-products')
+        products = await self._request_website('get', 'bapi/asset/v2/public/asset-service/product/get-products?includeEtf=true')
         return products
     get_products.__doc__ = Client.get_products.__doc__
 
