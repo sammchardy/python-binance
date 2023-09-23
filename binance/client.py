@@ -5784,6 +5784,15 @@ class Client(BaseClient):
         url_path = 'portfolio/repay-futures-negative-balance'
         return self._request_margin_api('post', url_path, True, data={})
 
+    def post_loan_flexible_borrow(self, loanCoin, loanAmount, collateralCoin, collateralAmount):
+        url_path = 'loan/flexible/borrow'
+        return self._request_margin_api('post', url_path, True, data={'loanCoin': loanCoin, 'loanAmount': loanAmount,
+                                                                      'collateralCoin': collateralCoin, 'collateralAmount': collateralAmount})
+
+    def get_loan_flexible_loanable_data(self, loanCoin=None):
+        url_path = 'loan/flexible/loanable/data'
+        return self._request_margin_api('get', url_path, True, data={'loanCoin': loanCoin})
+
     # Futures API
 
     def futures_ping(self):
