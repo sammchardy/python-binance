@@ -1,3 +1,4 @@
+import asyncio
 from decimal import Decimal
 from typing import Union, Optional, Dict
 
@@ -21,7 +22,7 @@ def date_to_milliseconds(date_str: str) -> int:
     # get epoch value in UTC
     epoch: datetime = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
     # parse our date string
-    d: Optional[datetime] = dateparser.parse(date_str, settings={'TIMEZONE': "UTC"})
+    d: Optional[datetime] = dateparser.parse(date_str, settings={"TIMEZONE": "UTC"})
     if not d:
         raise UnknownDateFormat(date_str)
 
@@ -45,6 +46,7 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
 
     """
     seconds_per_unit: Dict[str, int] = {
+        "s": 1,
         "m": 60,
         "h": 60 * 60,
         "d": 24 * 60 * 60,
@@ -74,3 +76,19 @@ def convert_ts_str(ts_str):
     if type(ts_str) == int:
         return ts_str
     return date_to_milliseconds(ts_str)
+
+
+def get_loop():
+    """check if there is an event loop in the current thread, if not create one
+    inspired by https://stackoverflow.com/questions/46727787/runtimeerror-there-is-no-current-event-loop-in-thread-in-async-apscheduler
+    """
+    try:
+        loop = asyncio.get_event_loop()
+        return loop
+    except RuntimeError as e:
+        if str(e).startswith("There is no current event loop in thread"):
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop
+        else:
+            raise

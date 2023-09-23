@@ -4,6 +4,7 @@ import asyncio
 import time
 from typing import Optional, Dict, Callable
 
+from .helpers import get_loop
 from .streams import BinanceSocketManager
 from .threaded_stream import ThreadedApiManager
 
@@ -154,11 +155,11 @@ class BaseDepthCacheManager:
 
         self._client = client
         self._depth_cache = None
-        self._loop = loop or asyncio.get_event_loop()
+        self._loop = loop or get_loop()
         self._symbol = symbol
         self._limit = limit
         self._last_update_id = None
-        self._bm = bm or BinanceSocketManager(self._client, self._loop)
+        self._bm = bm or BinanceSocketManager(self._client)
         self._refresh_interval = refresh_interval or self.DEFAULT_REFRESH
         self._conn_key = None
         self._conv_type = conv_type

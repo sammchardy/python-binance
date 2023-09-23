@@ -14,7 +14,7 @@ Install with ``pip``:
 Register on Binance
 -------------------
 
-Firstly `register an account with Binance <https://www.binance.com/register.html?ref=10099792>`_.
+Firstly `register an account with Binance <https://accounts.binance.com/en/register?ref=10099792>`_.
 
 Generate an API Key
 -------------------
@@ -139,7 +139,7 @@ Check the `get_exchange_info() <binance.html#binance.client.Client.get_exchange_
 
 At the current time Binance rate limits are:
 
-- 1200 requests per minute
+- 1200 weights per minute
 - 10 orders per second
 - 100,000 orders per 24hrs
 

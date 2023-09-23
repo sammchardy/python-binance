@@ -12,7 +12,7 @@ with codecs.open(
             '__init__.py'
         ), 'r', 'latin1') as fp:
     try:
-        version = re.findall(r"^__version__ = '([^']+)'\r?$", fp.read(), re.M)[0]
+        version = re.findall(r'^__version__ = "([^"]+)"\r?$', fp.read(), re.M)[0]
     except IndexError:
         raise RuntimeError('Unable to determine version.')
 
@@ -31,7 +31,7 @@ setup(
     license='MIT',
     author_email='',
     install_requires=[
-        'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets'
+        'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets', 'pycryptodome'
     ],
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[

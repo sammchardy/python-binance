@@ -16,6 +16,7 @@ from .client import AsyncClient
 from .enums import FuturesType
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import ContractType
+from .helpers import get_loop
 from .threaded_stream import ThreadedApiManager
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
@@ -47,7 +48,7 @@ class ReconnectingWebsocket:
     def __init__(
         self, url: str, path: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False, exit_coro=None
     ):
-        self._loop = asyncio.get_event_loop()
+        self._loop = get_loop()
         self._log = logging.getLogger(__name__)
         self._path = path
         self._url = url
@@ -82,7 +83,6 @@ class ReconnectingWebsocket:
     async def connect(self):
         await self._before_connect()
         assert self._path
-        self.ws_state = WSListenerState.STREAMING
         ws_url = self._url + self._prefix + self._path
         self._conn = ws.connect(ws_url, close_timeout=0.1)  # type: ignore
         try:
@@ -90,6 +90,7 @@ class ReconnectingWebsocket:
         except:  # noqa
             await self._reconnect()
             return
+        self.ws_state = WSListenerState.STREAMING
         self._reconnects = 0
         await self._after_connect()
         # To manage the "cannot call recv while another coroutine is already waiting for the next message"
@@ -123,13 +124,11 @@ class ReconnectingWebsocket:
         try:
             while True:
                 try:
-                    if self.ws_state == WSListenerState.RECONNECTING:
+                    while self.ws_state == WSListenerState.RECONNECTING:
                         await self._run_reconnect()
 
-                    if not self.ws or self.ws_state != WSListenerState.STREAMING:
-                        await self._wait_for_reconnect()
-                        break
-                    elif self.ws_state == WSListenerState.EXITING:
+                    if self.ws_state == WSListenerState.EXITING:
+                        self._log.debug(f"_read_loop {self._path} break for {self.ws_state}")
                         break
                     elif self.ws.state == ws.protocol.State.CLOSING:  # type: ignore
                         await asyncio.sleep(0.1)
@@ -137,6 +136,7 @@ class ReconnectingWebsocket:
                     elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
                         await self._reconnect()
                     elif self.ws_state == WSListenerState.STREAMING:
+                        assert self.ws
                         res = await asyncio.wait_for(self.ws.recv(), timeout=self.TIMEOUT)
                         res = self._handle_message(res)
                         if res:
@@ -322,7 +322,7 @@ class BinanceSocketManager:
         self.VSTREAM_TESTNET_URL = self.VSTREAM_TESTNET_URL.format(client.tld)
 
         self._conns = {}
-        self._loop = asyncio.get_event_loop()
+        self._loop = get_loop()
         self._client = client
         self._user_timeout = user_timeout
 
@@ -339,15 +339,15 @@ class BinanceSocketManager:
     def _get_socket(
         self, path: str, stream_url: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False,
         socket_type: BinanceSocketType = BinanceSocketType.SPOT
-    ) -> str:
+    ) -> ReconnectingWebsocket:
         conn_id = f'{socket_type}_{path}'
         if conn_id not in self._conns:
             self._conns[conn_id] = ReconnectingWebsocket(
                 path=path,
                 url=self._get_stream_url(stream_url),
                 prefix=prefix,
-                exit_coro=self._exit_socket,
-                is_binary=is_binary
+                exit_coro=lambda p: self._exit_socket(f'{socket_type}_{p}'),
+                is_binary=is_binary,
             )
 
         return self._conns[conn_id]
@@ -1052,7 +1052,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('user')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('user', stream_url=stream_url)
 
     def futures_user_socket(self):
         """Start a websocket for coin futures user data
@@ -1064,7 +1067,10 @@ class BinanceSocketManager:
         Message Format - see Binanace API docs for all types
         """
 
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1075,7 +1081,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('margin')
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket('margin', stream_url=stream_url)
 
     def futures_socket(self):
         """Start a websocket for futures data
@@ -1086,7 +1095,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket('futures', stream_url=self.FSTREAM_URL)
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        return self._get_account_socket('futures', stream_url=stream_url)
 
     def coin_futures_socket(self):
         """Start a websocket for coin futures data
@@ -1114,7 +1126,10 @@ class BinanceSocketManager:
 
         Message Format - see Binance API docs for all types
         """
-        return self._get_account_socket(symbol)
+        stream_url = self.STREAM_URL
+        if self.testnet:
+            stream_url = self.STREAM_TESTNET_URL
+        return self._get_account_socket(symbol, stream_url=stream_url)
 
     def options_ticker_socket(self, symbol: str):
         """Subscribe to a 24 hour ticker info stream
@@ -1125,6 +1140,16 @@ class BinanceSocketManager:
         :type symbol: str
         """
         return self._get_options_socket(symbol.lower() + '@ticker')
+
+    def options_ticker_by_expiration_socket(self, symbol: str, expiration_date: str):
+        """Subscribe to a 24 hour ticker info stream
+        https://binance-docs.github.io/apidocs/voptions/en/#24-hour-ticker-by-underlying-asset-and-expiration-data
+        :param symbol: required
+        :type symbol: str
+        :param expiration_date : required
+        :type expiration_date: str
+        """
+        return self._get_options_socket(symbol.lower() + '@ticker@' + expiration_date)
 
     def options_recent_trades_socket(self, symbol: str):
         """Subscribe to a latest completed trades stream
@@ -1178,10 +1203,10 @@ class ThreadedWebsocketManager(ThreadedApiManager):
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None, tld: str = 'com',
-        testnet: bool = False
+        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
+        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None
     ):
-        super().__init__(api_key, api_secret, requests_params, tld, testnet)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet, session_params)
         self._bsm: Optional[BinanceSocketManager] = None
 
     async def _before_socket_listener_start(self):
@@ -1465,6 +1490,16 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             socket_name='options_ticker_socket',
             params={
                 'symbol': symbol
+            }
+        )
+
+    def start_options_ticker_by_expiration_socket(self, callback: Callable, symbol: str, expiration_date: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='options_ticker_by_expiration_socket',
+            params={
+                'symbol': symbol,
+                'expiration_date': expiration_date
             }
         )
 
