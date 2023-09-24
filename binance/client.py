@@ -4276,9 +4276,6 @@ class Client(BaseClient):
     def get_margin_iso_interest_rate_history(self, **params):
         return self._request_margin_api('get', 'margin/isolatedMarginData', signed=True, data=params)
 
-    def get_cross_margin_data(self, **params):
-        return self._request_margin_api('get', 'margin/crossMarginData', signed=True, data=params)
-
     def get_isolated_margin_data(self, **params):
         return self._request_margin_api('get', 'margin/isolatedMarginData', signed=True, data=params)
 
