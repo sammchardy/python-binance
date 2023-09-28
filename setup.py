@@ -33,6 +33,9 @@ setup(
     install_requires=[
         'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets', 'pycryptodome'
     ],
+    extras_require = {
+        'extras': ['pandas']
+    },
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[
         'Intended Audience :: Developers',

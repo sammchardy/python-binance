@@ -77,23 +77,37 @@ converted to use Asynchronous Context Managers. See examples in the Async sectio
 `depth cache <https://python-binance.readthedocs.io/en/latest/depth_cache.html>`_ docs.
 
 Quick Start
------------
+--------------------
 
 `Register an account with Binance <https://accounts.binance.com/en/register?ref=10099792>`_.
 
 `Generate an API Key <https://www.binance.com/en/my/settings/api-management>`_ and assign relevant permissions.
+
+
+Installation
+--------------------
+
+Install the package:
+
+.. code:: bash
+
+    pip install python-binance
+
+Optionally install with extra dependencies, for example to interface with pandas dataframes:
+
+.. code:: bash
+
+    pip install python-binance[extras]
+
+
+Code Example
+--------------------
 
 If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
 client.
 
 To use the `Spot <https://testnet.binance.vision/>`_ or `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
 pass `testnet=True` when creating the client.
-
-
-.. code:: bash
-
-    pip install python-binance
-
 
 .. code:: python
 
@@ -181,7 +195,7 @@ pass `testnet=True` when creating the client.
 For more `check out the documentation <https://python-binance.readthedocs.io/en/latest/>`_.
 
 Async Example
--------------
+--------------------
 
 Read `Async basics for Binance <https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html>`_
 for more information.
@@ -258,8 +272,36 @@ for more information.
         loop.run_until_complete(main())
 
 
+
+
+
+
+DataFrame Example
+--------------------
+
+If you would like to work with response data in :code:`pandas.DataFrame` format, use the :code:`DataClient` class instead of the :code:`Client`, and invoke the desired method as you would normally do:
+
+.. code:: python
+
+    from binance.data_client import DataClient
+    from binance.enums import KLINE_INTERVAL_1MINUTE
+
+    client = DataClient(api_key, api_secret)
+
+    df = client.get_historical_klines(
+        symbol="BNBBTC",
+        interval=KLINE_INTERVAL_1MINUTE,
+        start_str="1st March 2018"
+    )
+    print(type(df)) #> <class 'pandas.core.frame.DataFrame'>
+    print(df.columns.tolist()) #> ['open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume', 'taker_buy_quote_asset_volume', 'ignore']
+
+
+Note: this requires you to install with the "extras" option.
+
+
 Donate
-------
+--------------------
 
 If this library helped you out feel free to donate.
 
@@ -269,7 +311,7 @@ If this library helped you out feel free to donate.
 - BTC: 1Dknp6L6oRZrHDECRedihPzx2sSfmvEBys
 
 Other Exchanges
----------------
+--------------------
 
 If you use `Binance Chain <https://testnet.binance.org/>`_ check out my `python-binance-chain <https://github.com/sammchardy/python-binance-chain>`_ library.
 
