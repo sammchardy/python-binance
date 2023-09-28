@@ -2,5 +2,5 @@ aiohttp
 dateparser
 pycryptodome
 requests
-ujson
+orjson
 websockets
