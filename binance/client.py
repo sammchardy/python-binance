@@ -8825,13 +8825,13 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
     get_all_isolated_margin_symbols.__doc__ = Client.get_all_isolated_margin_symbols.__doc__
 
-    async def isolated_margin_fee_data(self, **params):
+    async def get_isolated_margin_fee_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
-    isolated_margin_fee_data.__doc__ = Client.isolated_margin_fee_data.__doc__
+    get_isolated_margin_fee_data.__doc__ = Client.get_isolated_margin_fee_data.__doc__
 
-    async def isolated_margin_tier_data(self, **params):
+    async def get_isolated_margin_tier_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
-    isolated_margin_tier_data.__doc__ = Client.isolated_margin_tier_data.__doc__
+    get_isolated_margin_tier_data.__doc__ = Client.get_isolated_margin_tier_data.__doc__
 
     async def toggle_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
