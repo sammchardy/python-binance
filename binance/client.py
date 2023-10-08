@@ -9171,6 +9171,50 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
     disable_isolated_margin_account.__doc__ = Client.disable_isolated_margin_account.__doc__
 
+    async def get_enabled_isolated_margin_account_limit(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/accountLimit', True, data=params)
+    get_enabled_isolated_margin_account_limit.__doc__ = Client.get_enabled_isolated_margin_account_limit.__doc__
+
+    async def get_margin_dustlog(self, **params):
+        return await self._request_margin_api('get', 'margin/dribblet', True, data=params)
+    get_margin_dustlog.__doc__ = Client.get_margin_dustlog.__doc__
+
+    async def get_margin_dust_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/dust', True, data=params)
+    get_margin_dust_assets.__doc__ = Client.get_margin_dust_assets.__doc__
+
+    async def transfer_margin_dust(self, **params):
+        return await self._request_margin_api('post', 'margin/dust', True, data=params)
+    transfer_margin_dust.__doc__ = Client.transfer_margin_dust.__doc__
+
+    async def get_cross_margin_collateral_ratio(self, **params):
+        return await self._request_margin_api('get', 'margin/crossMarginCollateralRatio', True, data=params)
+    get_cross_margin_collateral_ratio.__doc__ = Client.get_cross_margin_collateral_ratio.__doc__
+
+    async def get_small_liability_exchange_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability', True, data=params)
+    get_small_liability_exchange_assets.__doc__ = Client.get_small_liability_exchange_assets.__doc__
+
+    async def exchange_small_liability_assets(self, **params):
+        return await self._request_margin_api('post', 'margin/exchange-small-liability', True, data=params)
+    exchange_small_liability_assets.__doc__ = Client.exchange_small_liability_assets.__doc__
+
+    async def get_small_liability_exchange_history(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability-history', True, data=params)
+    get_small_liability_exchange_history.__doc__ = Client.get_small_liability_exchange_history.__doc__
+
+    async def get_future_hourly_interest_rate(self, **params):
+        return await self._request_margin_api('get', 'margin/next-hourly-interest-rate', True, data=params)
+    get_future_hourly_interest_rate.__doc__ = Client.get_future_hourly_interest_rate.__doc__
+
+    async def get_margin_capital_flow(self, **params):
+        return await self._request_margin_api('get', 'margin/capital-flow', True, data=params)
+    get_margin_capital_flow.__doc__ = Client.get_margin_capital_flow.__doc__
+
+    async def get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
+    get_margin_delist_schedule.__doc__ = Client.get_margin_delist_schedule.__doc__
+    
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
     get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
