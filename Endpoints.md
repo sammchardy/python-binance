@@ -449,6 +449,10 @@
     ```python 
     client.get_all_isolated_margin_symbols(recvWindow)
     ```
+  - **POST /sapi/v1/margin/manual-liquidation (HMAC SHA256)** (Margin manual liquidation (MARGIN).)
+    ```python 
+    client.margin_manual_liquidation(type)
+    ```
 - *User Data Streams*
   - **POST /api/v3/userDataStream** (Create a ListenKey (Spot) (USER_STREAM): Start a new user data stream.)
     ```python 
