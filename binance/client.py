@@ -8137,6 +8137,14 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
 
+    def vip_loan_borrow(self, **params):
+        """VIP Loan Borrow"""
+        return self._request_margin_api('post', 'loan/vip/borrow', signed=True, data=params)
+
+    def get_vip_collateral_asset_data(self, **params):
+        """Get Collateral Asset Data"""
+        return self._request_margin_api('get', 'loan/vip/collateral/data', signed=True, data=params)
+
     # Pay Endpoints
 
     def get_pay_trade_history(self, **params):
