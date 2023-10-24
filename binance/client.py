@@ -5480,6 +5480,46 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'staking/personalLeftQuota', signed=True, data=params)
 
+    def subscribe_eth_staking(self, **params):
+        """Subscribe ETH staking
+
+        https://binance-docs.github.io/apidocs/spot/en/#subscribe-eth-staking-trade
+
+        """
+        return self._request_margin_api('post', 'eth-staking/eth/stake', signed=True, data=params)
+
+    def redeem_eth(self, **params):
+        """Redeem ETH
+
+        https://binance-docs.github.io/apidocs/spot/en/#redeem-eth-trade
+
+        """
+        return self._request_margin_api('post', 'eth-staking/eth/redeem', signed=True, data=params)
+
+    def get_eth_rewards_distribution_history(self, **params):
+        """Redeem ETH
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-eth-rewards-distribution-history-user_data
+
+        """
+        return self._request_margin_api('get', 'eth-staking/eth/history/rewardsHistory', signed=True, data=params)
+
+    def wrap_beth(self, **params):
+        """Wrap BETH
+
+        https://binance-docs.github.io/apidocs/spot/en/#wrap-beth-trade
+
+        """
+        return self._request_margin_api('post', 'eth-staking/wbeth/wrap', signed=True, data=params)
+
+    def unwrap_beth(self, **params):
+        """Unwrap BETH
+
+        https://binance-docs.github.io/apidocs/spot/en/#unwrap-wbeth-trade
+
+        """
+        return self._request_margin_api('post', 'eth-staking/wbeth/unwrap', signed=True, data=params)
+
     # US Staking Endpoints
 
     def get_staking_asset_us(self, **params):
@@ -8104,6 +8144,14 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'c2c/orderMatch/listUserOrderHistory', signed=True, data=params)
+
+    def vip_loan_borrow(self, **params):
+        """VIP Loan Borrow"""
+        return self._request_margin_api('post', 'loan/vip/borrow', signed=True, data=params)
+
+    def get_vip_collateral_asset_data(self, **params):
+        """Get Collateral Asset Data"""
+        return self._request_margin_api('get', 'loan/vip/collateral/data', signed=True, data=params)
 
     # Pay Endpoints
 
