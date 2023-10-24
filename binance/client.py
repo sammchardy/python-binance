@@ -5464,6 +5464,14 @@ class Client(BaseClient):
         """
         return self._request_margin_api('post', 'staking/setAutoStaking', signed=True, data=params)
 
+    def get_eth_staking_rate_history(self, **params):
+        """查询 BETH 汇率历史 (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#beth-user_data
+
+        """
+        return self._request_margin_api('get', 'eth-staking/eth/history/rateHistory', signed=True, data=params)
+
     def get_personal_left_quota(self, **params):
         """Get Personal Left Quota of Staking Product
 
