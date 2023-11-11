@@ -38,8 +38,8 @@ To keep the ThreadedWebsocketManager running, use `join()` to join it to the mai
 
     from binance import ThreadedWebsocketManager
 
-    api_key = '<api_key'>
-    api_secret = '<api_secret'>
+    api_key = '<api_key>'
+    api_secret = '<api_secret>'
 
     def main():
 
