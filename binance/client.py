@@ -1447,6 +1447,9 @@ class Client(BaseClient):
         """
         return self._post('order', True, data=params)
 
+    def cancel_replace_order(self, **params):
+        return self._post('order/cancelReplace', True, data=params)
+
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
