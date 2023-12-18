@@ -6807,6 +6807,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api('post', 'order', True, data=params)
 
+    def futures_create_test_order(self, **params):
+        """Testing order request, this order will not be submitted to matching engine
+
+        https://binance-docs.github.io/apidocs/futures/en/#test-order-trade
+
+        """
+        return self._request_futures_api('post', 'order/test', True, data=params)
+
     def futures_place_batch_order(self, **params):
         """Send in new orders.
 
@@ -9261,6 +9269,9 @@ class AsyncClient(BaseClient):
 
     async def futures_create_order(self, **params):
         return await self._request_futures_api('post', 'order', True, data=params)
+
+    async def futures_create_test_order(self, **params):
+        return await self._request_futures_api('post', 'order/test', True, data=params)
 
     async def futures_place_batch_order(self, **params):
         query_string = urlencode(params)
