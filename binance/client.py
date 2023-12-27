@@ -8455,6 +8455,11 @@ class AsyncClient(BaseClient):
             if temp_data:
                 output_data += temp_data
 
+            # check if output_data is greater than limit and truncate if needed and break loop
+            if len(output_data) > limit:
+                output_data = output_data[:limit]
+                break
+
             # handle the case where exactly the limit amount of data was returned last loop
             # or check if we received less than the required limit and exit the loop
             if not len(temp_data) or len(temp_data) < limit:
