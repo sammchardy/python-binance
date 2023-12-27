@@ -16,6 +16,10 @@ def test_invalid_json():
                 "https://www.binance.com/exchange-api/v1/public/asset-service/product/get-products?includeEtf=true",
                 text="<head></html>",
             )
+            m.get(
+                "https://www.binance.com/bapi/asset/v2/public/asset-service/product/get-products?includeEtf=true",
+                text="<head></html>",
+            )
             client.get_products()
 
 
