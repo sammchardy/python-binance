@@ -962,7 +962,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
@@ -986,7 +986,7 @@ class Client(BaseClient):
             symbol, interval, start_str=start_str, end_str=end_str, limit=limit, klines_type=klines_type
         )
 
-    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
@@ -1010,6 +1010,12 @@ class Client(BaseClient):
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
 
         """
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
+
         # init our list
         output_data = []
 
@@ -1046,7 +1052,7 @@ class Client(BaseClient):
                 output_data += temp_data
 
             # check if output_data is greater than limit and truncate if needed and break loop
-            if len(output_data) > limit:
+            if initial_limit_set and len(output_data) > limit:
                 output_data = output_data[:limit]
                 break
 
@@ -1070,7 +1076,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
@@ -1093,7 +1099,7 @@ class Client(BaseClient):
 
         return self._historical_klines_generator(symbol, interval, start_str, end_str, limit, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                      klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
@@ -1115,6 +1121,11 @@ class Client(BaseClient):
         :return: generator of OHLCV values
 
         """
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
@@ -8419,13 +8430,18 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
-    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                  klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
 
         # init our list
         output_data = []
@@ -8461,7 +8477,7 @@ class AsyncClient(BaseClient):
                 output_data += temp_data
 
             # check if output_data is greater than limit and truncate if needed and break loop
-            if len(output_data) > limit:
+            if initial_limit_set and len(output_data) > limit:
                 output_data = output_data[:limit]
                 break
 
