@@ -6869,6 +6869,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    def futures_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
+
+        """
+        return self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     def futures_account_balance(self, **params):
         """Get futures account balance
 
