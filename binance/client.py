@@ -9294,6 +9294,9 @@ class AsyncClient(BaseClient):
     async def futures_cancel_orders(self, **params):
         return await self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    async def futures_countdown_cancel_all(self, **params):
+        return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     async def futures_account_balance(self, **params):
         return await self._request_futures_api('get', 'balance', True, version=2, data=params)
 
