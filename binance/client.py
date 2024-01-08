@@ -5523,6 +5523,14 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'eth-staking/eth/history/rateHistory', signed=True, data=params)
 
+    def post_eth_staking_v2(self, **params):
+        """质押 ETH V2(TRADE)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#eth-v2-trade
+
+        """
+        return self._request_margin_api('post', 'eth-staking/eth/stake', signed=True, data=params, version=2)
+
     # US Staking Endpoints
 
     def get_staking_asset_us(self, **params):
