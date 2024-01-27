@@ -6620,8 +6620,10 @@ class Client(BaseClient):
         return self._request_futures_api('get', 'forceOrders', signed=True, data=params)
 
     def futures_api_trading_status(self, **params):
-        """Get Position ADL Quantile Estimate
-
+        """Get quantitative trading rules for order placement, such as Unfilled Ratio (UFR), Good-Til-Canceled Ratio (GCR),
+        Immediate-or-Cancel (IOC) & Fill-or-Kill (FOK) Expire Ratio (IFER), among others.
+        https://www.binance.com/en/support/faq/binance-futures-trading-quantitative-rules-4f462ebe6ff445d4a170be7d9e897272
+        
         https://binance-docs.github.io/apidocs/futures/en/#futures-trading-quantitative-rules-indicators-user_data
 
         :param symbol: optional
