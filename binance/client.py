@@ -5587,6 +5587,87 @@ class Client(BaseClient):
         assert self.tld == "us", "Endpoint only available on binance.us"
         return self._request_margin_api("get", "staking/stakingRewardsHistory", True, data=params)
 
+    def get_loan_vip_ongoing_orders(self, **params):
+        """查询VIP借币借款中订单 (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-user_data
+
+        """
+        return self._request_margin_api('get', 'loan/vip/ongoing/orders', signed=True, data=params, version=1)
+
+    def post_loan_vip_repay(self, **params):
+        """VIP借币还款 (TRADE)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-trade
+
+        """
+        return self._request_margin_api('post', 'loan/vip/repay', signed=True, data=params, version=1)
+
+    def get_loan_vip_repay_history(self, **params):
+        """查询VIP借币还款记录历史 (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-user_data-2
+
+        """
+        return self._request_margin_api('get', 'loan/vip/repay/history', signed=True, data=params, version=1)
+
+    def post_loan_vip_renew(self, **params):
+        """VIP 借币续期 (TRADE)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-trade-2
+
+        """
+        return self._request_margin_api('post', 'loan/vip/renew', signed=True, data=params, version=1)
+
+    def get_loan_vip_collateral_account(self, **params):
+        """查询VIP子账户冻结抵押物金额 (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-user_data-3
+
+        """
+        return self._request_margin_api('post', 'loan/vip/collateral/account', signed=True, data=params, version=1)
+
+    def post_loan_vip_borrow(self, **params):
+        """VIP 借币借款 (TRADE)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-trade-3
+
+        """
+        return self._request_margin_api('post', 'loan/vip/borrow', signed=True, data=params, version=1)
+
+    def get_loan_vip_loanable_data(self, **params):
+        """查询VIP借币可借币种数据(USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-user_data-4
+
+        """
+        return self._request_margin_api('get', 'loan/vip/loanable/data', signed=True, data=params, version=1)
+
+    def get_loan_vip_collateral_data(self, **params):
+        """查询VIP借币抵押币种数据（USER_DATA）
+
+        https://binance-docs.github.io/apidocs/spot/cn/#vip-user_data-5
+
+        """
+        return self._request_margin_api('get', 'loan/vip/collateral/data', signed=True, data=params, version=1)
+
+    def get_loan_vip_request_data(self, **params):
+        """查询申请状态（USER_DATA）
+
+        https://binance-docs.github.io/apidocs/spot/cn/#user_data-132
+
+        """
+        return self._request_margin_api('get', 'loan/vip/request/data', signed=True, data=params, version=1)
+
+    def get_loan_vip_request_interest_rate(self, **params):
+        """查询借款利率（USER_DATA）
+
+        https://binance-docs.github.io/apidocs/spot/cn/#user_data-133
+
+        """
+        return self._request_margin_api('get', 'loan/vip/request/interestRate', signed=True, data=params, version=1)
+
+
     # Sub Accounts
 
     def get_sub_account_list(self, **params):
