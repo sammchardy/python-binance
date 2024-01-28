@@ -4596,6 +4596,40 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
+    def get_margin_delist_schedule(self, **params):
+        """Get tokens or symbols delist schedule for cross margin and isolated margin
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "crossMarginAssets": [
+                        "BTC",
+                        "USDT"
+                    ],
+                    "isolatedMarginSymbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "crossMarginAssets": [
+                        "ADA"
+                    ],
+                    "isolatedMarginSymbols": []
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
+
     # Margin OCO
 
     def create_margin_oco_order(self, **params):
@@ -8778,7 +8812,7 @@ class AsyncClient(BaseClient):
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
 
     async def get_spot_delist_schedule(self, **params):
-        return self._request_margin_api('get', '/spot/delist-schedule', True, data=params)
+        return self._request_margin_api('get', '/spot/delist-schedule', signed=True, data=params)
 
     # Withdraw Endpoints
 
@@ -8979,6 +9013,9 @@ class AsyncClient(BaseClient):
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    async def get_margin_delist_schedule(self, **params):
+        return self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
