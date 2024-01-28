@@ -8812,7 +8812,7 @@ class AsyncClient(BaseClient):
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
 
     async def get_spot_delist_schedule(self, **params):
-        return self._request_margin_api('get', '/spot/delist-schedule', signed=True, data=params)
+        return await self._request_margin_api('get', '/spot/delist-schedule', signed=True, data=params)
 
     # Withdraw Endpoints
 
@@ -9015,7 +9015,7 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
     async def get_margin_delist_schedule(self, **params):
-        return self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
+        return await self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
