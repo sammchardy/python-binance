@@ -6869,6 +6869,29 @@ class Client(BaseClient):
         """
         return self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    def futures_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
+	
+        :param symbol: required
+        :type symbol: str
+        :param countdownTime: required
+        :type countdownTime: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+	
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "symbol": "BTCUSDT", 
+            "countdownTime": "100000"
+        }
+
+        """
+        return self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     def futures_account_balance(self, **params):
         """Get futures account balance
 
@@ -9286,6 +9309,9 @@ class AsyncClient(BaseClient):
     async def futures_cancel_orders(self, **params):
         return await self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    async def futures_countdown_cancel_all(self, **params):
+        return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     async def futures_account_balance(self, **params):
         return await self._request_futures_api('get', 'balance', True, version=2, data=params)
 
