@@ -2704,6 +2704,35 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
+    def get_spot_delist_schedule(self, **params):
+        """Get symbols delist schedule for spot
+	
+	https://binance-docs.github.io/apidocs/spot/en/#get-symbols-delist-schedule-for-spot-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "symbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "symbols": [
+                        "ETHUSDT"
+                    ]
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/spot/delist-schedule', True, data=params)
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):
@@ -8747,6 +8776,9 @@ class AsyncClient(BaseClient):
     async def get_asset_details(self, **params):
         return await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
+
+    async def get_spot_delist_schedule(self, **params):
+        return self._request_margin_api('get', '/spot/delist-schedule', True, data=params)
 
     # Withdraw Endpoints
 
