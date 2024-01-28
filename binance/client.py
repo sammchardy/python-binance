@@ -6880,8 +6880,6 @@ class Client(BaseClient):
         :type countdownTime: int
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
-        :param timestamp: required
-        :type timestamp: int
 	
         :returns: API response
 
