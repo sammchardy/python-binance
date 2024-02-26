@@ -5531,6 +5531,14 @@ class Client(BaseClient):
         """
         return self._request_margin_api('post', 'eth-staking/eth/stake', signed=True, data=params, version=2)
 
+    def get_eth_staking_redemption_history(self, **params):
+        """查询 ETH 赎回记录 (USER_DATA)
+
+        https://binance-docs.github.io/apidocs/spot/cn/#eth-user_data-2
+
+        """
+        return self._request_margin_api('get', 'eth-staking/eth/history/redemptionHistory', signed=True, data=params, version=1)
+
     # US Staking Endpoints
 
     def get_staking_asset_us(self, **params):
