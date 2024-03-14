@@ -1,3 +1,4 @@
+import logging
 from base64 import b64encode
 from pathlib import Path
 from typing import Dict, Optional, List, Tuple, Union, Any
@@ -18,6 +19,7 @@ from .helpers import interval_to_milliseconds, convert_ts_str, get_loop
 from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
 from .enums import HistoricalKlinesType
 
+logger = logging.getLogger('python-binance')
 
 class BaseClient:
 
@@ -364,6 +366,18 @@ class Client(BaseClient):
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
+
+        limit_usage = []
+        for key in sorted(response.headers.keys()):
+            key_lower = key.lower()
+            if (
+                    key_lower.startswith("x-mbx-used-weight")
+                    or key_lower.startswith("x-mbx-order-count")
+                    or key_lower.startswith("x-sapi-used")
+            ):
+                limit_usage.append(f'{key_lower}={response.headers[key]}')
+        logger.debug(', '.join(limit_usage))
+
         if not (200 <= response.status_code < 300):
             raise BinanceAPIException(response, response.status_code, response.text)
         try:
