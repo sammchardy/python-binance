@@ -4871,7 +4871,7 @@ class Client(BaseClient):
             ]
 
     """
-        return self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
+        return self._request_margin_api('get', 'margin/openOrderList', signed=True, data=params)
 
     # Cross-margin
 
