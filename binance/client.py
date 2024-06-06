@@ -6558,10 +6558,10 @@ class Client(BaseClient):
     def get_subaccount_api_ip_restriction(self, **params):
         return self._request_margin_api('get', 'sub-account/subAccountApi/ipRestriction', True, data=params)
 
-    def post_subaccount_api_ip_restriction(self, **params):
+    def delete_subaccount_api_ip_restriction(self, **params):
         return self._request_margin_api('delete', 'sub-account/subAccountApi/ipRestriction/ipList', True, data=params)
 
-    def delete_subaccount_api_ip_restriction(self, **params):
+    def post_subaccount_api_ip_restriction(self, **params):
         return self._request_margin_api('post', 'sub-account/subAccountApi/ipRestriction', True, version=2, data=params)
 
     def get_universal_transfer_history(self, **params):
