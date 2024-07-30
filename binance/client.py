@@ -2764,6 +2764,12 @@ class Client(BaseClient):
         """
         return self._request_margin_api('post', 'capital/withdraw/apply', True, data=params)
 
+    def get_withdraw_address_list(self, **params):
+        """
+        https://binance-docs.github.io/apidocs/spot/cn/#user_data-24
+        """
+        return self._request_margin_api('get', 'capital/withdraw/address/list', True, data=params)
+
     def get_deposit_history(self, **params):
         """Fetch deposit history.
 
