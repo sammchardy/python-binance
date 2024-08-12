@@ -8,9 +8,9 @@ import hashlib
 import hmac
 import requests
 import time
-from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding, rsa, ed25519
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -150,10 +150,10 @@ class BaseClient:
         :type requests_params: dict.
         :param testnet: Use testnet environment - only available for vanilla options at the moment
         :type testnet: bool
-        :param private_key: Path to private key, or string of file contents
+        :param private_key: Path to private key, or bytes of file contents
         :type private_key: optional - str or Path
         :param private_key_pass: Password of private key
-        :type private_key_pass: optional - str
+        :type private_key_pass: optional - bytes
 
         """
 
@@ -190,13 +190,15 @@ class BaseClient:
     def _init_session(self):
         raise NotImplementedError
 
-    def _init_private_key(self, private_key: Optional[Union[str, Path]], private_key_pass: Optional[str] = None):
+    def _init_private_key(self, private_key: Optional[Union[bytes, Path]], private_key_pass: Optional[str] = None):
         if not private_key:
             return
         if isinstance(private_key, Path):
-            with open(private_key, "r") as f:
+            with open(private_key, "rb") as f:
                 private_key = f.read()
-        return RSA.import_key(private_key, passphrase=private_key_pass)
+        # Binance suppots both RSA and ED25519 keys
+        # https://www.binance.com/en/support/faq/how-to-generate-an-ed25519-key-pair-to-send-api-requests-on-binance-6b9a63f1e3384cf48a2eedb82767a69a
+        return load_pem_private_key(private_key, password=private_key_pass)
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
@@ -249,10 +251,19 @@ class BaseClient:
             url = self.OPTIONS_TESTNET_URL
         return url + '/' + self.OPTIONS_API_VERSION + '/' + path
 
-    def _rsa_signature(self, query_string: str):
+    def _key_signature(self, query_string: str):
         assert self.PRIVATE_KEY
-        h = SHA256.new(query_string.encode("utf-8"))
-        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
+        message = query_string.encode('utf-8')
+        if isinstance(self.PRIVATE_KEY, rsa.RSAPrivateKey): 
+            # RSA key
+            signature = self.PRIVATE_KEY.sign(
+                message,
+                padding.PKCS1v15(),
+                hashes.SHA256() 
+            )
+        else: 
+            # Assuming ed25519 key
+            signature = self.PRIVATE_KEY.sign(message)
         return b64encode(signature).decode()
 
     def _hmac_signature(self, query_string: str) -> str:
@@ -263,7 +274,7 @@ class BaseClient:
     def _generate_signature(self, data: Dict) -> str:
         sig_func = self._hmac_signature
         if self.PRIVATE_KEY:
-            sig_func = self._rsa_signature
+            sig_func = self._key_signature
         query_string = '&'.join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
         return sig_func(query_string)
 
@@ -436,6 +447,7 @@ class Client(BaseClient):
 
         """
         products = self._request_website('get', 'bapi/asset/v2/public/asset-service/product/get-products?includeEtf=true')
+        
         return products
 
     def get_exchange_info(self) -> Dict:
