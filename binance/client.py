@@ -2710,6 +2710,35 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
 
+    def get_spot_delist_schedule(self, **params):
+        """Get symbols delist schedule for spot
+	
+	https://binance-docs.github.io/apidocs/spot/en/#get-symbols-delist-schedule-for-spot-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "symbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "symbols": [
+                        "ETHUSDT"
+                    ]
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/spot/delist-schedule', True, data=params)
+
     # Withdraw Endpoints
 
     def withdraw(self, **params):
@@ -4572,6 +4601,40 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    def get_margin_delist_schedule(self, **params):
+        """Get tokens or symbols delist schedule for cross margin and isolated margin
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "crossMarginAssets": [
+                        "BTC",
+                        "USDT"
+                    ],
+                    "isolatedMarginSymbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "crossMarginAssets": [
+                        "ADA"
+                    ],
+                    "isolatedMarginSymbols": []
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
@@ -6883,6 +6946,29 @@ class Client(BaseClient):
         """
         return self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    def futures_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
+	
+        :param symbol: required
+        :type symbol: str
+        :param countdownTime: required
+        :type countdownTime: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+	
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "symbol": "BTCUSDT", 
+            "countdownTime": "100000"
+        }
+
+        """
+        return self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     def futures_account_balance(self, **params):
         """Get futures account balance
 
@@ -8743,6 +8829,9 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
 
+    async def get_spot_delist_schedule(self, **params):
+        return await self._request_margin_api('get', '/spot/delist-schedule', signed=True, data=params)
+
     # Withdraw Endpoints
 
     async def withdraw(self, **params):
@@ -8942,6 +9031,9 @@ class AsyncClient(BaseClient):
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    async def get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
@@ -9304,6 +9396,9 @@ class AsyncClient(BaseClient):
     async def futures_cancel_orders(self, **params):
         return await self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    async def futures_countdown_cancel_all(self, **params):
+        return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     async def futures_account_balance(self, **params):
         return await self._request_futures_api('get', 'balance', True, version=2, data=params)
 
