@@ -3882,7 +3882,7 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
-    def isolated_margin_fee_data(self, **params):
+    def get_isolated_margin_fee_data(self, **params):
         """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
@@ -3891,11 +3891,10 @@ class Client(BaseClient):
         :type vipLevel: int
         :param symbol: optional
         :type symbol: str
-        :param recvWindow: optional: No more tahn 60000
-        :type recvWindow: long
 
         :returns: API response
 
+        .. code-block:: python
             [
                 {
                     "vipLevel": 0,
@@ -3918,8 +3917,8 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
 
-    def isolated_margin_tier_data(self, **params):
-        """
+    def get_isolated_margin_tier_data(self, **params):
+        """Get isolated margin tier data collection with any tier as https://www.binance.com/en/margin-data
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-tier-data-user_data
 
@@ -3931,7 +3930,8 @@ class Client(BaseClient):
         :type recvWindow:
 
         :returns: API response
-
+        
+        .. code-block:: python
             [
                 {
                     "symbol": "BTCUSDT",
@@ -9416,13 +9416,13 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
     get_all_isolated_margin_symbols.__doc__ = Client.get_all_isolated_margin_symbols.__doc__
 
-    async def isolated_margin_fee_data(self, **params):
+    async def get_isolated_margin_fee_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
-    isolated_margin_fee_data.__doc__ = Client.isolated_margin_fee_data.__doc__
+    get_isolated_margin_fee_data.__doc__ = Client.get_isolated_margin_fee_data.__doc__
 
-    async def isolated_margin_tier_data(self, **params):
+    async def get_isolated_margin_tier_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
-    isolated_margin_tier_data.__doc__ = Client.isolated_margin_tier_data.__doc__
+    get_isolated_margin_tier_data.__doc__ = Client.get_isolated_margin_tier_data.__doc__
 
     async def margin_manual_liquidation(self, **params):
         return await self._request_margin_api('get', 'margin/manual-liquidation', True, data=params)
