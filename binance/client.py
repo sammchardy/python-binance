@@ -2273,11 +2273,12 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'system/status')
 
-    def get_account_status(self, **params):
+    def get_account_status(self, version=1,**params):
         """Get account status detail.
 
         https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
-
+        :param version: the api version
+        :param version: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2290,7 +2291,11 @@ class Client(BaseClient):
             }
 
         """
-        return self._request_margin_api('get', 'account/status', True, data=params)
+        if self.tld == 'us':
+            path = 'accountStatus'
+        else:
+            path = 'account/status'
+        return self._request_margin_api('get', path, True, version, data=params)
 
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
