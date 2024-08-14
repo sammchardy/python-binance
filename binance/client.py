@@ -3573,6 +3573,31 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
 
+    def margin_manual_liquidation(self, **params):
+        """
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-manual-liquidation-margin
+
+        
+
+        :param type: required
+        :type symbol: str: When type selected is "ISOLATED", symbol must be filled in
+
+        :returns: API response
+
+            [
+                {
+                    "asset": "ETH",
+                    "interest": "0.00083334",
+                    "principal": "0.001",
+                    "liabilityAsset": "USDT",
+                    "liabilityQty": 0.3552
+                }
+            ]
+
+        """
+        return self._request_margin_api('post', 'margin/manual-liquidation', True, data=params)
+
     def toggle_bnb_burn_spot_margin(self, **params):
         """Toggle BNB Burn On Spot Trade And Margin Interest
 
@@ -8980,6 +9005,10 @@ class AsyncClient(BaseClient):
     async def isolated_margin_tier_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
     isolated_margin_tier_data.__doc__ = Client.isolated_margin_tier_data.__doc__
+
+    async def margin_manual_liquidation(self, **params):
+        return await self._request_margin_api('get', 'margin/manual-liquidation', True, data=params)
+    margin_manual_liquidation.__doc__ = Client.margin_manual_liquidation.__doc__
 
     async def toggle_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
