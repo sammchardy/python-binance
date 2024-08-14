@@ -8733,6 +8733,12 @@ class AsyncClient(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+         # checks if there is still a connection to binance before sending request and crashing
+        while True:
+            test = getattr(self.session, method)(uri, **kwargs) 
+            if test.status_code == 200:
+                break
+                
         async with getattr(self.session, method)(uri, **kwargs) as response:
             self.response = response
             return await self._handle_response(response)
