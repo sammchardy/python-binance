@@ -3268,9 +3268,383 @@ class Client(BaseClient):
               "symbol": "BTCUSDT"
             }
 
-
         """
         return self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
+
+    def get_enabled_isolated_margin_account_limit(self, **params):
+        """Query enabled isolated margin account limit.
+        
+        https://binance-docs.github.io/apidocs/spot/en/#query-enabled-isolated-margin-account-limit-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "enabledAccount": 5,
+                "maxAccount": 20
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/accountLimit', True, data=params)
+
+    def get_margin_dustlog(self, **params):
+        """
+        Query the historical information of user's margin account small-value asset conversion BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-dustlog-user_data
+
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "total": 8, //Total counts of exchange
+                "userAssetDribblets": [
+                    {
+                        "operateTime": 1615985535000,
+                        "totalTransferedAmount": "0.00132256", // Total transfered BNB amount for this exchange.
+                        "totalServiceChargeAmount": "0.00002699", //Total service charge amount for this exchange.
+                        "transId": 45178372831,
+                        "userAssetDribbletDetails": [ //Details of  this exchange.
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.000009",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.000441",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.00001799",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.00088156",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    },
+                    {
+                        "operateTime":1616203180000,
+                        "totalTransferedAmount": "0.00058795",
+                        "totalServiceChargeAmount": "0.000012",
+                        "transId": 4357015,
+                        "userAssetDribbletDetails": [
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.00001",
+                                "amount": "0.001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00049",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.000002",
+                                "amount": "0.0001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00009795",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/dribblet', True, data=params)
+
+    def get_margin_dust_assets(self, **params):
+        """Get margin assets that can be converted into BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-dustlog-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "details": [
+                    {
+                        "asset": "ADA",
+                        "assetFullName": "ADA",
+                        "amountFree": "6.21",
+                        "toBTC": "0.00016848",
+                        "toBNB": "0.01777302",
+                        "toBNBOffExchange": "0.01741756",
+                        "exchange": "0.00035546"
+                    }
+                ],
+                "totalTransferBtc": "0.00016848",
+                "totalTransferBNB": "0.01777302",
+                "dribbletPercentage": "0.02"
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/dust', True, data=params)
+
+    def transfer_margin_dust(self, **params):
+        """Convert dust assets to BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#dust-transfer-trade
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "totalServiceCharge":"0.02102542",
+                "totalTransfered":"1.05127099",
+                "transferResult":[
+                    {
+                        "amount":"0.03000000",
+                        "fromAsset":"ETH",
+                        "operateTime":1563368549307,
+                        "serviceChargeAmount":"0.00500000",
+                        "tranId":2970932918,
+                        "transferedAmount":"0.25000000"
+                    },
+                    {
+                        "amount":"0.09000000",
+                        "fromAsset":"LTC",
+                        "operateTime":1563368549404,
+                        "serviceChargeAmount":"0.01548000",
+                        "tranId":2970932918,
+                        "transferedAmount":"0.77400000"
+                    }
+                ]
+            }
+
+        """
+        return self._request_margin_api('post', 'margin/dust', True, data=params)
+
+    def get_cross_margin_collateral_ratio(self, **params):
+        """
+        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-collateral-ratio-market_data
+
+        :param none
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "collaterals": [
+                  {
+                    "minUsdValue": "0",
+                    "maxUsdValue": "13000000",
+                    "discountRate": "1"
+                  },
+                  {
+                    "minUsdValue": "13000000",
+                    "maxUsdValue": "20000000",
+                    "discountRate": "0.975"
+                  },
+                  {
+                    "minUsdValue": "20000000",
+                    "discountRate": "0"
+                  }
+                ],
+                "assetNames": [
+                  "BNX"
+                ]
+              },
+              {
+                "collaterals": [
+                  {
+                    "minUsdValue": "0",
+                    "discountRate": "1"
+                  }
+                ],
+                "assetNames": [
+                  "BTC",
+                  "BUSD",
+                  "ETH",
+                  "USDT"
+                ]
+              }
+            ]
+        """
+        return self._request_margin_api('get', 'margin/crossMarginCollateralRatio', True, data=params)
+
+    def get_small_liability_exchange_assets(self, **params):
+        """Query the coins which can be small liability exchange
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-coin-list-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                  "asset": "ETH",
+                  "interest": "0.00083334",
+                  "principal": "0.001",
+                  "liabilityAsset": "USDT",
+                  "liabilityQty": 0.3552
+                }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/exchange-small-liability', True, data=params)
+
+    def exchange_small_liability_assets(self, **params):
+        """Cross Margin Small Liability Exchange
+
+        https://binance-docs.github.io/apidocs/spot/en/#small-liability-exchange-margin
+
+        :param assetNames: The assets list of small liability exchange
+        :type assetNames: array
+
+        :returns: API response
+
+        .. code-block:: python
+        none
+
+        """
+        return self._request_margin_api('post', 'margin/exchange-small-liability', True, data=params)
+
+    def get_small_liability_exchange_history(self, **params):
+        """Get Small liability Exchange History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-history-user_data
+
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: Default:10, Max:100
+        :type size: int
+        :param startTime: Default: 30 days from current timestamp
+        :type startTime: long
+        :param endTime: Default: present timestamp
+        :type endTIme: long
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "total": 1,
+                "rows": [
+                  {
+                    "asset": "ETH",
+                    "amount": "0.00083434",
+                    "targetAsset": "BUSD",
+                    "targetAmount": "1.37576819",
+                    "bizType": "EXCHANGE_SMALL_LIABILITY",
+                    "timestamp": 1672801339253
+                  }
+                ]
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/exchange-small-liability-history', True, data=params)
+
+    def get_future_hourly_interest_rate(self, **params):
+        """Get user the next hourly estimate interest
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-a-future-hourly-interest-rate-user_data
+
+        :param assets: List of assets, separated by commas, up to 20
+        :type assets: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"
+        :type isIsolated: bool
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "asset": "BTC",
+                    "nextHourlyInterestRate": "0.00000571"
+                },
+                {
+                    "asset": "ETH",
+                    "nextHourlyInterestRate": "0.00000578"
+                }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/next-hourly-interest-rate', True, data=params)
+
+    def get_margin_capital_flow(self, **params):
+        """Get cross or isolated margin capital flow
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-cross-or-isolated-margin-capital-flow-user_data
+
+        :param asset: optional
+        :type asset: str
+        :param symbol: Required when querying isolated data
+        :type symbol: str
+        :param type: optional
+        :type type: string
+        :param startTime: Only supports querying the data of the last 90 days
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param formId: If fromId is set, the data with id > fromId will be returned. Otherwise the latest data will be returned
+        :type formId: long
+        :param limit: The number of data items returned each time is limited. Default 500; Max 1000.
+        :type limit: long
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "id": 123456,
+                "tranId": 123123,
+                "timestamp": 1691116657000,
+                "asset": "USDT,
+                "symbol": "BTCUSDT",
+                "type": "BORROW",
+                "amount": "101"
+              },
+              {
+                "id": 123457,
+                "tranId": 123124,
+                "timestamp": 1691116658000,
+                "asset": "BTC",
+                "symbol": "BTCUSDT",
+                "type": "REPAY",
+                "amount": "10"
+              }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/capital-flow', True, data=params)
+
+    def get_margin_delist_schedule(self, **params):
+        """Get tokens or symbols delist schedule for cross margin and isolated margin
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "delistTime": 1686161202000,
+                "crossMarginAssets": [
+                  "BTC",
+                  "USDT"
+                ],
+                "isolatedMarginSymbols": [
+                  "ADAUSDT",
+                  "BNBUSDT"
+                ]
+              },
+              {
+                "delistTime": 1686222232000,
+                "crossMarginAssets": [
+                  "ADA"
+                ],
+                "isolatedMarginSymbols": []
+              }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
 
     def get_margin_asset(self, **params):
         """Query cross-margin asset
@@ -8970,6 +9344,50 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
     disable_isolated_margin_account.__doc__ = Client.disable_isolated_margin_account.__doc__
 
+    async def get_enabled_isolated_margin_account_limit(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/accountLimit', True, data=params)
+    get_enabled_isolated_margin_account_limit.__doc__ = Client.get_enabled_isolated_margin_account_limit.__doc__
+
+    async def get_margin_dustlog(self, **params):
+        return await self._request_margin_api('get', 'margin/dribblet', True, data=params)
+    get_margin_dustlog.__doc__ = Client.get_margin_dustlog.__doc__
+
+    async def get_margin_dust_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/dust', True, data=params)
+    get_margin_dust_assets.__doc__ = Client.get_margin_dust_assets.__doc__
+
+    async def transfer_margin_dust(self, **params):
+        return await self._request_margin_api('post', 'margin/dust', True, data=params)
+    transfer_margin_dust.__doc__ = Client.transfer_margin_dust.__doc__
+
+    async def get_cross_margin_collateral_ratio(self, **params):
+        return await self._request_margin_api('get', 'margin/crossMarginCollateralRatio', True, data=params)
+    get_cross_margin_collateral_ratio.__doc__ = Client.get_cross_margin_collateral_ratio.__doc__
+
+    async def get_small_liability_exchange_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability', True, data=params)
+    get_small_liability_exchange_assets.__doc__ = Client.get_small_liability_exchange_assets.__doc__
+
+    async def exchange_small_liability_assets(self, **params):
+        return await self._request_margin_api('post', 'margin/exchange-small-liability', True, data=params)
+    exchange_small_liability_assets.__doc__ = Client.exchange_small_liability_assets.__doc__
+
+    async def get_small_liability_exchange_history(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability-history', True, data=params)
+    get_small_liability_exchange_history.__doc__ = Client.get_small_liability_exchange_history.__doc__
+
+    async def get_future_hourly_interest_rate(self, **params):
+        return await self._request_margin_api('get', 'margin/next-hourly-interest-rate', True, data=params)
+    get_future_hourly_interest_rate.__doc__ = Client.get_future_hourly_interest_rate.__doc__
+
+    async def get_margin_capital_flow(self, **params):
+        return await self._request_margin_api('get', 'margin/capital-flow', True, data=params)
+    get_margin_capital_flow.__doc__ = Client.get_margin_capital_flow.__doc__
+
+    async def get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
+    get_margin_delist_schedule.__doc__ = Client.get_margin_delist_schedule.__doc__
+    
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
     get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
