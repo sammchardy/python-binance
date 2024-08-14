@@ -327,6 +327,11 @@ class BaseClient:
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del kwargs['data']
 
+        #Temporary fix for Signature issue while using batchOrders in AsyncClient
+        if 'params' in kwargs.keys() and 'batchOrders' in kwargs['params']:
+            kwargs['data'] = kwargs['params']
+            del kwargs['params']
+
         return kwargs
 
 
