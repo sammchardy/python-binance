@@ -1,7 +1,7 @@
 import time
 import dateparser
 import pytz
-import json
+import orjson as json
 
 from datetime import datetime
 from binance.client import Client
