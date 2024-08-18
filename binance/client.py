@@ -2696,7 +2696,7 @@ class Client(BaseClient):
             ]
 
         """
-        if self.tld == 'us'
+        if self.tld == 'us':
             endpoint = 'asset/query/trading-fee'
         else:
             endpoint = 'asset/tradeFee'
