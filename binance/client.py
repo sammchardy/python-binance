@@ -9263,7 +9263,7 @@ class AsyncClient(BaseClient):
     query_universal_transfer_history.__doc__ = Client.query_universal_transfer_history.__doc__
 
     async def get_trade_fee(self, **params):
-        if self.tld == 'us'
+        if self.tld == "us":
             endpoint = 'asset/query/trading-fee'
         else:
             endpoint = 'asset/tradeFee'
@@ -9392,7 +9392,7 @@ class AsyncClient(BaseClient):
     async def get_margin_delist_schedule(self, **params):
         return await self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
     get_margin_delist_schedule.__doc__ = Client.get_margin_delist_schedule.__doc__
-    
+
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
     get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
@@ -9894,7 +9894,7 @@ class AsyncClient(BaseClient):
 
     async def futures_countdown_cancel_all(self, **params):
         return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
-    
+
     async def futures_account_balance(self, **params):
         return await self._request_futures_api('get', 'balance', True, version=2, data=params)
 
