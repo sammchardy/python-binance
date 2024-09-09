@@ -2696,7 +2696,7 @@ class Client(BaseClient):
             ]
 
         """
-        if self.tld == 'us'
+        if self.tld == 'us':
             endpoint = 'asset/query/trading-fee'
         else:
             endpoint = 'asset/tradeFee'
@@ -9263,7 +9263,7 @@ class AsyncClient(BaseClient):
     query_universal_transfer_history.__doc__ = Client.query_universal_transfer_history.__doc__
 
     async def get_trade_fee(self, **params):
-        if self.tld == 'us'
+        if self.tld == 'us':
             endpoint = 'asset/query/trading-fee'
         else:
             endpoint = 'asset/tradeFee'

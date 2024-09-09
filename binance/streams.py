@@ -209,9 +209,12 @@ class ReconnectingWebsocket:
         return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
 
     async def before_reconnect(self):
-        if self.ws and self._conn:
-            await self._conn.__aexit__(None, None, None)
+        if self.ws:
             self.ws = None
+
+        if self._conn and hasattr(self._conn, 'protocol'):
+            await self._conn.__aexit__(None, None, None)
+
         self._reconnects += 1
 
     def _no_message_received_reconnect(self):
