@@ -6561,6 +6561,9 @@ class Client(BaseClient):
         """
         return self._request_margin_api('post', 'sub-account/universalTransfer', True, data=params)
 
+    def managed_subaccount_query_trans_log(self, **params):
+        return self._request_margin_api('get', 'managed-subaccount/query-trans-log', True, data=params)
+
     def get_subaccount_api_ip_restriction(self, **params):
         return self._request_margin_api('get', 'sub-account/subAccountApi/ipRestriction', True, data=params)
 
