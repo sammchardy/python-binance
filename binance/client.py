@@ -2287,6 +2287,9 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'account/status', True, data=params)
 
+    def get_account_info(self, **params):
+        return self._request_margin_api('get', 'account/info', True, data=params)
+
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
 
