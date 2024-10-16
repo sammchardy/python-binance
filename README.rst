@@ -171,7 +171,7 @@ pass `testnet=True` when creating the client.
     dcm.start_depth_cache(callback=handle_dcm_message, symbol='ETHBTC')
 
     # replace with a current options symbol
-    options_symbol = 'BTC-210430-36000-C'
+    options_symbol = 'BTC-241227-41000-C'
     dcm.start_options_depth_cache(callback=handle_dcm_message, symbol=options_symbol)
 
     # join the threaded managers to the main thread
@@ -239,7 +239,7 @@ for more information.
                 print(depth_cache.get_bids()[:5])
 
         # Vanilla options Depth Cache works the same, update the symbol to a current one
-        options_symbol = 'BTC-210430-36000-C'
+        options_symbol = 'BTC-241227-41000-C'
         async with OptionsDepthCacheManager(client, symbol=options_symbol) as dcm_socket:
             for _ in range(5):
                 depth_cache = await dcm_socket.recv()
