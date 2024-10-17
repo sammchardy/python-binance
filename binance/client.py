@@ -8,9 +8,9 @@ import hashlib
 import hmac
 import requests
 import time
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from Crypto.Signature import pkcs1_15, eddsa
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -197,7 +197,9 @@ class BaseClient:
         if isinstance(private_key, Path):
             with open(private_key, "r") as f:
                 private_key = f.read()
-        return RSA.import_key(private_key, passphrase=private_key_pass)
+        if len(private_key) > 120:
+            return RSA.import_key(private_key, passphrase=private_key_pass)
+        return ECC.import_key(private_key, passphrase=private_key_pass)
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
@@ -254,6 +256,12 @@ class BaseClient:
         assert self.PRIVATE_KEY
         h = SHA256.new(query_string.encode("utf-8"))
         signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
+        return b64encode(signature).decode()
+
+    def _ed25519_signature(self, query_string: str):
+        assert self.PRIVATE_KEY
+        h = SHA256.new(query_string.encode("utf-8"))
+        signature = eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(h)
         return b64encode(signature).decode()
 
     def _hmac_signature(self, query_string: str) -> str:
