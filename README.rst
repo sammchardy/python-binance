@@ -19,7 +19,7 @@ Updated 11th Aug 2023
 .. image:: https://img.shields.io/pypi/pyversions/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
-.. image:: https://img.shields.io/badge/CCXT-Chat-blue?logo=telegram
+.. image:: https://img.shields.io/badge/Telegram-Join%20Us-blue?logo=Telegram
     :target: https://t.me/python_binance
 
 
