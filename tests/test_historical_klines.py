@@ -7,7 +7,7 @@ import requests_mock
 import os
 
 proxies = {}
-proxy = os.getenv("PROXY_URL")
+proxy = os.getenv("PROXY")
 
 if proxy:
     proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
