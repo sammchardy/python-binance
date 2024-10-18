@@ -8,7 +8,7 @@ proxies = {}
 proxy = os.getenv("PROXY")
 
 if proxy:
-    proxies = {"http": proxy, "https": proxy}
+    proxies = {"http": proxy} # tmp: improve this in the future
 
 client = Client("api_key", "api_secret", {'proxies': proxies})
 
