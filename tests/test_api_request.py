@@ -8,11 +8,11 @@ import requests_mock
 client = Client("api_key", "api_secret")
 
 print('INside test\n\n\n\n')
-print(os.environ['HTTPS_PROXY'])
+print(os.environ['PROXY'])
 
 def test_invalid_json():
     print('INside test\n\n\n\n')
-    print(os.environ['HTTPS_PROXY'])
+    print(os.environ['PROXY'])
     """Test Invalid response Exception"""
 
     with pytest.raises(BinanceRequestException):
