@@ -18,6 +18,7 @@ from .helpers import interval_to_milliseconds, convert_ts_str, get_loop
 from .exceptions import BinanceAPIException, BinanceRequestException, NotImplementedException
 from .enums import HistoricalKlinesType
 
+import os
 
 class BaseClient:
 
@@ -348,6 +349,8 @@ class BaseClient:
 
 class Client(BaseClient):
 
+    print('Inside client \n\n\n')
+    print(os.environ['HTTPS_PROXY'])
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
