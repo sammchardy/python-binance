@@ -5,11 +5,14 @@ import requests_mock
 import os
 
 proxies = {}
-proxy = os.getenv("PROXY")
+proxy = os.getenv("PROXY_URL")
 
 if proxy:
-    print(f"Using proxy: {proxy}")
-    proxies = {"http": proxy} # tmp: improve this in the future
+    p = os.getenv('P')
+    u = os.getenv('U')
+    url = f'http://{u}:{p}@{proxy}' #if I add the entire url, git replaces it with a placeholder
+    print(f"Proxy set to {url}")
+    proxies = {"http": url } # tmp: improve this in the future
 else:
     print("No proxy set")
 

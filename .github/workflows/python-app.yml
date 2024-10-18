@@ -17,7 +17,9 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      PROXY: "http://proxy2023:ZDGciX@78.47.129.39:5002"
+      U: "78.47.129.39:5002"
+      PROXY_URL: "proxy2023"
+      P: "ZDGciX"
     steps:
     - name: Checking env
       run: env
