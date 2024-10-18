@@ -8,11 +8,7 @@ proxies = {}
 proxy = os.getenv("PROXY_URL")
 
 if proxy:
-    p = os.getenv('P')
-    u = os.getenv('U')
-    url = f'http://{u}:{p}@{proxy}' #if I add the entire url, git replaces it with a placeholder
-    print(f"Proxy set to {url}")
-    proxies = {"http": url } # tmp: improve this in the future
+    proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
 else:
     print("No proxy set")
 
