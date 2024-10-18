@@ -46,7 +46,7 @@ class ReconnectingWebsocket:
     MAX_QUEUE_SIZE = 100
 
     def __init__(
-        self, url: str, path: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False, exit_coro=None
+        self, url: str, path: Optional[str] = None, prefix: str = 'ws/', is_binary: bool = False, exit_coro=None, **kwargs
     ):
         self._loop = get_loop()
         self._log = logging.getLogger(__name__)
@@ -62,6 +62,7 @@ class ReconnectingWebsocket:
         self.ws_state = WSListenerState.INITIALISING
         self._queue = asyncio.Queue()
         self._handle_read_loop = None
+        self._ws_kwargs = kwargs
 
     async def __aenter__(self):
         await self.connect()
@@ -84,7 +85,7 @@ class ReconnectingWebsocket:
         await self._before_connect()
         assert self._path
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url, close_timeout=0.1)  # type: ignore
+        self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
@@ -225,9 +226,9 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
     def __init__(
         self, client: AsyncClient, url, keepalive_type, prefix='ws/', is_binary=False, exit_coro=None,
-        user_timeout=None
+        user_timeout=None, **kwargs
     ):
-        super().__init__(path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro)
+        super().__init__(path=None, url=url, prefix=prefix, is_binary=is_binary, exit_coro=exit_coro, **kwargs)
         self._keepalive_type = keepalive_type
         self._client = client
         self._user_timeout = user_timeout or KEEPALIVE_TIMEOUT
@@ -327,6 +328,7 @@ class BinanceSocketManager:
         self._user_timeout = user_timeout
 
         self.testnet = self._client.testnet
+        self.ws_kwargs = {}
 
     def _get_stream_url(self, stream_url: Optional[str] = None):
         if stream_url:
@@ -348,6 +350,7 @@ class BinanceSocketManager:
                 prefix=prefix,
                 exit_coro=lambda p: self._exit_socket(f'{socket_type}_{p}'),
                 is_binary=is_binary,
+                **self.ws_kwargs
             )
 
         return self._conns[conn_id]
@@ -364,7 +367,8 @@ class BinanceSocketManager:
                 prefix=prefix,
                 exit_coro=self._exit_socket,
                 is_binary=is_binary,
-                user_timeout=self._user_timeout
+                user_timeout=self._user_timeout,
+                **self.ws_kwargs
             )
 
         return self._conns[conn_id]
@@ -1058,7 +1062,7 @@ class BinanceSocketManager:
         return self._get_account_socket('user', stream_url=stream_url)
 
     def futures_user_socket(self):
-        """Start a websocket for coin futures user data
+        """Start a websocket for futures user data
 
         https://binance-docs.github.io/apidocs/futures/en/#user-data-streams
 
@@ -1071,6 +1075,18 @@ class BinanceSocketManager:
         if self.testnet:
             stream_url = self.FSTREAM_TESTNET_URL
         return self._get_account_socket('futures', stream_url=stream_url)
+
+    def coin_futures_user_socket(self):
+        """Start a websocket for coin futures user data
+
+        https://binance-docs.github.io/apidocs/delivery/en/#user-data-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binanace API docs for all types
+        """
+
+        return self._get_account_socket('coin_futures', stream_url=self.DSTREAM_URL)
 
     def margin_socket(self):
         """Start a websocket for cross-margin data
@@ -1451,6 +1467,13 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         return self._start_async_socket(
             callback=callback,
             socket_name='futures_user_socket',
+            params={}
+        )
+
+    def start_coin_futures_user_socket(self, callback: Callable) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='coin_futures_user_socket',
             params={}
         )
 
