@@ -4,9 +4,24 @@
 from binance.client import Client
 import pytest
 import requests_mock
+import os
 
+proxies = {}
+proxy = os.getenv("PROXY_URL")
 
-client = Client("api_key", "api_secret")
+if proxy:
+    p = os.getenv('P')
+    u = os.getenv('U')
+    print(p)
+    print(u)
+    print(proxy)
+    url = f'http://{u}:{p}@{proxy}' #if I add the entire url, git replaces it with a placeholder
+    print(f"Proxy set to {url}")
+    proxies = {"http": url } # tmp: improve this in the future
+else:
+    print("No proxy set")
+
+client = Client("api_key", "api_secret", {'proxies': proxies})
 
 
 def test_exact_amount():
