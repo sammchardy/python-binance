@@ -201,7 +201,7 @@ class BaseClient:
         if len(private_key) > 120:
             self._is_rsa = True
             return RSA.import_key(private_key, passphrase=private_key_pass)
-        return ECC.import_key(private_key.encode())
+        return ECC.import_key(private_key)
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
