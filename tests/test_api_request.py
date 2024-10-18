@@ -7,6 +7,8 @@ import requests_mock
 
 client = Client("api_key", "api_secret")
 
+print('INside test\n\n\n\n')
+print(os.environ['HTTPS_PROXY'])
 
 def test_invalid_json():
     print('INside test\n\n\n\n')

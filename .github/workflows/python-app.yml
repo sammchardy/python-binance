@@ -16,11 +16,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: actions
     env:
-      HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
-
-
+      HTTPS_PROXY: "http://proxy2023:ZDGciX@78.47.129.39:5002"
     steps:
     - name: Checking env
       run: env
@@ -42,7 +39,5 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
-      env:
-        HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
       run: |
         pytest
