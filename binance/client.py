@@ -8,9 +8,9 @@ import hashlib
 import hmac
 import requests
 import time
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from Crypto.Signature import pkcs1_15, eddsa
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -171,6 +171,7 @@ class BaseClient:
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
+        self._is_rsa = False
         self.PRIVATE_KEY = self._init_private_key(private_key, private_key_pass)
         self.session = self._init_session()
         self._requests_params = requests_params
@@ -197,7 +198,10 @@ class BaseClient:
         if isinstance(private_key, Path):
             with open(private_key, "r") as f:
                 private_key = f.read()
-        return RSA.import_key(private_key, passphrase=private_key_pass)
+        if len(private_key) > 120:
+            self._is_rsa = True
+            return RSA.import_key(private_key, passphrase=private_key_pass)
+        return ECC.import_key(private_key.encode())
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
@@ -256,6 +260,10 @@ class BaseClient:
         signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
         return b64encode(signature).decode()
 
+    def _ed25519_signature(self, query_string: str):
+        assert self.PRIVATE_KEY
+        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode()
+
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
@@ -264,7 +272,10 @@ class BaseClient:
     def _generate_signature(self, data: Dict) -> str:
         sig_func = self._hmac_signature
         if self.PRIVATE_KEY:
-            sig_func = self._rsa_signature
+            if self._is_rsa:
+                sig_func = self._rsa_signature
+            else:
+                sig_func = self._ed25519_signature
         query_string = '&'.join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
         return sig_func(query_string)
 
