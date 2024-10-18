@@ -16,6 +16,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      HTTPS_PROXY: ${{ secrets.HTTPS_PROXY }}
 
     steps:
     - uses: actions/checkout@v4
