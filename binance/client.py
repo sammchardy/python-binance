@@ -349,8 +349,9 @@ class BaseClient:
 
 class Client(BaseClient):
 
-    print('Inside client \n\n\n')
-    print(os.environ['HTTPS_PROXY'])
+    print('Inside client \n\n\n\n')
+    print('proxy is ' + os.environ['HTTPS_PROXY'])
+
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
