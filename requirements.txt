@@ -4,4 +4,3 @@ pycryptodome
 requests
 ujson
 websockets
-cryptography
