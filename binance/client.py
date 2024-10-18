@@ -350,7 +350,7 @@ class BaseClient:
 class Client(BaseClient):
 
     print('Inside client \n\n\n\n')
-    proxy = os.getenv('HTTPS_PROXY')
+    proxy = os.getenv('PROXY')
     if proxy:
         print(f"HTTPS_PROXY is set: {proxy}")
     else:
