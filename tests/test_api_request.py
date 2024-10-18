@@ -8,7 +8,10 @@ proxies = {}
 proxy = os.getenv("PROXY")
 
 if proxy:
+    print(f"Using proxy: {proxy}")
     proxies = {"http": proxy} # tmp: improve this in the future
+else:
+    print("No proxy set")
 
 client = Client("api_key", "api_secret", {'proxies': proxies})
 
