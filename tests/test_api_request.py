@@ -2,10 +2,15 @@ from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
 import pytest
 import requests_mock
+import os
 
+proxies = {}
+proxy = os.getenv("PROXY")
 
-client = Client("api_key", "api_secret")
+if proxy:
+    proxies = {"http": proxy, "https": proxy}
 
+client = Client("api_key", "api_secret", {'proxies': proxies})
 
 def test_invalid_json():
     """Test Invalid response Exception"""
