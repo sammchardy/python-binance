@@ -1,4 +1,13 @@
 from binance.client import Client
+import os
+
+proxies = {}
+proxy = os.getenv("PROXY")
+if proxy:
+    proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
+else:
+    print("No proxy set")
+
 
 test_cases = [
     {
@@ -43,6 +52,7 @@ def test_encryption():
             api_secret="api_secret",
             private_key=case["private_key"],
             private_key_pass=case["password"],
+            requests_params={'proxies': proxies}
         )
         signature = client._generate_signature(data)
         assert signature == case["expected_signature"], f"Test failed: {case['description']}"

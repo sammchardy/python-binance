@@ -16,8 +16,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      PROXY: "http://51.83.140.52:16301"
     steps:
+    - name: Checking env
+      run: env
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
