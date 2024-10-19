@@ -37,6 +37,9 @@ Documentation
 Community Telegram Chat
   https://t.me/python_binance
 
+Announcements Channel
+  https://t.me/python_binance_announcements
+
 Examples including async
   https://github.com/sammchardy/python-binance/tree/master/examples
 
