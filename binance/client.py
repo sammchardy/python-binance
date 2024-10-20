@@ -5562,6 +5562,12 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'eth-staking/eth/history/redemptionHistory', signed=True, data=params, version=1)
 
+    def get_sol_staking_rate_history(self, **params):
+        """查询 bnsol 汇率历史 (USER_DATA)
+        https://developers.binance.com/docs/staking/sol-staking/history
+        """
+        return self._request_margin_api('get', 'sol-staking/sol/history/stakingHistory', signed=True, data=params)
+
     # US Staking Endpoints
 
     def get_staking_asset_us(self, **params):
