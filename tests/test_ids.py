@@ -21,7 +21,6 @@ def test_spot_id():
         assert url_dict['quantity'] == '0.1'
         assert url_dict['newClientOrderId'].startswith('x-R4BD3S82')
 
-
 def test_spot_limit_id():
     with requests_mock.mock() as m:
         m.post("https://api.binance.com/api/v3/order", json={}, status_code=200)
@@ -48,7 +47,6 @@ def test_swap_id():
         assert url_dict['quantity'] == '0.1'
         assert url_dict['newClientOrderId'.lower()].startswith('x-xcKtGhcu'.lower())
 
-
 @pytest.mark.asyncio()
 async def test_spot_id_async():
     clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret") # reuse client later
@@ -59,7 +57,6 @@ async def test_spot_id_async():
         m.post("https://api.binance.com/api/v3/order", payload={'id': 1}, status=200, callback=handler)
         await clientAsync.create_order(symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
         await clientAsync.close_connection()
-
 
 @pytest.mark.asyncio()
 async def test_swap_id_async():
