@@ -5564,9 +5564,9 @@ class Client(BaseClient):
 
     def get_sol_staking_rate_history(self, **params):
         """查询 bnsol 汇率历史 (USER_DATA)
-        https://developers.binance.com/docs/staking/sol-staking/history
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-BNSOL-Rate-History
         """
-        return self._request_margin_api('get', 'sol-staking/sol/history/stakingHistory', signed=True, data=params)
+        return self._request_margin_api('get', 'sol-staking/sol/history/rateHistory', signed=True, data=params)
 
     # US Staking Endpoints
 
