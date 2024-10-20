@@ -8,7 +8,7 @@ sys.path.append(root)
 
 from binance.client import Client, AsyncClient
 
-client = Client(api_key="api_key", api_secret="api_secret")
+client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 
 def test_spot_id():
     with requests_mock.mock() as m:
