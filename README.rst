@@ -54,7 +54,7 @@ Features
 - Implementation of all General, Market Data and Account endpoints.
 - Asyncio implementation
 - Testnet support for Spot, Futures and Vanilla Options
-- Simple handling of authentication include RSA keys
+- Simple handling of authentication include RSA and EDDSA keys
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
@@ -64,6 +64,7 @@ Features
 - Deposit addresses
 - Margin Trading
 - Futures Trading
+- Porfolio Margin Trading
 - Vanilla Options
 - Support other domains (.us, .jp, etc)
 
