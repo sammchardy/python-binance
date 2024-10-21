@@ -24,3 +24,17 @@ def test_futures_position_information_version_override():
         pos = client.futures_position_information(symbol="LTCUSDT", version=2)
         assert m.last_request.qs['symbol'][0] == 'LTCUSDT'.lower()
         assert m.last_request.path == '/fapi/v2/positionrisk'
+
+def test_futures_account_balance():
+    with requests_mock.mock() as m:
+        url_matcher = re.compile(r"https:\/\/fapi.binance.com\/fapi\/v3\/balance\?.+")
+        m.register_uri("GET", url_matcher, json={}, status_code=200)
+        client.futures_account_balance()
+        assert m.last_request.path == '/fapi/v3/balance'
+
+def test_futures_account_config():
+    with requests_mock.mock() as m:
+        url_matcher = re.compile(r"https:\/\/fapi.binance.com\/fapi\/v1\/accountConfig\?.+")
+        m.register_uri("GET", url_matcher, json={}, status_code=200)
+        client.futures_account_config()
+        assert m.last_request.path == '/fapi/v1/accountconfig'

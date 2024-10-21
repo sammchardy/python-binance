@@ -7448,10 +7448,10 @@ class Client(BaseClient):
     def futures_account_balance(self, **params):
         """Get futures account balance
 
-        https://binance-docs.github.io/apidocs/futures/en/#future-account-balance-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Futures-Account-Balance-V3
 
         """
-        return self._request_futures_api('get', 'balance', True, 2, data=params)
+        return self._request_futures_api('get', 'balance', True, 3, data=params)
 
     def futures_account(self, **params):
         """Get current account information.
@@ -7567,6 +7567,13 @@ class Client(BaseClient):
             'listenKey': listenKey
         }
         return self._request_futures_api('delete', 'listenKey', signed=False, data=params)
+
+    # new methods
+    def futures_account_config(self, **params):
+        return self._request_futures_api('get', 'accountConfig', signed=True, version=1, data=params)
+
+    def futures_symbol_config(self, **params):
+        return self._request_futures_api('get', 'symbolConfig', signed=True, version=1, data=params)
 
     # COIN Futures API
     def futures_coin_ping(self):
@@ -9947,9 +9954,9 @@ class AsyncClient(BaseClient):
 
     async def futures_countdown_cancel_all(self, **params):
         return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
-    
+
     async def futures_account_balance(self, **params):
-        return await self._request_futures_api('get', 'balance', True, version=2, data=params)
+        return await self._request_futures_api('get', 'balance', True, version=3, data=params)
 
     async def futures_account(self, **params):
         return await self._request_futures_api('get', 'account', True, version=2, data=params)
@@ -10005,6 +10012,13 @@ class AsyncClient(BaseClient):
             'listenKey': listenKey
         }
         return await self._request_futures_api('delete', 'listenKey', signed=False, data=params)
+
+    # new methods
+    async def futures_account_config(self, **params):
+        return await self._request_futures_api('get', 'accountConfig', signed=True, version=1, data=params)
+
+    async def futures_symbol_config(self, **params):
+        return await self._request_futures_api('get', 'symbolConfig', signed=True, version=1, data=params)
 
     # COIN Futures API
 
