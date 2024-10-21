@@ -10028,8 +10028,9 @@ class AsyncClient(BaseClient):
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False, loop=None, session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
+        https_proxy: Optional[str] = None
     ):
-
+        self.https_proxy = https_proxy
         self.loop = loop or get_loop()
         self._session_params: Dict[str, Any] = session_params or {}
         super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
@@ -10076,7 +10077,7 @@ class AsyncClient(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        async with getattr(self.session, method)(uri, **kwargs) as response:
+        async with getattr(self.session, method)(uri, proxy=self.https_proxy, **kwargs) as response:
             self.response = response
             return await self._handle_response(response)
 

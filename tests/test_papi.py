@@ -1,9 +1,11 @@
 
-from binance.client import Client
+from binance.client import Client, AsyncClient
 import os
+import pytest
 
 proxies = {}
 proxy = os.getenv("PROXY")
+proxy = "http://51.83.140.52:16301"
 
 if proxy:
     proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
@@ -12,6 +14,13 @@ else:
 
 client = Client("api_key", "api_secret", {'proxies': proxies})
 
+
 def test_ping_sync():
-    pingResponse = client.papi_ping()
-    assert pingResponse != None
+    ping_response = client.papi_ping()
+    assert ping_response != None
+
+@pytest.mark.asyncio()
+async def test_ping_async():
+    clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy)
+    ping_response = await clientAsync.papi_ping()
+    assert ping_response != None
