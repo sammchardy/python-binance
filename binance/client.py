@@ -36,7 +36,7 @@ class BaseClient:
     FUTURES_COIN_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
     OPTIONS_URL = 'https://eapi.binance.{}/eapi'
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/eapi'
-    PORTFOLIO_URL = 'https://papi.binance.{}/papi/'
+    PAPI_URL = 'https://papi.binance.{}/papi'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
@@ -48,6 +48,7 @@ class BaseClient:
     FUTURES_API_VERSION3 = 'v3'
     OPTIONS_API_VERSION = 'v1'
     PORTFOLIO_API_VERSION = 'v1'
+    PORTFOLIO_API_VERSION2 = 'v1'
 
 
     BASE_ENDPOINT_DEFAULT = ''
@@ -231,8 +232,9 @@ class BaseClient:
     def _create_papi_api_uri(self, path: str, version: int = 1) -> str:
         options = {
             1: self.PORTFOLIO_API_VERSION,
+            2: self.PORTFOLIO_API_VERSION2
         }
-        return self.PORTFOLIO_URL.format(self.tld) + '/' + options[version] + '/' + path
+        return self.PAPI_URL.format(self.tld) + '/' + options[version] + '/' + path
 
     def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
@@ -458,6 +460,7 @@ class Client(BaseClient):
         return self._request(method, uri, signed, **kwargs)
 
     def _request_papi_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        version = self._get_version(version, **kwargs)
         uri = self._create_papi_api_uri(path, version)
         return self._request(method, uri, signed, **kwargs)
 
@@ -8791,7 +8794,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'balance', signed=True, data=params)
+        return self._request_papi_api('get', 'balance', signed=True, data=params)
 
     def papi_get_account(self, **params):
         """Query account information.
@@ -8804,7 +8807,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'account', signed=True, data=params)
+        return self._request_papi_api('get', 'account', signed=True, data=params)
 
     def papi_get_margin_max_borrowable(self, **params):
         """Query margin max borrow.
@@ -8820,7 +8823,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'margin/maxBorrowable', signed=True, data=params)
+        return self._request_papi_api('get', 'margin/maxBorrowable', signed=True, data=params)
 
 
     def papi_get_margin_max_withdraw(self, **params):
@@ -8837,7 +8840,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'margin/maxWithdraw', signed=True, data=params)
+        return self._request_papi_api('get', 'margin/maxWithdraw', signed=True, data=params)
 
 
     def papi_get_um_position_risk(self, **params):
@@ -8854,7 +8857,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/positionRisk', signed=True, data=params)
+        return self._request_papi_api('get', 'um/positionRisk', signed=True, data=params)
 
 
 
@@ -8872,7 +8875,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/positionRisk', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/positionRisk', signed=True, data=params)
 
 
 
@@ -8893,7 +8896,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'um/leverage', signed=True, data=params)
+        return self._request_papi_api('post', 'um/leverage', signed=True, data=params)
 
 
     def papi_set_cm_leverage(self, **params):
@@ -8913,10 +8916,10 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'cm/leverage', signed=True, data=params)
+        return self._request_papi_api('post', 'cm/leverage', signed=True, data=params)
 
 
-    def papi_set_um_leverage(self, **params):
+    def papi_change_um_position_side_dual(self, **params):
         """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-UM-Position-Mode
@@ -8930,7 +8933,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'um/positionSide/dual', signed=True, data=params)
+        return self._request_papi_api('post', 'um/positionSide/dual', signed=True, data=params)
 
 
     def papi_get_um_position_side_dual(self, **params):
@@ -8944,7 +8947,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/positionSide/dual', signed=True, data=params)
+        return self._request_papi_api('get', 'um/positionSide/dual', signed=True, data=params)
 
 
     def papi_get_cm_position_side_dual(self, **params):
@@ -8958,7 +8961,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/positionSide/dual', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/positionSide/dual', signed=True, data=params)
 
 
     def papi_get_um_leverage_bracket(self, **params):
@@ -8975,7 +8978,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/leverageBracket', signed=True, data=params)
+        return self._request_papi_api('get', 'um/leverageBracket', signed=True, data=params)
 
 
     def papi_get_cm_leverage_bracket(self, **params):
@@ -8992,7 +8995,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/leverageBracket', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/leverageBracket', signed=True, data=params)
 
     def papi_get_um_api_trading_status(self, **params):
         """Portfolio Margin UM Trading Quantitative Rules Indicators.
@@ -9008,7 +9011,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/apiTradingStatus', signed=True, data=params)
+        return self._request_papi_api('get', 'um/apiTradingStatus', signed=True, data=params)
 
 
     def papi_get_um_comission_rate(self, **params):
@@ -9025,7 +9028,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/commissionRate', signed=True, data=params)
+        return self._request_papi_api('get', 'um/commissionRate', signed=True, data=params)
 
 
     def papi_get_cm_comission_rate(self, **params):
@@ -9042,7 +9045,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/commissionRate', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/commissionRate', signed=True, data=params)
 
     def papi_get_margin_margin_loan(self, **params):
         """Query margin loan record.
@@ -9058,7 +9061,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'margin/marginLoan', signed=True, data=params)
+        return self._request_papi_api('get', 'margin/marginLoan', signed=True, data=params)
 
     def papi_get_margin_repay_loan(self, **params):
         """Query margin repay record.
@@ -9074,7 +9077,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'margin/repayLoan', signed=True, data=params)
+        return self._request_papi_api('get', 'margin/repayLoan', signed=True, data=params)
 
 
     def papi_get_repay_futures_switch(self, **params):
@@ -9088,7 +9091,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'repay-futures-switch', signed=True, data=params)
+        return self._request_papi_api('get', 'repay-futures-switch', signed=True, data=params)
 
 
     def papi_repay_futures_switch(self, **params):
@@ -9105,7 +9108,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'repay-futures-switch', signed=True, data=params)
+        return self._request_papi_api('post', 'repay-futures-switch', signed=True, data=params)
 
 
     def papi_get_margin_interest_history(self, **params):
@@ -9119,7 +9122,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'margin/marginInterestHistory', signed=True, data=params)
+        return self._request_papi_api('get', 'margin/marginInterestHistory', signed=True, data=params)
 
 
     def papi_repay_futures_negative_balance(self, **params):
@@ -9133,7 +9136,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'repay-futures-negative-balance', signed=True, data=params)
+        return self._request_papi_api('post', 'repay-futures-negative-balance', signed=True, data=params)
 
 
     def papi_get_portfolio_interest_history(self, **params):
@@ -9147,7 +9150,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'portfolio/interest-history', signed=True, data=params)
+        return self._request_papi_api('get', 'portfolio/interest-history', signed=True, data=params)
 
 
     def papi_fund_auto_collection(self, **params):
@@ -9161,7 +9164,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'auto-collection', signed=True, data=params)
+        return self._request_papi_api('post', 'auto-collection', signed=True, data=params)
 
 
     def papi_fund_asset_collection(self, **params):
@@ -9175,7 +9178,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'asset-collection', signed=True, data=params)
+        return self._request_papi_api('post', 'asset-collection', signed=True, data=params)
 
 
     def papi_bnb_transfer(self, **params):
@@ -9189,7 +9192,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('post', 'bnb-transfer', signed=True, data=params)
+        return self._request_papi_api('post', 'bnb-transfer', signed=True, data=params)
 
 
     def papi_get_um_income_history(self, **params):
@@ -9203,7 +9206,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/income', signed=True, data=params)
+        return self._request_papi_api('get', 'um/income', signed=True, data=params)
 
 
     def papi_get_cm_income_history(self, **params):
@@ -9217,7 +9220,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/income', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/income', signed=True, data=params)
 
 
     def papi_get_um_account(self, **params):
@@ -9231,7 +9234,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/account', signed=True, data=params)
+        return self._request_papi_api('get', 'um/account', signed=True, data=params)
 
     def papi_get_um_account_v2(self, **params):
         """Get current UM account asset and position information.
@@ -9245,7 +9248,7 @@ class Client(BaseClient):
 
         """
         params['version'] = 2
-        return self._request_margin_api('get', 'um/account', signed=True, data=params)
+        return self._request_papi_api('get', 'um/account', signed=True, data=params)
 
 
     def papi_get_cm_account(self, **params):
@@ -9259,7 +9262,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'cm/account', signed=True, data=params)
+        return self._request_papi_api('get', 'cm/account', signed=True, data=params)
 
 
     def papi_get_um_account_config(self, **params):
@@ -9273,7 +9276,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/accountConfig', signed=True, data=params)
+        return self._request_papi_api('get', 'um/accountConfig', signed=True, data=params)
 
 
     def papi_get_um_symbol_config(self, **params):
@@ -9287,7 +9290,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/symbolConfig', signed=True, data=params)
+        return self._request_papi_api('get', 'um/symbolConfig', signed=True, data=params)
 
 
     def papi_get_um_trade_asyn(self, **params):
@@ -9301,7 +9304,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/trade/asyn', signed=True, data=params)
+        return self._request_papi_api('get', 'um/trade/asyn', signed=True, data=params)
 
 
     def papi_get_um_trade_asyn_id(self, **params):
@@ -9315,7 +9318,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/trade/asyn/id', signed=True, data=params)
+        return self._request_papi_api('get', 'um/trade/asyn/id', signed=True, data=params)
 
 
 
@@ -9330,7 +9333,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/order/asyn', signed=True, data=params)
+        return self._request_papi_api('get', 'um/order/asyn', signed=True, data=params)
 
 
     def papi_get_um_order_asyn_id(self, **params):
@@ -9344,7 +9347,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/order/asyn/id', signed=True, data=params)
+        return self._request_papi_api('get', 'um/order/asyn/id', signed=True, data=params)
 
 
     def papi_get_um_income_asyn(self, **params):
@@ -9358,7 +9361,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/income/asyn', signed=True, data=params)
+        return self._request_papi_api('get', 'um/income/asyn', signed=True, data=params)
 
 
     def papi_get_um_income_asyn_id(self, **params):
@@ -9372,8 +9375,18 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        return self._request_margin_api('get', 'um/income/asyn/id', signed=True, data=params)
+        return self._request_papi_api('get', 'um/income/asyn/id', signed=True, data=params)
 
+
+    def papi_ping(self, **params):
+        """Test connectivity to the Rest API.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/market-data
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'ping', signed=False, data=params)
 
     def close_connection(self):
         if self.session:
