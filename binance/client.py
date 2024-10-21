@@ -9568,7 +9568,7 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/orderList', signed=True, data=params)
 
     async def get_open_margin_oco_orders(self, **params):
-        return await self._request_margin_api('get', 'margin/allOrderList', signed=True, data=params)
+        return await self._request_margin_api('get', 'margin/openOrderList', signed=True, data=params)
 
     # Cross-margin
 
