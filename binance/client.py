@@ -9247,8 +9247,7 @@ class Client(BaseClient):
         :returns: API response
 
         """
-        params['version'] = 2
-        return self._request_papi_api('get', 'um/account', signed=True, data=params)
+        return self._request_papi_api('get', 'um/account', version=2, signed=True, data=params)
 
 
     def papi_get_cm_account(self, **params):
