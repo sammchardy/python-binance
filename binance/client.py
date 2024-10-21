@@ -9390,7 +9390,7 @@ class Client(BaseClient):
 
     # Trade papi endpoints
 
-    def papi_um_order(self, **params):
+    def papi_create_um_order(self, **params):
         """Place new UM order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade
@@ -9403,7 +9403,7 @@ class Client(BaseClient):
         return self._request_papi_api('post', 'um/order', signed=True, data=params)
 
 
-    def papi_um_conditional_order(self, **params):
+    def papi_create_um_conditional_order(self, **params):
         """Place new UM Conditional order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Conditional-Order
@@ -9416,7 +9416,7 @@ class Client(BaseClient):
         return self._request_papi_api('post', 'um/conditional/order', signed=True, data=params)
 
 
-    def papi_cm_order(self, **params):
+    def papi_create_cm_order(self, **params):
         """Place new CM order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Order
@@ -9429,7 +9429,7 @@ class Client(BaseClient):
         return self._request_papi_api('post', 'cm/order', signed=True, data=params)
 
 
-    def papi_cm_conditional_order(self, **params):
+    def papi_create_cm_conditional_order(self, **params):
         """Place new CM Conditional order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Conditional-Order
@@ -9442,7 +9442,7 @@ class Client(BaseClient):
         return self._request_papi_api('post', 'cm/conditional/order', signed=True, data=params)
 
 
-    def papi_margin_order(self, **params):
+    def papi_create_margin_order(self, **params):
         """New Margin Order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-Margin-Order
@@ -11783,7 +11783,7 @@ class AsyncClient(BaseClient):
 
     # papi trading endpoints
 
-    async def papi_um_order(self, **params):
+    async def papi_create_um_order(self, **params):
         """Place new UM order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade
@@ -11796,7 +11796,7 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api('post', 'um/order', signed=True, data=params)
 
 
-    async def papi_um_conditional_order(self, **params):
+    async def papi_create_um_conditional_order(self, **params):
         """Place new UM Conditional order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Conditional-Order
@@ -11809,7 +11809,7 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api('post', 'um/conditional/order', signed=True, data=params)
 
 
-    async def papi_cm_order(self, **params):
+    async def papi_create_cm_order(self, **params):
         """Place new CM order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Order
@@ -11822,7 +11822,7 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api('post', 'cm/order', signed=True, data=params)
 
 
-    async def papi_cm_conditional_order(self, **params):
+    async def papi_create_cm_conditional_order(self, **params):
         """Place new CM Conditional order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Conditional-Order
@@ -11835,7 +11835,7 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api('post', 'cm/conditional/order', signed=True, data=params)
 
 
-    async def papi_margin_order(self, **params):
+    async def papi_create_margin_order(self, **params):
         """New Margin Order.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-Margin-Order
