@@ -6,15 +6,7 @@ import pytest
 import requests_mock
 import os
 
-proxies = {}
-proxy = os.getenv("PROXY")
-
-if proxy:
-    proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
-else:
-    print("No proxy set")
-
-client = Client("api_key", "api_secret", {'proxies': proxies})
+client = Client("api_key", "api_secret", ping=False)
 
 
 def test_exact_amount():
