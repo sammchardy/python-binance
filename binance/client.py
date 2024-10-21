@@ -1,5 +1,6 @@
 from base64 import b64encode
 from pathlib import Path
+import random
 from typing import Dict, Optional, List, Tuple, Union, Any
 
 import aiohttp
@@ -8,9 +9,9 @@ import hashlib
 import hmac
 import requests
 import time
-from Crypto.PublicKey import RSA
+from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
-from Crypto.Signature import pkcs1_15
+from Crypto.Signature import pkcs1_15, eddsa
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -63,6 +64,7 @@ class BaseClient:
     ORDER_STATUS_REJECTED = 'REJECTED'
     ORDER_STATUS_EXPIRED = 'EXPIRED'
 
+    KLINE_INTERVAL_1SECOND = '1s'
     KLINE_INTERVAL_1MINUTE = '1m'
     KLINE_INTERVAL_3MINUTE = '3m'
     KLINE_INTERVAL_5MINUTE = '5m'
@@ -135,6 +137,10 @@ class BaseClient:
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
 
+    ## order ids
+    SPOT_ORDER_PREFIX = "HNA2TXFJ"
+    CONTRACT_ORDER_PREFIX = "Cb7ytekJ"
+
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com', base_endpoint: str = BASE_ENDPOINT_DEFAULT,
@@ -170,6 +176,7 @@ class BaseClient:
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
+        self._is_rsa = False
         self.PRIVATE_KEY = self._init_private_key(private_key, private_key_pass)
         self.session = self._init_session()
         self._requests_params = requests_params
@@ -196,7 +203,10 @@ class BaseClient:
         if isinstance(private_key, Path):
             with open(private_key, "r") as f:
                 private_key = f.read()
-        return RSA.import_key(private_key, passphrase=private_key_pass)
+        if len(private_key) > 120:
+            self._is_rsa = True
+            return RSA.import_key(private_key, passphrase=private_key_pass)
+        return ECC.import_key(private_key)
 
     def _create_api_uri(self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION) -> str:
         url = self.API_URL
@@ -255,6 +265,10 @@ class BaseClient:
         signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
         return b64encode(signature).decode()
 
+    def _ed25519_signature(self, query_string: str):
+        assert self.PRIVATE_KEY
+        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode()
+
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
         m = hmac.new(self.API_SECRET.encode('utf-8'), query_string.encode('utf-8'), hashlib.sha256)
@@ -263,9 +277,16 @@ class BaseClient:
     def _generate_signature(self, data: Dict) -> str:
         sig_func = self._hmac_signature
         if self.PRIVATE_KEY:
-            sig_func = self._rsa_signature
+            if self._is_rsa:
+                sig_func = self._rsa_signature
+            else:
+                sig_func = self._ed25519_signature
         query_string = '&'.join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
         return sig_func(query_string)
+
+    @staticmethod
+    def uuid22(length=22):
+        return format(random.getrandbits(length * 4), 'x')
 
     @staticmethod
     def _order_params(data: Dict) -> List[Tuple[str, str]]:
@@ -326,6 +347,11 @@ class BaseClient:
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del kwargs['data']
 
+        #Temporary fix for Signature issue while using batchOrders in AsyncClient
+        if 'params' in kwargs.keys() and 'batchOrders' in kwargs['params']:
+            kwargs['data'] = kwargs['params']
+            del kwargs['params']
+
         return kwargs
 
 
@@ -335,13 +361,15 @@ class Client(BaseClient):
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT, testnet: bool = False,
-        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
+        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
+        ping: Optional[bool] = True
     ):
 
         super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
         # init DNS and SSL cert
-        self.ping()
+        if ping:
+            self.ping()
 
     def _init_session(self) -> requests.Session:
 
@@ -962,7 +990,7 @@ class Client(BaseClient):
         )
         return kline[0][0]
 
-    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                               klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance
 
@@ -986,7 +1014,7 @@ class Client(BaseClient):
             symbol, interval, start_str=start_str, end_str=end_str, limit=limit, klines_type=klines_type
         )
 
-    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                            klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines from Binance (spot or futures)
 
@@ -1010,6 +1038,12 @@ class Client(BaseClient):
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
 
         """
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
+
         # init our list
         output_data = []
 
@@ -1045,6 +1079,11 @@ class Client(BaseClient):
             if temp_data:
                 output_data += temp_data
 
+            # check if output_data is greater than limit and truncate if needed and break loop
+            if initial_limit_set and len(output_data) > limit:
+                output_data = output_data[:limit]
+                break
+
             # handle the case where exactly the limit amount of data was returned last loop
             # check if we received less than the required limit and exit the loop
             if not len(temp_data) or len(temp_data) < limit:
@@ -1065,7 +1104,7 @@ class Client(BaseClient):
 
         return output_data
 
-    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def get_historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance
 
@@ -1088,7 +1127,7 @@ class Client(BaseClient):
 
         return self._historical_klines_generator(symbol, interval, start_str, end_str, limit, klines_type=klines_type)
 
-    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    def _historical_klines_generator(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                      klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         """Get Historical Klines generator from Binance (spot or futures)
 
@@ -1110,6 +1149,11 @@ class Client(BaseClient):
         :return: generator of OHLCV values
 
         """
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
 
         # convert interval to useful value in seconds
         timeframe = interval_to_milliseconds(interval)
@@ -1445,6 +1489,8 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._post('order', True, data=params)
 
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -2251,11 +2297,12 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'system/status')
 
-    def get_account_status(self, **params):
+    def get_account_status(self, version=1,**params):
         """Get account status detail.
 
         https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
-
+        :param version: the api version
+        :param version: int
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
 
@@ -2268,7 +2315,11 @@ class Client(BaseClient):
             }
 
         """
-        return self._request_margin_api('get', 'account/status', True, data=params)
+        if self.tld == 'us':
+            path = 'accountStatus'
+        else:
+            path = 'account/status'
+        return self._request_margin_api('get', path, True, version, data=params)
 
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
@@ -2669,7 +2720,12 @@ class Client(BaseClient):
             ]
 
         """
-        return self._request_margin_api('get', 'asset/tradeFee', True, data=params)
+        if self.tld == 'us':
+            endpoint = 'asset/query/trading-fee'
+        else:
+            endpoint = 'asset/tradeFee'
+
+        return self._request_margin_api('get', endpoint, True, data=params)
 
     def get_asset_details(self, **params):
         """Fetch details on assets.
@@ -2703,6 +2759,35 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'asset/assetDetail', True, data=params)
+
+    def get_spot_delist_schedule(self, **params):
+        """Get symbols delist schedule for spot
+	
+	https://binance-docs.github.io/apidocs/spot/en/#get-symbols-delist-schedule-for-spot-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "symbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "symbols": [
+                        "ETHUSDT"
+                    ]
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/spot/delist-schedule', True, data=params)
 
     # Withdraw Endpoints
 
@@ -3212,9 +3297,383 @@ class Client(BaseClient):
               "symbol": "BTCUSDT"
             }
 
-
         """
         return self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
+
+    def get_enabled_isolated_margin_account_limit(self, **params):
+        """Query enabled isolated margin account limit.
+        
+        https://binance-docs.github.io/apidocs/spot/en/#query-enabled-isolated-margin-account-limit-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "enabledAccount": 5,
+                "maxAccount": 20
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/isolated/accountLimit', True, data=params)
+
+    def get_margin_dustlog(self, **params):
+        """
+        Query the historical information of user's margin account small-value asset conversion BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-dustlog-user_data
+
+        :param startTime: optional
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "total": 8, //Total counts of exchange
+                "userAssetDribblets": [
+                    {
+                        "operateTime": 1615985535000,
+                        "totalTransferedAmount": "0.00132256", // Total transfered BNB amount for this exchange.
+                        "totalServiceChargeAmount": "0.00002699", //Total service charge amount for this exchange.
+                        "transId": 45178372831,
+                        "userAssetDribbletDetails": [ //Details of  this exchange.
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.000009",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.000441",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4359321,
+                                "serviceChargeAmount": "0.00001799",
+                                "amount": "0.0009",
+                                "operateTime": 1615985535000,
+                                "transferedAmount": "0.00088156",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    },
+                    {
+                        "operateTime":1616203180000,
+                        "totalTransferedAmount": "0.00058795",
+                        "totalServiceChargeAmount": "0.000012",
+                        "transId": 4357015,
+                        "userAssetDribbletDetails": [
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.00001",
+                                "amount": "0.001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00049",
+                                "fromAsset": "USDT"
+                            },
+                            {
+                                "transId": 4357015,
+                                "serviceChargeAmount": "0.000002",
+                                "amount": "0.0001",
+                                "operateTime": 1616203180000,
+                                "transferedAmount": "0.00009795",
+                                "fromAsset": "ETH"
+                            }
+                        ]
+                    }
+                ]
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/dribblet', True, data=params)
+
+    def get_margin_dust_assets(self, **params):
+        """Get margin assets that can be converted into BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-dustlog-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "details": [
+                    {
+                        "asset": "ADA",
+                        "assetFullName": "ADA",
+                        "amountFree": "6.21",
+                        "toBTC": "0.00016848",
+                        "toBNB": "0.01777302",
+                        "toBNBOffExchange": "0.01741756",
+                        "exchange": "0.00035546"
+                    }
+                ],
+                "totalTransferBtc": "0.00016848",
+                "totalTransferBNB": "0.01777302",
+                "dribbletPercentage": "0.02"
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/dust', True, data=params)
+
+    def transfer_margin_dust(self, **params):
+        """Convert dust assets to BNB.
+
+        https://binance-docs.github.io/apidocs/spot/en/#dust-transfer-trade
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "totalServiceCharge":"0.02102542",
+                "totalTransfered":"1.05127099",
+                "transferResult":[
+                    {
+                        "amount":"0.03000000",
+                        "fromAsset":"ETH",
+                        "operateTime":1563368549307,
+                        "serviceChargeAmount":"0.00500000",
+                        "tranId":2970932918,
+                        "transferedAmount":"0.25000000"
+                    },
+                    {
+                        "amount":"0.09000000",
+                        "fromAsset":"LTC",
+                        "operateTime":1563368549404,
+                        "serviceChargeAmount":"0.01548000",
+                        "tranId":2970932918,
+                        "transferedAmount":"0.77400000"
+                    }
+                ]
+            }
+
+        """
+        return self._request_margin_api('post', 'margin/dust', True, data=params)
+
+    def get_cross_margin_collateral_ratio(self, **params):
+        """
+        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-collateral-ratio-market_data
+
+        :param none
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "collaterals": [
+                  {
+                    "minUsdValue": "0",
+                    "maxUsdValue": "13000000",
+                    "discountRate": "1"
+                  },
+                  {
+                    "minUsdValue": "13000000",
+                    "maxUsdValue": "20000000",
+                    "discountRate": "0.975"
+                  },
+                  {
+                    "minUsdValue": "20000000",
+                    "discountRate": "0"
+                  }
+                ],
+                "assetNames": [
+                  "BNX"
+                ]
+              },
+              {
+                "collaterals": [
+                  {
+                    "minUsdValue": "0",
+                    "discountRate": "1"
+                  }
+                ],
+                "assetNames": [
+                  "BTC",
+                  "BUSD",
+                  "ETH",
+                  "USDT"
+                ]
+              }
+            ]
+        """
+        return self._request_margin_api('get', 'margin/crossMarginCollateralRatio', True, data=params)
+
+    def get_small_liability_exchange_assets(self, **params):
+        """Query the coins which can be small liability exchange
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-coin-list-user_data
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                  "asset": "ETH",
+                  "interest": "0.00083334",
+                  "principal": "0.001",
+                  "liabilityAsset": "USDT",
+                  "liabilityQty": 0.3552
+                }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/exchange-small-liability', True, data=params)
+
+    def exchange_small_liability_assets(self, **params):
+        """Cross Margin Small Liability Exchange
+
+        https://binance-docs.github.io/apidocs/spot/en/#small-liability-exchange-margin
+
+        :param assetNames: The assets list of small liability exchange
+        :type assetNames: array
+
+        :returns: API response
+
+        .. code-block:: python
+        none
+
+        """
+        return self._request_margin_api('post', 'margin/exchange-small-liability', True, data=params)
+
+    def get_small_liability_exchange_history(self, **params):
+        """Get Small liability Exchange History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-history-user_data
+
+        :param current: Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: Default:10, Max:100
+        :type size: int
+        :param startTime: Default: 30 days from current timestamp
+        :type startTime: long
+        :param endTime: Default: present timestamp
+        :type endTIme: long
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "total": 1,
+                "rows": [
+                  {
+                    "asset": "ETH",
+                    "amount": "0.00083434",
+                    "targetAsset": "BUSD",
+                    "targetAmount": "1.37576819",
+                    "bizType": "EXCHANGE_SMALL_LIABILITY",
+                    "timestamp": 1672801339253
+                  }
+                ]
+            }
+
+        """
+        return self._request_margin_api('get', 'margin/exchange-small-liability-history', True, data=params)
+
+    def get_future_hourly_interest_rate(self, **params):
+        """Get user the next hourly estimate interest
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-a-future-hourly-interest-rate-user_data
+
+        :param assets: List of assets, separated by commas, up to 20
+        :type assets: str
+        :param isIsolated: for isolated margin or not, "TRUE", "FALSE"
+        :type isIsolated: bool
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "asset": "BTC",
+                    "nextHourlyInterestRate": "0.00000571"
+                },
+                {
+                    "asset": "ETH",
+                    "nextHourlyInterestRate": "0.00000578"
+                }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/next-hourly-interest-rate', True, data=params)
+
+    def get_margin_capital_flow(self, **params):
+        """Get cross or isolated margin capital flow
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-cross-or-isolated-margin-capital-flow-user_data
+
+        :param asset: optional
+        :type asset: str
+        :param symbol: Required when querying isolated data
+        :type symbol: str
+        :param type: optional
+        :type type: string
+        :param startTime: Only supports querying the data of the last 90 days
+        :type startTime: long
+        :param endTime: optional
+        :type endTime: long
+        :param formId: If fromId is set, the data with id > fromId will be returned. Otherwise the latest data will be returned
+        :type formId: long
+        :param limit: The number of data items returned each time is limited. Default 500; Max 1000.
+        :type limit: long
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "id": 123456,
+                "tranId": 123123,
+                "timestamp": 1691116657000,
+                "asset": "USDT,
+                "symbol": "BTCUSDT",
+                "type": "BORROW",
+                "amount": "101"
+              },
+              {
+                "id": 123457,
+                "tranId": 123124,
+                "timestamp": 1691116658000,
+                "asset": "BTC",
+                "symbol": "BTCUSDT",
+                "type": "REPAY",
+                "amount": "10"
+              }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/capital-flow', True, data=params)
+
+    def get_margin_delist_schedule(self, **params):
+        """Get tokens or symbols delist schedule for cross margin and isolated margin
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+              {
+                "delistTime": 1686161202000,
+                "crossMarginAssets": [
+                  "BTC",
+                  "USDT"
+                ],
+                "isolatedMarginSymbols": [
+                  "ADAUSDT",
+                  "BNBUSDT"
+                ]
+              },
+              {
+                "delistTime": 1686222232000,
+                "crossMarginAssets": [
+                  "ADA"
+                ],
+                "isolatedMarginSymbols": []
+              }
+            ]
+
+        """
+        return self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
 
     def get_margin_asset(self, **params):
         """Query cross-margin asset
@@ -3452,7 +3911,7 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
 
-    def isolated_margin_fee_data(self, **params):
+    def get_isolated_margin_fee_data(self, **params):
         """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
@@ -3461,11 +3920,10 @@ class Client(BaseClient):
         :type vipLevel: int
         :param symbol: optional
         :type symbol: str
-        :param recvWindow: optional: No more tahn 60000
-        :type recvWindow: long
 
         :returns: API response
 
+        .. code-block:: python
             [
                 {
                     "vipLevel": 0,
@@ -3488,8 +3946,8 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
 
-    def isolated_margin_tier_data(self, **params):
-        """
+    def get_isolated_margin_tier_data(self, **params):
+        """Get isolated margin tier data collection with any tier as https://www.binance.com/en/margin-data
 
         https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-tier-data-user_data
 
@@ -3501,7 +3959,8 @@ class Client(BaseClient):
         :type recvWindow:
 
         :returns: API response
-
+        
+        .. code-block:: python
             [
                 {
                     "symbol": "BTCUSDT",
@@ -3516,6 +3975,31 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
+
+    def margin_manual_liquidation(self, **params):
+        """
+
+        https://binance-docs.github.io/apidocs/spot/en/#margin-manual-liquidation-margin
+
+        
+
+        :param type: required
+        :type symbol: str: When type selected is "ISOLATED", symbol must be filled in
+
+        :returns: API response
+
+            [
+                {
+                    "asset": "ETH",
+                    "interest": "0.00083334",
+                    "principal": "0.001",
+                    "liabilityAsset": "USDT",
+                    "liabilityQty": 0.3552
+                }
+            ]
+
+        """
+        return self._request_margin_api('post', 'margin/manual-liquidation', True, data=params)
 
     def toggle_bnb_burn_spot_margin(self, **params):
         """Toggle BNB Burn On Spot Trade And Margin Interest
@@ -4566,6 +5050,40 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    def get_margin_delist_schedule(self, **params):
+        """Get tokens or symbols delist schedule for cross margin and isolated margin
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "delistTime": 1686161202000,
+                    "crossMarginAssets": [
+                        "BTC",
+                        "USDT"
+                    ],
+                    "isolatedMarginSymbols": [
+                        "ADAUSDT",
+                        "BNBUSDT"
+                    ]
+                },
+                {
+                    "delistTime": 1686222232000,
+                    "crossMarginAssets": [
+                        "ADA"
+                    ],
+                    "isolatedMarginSymbols": []
+                }
+            ]
+        """
+        return self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
@@ -6620,8 +7138,10 @@ class Client(BaseClient):
         return self._request_futures_api('get', 'forceOrders', signed=True, data=params)
 
     def futures_api_trading_status(self, **params):
-        """Get Position ADL Quantile Estimate
-
+        """Get quantitative trading rules for order placement, such as Unfilled Ratio (UFR), Good-Til-Canceled Ratio (GCR),
+        Immediate-or-Cancel (IOC) & Fill-or-Kill (FOK) Expire Ratio (IFER), among others.
+        https://www.binance.com/en/support/faq/binance-futures-trading-quantitative-rules-4f462ebe6ff445d4a170be7d9e897272
+        
         https://binance-docs.github.io/apidocs/futures/en/#futures-trading-quantitative-rules-indicators-user_data
 
         :param symbol: optional
@@ -6805,7 +7325,25 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_futures_api('post', 'order', True, data=params)
+
+    def futures_modify_order(self, **params):
+        """Modify an existing order. Currently only LIMIT order modification is supported.
+
+        https://binance-docs.github.io/apidocs/futures/en/#modify-order-trade
+
+        """
+        return self._request_futures_api('put', 'order', True, data=params)
+
+    def futures_create_test_order(self, **params):
+        """Testing order request, this order will not be submitted to matching engine
+
+        https://binance-docs.github.io/apidocs/futures/en/#test-order-trade
+
+        """
+        return self._request_futures_api('post', 'order/test', True, data=params)
 
     def futures_place_batch_order(self, **params):
         """Send in new orders.
@@ -6869,6 +7407,29 @@ class Client(BaseClient):
         """
         return self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    def futures_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
+	
+        :param symbol: required
+        :type symbol: str
+        :param countdownTime: required
+        :type countdownTime: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+	
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "symbol": "BTCUSDT", 
+            "countdownTime": "100000"
+        }
+
+        """
+        return self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     def futures_account_balance(self, **params):
         """Get futures account balance
 
@@ -8222,7 +8783,7 @@ class AsyncClient(BaseClient):
     async def _request_futures_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_futures_api_uri(path, version=version)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        return await self._request(method, uri, signed, False, **kwargs)
 
     async def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
@@ -8414,13 +8975,18 @@ class AsyncClient(BaseClient):
         return kline[0][0]
     _get_earliest_valid_timestamp.__doc__ = Client._get_earliest_valid_timestamp.__doc__
 
-    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    async def get_historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                     klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
         return await self._historical_klines(symbol, interval, start_str, end_str=end_str, limit=limit, klines_type=klines_type)
     get_historical_klines.__doc__ = Client.get_historical_klines.__doc__
 
-    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=1000,
+    async def _historical_klines(self, symbol, interval, start_str=None, end_str=None, limit=None,
                                  klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT):
+
+        initial_limit_set = True
+        if limit is None:
+            limit = 1000
+            initial_limit_set = False
 
         # init our list
         output_data = []
@@ -8454,6 +9020,11 @@ class AsyncClient(BaseClient):
             # append this loops data to our output data
             if temp_data:
                 output_data += temp_data
+
+            # check if output_data is greater than limit and truncate if needed and break loop
+            if initial_limit_set and len(output_data) > limit:
+                output_data = output_data[:limit]
+                break
 
             # handle the case where exactly the limit amount of data was returned last loop
             # or check if we received less than the required limit and exit the loop
@@ -8558,6 +9129,8 @@ class AsyncClient(BaseClient):
     # Account Endpoints
 
     async def create_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._post('order', True, data=params)
     create_order.__doc__ = Client.create_order.__doc__
 
@@ -8718,12 +9291,19 @@ class AsyncClient(BaseClient):
     query_universal_transfer_history.__doc__ = Client.query_universal_transfer_history.__doc__
 
     async def get_trade_fee(self, **params):
-        return await self._request_margin_api('get', 'asset/tradeFee', True, data=params)
+        if self.tld == 'us':
+            endpoint = 'asset/query/trading-fee'
+        else:
+            endpoint = 'asset/tradeFee'
+        return await self._request_margin_api('get', endpoint, True, data=params)
     get_trade_fee.__doc__ = Client.get_trade_fee.__doc__
 
     async def get_asset_details(self, **params):
         return await self._request_margin_api('get', 'asset/assetDetail', True, data=params)
     get_asset_details.__doc__ = Client.get_asset_details.__doc__
+
+    async def get_spot_delist_schedule(self, **params):
+        return await self._request_margin_api('get', '/spot/delist-schedule', signed=True, data=params)
 
     # Withdraw Endpoints
 
@@ -8797,6 +9377,50 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('delete', 'margin/isolated/account', True, data=params)
     disable_isolated_margin_account.__doc__ = Client.disable_isolated_margin_account.__doc__
 
+    async def get_enabled_isolated_margin_account_limit(self, **params):
+        return await self._request_margin_api('get', 'margin/isolated/accountLimit', True, data=params)
+    get_enabled_isolated_margin_account_limit.__doc__ = Client.get_enabled_isolated_margin_account_limit.__doc__
+
+    async def get_margin_dustlog(self, **params):
+        return await self._request_margin_api('get', 'margin/dribblet', True, data=params)
+    get_margin_dustlog.__doc__ = Client.get_margin_dustlog.__doc__
+
+    async def get_margin_dust_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/dust', True, data=params)
+    get_margin_dust_assets.__doc__ = Client.get_margin_dust_assets.__doc__
+
+    async def transfer_margin_dust(self, **params):
+        return await self._request_margin_api('post', 'margin/dust', True, data=params)
+    transfer_margin_dust.__doc__ = Client.transfer_margin_dust.__doc__
+
+    async def get_cross_margin_collateral_ratio(self, **params):
+        return await self._request_margin_api('get', 'margin/crossMarginCollateralRatio', True, data=params)
+    get_cross_margin_collateral_ratio.__doc__ = Client.get_cross_margin_collateral_ratio.__doc__
+
+    async def get_small_liability_exchange_assets(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability', True, data=params)
+    get_small_liability_exchange_assets.__doc__ = Client.get_small_liability_exchange_assets.__doc__
+
+    async def exchange_small_liability_assets(self, **params):
+        return await self._request_margin_api('post', 'margin/exchange-small-liability', True, data=params)
+    exchange_small_liability_assets.__doc__ = Client.exchange_small_liability_assets.__doc__
+
+    async def get_small_liability_exchange_history(self, **params):
+        return await self._request_margin_api('get', 'margin/exchange-small-liability-history', True, data=params)
+    get_small_liability_exchange_history.__doc__ = Client.get_small_liability_exchange_history.__doc__
+
+    async def get_future_hourly_interest_rate(self, **params):
+        return await self._request_margin_api('get', 'margin/next-hourly-interest-rate', True, data=params)
+    get_future_hourly_interest_rate.__doc__ = Client.get_future_hourly_interest_rate.__doc__
+
+    async def get_margin_capital_flow(self, **params):
+        return await self._request_margin_api('get', 'margin/capital-flow', True, data=params)
+    get_margin_capital_flow.__doc__ = Client.get_margin_capital_flow.__doc__
+
+    async def get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
+    get_margin_delist_schedule.__doc__ = Client.get_margin_delist_schedule.__doc__
+    
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
     get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
@@ -8825,13 +9449,17 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'margin/isolated/allPairs', signed=True, data=params)
     get_all_isolated_margin_symbols.__doc__ = Client.get_all_isolated_margin_symbols.__doc__
 
-    async def isolated_margin_fee_data(self, **params):
+    async def get_isolated_margin_fee_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginData', True, data=params)
-    isolated_margin_fee_data.__doc__ = Client.isolated_margin_fee_data.__doc__
+    get_isolated_margin_fee_data.__doc__ = Client.get_isolated_margin_fee_data.__doc__
 
-    async def isolated_margin_tier_data(self, **params):
+    async def get_isolated_margin_tier_data(self, **params):
         return await self._request_margin_api('get', 'margin/isolatedMarginTier', True, data=params)
-    isolated_margin_tier_data.__doc__ = Client.isolated_margin_tier_data.__doc__
+    get_isolated_margin_tier_data.__doc__ = Client.get_isolated_margin_tier_data.__doc__
+
+    async def margin_manual_liquidation(self, **params):
+        return await self._request_margin_api('get', 'margin/manual-liquidation', True, data=params)
+    margin_manual_liquidation.__doc__ = Client.margin_manual_liquidation.__doc__
 
     async def toggle_bnb_burn_spot_margin(self, **params):
         return await self._request_margin_api('post', 'bnbBurn', signed=True, data=params)
@@ -8924,6 +9552,9 @@ class AsyncClient(BaseClient):
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
+
+    async def get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
@@ -9260,7 +9891,12 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'futures/loan/interestHistory', True, data=params)
 
     async def futures_create_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_api('post', 'order', True, data=params)
+
+    async def futures_create_test_order(self, **params):
+        return await self._request_futures_api('post', 'order/test', True, data=params)
 
     async def futures_place_batch_order(self, **params):
         query_string = urlencode(params)
@@ -9286,6 +9922,9 @@ class AsyncClient(BaseClient):
     async def futures_cancel_orders(self, **params):
         return await self._request_futures_api('delete', 'batchOrders', True, data=params)
 
+    async def futures_countdown_cancel_all(self, **params):
+        return await self._request_futures_api('post', 'countdownCancelAll', True, data=params)
+    
     async def futures_account_balance(self, **params):
         return await self._request_futures_api('get', 'balance', True, version=2, data=params)
 

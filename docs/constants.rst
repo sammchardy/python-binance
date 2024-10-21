@@ -15,6 +15,7 @@ Binance requires specific string constants for Order Types, Order Side, Time in 
     ORDER_STATUS_REJECTED = 'REJECTED'
     ORDER_STATUS_EXPIRED = 'EXPIRED'
 
+    KLINE_INTERVAL_1SECOND = '1s'
     KLINE_INTERVAL_1MINUTE = '1m'
     KLINE_INTERVAL_3MINUTE = '3m'
     KLINE_INTERVAL_5MINUTE = '5m'
