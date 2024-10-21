@@ -8822,6 +8822,275 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'margin/maxBorrowable', signed=True, data=params)
 
+
+    def papi_get_margin_max_withdraw(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-Max-Withdraw
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'margin/maxWithdraw', signed=True, data=params)
+
+
+    def papi_get_um_position_risk(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-UM-Position-Information
+
+        :param symbol: required
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/positionRisk', signed=True, data=params)
+
+
+
+    def papi_get_cm_position_risk(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-CM-Position-Information
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/positionRisk', signed=True, data=params)
+
+
+
+    def papi_set_um_leverage(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-UM-Initial-Leverage
+
+        :param asset: required
+        :type asset: str
+
+        :param leverage: required
+        :type leverage: int
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'um/leverage', signed=True, data=params)
+
+
+    def papi_set_cm_leverage(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-CM-Initial-Leverage
+
+        :param asset: required
+        :type asset: str
+
+        :param leverage: required
+        :type leverage: int
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'cm/leverage', signed=True, data=params)
+
+
+    def papi_set_um_leverage(self, **params):
+        """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-UM-Position-Mode
+
+        :param dualSidePosition: required
+        :type dualSidePosition: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'um/positionSide/dual', signed=True, data=params)
+
+
+    def papi_get_um_position_side_dual(self, **params):
+        """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Current-Position-Mode
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/positionSide/dual', signed=True, data=params)
+
+
+    def papi_get_cm_position_side_dual(self, **params):
+        """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Current-Position-Mode
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/positionSide/dual', signed=True, data=params)
+
+
+    def papi_get_um_leverage_bracket(self, **params):
+        """Query UM notional and leverage brackets.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Margin-Max-Borrow
+
+        :param symbol: optional
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/leverageBracket', signed=True, data=params)
+
+
+    def papi_get_cm_leverage_bracket(self, **params):
+        """Query CM notional and leverage brackets.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/CM-Notional-and-Leverage-Brackets
+
+        :param symbol: optional
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/leverageBracket', signed=True, data=params)
+
+    def papi_get_um_api_trading_status(self, **params):
+        """Portfolio Margin UM Trading Quantitative Rules Indicators.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Portfolio-Margin-UM-Trading-Quantitative-Rules-Indicators
+
+        :param symbol: optional
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/apiTradingStatus', signed=True, data=params)
+
+
+    def papi_get_um_comission_rate(self, **params):
+        """Get User Commission Rate for UM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-User-Commission-Rate-for-UM
+
+        :param symbol: required
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/commissionRate', signed=True, data=params)
+
+
+    def papi_get_cm_comission_rate(self, **params):
+        """Get User Commission Rate for CM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-User-Commission-Rate-for-CM
+
+        :param symbol: required
+        :type symbol: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/commissionRate', signed=True, data=params)
+
+    def papi_get_margin_margin_loan(self, **params):
+        """Query margin loan record.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-Loan-Record
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'margin/marginLoan', signed=True, data=params)
+
+    def papi_get_margin_repay_loan(self, **params):
+        """Query margin repay record.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Margin-repay-Record
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'margin/repayLoan', signed=True, data=params)
+
+
+    def papi_get_repay_futures_switch(self, **params):
+        """Query Auto-repay-futures Status.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Auto-repay-futures-Status
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'repay-futures-switch', signed=True, data=params)
+
+
     def close_connection(self):
         if self.session:
             self.session.close()
