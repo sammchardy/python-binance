@@ -9091,6 +9091,290 @@ class Client(BaseClient):
         return self._request_margin_api('get', 'repay-futures-switch', signed=True, data=params)
 
 
+    def papi_repay_futures_switch(self, **params):
+        """Change Auto-repay-futures Status.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-Auto-repay-futures-Status
+
+        :param autoRepay: required
+        :type autoRepay: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'repay-futures-switch', signed=True, data=params)
+
+
+    def papi_get_margin_interest_history(self, **params):
+        """Get Margin Borrow/Loan Interest History.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Margin-BorrowLoan-Interest-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'margin/marginInterestHistory', signed=True, data=params)
+
+
+    def papi_repay_futures_negative_balance(self, **params):
+        """Repay futures Negative Balance.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Repay-futures-Negative-Balance
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'repay-futures-negative-balance', signed=True, data=params)
+
+
+    def papi_get_portfolio_interest_history(self, **params):
+        """GQuery interest history of negative balance for portfolio margin.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Portfolio-Margin-Negative-Balance-Interest-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'portfolio/interest-history', signed=True, data=params)
+
+
+    def papi_fund_auto_collection(self, **params):
+        """Fund collection for Portfolio Margin.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Fund-Auto-collection
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'auto-collection', signed=True, data=params)
+
+
+    def papi_fund_asset_collection(self, **params):
+        """Transfers specific asset from Futures Account to Margin account.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Fund-Collection-by-Asset
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'asset-collection', signed=True, data=params)
+
+
+    def papi_bnb_transfer(self, **params):
+        """Transfer BNB in and out of UM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/BNB-transfer
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('post', 'bnb-transfer', signed=True, data=params)
+
+
+    def papi_get_um_income_history(self, **params):
+        """Get UM Income History.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Income-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/income', signed=True, data=params)
+
+
+    def papi_get_cm_income_history(self, **params):
+        """Get CM Income History.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Income-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/income', signed=True, data=params)
+
+
+    def papi_get_um_account(self, **params):
+        """Get current UM account asset and position information.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/account', signed=True, data=params)
+
+    def papi_get_um_account_v2(self, **params):
+        """Get current UM account asset and position information.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        params['version'] = 2
+        return self._request_margin_api('get', 'um/account', signed=True, data=params)
+
+
+    def papi_get_cm_account(self, **params):
+        """Get current CM account asset and position information.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-CM-Account-Detail
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'cm/account', signed=True, data=params)
+
+
+    def papi_get_um_account_config(self, **params):
+        """Query UM Futures account configuration.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Account-Config
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/accountConfig', signed=True, data=params)
+
+
+    def papi_get_um_symbol_config(self, **params):
+        """Get current UM account symbol configuration.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Symbol-Config
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/symbolConfig', signed=True, data=params)
+
+
+    def papi_get_um_trade_asyn(self, **params):
+        """Get download id for UM futures trade history.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Trade-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/trade/asyn', signed=True, data=params)
+
+
+    def papi_get_um_trade_asyn_id(self, **params):
+        """Get UM futures trade download link by Id.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Trade-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/trade/asyn/id', signed=True, data=params)
+
+
+
+    def papi_get_um_order_asyn(self, **params):
+        """Get download id for UM futures order history.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Order-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/order/asyn', signed=True, data=params)
+
+
+    def papi_get_um_order_asyn_id(self, **params):
+        """Get UM futures order download link by Id.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Order-Download-Link-by-Id
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/order/asyn/id', signed=True, data=params)
+
+
+    def papi_get_um_income_asyn(self, **params):
+        """Get download id for UM futures transaction history.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Transaction-History
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/income/asyn', signed=True, data=params)
+
+
+    def papi_get_um_income_asyn_id(self, **params):
+        """Get UM futures Transaction download link by Id.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Transaction-Download-Link-by-Id
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'um/income/asyn/id', signed=True, data=params)
+
+
     def close_connection(self):
         if self.session:
             self.session.close()
