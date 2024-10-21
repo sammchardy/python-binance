@@ -9506,6 +9506,12 @@ class AsyncClient(BaseClient):
 
         return await self._request(method, uri, signed, **kwargs)
 
+    async def _request_papi_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        version = self._get_version(version, **kwargs)
+        uri = self._create_papi_api_uri(path, version)
+
+        return await self._request(method, uri, signed, **kwargs)
+
     async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
         return await self._request(method, uri, signed, **kwargs)
@@ -10995,3 +11001,159 @@ class AsyncClient(BaseClient):
     async def convert_accept_quote(self, **params):
         return await self._request_margin_api('post', 'convert/acceptQuote', signed=True, data=params)
     convert_accept_quote.__doc__ = Client.convert_accept_quote.__doc__
+
+    """
+    ====================================================================================================================
+    PortfolioMargin API
+    ====================================================================================================================
+    """
+
+    async def papi_get_balance(self, **params):
+        return await self._request_papi_api('get', 'balance', signed=True, data=params)
+
+    async def papi_get_account(self, **params):
+        return await self._request_papi_api('get', 'account', signed=True, data=params)
+
+    async def papi_get_margin_max_borrowable(self, **params):
+        return await self._request_papi_api('get', 'margin/maxBorrowable', signed=True, data=params)
+
+    async def papi_get_margin_max_withdraw(self, **params):
+        return await self._request_papi_api('get', 'margin/maxWithdraw', signed=True, data=params)
+
+    async def papi_get_um_position_risk(self, **params):
+        return await self._request_papi_api('get', 'um/positionRisk', signed=True, data=params)
+
+    async def papi_get_cm_position_risk(self, **params):
+        return await self._request_papi_api('get', 'cm/positionRisk', signed=True, data=params)
+
+    async def papi_set_um_leverage(self, **params):
+        return await self._request_papi_api('post', 'um/leverage', signed=True, data=params)
+
+
+    async def papi_set_cm_leverage(self, **params):
+        return await self._request_papi_api('post', 'cm/leverage', signed=True, data=params)
+
+
+    async def papi_change_um_position_side_dual(self, **params):
+        return await self._request_papi_api('post', 'um/positionSide/dual', signed=True, data=params)
+
+
+    async def papi_get_um_position_side_dual(self, **params):
+        return await self._request_papi_api('get', 'um/positionSide/dual', signed=True, data=params)
+
+
+    async def papi_get_cm_position_side_dual(self, **params):
+        return await self._request_papi_api('get', 'cm/positionSide/dual', signed=True, data=params)
+
+
+    async def papi_get_um_leverage_bracket(self, **params):
+        return await self._request_papi_api('get', 'um/leverageBracket', signed=True, data=params)
+
+
+    async def papi_get_cm_leverage_bracket(self, **params):
+        return await self._request_papi_api('get', 'cm/leverageBracket', signed=True, data=params)
+
+    async def papi_get_um_api_trading_status(self, **params):
+        return await self._request_papi_api('get', 'um/apiTradingStatus', signed=True, data=params)
+
+
+    async def papi_get_um_comission_rate(self, **params):
+        return await self._request_papi_api('get', 'um/commissionRate', signed=True, data=params)
+
+
+    async def papi_get_cm_comission_rate(self, **params):
+        return await self._request_papi_api('get', 'cm/commissionRate', signed=True, data=params)
+
+    async def papi_get_margin_margin_loan(self, **params):
+        return await self._request_papi_api('get', 'margin/marginLoan', signed=True, data=params)
+
+    async def papi_get_margin_repay_loan(self, **params):
+        return await self._request_papi_api('get', 'margin/repayLoan', signed=True, data=params)
+
+
+    async def papi_get_repay_futures_switch(self, **params):
+        return await self._request_papi_api('get', 'repay-futures-switch', signed=True, data=params)
+
+
+    async def papi_repay_futures_switch(self, **params):
+        return await self._request_papi_api('post', 'repay-futures-switch', signed=True, data=params)
+
+
+    async def papi_get_margin_interest_history(self, **params):
+        return await self._request_papi_api('get', 'margin/marginInterestHistory', signed=True, data=params)
+
+
+    async def papi_repay_futures_negative_balance(self, **params):
+        return await self._request_papi_api('post', 'repay-futures-negative-balance', signed=True, data=params)
+
+
+    async def papi_get_portfolio_interest_history(self, **params):
+        return await self._request_papi_api('get', 'portfolio/interest-history', signed=True, data=params)
+
+
+    async def papi_fund_auto_collection(self, **params):
+        return await self._request_papi_api('post', 'auto-collection', signed=True, data=params)
+
+
+    async def papi_fund_asset_collection(self, **params):
+        return await self._request_papi_api('post', 'asset-collection', signed=True, data=params)
+
+
+    async def papi_bnb_transfer(self, **params):
+        return await self._request_papi_api('post', 'bnb-transfer', signed=True, data=params)
+
+
+    async def papi_get_um_income_history(self, **params):
+        return await self._request_papi_api('get', 'um/income', signed=True, data=params)
+
+
+    async def papi_get_cm_income_history(self, **params):
+        return await self._request_papi_api('get', 'cm/income', signed=True, data=params)
+
+
+    async def papi_get_um_account(self, **params):
+        return await self._request_papi_api('get', 'um/account', signed=True, data=params)
+
+    async def papi_get_um_account_v2(self, **params):
+        return await self._request_papi_api('get', 'um/account', version=2, signed=True, data=params)
+
+
+    async def papi_get_cm_account(self, **params):
+        return await self._request_papi_api('get', 'cm/account', signed=True, data=params)
+
+
+    async def papi_get_um_account_config(self, **params):
+        return await self._request_papi_api('get', 'um/accountConfig', signed=True, data=params)
+
+
+    async def papi_get_um_symbol_config(self, **params):
+        return await self._request_papi_api('get', 'um/symbolConfig', signed=True, data=params)
+
+
+    async def papi_get_um_trade_asyn(self, **params):
+        return await self._request_papi_api('get', 'um/trade/asyn', signed=True, data=params)
+
+
+    async def papi_get_um_trade_asyn_id(self, **params):
+        return await self._request_papi_api('get', 'um/trade/asyn/id', signed=True, data=params)
+
+
+
+    async def papi_get_um_order_asyn(self, **params):
+        return await self._request_papi_api('get', 'um/order/asyn', signed=True, data=params)
+
+
+    async def papi_get_um_order_asyn_id(self, **params):
+        return await self._request_papi_api('get', 'um/order/asyn/id', signed=True, data=params)
+
+
+    async def papi_get_um_income_asyn(self, **params):
+        return await self._request_papi_api('get', 'um/income/asyn', signed=True, data=params)
+
+
+    async def papi_get_um_income_asyn_id(self, **params):
+        return await self._request_papi_api('get', 'um/income/asyn/id', signed=True, data=params)
+
+
+    async def papi_ping(self, **params):
+        return await self._request_papi_api('get', 'ping', signed=False, data=params)
