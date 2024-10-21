@@ -35,6 +35,7 @@ class BaseClient:
     FUTURES_COIN_DATA_TESTNET_URL = 'https://testnet.binancefuture.com/futures/data'
     OPTIONS_URL = 'https://eapi.binance.{}/eapi'
     OPTIONS_TESTNET_URL = 'https://testnet.binanceops.{}/eapi'
+    PORTFOLIO_URL = 'https://papi.binance.{}/papi/'
     PUBLIC_API_VERSION = 'v1'
     PRIVATE_API_VERSION = 'v3'
     MARGIN_API_VERSION = 'v1'
@@ -44,6 +45,8 @@ class BaseClient:
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = 'v2'
     OPTIONS_API_VERSION = 'v1'
+    PORTFOLIO_API_VERSION = 'v1'
+
 
     BASE_ENDPOINT_DEFAULT = ''
     BASE_ENDPOINT_1 = '1'
@@ -218,6 +221,12 @@ class BaseClient:
             4: self.MARGIN_API_VERSION4,
         }
         return self.MARGIN_API_URL + '/' + options[version] + '/' + path
+
+    def _create_papi_api_uri(self, path: str, version: int = 1) -> str:
+        options = {
+            1: self.PORTFOLIO_API_VERSION,
+        }
+        return self.PORTFOLIO_URL.format(self.tld) + '/' + options[version] + '/' + path
 
     def _create_website_uri(self, path: str) -> str:
         return self.WEBSITE_URL + '/' + path
@@ -422,6 +431,10 @@ class Client(BaseClient):
     def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         uri = self._create_margin_api_uri(path, version)
 
+        return self._request(method, uri, signed, **kwargs)
+
+    def _request_papi_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        uri = self._create_papi_api_uri(path, version)
         return self._request(method, uri, signed, **kwargs)
 
     def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
@@ -8679,6 +8692,57 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('post', 'convert/acceptQuote', signed=True, data=params)
+
+    """
+    ====================================================================================================================
+    PortfolioMargin API
+    ====================================================================================================================
+    """
+
+    def papi_get_balance(self, **params):
+        """Query account balance.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'balance', signed=True, data=params)
+
+    def papi_get_account(self, **params):
+        """Query account information.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Account-Information
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'account', signed=True, data=params)
+
+    def papi_get_margin_max_borrowable(self, **params):
+        """Query margin max borrow.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Margin-Max-Borrow
+
+        :param asset: required
+        :type asset: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'margin/maxBorrowable', signed=True, data=params)
 
     def close_connection(self):
         if self.session:
