@@ -9376,6 +9376,7 @@ class Client(BaseClient):
         """
         return self._request_papi_api('get', 'um/income/asyn/id', signed=True, data=params)
 
+    # Public papi endpoints
 
     def papi_ping(self, **params):
         """Test connectivity to the Rest API.
@@ -9386,6 +9387,279 @@ class Client(BaseClient):
 
         """
         return self._request_papi_api('get', 'ping', signed=False, data=params)
+
+    # Trade papi endpoints
+
+    def papi_um_order(self, **params):
+        """Place new UM order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade
+
+        :returns: API response
+
+        """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_papi_api('post', 'um/order', signed=True, data=params)
+
+
+    def papi_um_conditional_order(self, **params):
+        """Place new UM Conditional order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-UM-Conditional-Order
+
+        :returns: API response
+
+        """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_papi_api('post', 'um/conditional/order', signed=True, data=params)
+
+
+    def papi_cm_order(self, **params):
+        """Place new CM order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Order
+
+        :returns: API response
+
+        """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_papi_api('post', 'cm/order', signed=True, data=params)
+
+
+    def papi_cm_conditional_order(self, **params):
+        """Place new CM Conditional order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-CM-Conditional-Order
+
+        :returns: API response
+
+        """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_papi_api('post', 'cm/conditional/order', signed=True, data=params)
+
+
+    def papi_margin_order(self, **params):
+        """New Margin Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/New-Margin-Order
+
+        :returns: API response
+
+        """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_papi_api('post', 'margin/order', signed=True, data=params)
+
+
+    def papi_margin_loan(self, **params):
+        """Apply for a margin loan.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Borrow
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('post', 'marginLoan', signed=True, data=params)
+
+
+    def papi_repay_loan(self, **params):
+        """Repay for a margin loan.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Repay
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('post', 'repayLoan', signed=True, data=params)
+
+
+    def papi_margin_order_oco(self, **params):
+        """Send in a new OCO for a margin account.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-New-OCO
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('post', 'margin/order/oco', signed=True, data=params)
+
+
+    def papi_cancel_um_order(self, **params):
+        """Cancel an active UM LIMIT order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'um/order', signed=True, data=params)
+
+    def papi_cancel_um_all_open_orders(self, **params):
+        """Cancel an active UM LIMIT order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Open-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'um/allOpenOrders', signed=True, data=params)
+
+
+    def papi_cancel_um_conditional_order(self, **params):
+        """Cancel UM Conditional Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-UM-Conditional-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'um/conditional/order', signed=True, data=params)
+
+
+    def papi_cancel_um_conditional_all_open_orders(self, **params):
+        """Cancel All UM Open Conditional Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-UM-Open-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'um/conditional/allOpenOrders', signed=True, data=params)
+
+
+    def papi_cancel_cm_order(self, **params):
+        """Cancel an active CM LIMIT order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-CM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'cm/order', signed=True, data=params)
+
+    def papi_cancel_cm_all_open_orders(self, **params):
+        """Cancel an active CM LIMIT order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-CM-Open-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'cm/allOpenOrders', signed=True, data=params)
+
+    def papi_cancel_cm_conditional_order(self, **params):
+        """Cancel CM Conditional Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-CM-Conditional-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'cm/conditional/order', signed=True, data=params)
+
+
+    def papi_cancel_cm_conditional_all_open_orders(self, **params):
+        """Cancel All CM Open Conditional Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-All-CM-Open-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'cm/conditional/allOpenOrders', signed=True, data=params)
+
+
+    def papi_cancel_margin_order(self, **params):
+        """Cancel Margin Account Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'margin/order', signed=True, data=params)
+
+
+    def papi_cancel_margin_order_list(self, **params):
+        """Cancel Margin Account OCO Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-OCO-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'margin/orderList', signed=True, data=params)
+
+
+    def papi_cancel_margin_all_open_orders(self, **params):
+        """Cancel Margin Account All Open Orders on a Symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Cancel-Margin-Account-All-Open-Orders-on-a-Symbol
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('delete', 'margin/allOpenOrders', signed=True, data=params)
+
+
+    def papi_modify_um_order(self, **params):
+        """Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Modify-UM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('put', 'um/order', signed=True, data=params)
+
+
+    def papi_modify_cm_order(self, **params):
+        """Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Modify-CM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('put', 'cm/order', signed=True, data=params)
+
+    def papi_get_um_order(self, **params):
+        """Check an UM order's status.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/order', signed=True, data=params)
+
+
+    def papi_get_um_all_orders(self, **params):
+        """Get all account UM orders; active, canceled, or filled.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/allOrders', signed=True, data=params)
+
+
+    def papi_get_um_open_order(self, **params):
+        """Query current UM open order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/openOrder', signed=True, data=params)
+
+
 
     def close_connection(self):
         if self.session:
