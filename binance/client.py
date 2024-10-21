@@ -4476,6 +4476,8 @@ class Client(BaseClient):
             BinanceOrderInactiveSymbolException
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._request_margin_api('post', 'margin/order', signed=True, data=params)
 
     def cancel_margin_order(self, **params):
@@ -8392,6 +8394,8 @@ class Client(BaseClient):
         :type recvWindow: int
 
         """
+        if 'clientOrderId' not in params:
+            params['clientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_options_api('post', 'order', signed=True, data=params)
 
     def options_place_batch_order(self, **params):
@@ -9521,6 +9525,8 @@ class AsyncClient(BaseClient):
     repay_margin_loan.__doc__ = Client.repay_margin_loan.__doc__
 
     async def create_margin_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._request_margin_api('post', 'margin/order', signed=True, data=params)
     create_margin_order.__doc__ = Client.create_margin_order.__doc__
 
@@ -10243,6 +10249,8 @@ class AsyncClient(BaseClient):
         return await self._request_options_api('post', 'bill', signed=True, data=params)
 
     async def options_place_order(self, **params):
+        if 'clientOrderId' not in params:
+            params['clientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_options_api('post', 'order', signed=True, data=params)
 
     async def options_place_batch_order(self, **params):
