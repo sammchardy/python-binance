@@ -1,6 +1,6 @@
 import asyncio
 import gzip
-import json
+import orjson as json
 import logging
 import time
 from asyncio import sleep
