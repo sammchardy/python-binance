@@ -9682,6 +9682,336 @@ class Client(BaseClient):
         return self._request_papi_api('get', 'um/conditional/allOrders', signed=True, data=params)
 
 
+    def papi_get_um_conditional_open_orders(self, **params):
+        """Get all open conditional orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/conditional/openOrders', signed=True, data=params)
+
+
+    def papi_get_um_conditional_open_order(self, **params):
+        """Query Current UM Open Conditional Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-UM-Open-Conditional-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/conditional/openOrder', signed=True, data=params)
+
+
+    def papi_get_um_conditional_order_history(self, **params):
+        """Get all open conditional orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Conditional-Order-History
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/conditional/orderHistory', signed=True, data=params)
+
+
+
+    def papi_get_cm_order(self, **params):
+        """Check an CM order's status.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/order', signed=True, data=params)
+
+
+    def papi_get_cm_all_orders(self, **params):
+        """Get all account CM orders; active, canceled, or filled.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/allOrders', signed=True, data=params)
+
+
+    def papi_get_cm_open_order(self, **params):
+        """Query current CM open order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-CM-Open-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/openOrder', signed=True, data=params)
+
+
+    def papi_get_cm_open_orders(self, **params):
+        """Get all open orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-CM-Open-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/openOrders', signed=True, data=params)
+
+
+    def papi_get_cm_conditional_all_orders(self, **params):
+        """Query All CM Conditional Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-CM-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/conditional/allOrders', signed=True, data=params)
+
+
+    def papi_get_cm_conditional_open_orders(self, **params):
+        """Get all open conditional orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-CM-Open-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/conditional/openOrders', signed=True, data=params)
+
+
+    def papi_get_cm_conditional_open_order(self, **params):
+        """Query Current UM Open Conditional Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-CM-Open-Conditional-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/conditional/openOrder', signed=True, data=params)
+
+
+    def papi_get_cm_conditional_order_history(self, **params):
+        """Get all open conditional orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Conditional-Order-History
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/conditional/orderHistory', signed=True, data=params)
+
+
+    def papi_get_um_force_orders(self, **params):
+        """Query User's UM Force Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-UM-Force-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/forceOrders', signed=True, data=params)
+
+
+    def papi_get_cm_force_orders(self, **params):
+        """Query User's CM Force Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-CM-Force-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/forceOrders', signed=True, data=params)
+
+
+    def papi_get_um_order_amendment(self, **params):
+        """Get order modification history.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Modify-Order-History
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/orderAmendment', signed=True, data=params)
+
+
+    def papi_get_cm_order_amendment(self, **params):
+        """Get order modification history.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Modify-Order-History
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/orderAmendment', signed=True, data=params)
+
+
+    def papi_get_margin_force_orders(self, **params):
+        """Query user's margin force orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Users-Margin-Force-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/forceOrders', signed=True, data=params)
+
+    def papi_get_um_user_trades(self, **params):
+        """Get trades for a specific account and UM symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/UM-Account-Trade-List
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/userTrades', signed=True, data=params)
+
+
+    def papi_get_cm_user_trades(self, **params):
+        """Get trades for a specific account and CM symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/CM-Account-Trade-List
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/userTrades', signed=True, data=params)
+
+
+    def papi_get_um_adl_quantile(self, **params):
+        """Query UM Position ADL Quantile Estimation.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/UM-Position-ADL-Quantile-Estimation
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/adlQuantile', signed=True, data=params)
+
+
+    def papi_get_cm_adl_quantile(self, **params):
+        """Query CM Position ADL Quantile Estimation.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/CM-Position-ADL-Quantile-Estimation
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'cm/adlQuantile', signed=True, data=params)
+
+
+    def papi_set_um_fee_burn(self, **params):
+        """Change user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off ) on EVERY symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Toggle-BNB-Burn-On-UM-Futures-Trade
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('post', 'um/feeBurn', signed=True, data=params)
+
+
+    def papi_get_um_fee_burn(self, **params):
+        """Get user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off).
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Get-UM-Futures-BNB-Burn-Status
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/feeBurn', signed=True, data=params)
+
+
+    def papi_get_margin_order(self, **params):
+        """Query Margin Account Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/order', signed=True, data=params)
+
+
+    def papi_get_margin_open_orders(self, **params):
+        """Query Current Margin Open Order.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Order
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/openOrders', signed=True, data=params)
+
+
+    def papi_get_margin_all_orders(self, **params):
+        """Query All Margin Account Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Margin-Account-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/allOrders', signed=True, data=params)
+
+
+    def papi_get_margin_order_list(self, **params):
+        """Retrieves a specific OCO based on provided optional parameters.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-OCO
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/orderList', signed=True, data=params)
+
+
+    def papi_get_margin_all_order_list(self, **params):
+        """Query all OCO for a specific margin account based on provided optional parameters.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-all-OCO
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/allOrderList', signed=True, data=params)
+
+
+    def papi_get_margin_open_order_list(self, **params):
+        """Query Margin Account's Open OCO.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Open-OCO
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/openOrderList', signed=True, data=params)
+
+
+    def papi_get_margin_my_trades(self, **params):
+        """Margin Account Trade List.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Trade-List
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'margin/myTrades', signed=True, data=params)
+
+
+    def papi_get_margin_repay_debt(self, **params):
+        """Repay debt for a margin loan.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Trade-List
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('post', 'margin/repay-debt', signed=True, data=params)
+
+
     def close_connection(self):
         if self.session:
             self.session.close()
