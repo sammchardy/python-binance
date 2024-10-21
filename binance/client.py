@@ -281,6 +281,14 @@ class BaseClient:
         return sig_func(query_string)
 
     @staticmethod
+    def _get_version(version: int, **kwargs) -> int:
+        if 'data' in kwargs and 'version' in kwargs['data']:
+            version_override = kwargs['data'].get('version')
+            del kwargs['data']['version']
+            return version_override
+        return version
+
+    @staticmethod
     def _order_params(data: Dict) -> List[Tuple[str, str]]:
         """Convert params to list with signature as last element
 
@@ -396,9 +404,7 @@ class Client(BaseClient):
         return self._request(method, uri, signed, **kwargs)
 
     def _request_futures_api(self, method, path, signed=False, version: int = 1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version)
 
         return self._request(method, uri, signed, True, **kwargs)
@@ -409,17 +415,13 @@ class Client(BaseClient):
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
@@ -430,9 +432,7 @@ class Client(BaseClient):
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
         return self._request(method, uri, signed, **kwargs)
@@ -8779,9 +8779,7 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, **kwargs)
 
     async def _request_futures_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
@@ -8792,17 +8790,13 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
@@ -8813,9 +8807,7 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
-        if 'version' in kwargs:
-            version = kwargs['version']
-            del kwargs['version']
+        version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
         return await self._request(method, uri, signed, **kwargs)
