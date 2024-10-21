@@ -10040,10 +10040,12 @@ class AsyncClient(BaseClient):
         cls, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
-        testnet: bool = False, loop=None, session_params: Optional[Dict[str, Any]] = None
+        testnet: bool = False, loop=None, session_params: Optional[Dict[str, Any]] = None,
+        https_proxy: Optional[str] = None
     ):
 
         self = cls(api_key, api_secret, requests_params, tld, base_endpoint, testnet, loop, session_params)
+        self.https_proxy = https_proxy # move this to the constructor
 
         try:
             await self.ping()
