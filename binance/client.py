@@ -43,6 +43,7 @@ class BaseClient:
     MARGIN_API_VERSION4 = 'v4'
     FUTURES_API_VERSION = 'v1'
     FUTURES_API_VERSION2 = 'v2'
+    FUTURES_API_VERSION3 = 'v3'
     OPTIONS_API_VERSION = 'v1'
 
     BASE_ENDPOINT_DEFAULT = ''
@@ -226,7 +227,7 @@ class BaseClient:
         url = self.FUTURES_URL
         if self.testnet:
             url = self.FUTURES_TESTNET_URL
-        options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
+        options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2, 3: self.FUTURES_API_VERSION3}
         return url + '/' + options[version] + '/' + path
 
     def _create_futures_data_api_uri(self, path: str) -> str:
@@ -239,7 +240,7 @@ class BaseClient:
         url = self.FUTURES_COIN_URL
         if self.testnet:
             url = self.FUTURES_COIN_TESTNET_URL
-        options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2}
+        options = {1: self.FUTURES_API_VERSION, 2: self.FUTURES_API_VERSION2, 3: self.FUTURES_API_VERSION3}
         return url + "/" + options[version] + "/" + path
 
     def _create_futures_coin_data_api_url(self, path: str, version: int = 1) -> str:
@@ -395,6 +396,9 @@ class Client(BaseClient):
         return self._request(method, uri, signed, **kwargs)
 
     def _request_futures_api(self, method, path, signed=False, version: int = 1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_api_uri(path, version)
 
         return self._request(method, uri, signed, True, **kwargs)
@@ -405,11 +409,17 @@ class Client(BaseClient):
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return self._request(method, uri, signed, True, **kwargs)
@@ -420,6 +430,9 @@ class Client(BaseClient):
         return self._request(method, uri, signed, True, **kwargs)
 
     def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_margin_api_uri(path, version)
 
         return self._request(method, uri, signed, **kwargs)
@@ -7469,7 +7482,7 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#position-information-user_data
 
         """
-        return self._request_futures_api('get', 'positionRisk', True, 2, data=params)
+        return self._request_futures_api('get', 'positionRisk', True, 3, data=params)
 
     def futures_account_trades(self, **params):
         """Get trades for the authenticated account and symbol.
@@ -8766,6 +8779,9 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, **kwargs)
 
     async def _request_futures_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_api_uri(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
@@ -8776,11 +8792,17 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_futures_coin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_coin_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
         return await self._request(method, uri, signed, True, **kwargs)
@@ -8791,6 +8813,9 @@ class AsyncClient(BaseClient):
         return await self._request(method, uri, signed, True, **kwargs)
 
     async def _request_margin_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
+        if 'version' in kwargs:
+            version = kwargs['version']
+            del kwargs['version']
         uri = self._create_margin_api_uri(path, version)
 
         return await self._request(method, uri, signed, **kwargs)
@@ -9925,7 +9950,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('get', 'positionMargin/history', True, data=params)
 
     async def futures_position_information(self, **params):
-        return await self._request_futures_api('get', 'positionRisk', True, version=2, data=params)
+        return await self._request_futures_api('get', 'positionRisk', True, version=3, data=params)
 
     async def futures_account_trades(self, **params):
         return await self._request_futures_api('get', 'userTrades', True, data=params)
