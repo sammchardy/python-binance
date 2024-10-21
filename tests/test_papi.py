@@ -5,7 +5,6 @@ import pytest
 
 proxies = {}
 proxy = os.getenv("PROXY")
-proxy = "http://51.83.140.52:16301"
 
 if proxy:
     proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
