@@ -143,8 +143,8 @@ class BaseClient:
     MINING_TO_FIAT = "MINING_C2C"
 
     ## order ids
-    SPOT_ORDER_PREFIX = "HNA2TXFJ"
-    CONTRACT_ORDER_PREFIX = "Cb7ytekJ"
+    SPOT_ORDER_PREFIX = "x-HNA2TXFJ"
+    CONTRACT_ORDER_PREFIX = "x-Cb7ytekJ"
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
@@ -2830,7 +2830,7 @@ class Client(BaseClient):
 
     def get_spot_delist_schedule(self, **params):
         """Get symbols delist schedule for spot
-	
+
 	https://binance-docs.github.io/apidocs/spot/en/#get-symbols-delist-schedule-for-spot-market_data
 
         :param recvWindow: optional - the number of milliseconds the request is valid for
@@ -3370,7 +3370,7 @@ class Client(BaseClient):
 
     def get_enabled_isolated_margin_account_limit(self, **params):
         """Query enabled isolated margin account limit.
-        
+
         https://binance-docs.github.io/apidocs/spot/en/#query-enabled-isolated-margin-account-limit-user_data
 
         :returns: API response
@@ -4027,7 +4027,7 @@ class Client(BaseClient):
         :type recvWindow:
 
         :returns: API response
-        
+
         .. code-block:: python
             [
                 {
@@ -4049,7 +4049,7 @@ class Client(BaseClient):
 
         https://binance-docs.github.io/apidocs/spot/en/#margin-manual-liquidation-margin
 
-        
+
 
         :param type: required
         :type symbol: str: When type selected is "ISOLATED", symbol must be filled in
@@ -7211,7 +7211,7 @@ class Client(BaseClient):
         """Get quantitative trading rules for order placement, such as Unfilled Ratio (UFR), Good-Til-Canceled Ratio (GCR),
         Immediate-or-Cancel (IOC) & Fill-or-Kill (FOK) Expire Ratio (IFER), among others.
         https://www.binance.com/en/support/faq/binance-futures-trading-quantitative-rules-4f462ebe6ff445d4a170be7d9e897272
-        
+
         https://binance-docs.github.io/apidocs/futures/en/#futures-trading-quantitative-rules-indicators-user_data
 
         :param symbol: optional
@@ -7481,25 +7481,25 @@ class Client(BaseClient):
         """Cancel all open orders of the specified symbol at the end of the specified countdown.
 
         https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
-	
+
         :param symbol: required
         :type symbol: str
         :param countdownTime: required
         :type countdownTime: int
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
-	
+
         :returns: API response
 
         .. code-block:: python
         {
-            "symbol": "BTCUSDT", 
+            "symbol": "BTCUSDT",
             "countdownTime": "100000"
         }
 
         """
         return self._request_futures_api('post', 'countdownCancelAll', True, data=params)
-    
+
     def futures_account_balance(self, **params):
         """Get futures account balance
 
@@ -10754,7 +10754,7 @@ class AsyncClient(BaseClient):
     async def get_margin_delist_schedule(self, **params):
         return await self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
     get_margin_delist_schedule.__doc__ = Client.get_margin_delist_schedule.__doc__
-    
+
     async def get_margin_asset(self, **params):
         return await self._request_margin_api('get', 'margin/asset', data=params)
     get_margin_asset.__doc__ = Client.get_margin_asset.__doc__
