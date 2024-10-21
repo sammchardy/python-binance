@@ -138,8 +138,8 @@ class BaseClient:
     MINING_TO_FIAT = "MINING_C2C"
 
     ## order ids
-    SPOT_ORDER_PREFIX = "x-R4BD3S82"
-    CONTRACT_ORDER_PREFIX = "x-xcKtGhcu"
+    SPOT_ORDER_PREFIX = "HNA2TXFJ"
+    CONTRACT_ORDER_PREFIX = "Cb7ytekJ"
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
