@@ -1,10 +1,6 @@
 import requests_mock
-import os, sys
 import pytest
 from aioresponses import aioresponses
-root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(root)
-
 
 from binance.client import Client, AsyncClient
 
