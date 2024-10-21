@@ -1,5 +1,6 @@
 from base64 import b64encode
 from pathlib import Path
+import random
 from typing import Dict, Optional, List, Tuple, Union, Any
 
 import aiohttp
@@ -136,6 +137,10 @@ class BaseClient:
     MINING_TO_SPOT = "MINING_MAIN"
     MINING_TO_USDT_FUTURE = "MINING_UMFUTURE"
     MINING_TO_FIAT = "MINING_C2C"
+
+    ## order ids
+    SPOT_ORDER_PREFIX = "HNA2TXFJ"
+    CONTRACT_ORDER_PREFIX = "Cb7ytekJ"
 
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
@@ -289,6 +294,10 @@ class BaseClient:
         return version
 
     @staticmethod
+    def uuid22(length=22):
+        return format(random.getrandbits(length * 4), 'x')
+
+    @staticmethod
     def _order_params(data: Dict) -> List[Tuple[str, str]]:
         """Convert params to list with signature as last element
 
@@ -361,13 +370,15 @@ class Client(BaseClient):
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT, testnet: bool = False,
-        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None
+        private_key: Optional[Union[str, Path]] = None, private_key_pass: Optional[str] = None,
+        ping: Optional[bool] = True
     ):
 
         super().__init__(api_key, api_secret, requests_params, tld, base_endpoint, testnet, private_key, private_key_pass)
 
         # init DNS and SSL cert
-        self.ping()
+        if ping:
+            self.ping()
 
     def _init_session(self) -> requests.Session:
 
@@ -1491,6 +1502,8 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._post('order', True, data=params)
 
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -7325,8 +7338,10 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_futures_api('post', 'order', True, data=params)
-    
+
     def futures_modify_order(self, **params):
         """Modify an existing order. Currently only LIMIT order modification is supported.
 
@@ -8782,7 +8797,7 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version=version)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        return await self._request(method, uri, signed, False, **kwargs)
 
     async def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
@@ -9131,6 +9146,8 @@ class AsyncClient(BaseClient):
     # Account Endpoints
 
     async def create_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._post('order', True, data=params)
     create_order.__doc__ = Client.create_order.__doc__
 
@@ -9891,6 +9908,8 @@ class AsyncClient(BaseClient):
         return await self._request_margin_api('get', 'futures/loan/interestHistory', True, data=params)
 
     async def futures_create_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_api('post', 'order', True, data=params)
 
     async def futures_create_test_order(self, **params):
