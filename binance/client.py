@@ -9660,6 +9660,27 @@ class Client(BaseClient):
         return self._request_papi_api('get', 'um/openOrder', signed=True, data=params)
 
 
+    def papi_get_um_open_orders(self, **params):
+        """Get all open orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-Current-UM-Open-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/openOrders', signed=True, data=params)
+
+
+    def papi_get_um_conditional_all_orders(self, **params):
+        """Query All UM Conditional Orders.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Conditional-Orders
+
+        :returns: API response
+
+        """
+        return self._request_papi_api('get', 'um/conditional/allOrders', signed=True, data=params)
+
 
     def close_connection(self):
         if self.session:
