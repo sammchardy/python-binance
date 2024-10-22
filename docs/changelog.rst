@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v1.0.20 - 2024-10-22
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+- EDDSA authentication
+- Portfolio Margin endpoints
+- Some new futures endpoints
+- Proxy support for the AsyncClient
+- Version override is possible now through `params`
+
+**Fixed**
+- Migrated `positionRisk` to v3
+- Fixed the error `AttributeError("'Connect' object has no attribute 'protocol'")`
+- Some minor bug fixes
+
 v1.0.19 - 2023-08-11
 ^^^^^^^^^^^^^^^^^^^^
 
