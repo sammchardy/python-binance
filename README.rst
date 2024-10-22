@@ -64,6 +64,7 @@ Features
 - Futures Trading
 - Porfolio Margin Trading
 - Vanilla Options
+- Proxy support
 - Support other domains (.us, .jp, etc)
 
 Upgrading to v1.0.0+
