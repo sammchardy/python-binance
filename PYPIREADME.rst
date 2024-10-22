@@ -1,9 +1,3 @@
-=================================
-Welcome to python-binance v1.0.19
-=================================
-
-Updated 11th Aug 2023
-
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
     :target: https://pypi.python.org/pypi/python-binance
 
