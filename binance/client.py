@@ -5568,6 +5568,18 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'sol-staking/sol/history/rateHistory', signed=True, data=params)
 
+    def subscribe_sol_staking(self, **params):
+        """Subscribe SOL Staking
+        https://developers.binance.com/docs/staking/sol-staking/staking
+        """
+        return self._request_margin_api('post', 'sol-staking/sol/stake', signed=True, data=params)
+
+    def redeem_sol(self, **params):
+        """Redeem SOL
+        https://developers.binance.com/docs/staking/sol-staking/staking/Redeem-SOL
+        """
+        return self._request_margin_api('post', 'sol-staking/sol/redeem', signed=True, data=params)
+
     # US Staking Endpoints
 
     def get_staking_asset_us(self, **params):
