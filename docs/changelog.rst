@@ -1,6 +1,17 @@
 Changelog
 =========
 
+v1.0.21 - 2024-10-23
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+- Some new endpoints
+
+**Fixed**
+- url encoding for coin-m post endpoints
+- batch order endpoint
+- Some minor bug fixes
+
 v1.0.20 - 2024-10-22
 ^^^^^^^^^^^^^^^^^^^^
 
