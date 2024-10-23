@@ -274,12 +274,12 @@ class BaseClient:
     def _rsa_signature(self, query_string: str):
         assert self.PRIVATE_KEY
         h = SHA256.new(query_string.encode("utf-8"))
-        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
+        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h) # type: ignore
         return b64encode(signature).decode()
 
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
-        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode()
+        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode() # type: ignore
 
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
@@ -440,7 +440,7 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        return self._request(method, uri, signed, False, **kwargs)
 
     def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         version = self._get_version(version, **kwargs)
@@ -1560,6 +1560,7 @@ class Client(BaseClient):
         if 'newClientOrderId' not in params:
             params['newClientOrderId'] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._post('order', True, data=params)
+
 
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
@@ -3710,38 +3711,6 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/capital-flow', True, data=params)
-
-    def get_margin_delist_schedule(self, **params):
-        """Get tokens or symbols delist schedule for cross margin and isolated margin
-
-        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
-
-        :returns: API response
-
-        .. code-block:: python
-            [
-              {
-                "delistTime": 1686161202000,
-                "crossMarginAssets": [
-                  "BTC",
-                  "USDT"
-                ],
-                "isolatedMarginSymbols": [
-                  "ADAUSDT",
-                  "BNBUSDT"
-                ]
-              },
-              {
-                "delistTime": 1686222232000,
-                "crossMarginAssets": [
-                  "ADA"
-                ],
-                "isolatedMarginSymbols": []
-              }
-            ]
-
-        """
-        return self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
 
     def get_margin_asset(self, **params):
         """Query cross-margin asset
@@ -7424,6 +7393,9 @@ class Client(BaseClient):
         the url encoding is done on the special query param, batchOrders, in the early stage.
 
         """
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         query_string = urlencode(params)
         query_string = query_string.replace('%27', '%22')
         params['batchOrders'] = query_string[12:]
@@ -7823,6 +7795,8 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/delivery/en/#new-order-trade
 
         """
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_futures_coin_api("post", "order", True, data=params)
 
     def futures_coin_place_batch_order(self, **params):
@@ -7834,6 +7808,9 @@ class Client(BaseClient):
         the url encoding is done on the special query param, batchOrders, in the early stage.
 
         """
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         query_string = urlencode(params)
         query_string = query_string.replace('%27', '%22')
         params['batchOrders'] = query_string[12:]
@@ -8471,6 +8448,9 @@ class Client(BaseClient):
         :type recvWindow: int
 
         """
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_options_api('post', 'batchOrders', signed=True, data=params)
 
     def options_cancel_order(self, **params):
@@ -10115,7 +10095,7 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        return await self._request(method, uri, signed, False, **kwargs)
 
     async def _request_futures_coin_data_api(self, method, path, signed=False, version=1, **kwargs) -> Dict:
         version = self._get_version(version, **kwargs)
@@ -10889,9 +10869,6 @@ class AsyncClient(BaseClient):
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
 
-    async def get_margin_delist_schedule(self, **params):
-        return await self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
-
     # Margin OCO
 
     async def create_margin_oco_order(self, **params):
@@ -11235,6 +11212,9 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api('post', 'order/test', True, data=params)
 
     async def futures_place_batch_order(self, **params):
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         query_string = urlencode(params)
         query_string = query_string.replace('%27', '%22')
         params['batchOrders'] = query_string[12:]
@@ -11405,9 +11385,14 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_coin_create_order(self, **params):
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_coin_api("post", "order", True, data=params)
 
     async def futures_coin_place_batch_order(self, **params):
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         query_string = urlencode(params)
         query_string = query_string.replace('%27', '%22')
         params['batchOrders'] = query_string[12:]
@@ -11574,6 +11559,9 @@ class AsyncClient(BaseClient):
         return await self._request_options_api('post', 'order', signed=True, data=params)
 
     async def options_place_batch_order(self, **params):
+        for order in params['batchOrders']:
+            if 'newClientOrderId' not in order:
+                order['newClientOrderId'] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_options_api('post', 'batchOrders', signed=True, data=params)
 
     async def options_cancel_order(self, **params):

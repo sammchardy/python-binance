@@ -133,7 +133,7 @@ DEFAULT_REFRESH = 60 * 30  # 30 minutes
 class BaseDepthCacheManager:
     TIMEOUT = 60
 
-    def __init__(self, client, symbol, loop=None, refresh_interval=DEFAULT_REFRESH, bm=None, limit=10, conv_type=float):
+    def __init__(self, client, symbol, loop=None, refresh_interval: Optional[int]=DEFAULT_REFRESH, bm=None, limit=10, conv_type=float):
         """Create a DepthCacheManager instance
 
         :param client: Binance API client
@@ -286,7 +286,7 @@ class BaseDepthCacheManager:
 class DepthCacheManager(BaseDepthCacheManager):
 
     def __init__(
-        self, client, symbol, loop=None, refresh_interval=None, bm=None, limit=500, conv_type=float, ws_interval=None
+        self, client, symbol, loop=None, refresh_interval: Optional[int]=None, bm=None, limit=500, conv_type=float, ws_interval=None
     ):
         """Initialise the DepthCacheManager
 
