@@ -274,12 +274,12 @@ class BaseClient:
     def _rsa_signature(self, query_string: str):
         assert self.PRIVATE_KEY
         h = SHA256.new(query_string.encode("utf-8"))
-        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)
+        signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h) # type: ignore
         return b64encode(signature).decode()
 
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
-        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode()
+        return b64encode(eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())).decode() # type: ignore
 
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
@@ -3710,38 +3710,6 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'margin/capital-flow', True, data=params)
-
-    def get_margin_delist_schedule(self, **params):
-        """Get tokens or symbols delist schedule for cross margin and isolated margin
-
-        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
-
-        :returns: API response
-
-        .. code-block:: python
-            [
-              {
-                "delistTime": 1686161202000,
-                "crossMarginAssets": [
-                  "BTC",
-                  "USDT"
-                ],
-                "isolatedMarginSymbols": [
-                  "ADAUSDT",
-                  "BNBUSDT"
-                ]
-              },
-              {
-                "delistTime": 1686222232000,
-                "crossMarginAssets": [
-                  "ADA"
-                ],
-                "isolatedMarginSymbols": []
-              }
-            ]
-
-        """
-        return self._request_margin_api('get', 'margin/delist-schedule', True, data=params)
 
     def get_margin_asset(self, **params):
         """Query cross-margin asset
@@ -10888,9 +10856,6 @@ class AsyncClient(BaseClient):
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api('get', 'margin/maxTransferable', signed=True, data=params)
-
-    async def get_margin_delist_schedule(self, **params):
-        return await self._request_margin_api('get', '/margin/delist-schedule', signed=True, data=params)
 
     # Margin OCO
 
