@@ -21,10 +21,17 @@ Welcome to python-binance v1.0.20
     :target: https://t.me/python_binance
 
 
-This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://binance-docs.github.io/apidocs/spot/en>`_. I am in no way affiliated with Binance, use at your own risk.
+This is an unofficial Python wrapper for the `Binance exchange REST API v3 <https://binance-docs.github.io/apidocs/spot/en>`_.
 
-If you came here looking for the `Binance exchange <https://accounts.binance.com/en/register?ref=D7YA7CLY>`_ to purchase cryptocurrencies, then `go here <https://accounts.binance.com/en/register?ref=D7YA7CLY>`_.
+If you came here looking for the `Binance exchange <https://accounts.binance.com/register?ref=PGDFCE46>`_ to purchase cryptocurrencies, then `go here <https://accounts.binance.com/register?ref=PGDFCE46>`_.
 If you want to automate interactions with Binance stick around.
+
+.. |ico1| image:: https://avatars.githubusercontent.com/u/31901609?s=48&v=4
+    :target: https://github.com/ccxt/ccxt
+    :height: 3ex
+    :align: middle
+
+**This project is powered by** |ico1|
 
 Source code
   https://github.com/sammchardy/python-binance
@@ -45,6 +52,8 @@ Examples including async
 - `Understanding Binance Order Filters <https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html>`_
 
 Make sure you update often and check the `Changelog <https://python-binance.readthedocs.io/en/latest/changelog.html>`_ for new features and bug fixes.
+
+Your contributions, suggestions, and fixes are always welcome! Don't hesitate to open a GitHub issue or reach out to us on our Telegram chat
 
 Features
 --------
@@ -81,14 +90,14 @@ converted to use Asynchronous Context Managers. See examples in the Async sectio
 Quick Start
 -----------
 
-`Register an account with Binance <https://accounts.binance.com/en/register?ref=D7YA7CLY>`_.
+`Register an account with Binance <https://accounts.binance.com/register?ref=PGDFCE46>`_.
 
 `Generate an API Key <https://www.binance.com/en/my/settings/api-management>`_ and assign relevant permissions.
 
 If you are using an exchange from the US, Japan or other TLD then make sure pass `tld='us'` when creating the
 client.
 
-To use the `Spot <https://testnet.binance.vision/>`_ or `Vanilla Options <https://testnet.binanceops.com/>`_ Testnet,
+To use the `Spot <https://testnet.binance.vision/>`_, `Vanilla Options <https://testnet.binanceops.com/>`_ , or `Futures <https://testnet.binancefuture.com>`_ Testnet
 pass `testnet=True` when creating the client.
 
 
@@ -260,7 +269,21 @@ for more information.
         loop.run_until_complete(main())
 
 
+The library is under `MIT license`, that means it's absolutely free for any developer to build commercial and opensource software on top of it, but use it at your own risk with no warranties, as is.
+
+
+Star history
+------------
+
+.. image:: https://api.star-history.com/svg?repos=sammchardy/python-binance&type=Date
+    :target: https://api.star-history.com/svg?repos=sammchardy/python-binance&type=Date
+
+Contact Us
+----------
+
+For business inquiries: `info@ccxt.trade`
+
 Other Exchanges
 ---------------
-
-If you use `Kucoin <https://www.kucoin.com/ucenter/signup?rcode=E5wkqe>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
+- Check out `CCXT <https://github.com/ccxt/ccxt>`_ for more than 100 crypto exchanges with a unified trading API.
+- If you use `Kucoin <https://www.kucoin.com/ucenter/signup?rcode=E5wkqe>`_ check out my `python-kucoin <https://github.com/sammchardy/python-kucoin>`_ library.
