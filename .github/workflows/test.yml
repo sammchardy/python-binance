@@ -11,20 +11,21 @@ permissions:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     env:
       PROXY: "http://51.83.140.52:16301"
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+        python: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
     - uses: actions/checkout@v4
     - name: Checking env
       run: env
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ matrix.python }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ matrix.python }}
         cache: 'pip'
     - name: Install dependencies
       run: |
@@ -38,6 +39,6 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-     - name: Run tox
-        # Run tox using the version of Python in `PATH`
-        run: tox -e py
+    - name: Run tox
+      # Run tox using the version of Python in `PATH`
+      run: tox -e py
