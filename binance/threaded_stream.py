@@ -11,16 +11,18 @@ class ThreadedApiManager(threading.Thread):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
-        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None
+        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None,
+        https_proxy: Optional[str] = None
     ):
         """Initialise the BinanceSocketManager
 
         """
         super().__init__()
-        self._loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if asyncio.get_event_loop().is_running() else asyncio.new_event_loop()
+        self._loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()# if asyncio.get_event_loop().is_running() else asyncio.new_event_loop()
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
+        self.https_proxy = https_proxy
         self._client_params = {
             'api_key': api_key,
             'api_secret': api_secret,
@@ -34,7 +36,7 @@ class ThreadedApiManager(threading.Thread):
         ...
 
     async def socket_listener(self):
-        self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
+        self._client = await AsyncClient.create(loop=self._loop, https_proxy=self.https_proxy,**self._client_params)
         await self._before_socket_listener_start()
         while self._running:
             await asyncio.sleep(0.2)
