@@ -1,9 +1,11 @@
+import contextlib
+import json
 import time
+from datetime import datetime
+
 import dateparser
 import pytz
-import json
 
-from datetime import datetime
 from binance.client import Client
 
 
@@ -16,7 +18,7 @@ def date_to_milliseconds(date_str):
 
     :param date_str: date in readable format, i.e. "January 01, 2018", "11 hours ago UTC", "now UTC"
     :type date_str: str
-    """
+    """  # noqa: E501
     # get epoch value in UTC
     epoch = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
     # parse our date string
@@ -39,21 +41,14 @@ def interval_to_milliseconds(interval):
          None if unit not one of m, h, d or w
          None if string not in correct format
          int value of interval in milliseconds
-    """
+    """  # noqa: E501
     ms = None
-    seconds_per_unit = {
-        "m": 60,
-        "h": 60 * 60,
-        "d": 24 * 60 * 60,
-        "w": 7 * 24 * 60 * 60
-    }
+    seconds_per_unit = {"m": 60, "h": 60 * 60, "d": 24 * 60 * 60, "w": 7 * 24 * 60 * 60}
 
     unit = interval[-1]
     if unit in seconds_per_unit:
-        try:
+        with contextlib.suppress(ValueError):
             ms = int(interval[:-1]) * seconds_per_unit[unit] * 1000
-        except ValueError:
-            pass
     return ms
 
 
@@ -75,7 +70,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 
     :return: list of OHLCV values
 
-    """
+    """  # noqa: E501
     # create the Binance client, no need for api key
     client = Client("", "")
 
@@ -97,7 +92,8 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
         end_ts = date_to_milliseconds(end_str)
 
     idx = 0
-    # it can be difficult to know when a symbol was listed on Binance so allow start time to be before list date
+    # it can be difficult to know when a symbol was listed on
+    # Binance so allow start time to be before list date
     symbol_existed = False
     while True:
         # fetch the klines from start_ts up to max 500 entries or the end_ts if set
@@ -106,10 +102,11 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
             interval=interval,
             limit=limit,
             startTime=start_ts,
-            endTime=end_ts
+            endTime=end_ts,
         )
 
-        # handle the case where our start date is before the symbol pair listed on Binance
+        # handle the case where our start date is before the
+        # symbol pair listed on Binance
         if not symbol_existed and len(temp_data):
             symbol_existed = True
 
@@ -117,7 +114,8 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
             # append this loops data to our output data
             output_data += temp_data
 
-            # update our start timestamp using the last value in the array and add the interval timeframe
+            # update our start timestamp using the last value in the
+            # array and add the interval timeframe
             start_ts = temp_data[len(temp_data) - 1][0] + timeframe
         else:
             # it wasn't listed yet, increment our start date
@@ -143,14 +141,12 @@ interval = Client.KLINE_INTERVAL_30MINUTE
 
 klines = get_historical_klines(symbol, interval, start, end)
 
-# open a file with filename including symbol, interval and start and end converted to milliseconds
+# open a file with filename including symbol, interval and start
+# and end converted to milliseconds
 with open(
     "Binance_{}_{}_{}-{}.json".format(
-        symbol,
-        interval,
-        date_to_milliseconds(start),
-        date_to_milliseconds(end)
+        symbol, interval, date_to_milliseconds(start), date_to_milliseconds(end)
     ),
-    'w'  # set file write mode
+    "w",  # set file write mode
 ) as f:
     f.write(json.dumps(klines))

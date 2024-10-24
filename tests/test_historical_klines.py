@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-# coding=utf-8
 
-from binance.client import Client
 import pytest
 import requests_mock
-import os
+
+from binance.client import Client
 
 client = Client("api_key", "api_secret", ping=False)
 
@@ -45,7 +44,7 @@ def test_exact_amount():
         "0",
     ]
 
-    for i in range(0, 500):
+    for _i in range(0, 500):
         first_res.append(row)
 
     second_res = []
@@ -64,7 +63,9 @@ def test_exact_amount():
             json=second_res,
         )
         klines = client.get_historical_klines(
-            symbol="BNBBTC", interval=Client.KLINE_INTERVAL_1MINUTE, start_str="1st March 2018"
+            symbol="BNBBTC",
+            interval=Client.KLINE_INTERVAL_1MINUTE,
+            start_str="1st March 2018",
         )
         assert len(klines) == 500
 
@@ -104,7 +105,7 @@ def test_start_and_end_str():
         "0",
     ]
 
-    for i in range(0, 300):
+    for _i in range(0, 300):
         first_res.append(row)
 
     with requests_mock.mock() as m:
@@ -160,7 +161,7 @@ def test_start_and_end_timestamp():
         "0",
     ]
 
-    for i in range(0, 300):
+    for _i in range(0, 300):
         first_res.append(row)
 
     with requests_mock.mock() as m:
@@ -216,7 +217,7 @@ def test_historical_kline_generator():
         "0",
     ]
 
-    for i in range(0, 300):
+    for _i in range(0, 300):
         first_res.append(row)
 
     with requests_mock.mock() as m:
@@ -235,7 +236,7 @@ def test_historical_kline_generator():
             end_str=1519880400000,
         )
 
-        for i in range(300):
+        for _i in range(300):
             assert len(next(klines)) > 0
 
         with pytest.raises(StopIteration):
@@ -281,6 +282,7 @@ def test_historical_kline_generator_empty_response():
         with pytest.raises(StopIteration):
             next(klines)
 
+
 def test_start_and_limit():
     """Test start_str and limit work correctly with integer timestamp"""
 
@@ -316,7 +318,7 @@ def test_start_and_limit():
         "0",
     ]
 
-    for i in range(0, 5):
+    for _i in range(0, 5):
         first_res.append(row)
 
     with requests_mock.mock() as m:
