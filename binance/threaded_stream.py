@@ -1,33 +1,37 @@
 import asyncio
 import threading
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 from .client import AsyncClient
-from .helpers import get_loop
 
 
 class ThreadedApiManager(threading.Thread):
-
     def __init__(
-        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
-        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None
+        self,
+        api_key: Optional[str] = None,
+        api_secret: Optional[str] = None,
+        requests_params: Optional[Dict[str, Any]] = None,
+        tld: str = "com",
+        testnet: bool = False,
+        session_params: Optional[Dict[str, Any]] = None,
     ):
-        """Initialise the BinanceSocketManager
-
-        """
+        """Initialise the BinanceSocketManager"""
         super().__init__()
-        self._loop: asyncio.AbstractEventLoop = asyncio.get_event_loop() if asyncio.get_event_loop().is_running() else asyncio.new_event_loop()
+        self._loop: asyncio.AbstractEventLoop = (
+            asyncio.get_event_loop()
+            if asyncio.get_event_loop().is_running()
+            else asyncio.new_event_loop()
+        )
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
         self._client_params = {
-            'api_key': api_key,
-            'api_secret': api_secret,
-            'requests_params': requests_params,
-            'tld': tld,
-            'testnet': testnet,
-            'session_params': session_params,
+            "api_key": api_key,
+            "api_secret": api_secret,
+            "requests_params": requests_params,
+            "tld": tld,
+            "testnet": testnet,
+            "session_params": session_params,
         }
 
     async def _before_socket_listener_start(self):
@@ -72,5 +76,5 @@ class ThreadedApiManager(threading.Thread):
             return
         self._running = False
         self._loop.call_soon(asyncio.create_task, self.stop_client())
-        for socket_name in self._socket_running.keys():
+        for socket_name in self._socket_running:
             self._socket_running[socket_name] = False

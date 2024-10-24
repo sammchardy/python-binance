@@ -1,21 +1,20 @@
+import asyncio
 import os
 import sys
-import asyncio
+import time
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
 
-import time
 
-import asyncio
-from binance import AsyncClient, BinanceSocketManager
+from binance import AsyncClient, BinanceSocketManager # noqa
 
 
 async def main():
     client = await AsyncClient.create()
     bm = BinanceSocketManager(client)
     # start any sockets here, i.e a trade socket
-    ts = bm.trade_socket('BTCUSDT')
+    ts = bm.trade_socket("BTCUSDT")
     # then start receiving messages
     async with ts as tscm:
         start_time = time.time()
@@ -29,6 +28,7 @@ async def main():
 
     await client.close_connection()
     print("WebSocket connection closed after 10 seconds.")
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

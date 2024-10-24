@@ -1,0 +1,24 @@
+[tool.ruff]
+# Exclude files and directories from linting
+exclude = [
+    ".git",
+    ".tox",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]

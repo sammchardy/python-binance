@@ -1,11 +1,10 @@
 import asyncio
+from datetime import datetime
 from decimal import Decimal
-from typing import Union, Optional, Dict
+from typing import Dict, Optional, Union
 
 import dateparser
 import pytz
-
-from datetime import datetime
 
 from binance.exceptions import UnknownDateFormat
 
@@ -18,7 +17,7 @@ def date_to_milliseconds(date_str: str) -> int:
     See dateparse docs for formats http://dateparser.readthedocs.io/en/latest/
 
     :param date_str: date in readable format, i.e. "January 01, 2018", "11 hours ago UTC", "now UTC"
-    """
+    """ # noqa: E501
     # get epoch value in UTC
     epoch: datetime = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
     # parse our date string
@@ -44,7 +43,7 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
          None if interval prefix is not a decimal integer
          None if interval suffix is not one of m, h, d, w
 
-    """
+    """ # noqa: E501
     seconds_per_unit: Dict[str, int] = {
         "s": 1,
         "m": 60,
@@ -58,7 +57,9 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
         return None
 
 
-def round_step_size(quantity: Union[float, Decimal], step_size: Union[float, Decimal]) -> float:
+def round_step_size(
+    quantity: Union[float, Decimal], step_size: Union[float, Decimal]
+) -> float:
     """Rounds a given quantity to a specific step size
 
     :param quantity: required
@@ -73,7 +74,7 @@ def round_step_size(quantity: Union[float, Decimal], step_size: Union[float, Dec
 def convert_ts_str(ts_str):
     if ts_str is None:
         return ts_str
-    if type(ts_str) == int:
+    if isinstance(ts_str, int):
         return ts_str
     return date_to_milliseconds(ts_str)
 
