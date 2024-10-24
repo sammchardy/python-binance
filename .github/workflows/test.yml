@@ -11,14 +11,12 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     env:
       PROXY: "http://51.83.140.52:16301"
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
-
     steps:
     - uses: actions/checkout@v4
     - name: Checking env
