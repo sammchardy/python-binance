@@ -8,11 +8,14 @@ from enum import Enum
 from random import random
 from socket import gaierror
 from typing import Optional, List, Dict, Callable, Any
+from urllib.parse import urlencode
+
+
 
 import websockets as ws
 from websockets.exceptions import ConnectionClosedError
 
-from .client import AsyncClient
+from .client import AsyncClient, BaseClient
 from .enums import FuturesType
 from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import ContractType
@@ -35,6 +38,7 @@ class BinanceSocketType(str, Enum):
     COIN_M_FUTURES = 'Coin_M_Futures'
     OPTIONS = 'Vanilla_Options'
     ACCOUNT = 'Account'
+    WSAPI = 'WSAPI'
 
 
 class ReconnectingWebsocket:
@@ -83,8 +87,7 @@ class ReconnectingWebsocket:
 
     async def connect(self):
         await self._before_connect()
-        assert self._path
-        ws_url = self._url + self._prefix + self._path
+        ws_url = f"{self._url}{self._prefix or ''}{self._path or ''}"
         self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
         try:
             self.ws = await self._conn.__aenter__()
@@ -223,6 +226,23 @@ class ReconnectingWebsocket:
 
     async def _reconnect(self):
         self.ws_state = WSListenerState.RECONNECTING
+    
+    async def send(self, payload):
+        """Send a payload over the WebSocket connection.
+
+        :param payload: The data to send over the WebSocket
+        :type payload: dict
+        """
+        if self.ws and self.ws.open:
+            try:
+                await self.ws.send(json.dumps(payload))
+            except Exception as e:
+                self._log.error(f"Error sending payload: {e}")
+                await self._reconnect()
+        else:
+            self._log.error("WebSocket is not connected")
+            await self._reconnect()
+            # throw exception?
 
 
 class KeepAliveWebsocket(ReconnectingWebsocket):
@@ -307,6 +327,8 @@ class BinanceSocketManager:
     DSTREAM_TESTNET_URL = 'wss://dstream.binancefuture.com/'
     VSTREAM_URL = 'wss://vstream.binance.{}/'
     VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.{}/'
+    WSAPI_URL = 'wss://ws-api.binance.{}:443/ws-api/v3'
+    WSAPI_TESTNET_URL = 'wss://testnet.binance.vision/ws-api/v3'
 
     WEBSOCKET_DEPTH_5 = '5'
     WEBSOCKET_DEPTH_10 = '10'
@@ -324,6 +346,8 @@ class BinanceSocketManager:
         self.DSTREAM_URL = self.DSTREAM_URL.format(client.tld)
         self.VSTREAM_URL = self.VSTREAM_URL.format(client.tld)
         self.VSTREAM_TESTNET_URL = self.VSTREAM_TESTNET_URL.format(client.tld)
+        self.WSAPI_URL = self.WSAPI_URL.format(client.tld)
+        self.WSAPI_TESTNET_URL = self.WSAPI_TESTNET_URL.format(client.tld)
 
         self._conns = {}
         self._loop = get_loop()
@@ -393,6 +417,12 @@ class BinanceSocketManager:
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
         return self._get_socket(path, stream_url, prefix, is_binary=True, socket_type=BinanceSocketType.OPTIONS)
+    
+    def _get_ws_api_socket(self):
+        stream_url = self.WSAPI_URL
+        if self.testnet:
+            stream_url = self.WSAPI_TESTNET_URL
+        return self._get_socket('', stream_url, '', is_binary=False, socket_type=BinanceSocketType.WSAPI)
 
     async def _exit_socket(self, path: str):
         await self._stop_socket(path)
@@ -596,7 +626,7 @@ class BinanceSocketManager:
         """
 
         return self._get_socket(f'!miniTicker@arr@{update_time}ms')
-
+    
     def trade_socket(self, symbol: str):
         """Start a websocket for symbol trade data
 
@@ -1203,6 +1233,430 @@ class BinanceSocketManager:
         :type depth: str
         """
         return self._get_options_socket(symbol.lower() + '@depth' + str(depth))
+    
+    async def create_test_order(self, **params):
+        """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
+
+        https://binance-docs.github.io/apidocs/websocket_api/en/#test-new-order-trade
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param type: required
+        :type type: str
+        :param timeInForce: required if limit order
+        :type timeInForce: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: The number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        .. code-block:: python
+
+            {}
+
+        """
+        
+        params.setdefault("timeInForce", self._client.TIME_IN_FORCE_GTC)
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
+        
+        payload = {
+            "id": params.get("id", self._get_request_id()),
+            "method": "order.test",
+            "params": self._sign_params(params),
+        }
+
+        ws = self._get_ws_api_socket()
+        await ws.__aenter__()
+        await ws.send(payload)
+        return ws
+    
+    async def create_order(self, **params):
+        """Create an order via WebSocket.
+        
+        https://binance-docs.github.io/apidocs/websocket_api/en/#place-new-order-trade
+        
+        :param id: The request ID to be used. By default uuid22() is used.
+        :param symbol: The symbol to create an order for
+        :param side: BUY or SELL
+        :param type: Order type (e.g., LIMIT, MARKET)
+        :param quantity: The amount to buy or sell
+        :param kwargs: Additional order parameters
+        """
+        params.setdefault("timeInForce", self._client.TIME_IN_FORCE_GTC)
+        if 'newClientOrderId' not in params:
+            params['newClientOrderId'] = self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
+        
+        return await self._send_ws("order.place", True, params)
+    
+    def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'type': self._client.ORDER_TYPE_LIMIT,
+            'timeInForce': timeInForce
+        })
+        return self.create_order(**params)
+
+    def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit buy order
+
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'side': self._client.SIDE_BUY,
+        })
+        return self.order_limit(timeInForce=timeInForce, **params)
+
+    def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit sell order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'side': self._client.SIDE_SELL
+        })
+        return self.order_limit(timeInForce=timeInForce, **params)
+
+    def order_market(self, **params):
+        """Send in a new market order
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: amount the user wants to spend (when buying) or receive (when selling)
+            of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'type': self._client.ORDER_TYPE_MARKET
+        })
+        return self.create_order(**params)
+
+    def order_market_buy(self, **params):
+        """Send in a new market buy order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to spend of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'side': self._client.SIDE_BUY
+        })
+        return self.order_market(**params)
+
+    def order_market_sell(self, **params):
+        """Send in a new market sell order
+
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to receive of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        See order endpoint for full response options
+
+
+        """
+        params.update({
+            'side': self._client.SIDE_SELL
+        })
+        return self.order_market(**params)
+    
+    
+    async def get_order(self, **params):
+        """Check an order's status. Either orderId or origClientOrderId must be sent.
+
+        https://binance-docs.github.io/apidocs/websocket_api/en/#query-order-user_data
+
+        :param symbol: required
+        :type symbol: str
+        :param orderId: The unique order id
+        :type orderId: int
+        :param origClientOrderId: optional
+        :type origClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        
+        """
+                
+        return await self._send_ws("order.status", True, params)
+    
+    async def cancel_order(self, **params):
+        return await self._send_ws("order.cancel", True, params)
+    cancel_order.__doc__ = AsyncClient.cancel_order.__doc__
+
+
+    async def cancel_and_replace_order(self, **params):
+        return await self._send_ws("order.cancelReplace", True, params)
+
+    async def get_open_orders(self, **params):
+        return await self._send_ws("openOrders.status", True, params)
+    
+    async def cancel_all_open_orders(self, **params):
+        return await self._send_ws("openOrders.cancelAll", True, params)
+
+    async def create_oco_order(self, **params):
+        return await self._send_ws("orderList.place.oco", True, params)
+    
+    async def create_oto_order(self, **params):
+        return await self._send_ws("orderList.place.oto", True, params)
+    
+    async def create_otoco_order(self, **params):
+        return await self._send_ws("orderList.place.otoco", True, params)
+    
+    async def get_oco_order(self, **params):
+        return await self._send_ws("orderList.status", True, params)
+    
+    async def cancel_oco_order(self, **params):
+        return await self._send_ws("orderList.cancel", True, params)
+    
+    async def get_oco_open_orders(self, **params):
+        return await self._send_ws("openOrderLists.status", True, params)
+    
+    async def create_sor_order(self, **params):
+        return await self._send_ws("sor.order.place", True, params)
+    
+    async def create_test_sor_order(self, **params):
+        return await self._send_ws("sor.order.test", True, params)
+    
+    async def get_account(self, **params):
+        return await self._send_ws("account.status", True, params)
+    
+    async def get_account_rate_limits_orders(self, **params):
+        return await self._send_ws("account.rateLimits.orders", True, params)
+    
+    async def get_all_orders(self, **params):
+        return await self._send_ws("allOrders", True, params)
+    
+    async def get_my_trades(self, **params):
+        return await self._send_ws("myTrades", True, params)
+    
+    async def get_prevented_matches(self, **params):
+        return await self._send_ws("myPreventedMatches", True, params)
+    
+    async def get_allocations(self, **params):
+        return await self._send_ws("myAllocations", True, params)
+    
+    async def get_commission_rates(self, **params):
+        return await self._send_ws("account.commission", True, params)
+    
+    async def get_order_book(self, **params):
+        return await self._send_ws("depth", False, params)
+    
+    async def get_recent_trades(self, **params):
+        return await self._send_ws("trades.recent", False, params)
+    
+    async def get_historical_trades(self, **params):
+        return await self._send_ws("trades.historical", False, params)
+    
+    async def get_aggregate_trades(self, **params):
+        return await self._send_ws("trades.aggregate", False, params)
+    
+    async def get_klines(self, **params):
+        return await self._send_ws("klines", False, params)
+    
+    async def get_uiKlines(self, **params):
+        return await self._send_ws("uiKlines", False, params)
+    
+    async def get_avg_price(self, **params):
+        return await self._send_ws("avgPrice", False, params)
+    
+    async def get_ticker(self, **params):
+        return await self._send_ws("ticker.24hr", False, params)
+    
+    async def get_trading_day_ticker(self, **params):
+        return await self._send_ws("ticker.tradingDay", False, params)
+    
+    async def get_symbol_ticker_window(self, **params):
+        return await self._send_ws("ticker", False, params)
+    
+    def get_symbol_ticker(self, **params):
+        self._loop.call_soon_threadsafe(asyncio.create_task, self._send_ws("ticker.price", False, params))
+        time.sleep(1) # TODO: fix. here to avoid race condition
+        return self._get_ws_api_socket()
+    
+    async def get_orderbook_ticker(self, **params):
+        return await self._send_ws("ticker.book", False, params)
+    
+    async def ping(self, **params):
+        return await self._send_ws("ping", False, params)
+    
+    async def get_time(self, **params):
+        return await self._send_ws("time", False, params)
+    
+    async def get_exchange_info(self, **params):
+        return await self._send_ws("exchangeInfo", False, params)
+
+    async def _send_ws (self, method, signed, params):
+        """Send payload to Binance Websocket API
+        
+        :param method: method to call
+        :param signed: whether to sign the params
+        :param params: parameters for the method
+        """
+        payload = {
+            "id": params.get("id", self._get_request_id()),
+            "method": method,
+            "params": params
+        }
+        if signed:
+            payload["params"] = self._sign_params(params)
+
+        ws = self._get_ws_api_socket()
+        await ws.__aenter__()
+        await ws.send(payload)
+        return ws
+        
+    def _sign_params (self, params):
+        if "signature" in params:
+            return params
+        params.setdefault("apiKey", self._client.API_KEY)
+        params.setdefault("timestamp", int(time.time() * 1000 + self._client.timestamp_offset))
+        params = dict(sorted(params.items()))
+        return {
+            **params,
+            "signature": self._generate_ws_signature(params)
+        }
+        
+    def _generate_ws_signature(self, data: Dict) -> str:
+        sig_func = self._client._hmac_signature
+        if self._client.PRIVATE_KEY:
+            if self._client._is_rsa:
+                sig_func = self._client._rsa_signature
+            else:
+                sig_func = self._client._ed25519_signature
+        query_string = urlencode(data)
+        return sig_func(query_string)
+
+    def _get_request_id(self):
+        return self._client.uuid22()
 
     async def _stop_socket(self, conn_key):
         """Stop a websocket given the connection key
@@ -1242,6 +1696,15 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         self._socket_running[socket_path] = True
         self._loop.call_soon_threadsafe(asyncio.create_task, self.start_listener(socket, socket_path, callback))
         return socket_path
+    
+    def get_symbol_ticker(self, callback: Callable, symbol: str) -> str:
+        return self._start_async_socket(
+            callback=callback,
+            socket_name='get_symbol_ticker',
+            params={
+                'symbol': symbol,
+            }
+        )
 
     def start_depth_socket(
         self, callback: Callable, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None
