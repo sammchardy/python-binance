@@ -14,7 +14,24 @@ permissions:
   contents: read
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+    - name: Install Ruff
+      run: pip install ruff
+    - name: Lint code with Ruff
+      run: ruff check --output-format=github --target-version=py39 .
+    - name: Check code formatting with Ruff
+      run: ruff format --check .
+      continue-on-error: true # TODO: delete once ruff errors are fixed
+
   build:
+    needs: lint
     runs-on: ubuntu-latest
     env:
       PROXY: "http://51.83.140.52:16301"
@@ -35,15 +52,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest pyright tox
+        pip install pytest pytest-cov pyright tox
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Type check with pyright
       run: pyright
     - name: Test with tox
