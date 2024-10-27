@@ -3,4 +3,4 @@ from binance.client import Client
 
 @pytest.fixture(scope="module")
 def client():
-    return Client(testnet=True)
+    return Client("test_api_key", "test_api_secret", testnet=True)
