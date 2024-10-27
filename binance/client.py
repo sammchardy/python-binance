@@ -299,8 +299,8 @@ class BaseClient:
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
         return b64encode(
-            eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())
-        ).decode()  # type: ignore
+            eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode()) # type: ignore
+        ).decode()
 
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
