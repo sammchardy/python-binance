@@ -24,7 +24,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Checking env
-      run: env
+      run: |
+        echo "PROXY: $PROXY"
+        env
     - name: Set up Python ${{ matrix.python }}
       uses: actions/setup-python@v5
       with:
