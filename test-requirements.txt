@@ -3,7 +3,6 @@ ruff
 pytest
 pytest-asyncio
 pytest-cov
-python-coveralls
 requests-mock
 tox
 setuptools
