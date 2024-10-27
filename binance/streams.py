@@ -997,10 +997,12 @@ class BinanceSocketManager:
         """
         return self._get_futures_socket(symbol.lower() + '@ticker', futures_type=futures_type)
 
-    def all_ticker_futures_socket(self, futures_type: FuturesType = FuturesType.USD_M):
+    def all_ticker_futures_socket(self, channel: str = '!bookTicker', futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for all ticker data
         By default all markets are included in an array.
         https://binance-docs.github.io/apidocs/futures/en/#all-book-tickers-stream
+        https://binance-docs.github.io/apidocs/futures/en/#all-market-tickers-streams
+        :param channel: optional channel type, default '!bookTicker', but '!ticker@arr' is also available
         :param futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         Message Format
@@ -1017,7 +1019,7 @@ class BinanceSocketManager:
             ]
         """
 
-        return self._get_futures_socket('!bookTicker', futures_type=futures_type)
+        return self._get_futures_socket(channel, futures_type=futures_type)
 
     def symbol_book_ticker_socket(self, symbol: str):
         """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
