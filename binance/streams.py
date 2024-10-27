@@ -1002,6 +1002,7 @@ class BinanceSocketManager:
         By default all markets are included in an array.
 
         https://binance-docs.github.io/apidocs/futures/en/#all-book-tickers-stream
+
         https://binance-docs.github.io/apidocs/futures/en/#all-market-tickers-streams
 
         :param channel: optional channel type, default '!bookTicker', but '!ticker@arr' is also available
