@@ -4,7 +4,6 @@ pytest
 pytest-asyncio
 pytest-cov
 pytest-flake8
-python-coveralls
 requests-mock
 tox
 setuptools

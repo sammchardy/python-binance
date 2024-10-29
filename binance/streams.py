@@ -804,6 +804,84 @@ class BinanceSocketManager:
         """
         return self._get_socket('!ticker@arr')
 
+
+    def futures_ticker_socket(self):
+        """Start a websocket for all ticker data
+
+        By default all markets are included in an array.
+
+        https://binance-docs.github.io/apidocs/futures/en/#all-market-tickers-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            [
+                {
+                    "e": "24hrTicker",  // Event type
+                    "E": 123456789,     // Event time
+                    "s": "BTCUSDT",     // Symbol
+                    "p": "0.0015",      // Price change
+                    "P": "250.00",      // Price change percent
+                    "w": "0.0018",      // Weighted average price
+                    "c": "0.0025",      // Last price
+                    "Q": "10",          // Last quantity
+                    "o": "0.0010",      // Open price
+                    "h": "0.0025",      // High price
+                    "l": "0.0010",      // Low price
+                    "v": "10000",       // Total traded base asset volume
+                    "q": "18",          // Total traded quote asset volume
+                    "O": 0,             // Statistics open time
+                    "C": 86400000,      // Statistics close time
+                    "F": 0,             // First trade ID
+                    "L": 18150,         // Last trade Id
+                    "n": 18151          // Total number of trades
+                }
+            ]
+        """
+        return self._get_futures_socket('!ticker@arr', FuturesType.USD_M)
+
+
+    def futures_coin_ticker_socket(self):
+        """Start a websocket for all ticker data
+
+        By default all markets are included in an array.
+
+        https://binance-docs.github.io/apidocs/delivery/en/#all-market-tickers-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format
+
+        .. code-block:: python
+
+            [
+                {
+                    "e": "24hrTicker",  // Event type
+                    "E": 123456789,     // Event time
+                    "s": "BTCUSDT",     // Symbol
+                    "p": "0.0015",      // Price change
+                    "P": "250.00",      // Price change percent
+                    "w": "0.0018",      // Weighted average price
+                    "c": "0.0025",      // Last price
+                    "Q": "10",          // Last quantity
+                    "o": "0.0010",      // Open price
+                    "h": "0.0025",      // High price
+                    "l": "0.0010",      // Low price
+                    "v": "10000",       // Total traded base asset volume
+                    "q": "18",          // Total traded quote asset volume
+                    "O": 0,             // Statistics open time
+                    "C": 86400000,      // Statistics close time
+                    "F": 0,             // First trade ID
+                    "L": 18150,         // Last trade Id
+                    "n": 18151          // Total number of trades
+                }
+            ]
+        """
+        return self._get_futures_socket('!ticker@arr', FuturesType.COIN_M)
+
     def index_price_socket(self, symbol: str, fast: bool = True):
         """Start a websocket for a symbol's futures mark price
         https://binance-docs.github.io/apidocs/delivery/en/#index-price-stream
@@ -919,11 +997,16 @@ class BinanceSocketManager:
         """
         return self._get_futures_socket(symbol.lower() + '@ticker', futures_type=futures_type)
 
-    def all_ticker_futures_socket(self, futures_type: FuturesType = FuturesType.USD_M):
+    def all_ticker_futures_socket(self, channel: str = '!bookTicker', futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for all ticker data
         By default all markets are included in an array.
+
         https://binance-docs.github.io/apidocs/futures/en/#all-book-tickers-stream
-        :param futures_type: use USD-M or COIN-M futures default USD-M
+
+        https://binance-docs.github.io/apidocs/futures/en/#all-market-tickers-streams
+
+        :param channel: optional channel type, default '!bookTicker', but '!ticker@arr' is also available
+        :param: futures_type: use USD-M or COIN-M futures default USD-M
         :returns: connection key string if successful, False otherwise
         Message Format
         .. code-block:: python
@@ -939,7 +1022,7 @@ class BinanceSocketManager:
             ]
         """
 
-        return self._get_futures_socket('!bookTicker', futures_type=futures_type)
+        return self._get_futures_socket(channel, futures_type=futures_type)
 
     def symbol_book_ticker_socket(self, symbol: str):
         """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
