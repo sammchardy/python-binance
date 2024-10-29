@@ -36,6 +36,15 @@ def test_get_order_book(client):
         pytest.fail(f"API request failed: {str(e)}")
 
 
+def test_futures_get_order_book(client):
+    try:
+        order_book = client.futures_order_book(symbol="BTCUSDT")
+        assert_ob(order_book)
+
+    except BinanceAPIException as e:
+        pytest.fail(f"API request failed: {str(e)}")
+
+
 def test_get_order_book_with_limit(client):
     try:
         order_book = client.get_order_book(symbol="BTCUSDT", limit=5)
@@ -54,6 +63,19 @@ async def test_get_order_book_async():
             api_key="api_key", api_secret="api_secret", https_proxy=proxy
         )
         order_book = await client.get_order_book(symbol="BTCUSDT")
+
+        assert_ob(order_book)
+    except BinanceAPIException as e:
+        pytest.fail(f"API request failed: {str(e)}")
+
+
+@pytest.mark.asyncio()
+async def test_futures_get_order_book_async():
+    try:
+        client = AsyncClient(
+            api_key="api_key", api_secret="api_secret", https_proxy=proxy
+        )
+        order_book = await client.futures_order_book(symbol="BTCUSDT")
 
         assert_ob(order_book)
     except BinanceAPIException as e:
