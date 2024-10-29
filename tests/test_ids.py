@@ -68,7 +68,7 @@ def test_coin_id():
 def test_coin_batch_id():
     with requests_mock.mock() as m:
         m.post("https://dapi.binance.com/dapi/v1/batchOrders", json={}, status_code=200)
-        order =  {"symbol": "BTCUSD_PERP", "side": "BUY", "type": "MARKET", "quantity": 0.1}
+        order = {"symbol": "BTCUSD_PERP", "side": "BUY", "type": "MARKET", "quantity": 0.1}
         orders = [order, order]
         client.futures_coin_place_batch_order(batchOrders=orders)
         text = m.last_request.text

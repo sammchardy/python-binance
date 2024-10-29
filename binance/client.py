@@ -367,7 +367,7 @@ class BaseClient:
             kwargs['params'] = '&'.join('%s=%s' % (data[0], data[1]) for data in kwargs['data'])
             del kwargs['data']
 
-        #Temporary fix for Signature issue while using batchOrders in AsyncClient
+        # Temporary fix for Signature issue while using batchOrders in AsyncClient
         if 'params' in kwargs.keys() and 'batchOrders' in kwargs['params']:
             kwargs['data'] = kwargs['params']
             del kwargs['params']
@@ -2366,7 +2366,7 @@ class Client(BaseClient):
         """
         return self._request_margin_api('get', 'system/status')
 
-    def get_account_status(self, version=1,**params):
+    def get_account_status(self, version=1, **params):
         """Get account status detail.
 
         https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data

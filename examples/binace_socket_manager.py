@@ -1,13 +1,11 @@
 import os
 import sys
 import asyncio
+import time
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
 
-import time
-
-import asyncio
 from binance import AsyncClient, BinanceSocketManager
 
 
