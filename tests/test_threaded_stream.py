@@ -4,8 +4,7 @@ import asyncio
 from binance.streams import ThreadedWebsocketManager
 import os
 from binance.threaded_stream import ThreadedApiManager
-from unittest.mock import AsyncMock, patch
-import aiohttp
+from unittest.mock import AsyncMock
 
 proxy = os.getenv("PROXY")
 
@@ -63,7 +62,7 @@ def test_threaded_api_manager(manager):
     assert received_ticker.is_set(), "Ticker Callback was not called"
     
     for socket_name in twm._socket_running.keys():
-            assert twm._socket_running[socket_name] == False
+        assert twm._socket_running[socket_name] is False
     
 
 
