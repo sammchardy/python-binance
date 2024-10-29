@@ -3,8 +3,9 @@ import pytest
 
 
 def assert_message(msg):
-    assert msg['stream'] == '!ticker@arr'
-    assert len(msg['data']) > 0
+    assert msg["stream"] == "!ticker@arr"
+    assert len(msg["data"]) > 0
+
 
 @pytest.mark.asyncio()
 async def test_ticker_socket():

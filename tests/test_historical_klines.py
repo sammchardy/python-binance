@@ -63,7 +63,9 @@ def test_exact_amount():
             json=second_res,
         )
         klines = client.get_historical_klines(
-            symbol="BNBBTC", interval=Client.KLINE_INTERVAL_1MINUTE, start_str="1st March 2018"
+            symbol="BNBBTC",
+            interval=Client.KLINE_INTERVAL_1MINUTE,
+            start_str="1st March 2018",
         )
         assert len(klines) == 500
 
@@ -279,6 +281,7 @@ def test_historical_kline_generator_empty_response():
 
         with pytest.raises(StopIteration):
             next(klines)
+
 
 def test_start_and_limit():
     """Test start_str and limit work correctly with integer timestamp"""
