@@ -73,6 +73,15 @@ class ThreadedApiManager(threading.Thread):
         if not self._running:
             return
         self._running = False
-        self._loop.call_soon(asyncio.create_task, self.stop_client())
+        if self._client and self._loop and not self._loop.is_closed():
+            try:
+                future = asyncio.run_coroutine_threadsafe(
+                    self.stop_client(), 
+                    self._loop
+                )
+                future.result(timeout=5)  # Add timeout to prevent hanging
+            except Exception as e:
+                # Log the error but don't raise it
+                print(f"Error stopping client: {e}")
         for socket_name in self._socket_running.keys():
             self._socket_running[socket_name] = False
