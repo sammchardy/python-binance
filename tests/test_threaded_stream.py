@@ -4,8 +4,28 @@ import asyncio
 from binance.streams import ThreadedWebsocketManager
 import os
 from binance.threaded_stream import ThreadedApiManager
-from unittest.mock import AsyncMock
+from unittest.mock import Mock
 
+# For Python 3.7 compatibility
+try:
+    from unittest.mock import AsyncMock
+except ImportError:
+    # Create our own AsyncMock for Python 3.7
+    class AsyncMock(Mock):
+        async def __call__(self, *args, **kwargs):
+            return super(AsyncMock, self).__call__(*args, **kwargs)
+        
+        async def __aenter__(self):
+            return self
+        
+        async def __aexit__(self, *args):
+            return None
+        
+        async def __aiter__(self):
+            return self
+        
+        async def __anext__(self):
+            raise StopAsyncIteration
 proxy = os.getenv("PROXY")
 
 @pytest.fixture
