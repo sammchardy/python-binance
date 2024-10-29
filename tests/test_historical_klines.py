@@ -4,7 +4,6 @@
 from binance.client import Client
 import pytest
 import requests_mock
-import os
 
 client = Client("api_key", "api_secret", ping=False)
 
