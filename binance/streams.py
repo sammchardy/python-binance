@@ -1306,9 +1306,10 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     def __init__(
         self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
         requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
-        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None
+        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None
     ):
-        super().__init__(api_key, api_secret, requests_params, tld, testnet, session_params)
+        super().__init__(api_key, api_secret, requests_params, tld, testnet, session_params, loop)
         self._bsm: Optional[BinanceSocketManager] = None
 
     async def _before_socket_listener_start(self):
