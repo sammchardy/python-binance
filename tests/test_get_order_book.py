@@ -47,7 +47,7 @@ def test_get_order_book_with_limit(client):
     except BinanceAPIException as e:
         pytest.fail(f"API request failed: {str(e)}")
 
-
+@pytest.mark.asyncio()
 async def test_get_order_book_async():
     try:
         client = AsyncClient(
