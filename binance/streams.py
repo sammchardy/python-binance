@@ -901,7 +901,7 @@ class BinanceSocketManager:
         stream_name = '@indexPrice@1s' if fast else '@indexPrice'
         return self._get_futures_socket(symbol.lower() + stream_name, futures_type=FuturesType.COIN_M)
 
-    def futures_depth_socket(self, symbol: str, depth: str = '10', futures_type=FuturesType.USD_M):
+    def futures_depth_socket(self, symbol: str, depth: str = '10', interval: Optional[int] = None, futures_type=FuturesType.USD_M):
         """Subscribe to a futures depth data stream
 
         https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
@@ -910,9 +910,17 @@ class BinanceSocketManager:
         :type symbol: str
         :param depth: optional Number of depth entries to return, default 10.
         :type depth: str
+        :param interval: optional interval for updates, default None. If not set, updates happen every second. Must be None (1s), 250 (250ms), 500 (500ms) or 100 (100ms)
+        :type interval: int
         :param futures_type: use USD-M or COIN-M futures default USD-M
         """
-        return self._get_futures_socket(symbol.lower() + '@depth' + str(depth), futures_type=futures_type)
+        stream_name = symbol.lower() + '@depth' + str(depth)
+        if interval is not None:
+            if interval in [250, 500, 100]:
+                stream_name += f'@{interval}ms'
+            else:
+                raise ValueError("Websocket interval value not allowed. Allowed values are [250, 500, 100]")
+        return self._get_futures_socket(stream_name, futures_type=futures_type)
 
     def symbol_mark_price_socket(self, symbol: str, fast: bool = True, futures_type: FuturesType = FuturesType.USD_M):
         """Start a websocket for a symbol's futures mark price
