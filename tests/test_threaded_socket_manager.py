@@ -1,14 +1,7 @@
 
-import pytest
-import os, sys
-
-root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(root)
-
 
 from binance import ThreadedWebsocketManager
-from binance.streams import BinanceSocketManager
-from binance.client import AsyncClient
+
 
 received_ohlcv = False
 received_depth = False
