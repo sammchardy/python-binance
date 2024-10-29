@@ -190,7 +190,7 @@ class BaseClient:
         self.API_KEY = api_key
         self.API_SECRET = api_secret
         self._is_rsa = False
-        self.PRIVATE_KEY = self._init_private_key(private_key, private_key_pass)
+        self.PRIVATE_KEY: Any = self._init_private_key(private_key, private_key_pass)
         self.session = self._init_session()
         self._requests_params = requests_params
         self.response = None
