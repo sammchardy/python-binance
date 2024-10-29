@@ -7,7 +7,7 @@ import os
 proxies = {}
 proxy = os.getenv("PROXY")
 if proxy:
-    proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
+    proxies = {"http": proxy, 'https': proxy} # tmp: improve this in the future
 else:
     print("No proxy set")
 

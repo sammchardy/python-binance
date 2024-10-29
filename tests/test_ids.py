@@ -46,7 +46,7 @@ def test_swap_id():
 def test_swap_batch_id():
     with requests_mock.mock() as m:
         m.post("https://fapi.binance.com/fapi/v1/batchOrders", json={}, status_code=200)
-        order =  {"symbol" : "LTCUSDT", "side":"BUY", "type":"MARKET", "quantity":0.1}
+        order =  {"symbol": "LTCUSDT", "side": "BUY", "type": "MARKET", "quantity": 0.1}
         orders = [order, order]
         client.futures_place_batch_order(batchOrders=orders)
         text = m.last_request.text
@@ -68,7 +68,7 @@ def test_coin_id():
 def test_coin_batch_id():
     with requests_mock.mock() as m:
         m.post("https://dapi.binance.com/dapi/v1/batchOrders", json={}, status_code=200)
-        order =  {"symbol" : "BTCUSD_PERP", "side":"BUY", "type":"MARKET", "quantity":0.1}
+        order =  {"symbol": "BTCUSD_PERP", "side": "BUY", "type": "MARKET", "quantity": 0.1}
         orders = [order, order]
         client.futures_coin_place_batch_order(batchOrders=orders)
         text = m.last_request.text
@@ -165,7 +165,7 @@ async def test_swap_batch_id_async():
         def handler(url, **kwargs):
             assert 'x-Cb7ytekJ' in kwargs['data'][0][1]
         m.post("https://fapi.binance.com/fapi/v1/batchOrders", payload={'id': 1}, status=200, callback=handler)
-        order =  {"symbol" : "LTCUSDT", "side":"BUY", "type":"MARKET", "quantity":0.1}
+        order =  {"symbol": "LTCUSDT", "side": "BUY", "type": "MARKET", "quantity": 0.1}
         orders = [order, order]
         await clientAsync.futures_place_batch_order(batchOrders=orders)
         await clientAsync.close_connection()
@@ -178,7 +178,7 @@ async def test_coin_batch_id_async():
         def handler(url, **kwargs):
             assert 'x-Cb7ytekJ' in kwargs['data'][0][1]
         m.post("https://dapi.binance.com/dapi/v1/batchOrders", payload={'id': 1}, status=200, callback=handler)
-        order =  {"symbol" : "LTCUSD_PERP", "side":"BUY", "type":"MARKET", "quantity":0.1}
+        order =  {"symbol": "LTCUSD_PERP", "side": "BUY", "type": "MARKET", "quantity": 0.1}
         orders = [order, order]
         await clientAsync.futures_coin_place_batch_order(batchOrders=orders)
         await clientAsync.close_connection()
