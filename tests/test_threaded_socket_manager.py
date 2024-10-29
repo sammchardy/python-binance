@@ -26,7 +26,7 @@ def handle_socket_message(msg):
     if received_depth and received_ohlcv:
         twm.stop()
 
-def test_socket_stopped_on_aexit():
+def test_threaded_socket_manager():
     global twm
     twm = ThreadedWebsocketManager(api_key="", api_secret="", testnet=True)
 
