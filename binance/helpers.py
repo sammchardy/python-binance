@@ -58,7 +58,9 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
         return None
 
 
-def round_step_size(quantity: Union[float, Decimal], step_size: Union[float, Decimal]) -> float:
+def round_step_size(
+    quantity: Union[float, Decimal], step_size: Union[float, Decimal]
+) -> float:
     """Rounds a given quantity to a specific step size
 
     :param quantity: required

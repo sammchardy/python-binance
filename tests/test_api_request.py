@@ -7,11 +7,12 @@ import os
 proxies = {}
 proxy = os.getenv("PROXY")
 if proxy:
-    proxies = {"http": proxy, 'https': proxy } # tmp: improve this in the future
+    proxies = {"http": proxy, "https": proxy}  # tmp: improve this in the future
 else:
     print("No proxy set")
 
-client = Client("api_key", "api_secret", {'proxies': proxies})
+client = Client("api_key", "api_secret", {"proxies": proxies})
+
 
 def test_invalid_json():
     """Test Invalid response Exception"""
@@ -45,5 +46,9 @@ def test_api_exception_invalid_json():
     with pytest.raises(BinanceAPIException):
         with requests_mock.mock() as m:
             not_json_str = "<html><body>Error</body></html>"
-            m.get("https://api.binance.com/api/v3/time", text=not_json_str, status_code=400)
+            m.get(
+                "https://api.binance.com/api/v3/time",
+                text=not_json_str,
+                status_code=400,
+            )
             client.get_server_time()

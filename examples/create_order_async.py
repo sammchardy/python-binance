@@ -7,9 +7,10 @@ sys.path.append(root)
 
 from binance.client import AsyncClient
 
+
 # create futures order
 async def main():
-    api_key = "" # your api_key here
+    api_key = ""  # your api_key here
     secret = ""  # your secret here
     client = AsyncClient(api_key, secret, testnet=True)
     order = await client.futures_create_order(
@@ -17,9 +18,10 @@ async def main():
         side="BUY",
         type="MARKET",
         quantity=0.1,
-        positionSide="LONG" # BOTH for One-way Mode ; LONG or SHORT for Hedge Mode
+        positionSide="LONG",  # BOTH for One-way Mode ; LONG or SHORT for Hedge Mode
     )
     print(order)
     await client.close_connection()
+
 
 asyncio.run(main())

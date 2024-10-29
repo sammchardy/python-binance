@@ -7,28 +7,29 @@ from .helpers import get_loop
 
 
 class ThreadedApiManager(threading.Thread):
-
     def __init__(
-        self, api_key: Optional[str] = None, api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, Any]] = None, tld: str = 'com',
-        testnet: bool = False, session_params: Optional[Dict[str, Any]] = None,
-        _loop: Optional[asyncio.AbstractEventLoop] = None
+        self,
+        api_key: Optional[str] = None,
+        api_secret: Optional[str] = None,
+        requests_params: Optional[Dict[str, Any]] = None,
+        tld: str = "com",
+        testnet: bool = False,
+        session_params: Optional[Dict[str, Any]] = None,
+        _loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
-        """Initialise the BinanceSocketManager
-
-        """
+        """Initialise the BinanceSocketManager"""
         super().__init__()
         self._loop: asyncio.AbstractEventLoop = get_loop() if _loop is None else _loop
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
         self._client_params = {
-            'api_key': api_key,
-            'api_secret': api_secret,
-            'requests_params': requests_params,
-            'tld': tld,
-            'testnet': testnet,
-            'session_params': session_params,
+            "api_key": api_key,
+            "api_secret": api_secret,
+            "requests_params": requests_params,
+            "tld": tld,
+            "testnet": testnet,
+            "session_params": session_params,
         }
 
     async def _before_socket_listener_start(self):
