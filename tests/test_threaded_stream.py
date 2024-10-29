@@ -44,25 +44,25 @@ def test_threaded_api_manager(manager):
     # start is required to initialise its internal loop
     twm.start()
     
-    received_kline = asyncio.Event()
-    received_depth = asyncio.Event()
     received_ticker = asyncio.Event()
+    received_depth = asyncio.Event()
+    received_mini_ticker = asyncio.Event()
 
 
-    def handle_kline(msg):
-        print(msg)
-        received_kline.set()  # Signal that we've received a callback
-        
-    def handle_depth(msg):
-        print(msg)
-        received_depth.set()  # Signal that we've received a callback
-    
     def handle_ticker(msg):
         print(msg)
         received_ticker.set()  # Signal that we've received a callback
+        
+    async def handle_depth(msg):
+        print(msg)
+        received_depth.set()  # Signal that we've received a callback
+    
+    def handle_mini_ticker(msg):
+        print(msg)
+        received_mini_ticker.set()  # Signal that we've received a callback
     
 
-    twm.start_kline_socket(callback=handle_kline, symbol=symbol)
+    twm.start_ticker_socket(callback=handle_ticker)
 
     # multiple sockets can be started
     twm.start_depth_socket(callback=handle_depth, symbol=symbol)
@@ -70,14 +70,25 @@ def test_threaded_api_manager(manager):
     # or a multiplex socket can be started like this
     # see Binance docs for stream names
     streams = ['bnbbtc@miniTicker', 'bnbbtc@bookTicker']
-    twm.start_multiplex_socket(callback=handle_ticker, streams=streams)
+    twm.start_multiplex_socket(callback=handle_mini_ticker, streams=streams)
 
     # wait for 10 seconds to recieve messages
-    time.sleep(20)
+    # Wait for callbacks to be received
+    wait_time = 10
+    start_time = time.time()
+    
+    while not all([
+        received_mini_ticker.is_set(),
+        received_depth.is_set(),
+        received_ticker.is_set()
+    ]):
+        time.sleep(0.1)
+        if time.time() - start_time > wait_time:
+            pytest.fail(f"Did not receive all callbacks within {wait_time} seconds")
     
     twm.stop()
 
-    assert received_kline.is_set(), "Kline Callback was not called"
+    assert received_ticker.is_set(), "Kline Callback was not called"
     assert received_depth.is_set(), "Depth Callback was not called"
     assert received_ticker.is_set(), "Ticker Callback was not called"
     
