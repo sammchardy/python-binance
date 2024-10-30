@@ -50,15 +50,12 @@ def test_threaded_api_manager(manager):
 
 
     def handle_ticker(msg):
-        print(msg)
         received_ticker.set()  # Signal that we've received a callback
         
     async def handle_depth(msg):
-        print(msg)
         received_depth.set()  # Signal that we've received a callback
     
     def handle_mini_ticker(msg):
-        print(msg)
         received_mini_ticker.set()  # Signal that we've received a callback
     
 
