@@ -64,7 +64,7 @@ Features
 - Simple handling of authentication include RSA and EDDSA keys
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
-- Websocket handling with reconnection and multiplexed connections
+- Websocket handling with reconnection, multiplexed connections and sync/async callbacks
 - Symbol Depth Cache
 - Historical Kline/Candle fetching function
 - Withdraw functionality
