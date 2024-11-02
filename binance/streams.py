@@ -11,7 +11,6 @@ from typing import Optional, List, Dict, Callable, Any
 from urllib.parse import urlencode
 
 
-
 import websockets as ws
 from websockets.exceptions import ConnectionClosedError
 
@@ -33,12 +32,12 @@ class WSListenerState(Enum):
 
 
 class BinanceSocketType(str, Enum):
-    SPOT = 'Spot'
-    USD_M_FUTURES = 'USD_M_Futures'
-    COIN_M_FUTURES = 'Coin_M_Futures'
-    OPTIONS = 'Vanilla_Options'
-    ACCOUNT = 'Account'
-    WSAPI = 'WSAPI'
+    SPOT = "Spot"
+    USD_M_FUTURES = "USD_M_Futures"
+    COIN_M_FUTURES = "Coin_M_Futures"
+    OPTIONS = "Vanilla_Options"
+    ACCOUNT = "Account"
+    WSAPI = "WSAPI"
 
 
 class ReconnectingWebsocket:
@@ -162,12 +161,10 @@ class ReconnectingWebsocket:
                                 self._log.debug(
                                     f"Queue overflow {self.MAX_QUEUE_SIZE}. Message not filled"
                                 )
-                                await self._queue.put(
-                                    {
-                                        "e": "error",
-                                        "m": "Queue overflow. Message not filled",
-                                    }
-                                )
+                                await self._queue.put({
+                                    "e": "error",
+                                    "m": "Queue overflow. Message not filled",
+                                })
                                 raise BinanceWebsocketUnableToConnect
                 except asyncio.TimeoutError:
                     self._log.debug(f"no message in {self.TIMEOUT} seconds")
@@ -242,7 +239,7 @@ class ReconnectingWebsocket:
 
     async def _reconnect(self):
         self.ws_state = WSListenerState.RECONNECTING
-    
+
     async def send(self, payload):
         """Send a payload over the WebSocket connection.
 
@@ -351,16 +348,16 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
 
 class BinanceSocketManager:
-    STREAM_URL = 'wss://stream.binance.{}:9443/'
-    STREAM_TESTNET_URL = 'wss://testnet.binance.vision/'
-    FSTREAM_URL = 'wss://fstream.binance.{}/'
-    FSTREAM_TESTNET_URL = 'wss://stream.binancefuture.com/'
-    DSTREAM_URL = 'wss://dstream.binance.{}/'
-    DSTREAM_TESTNET_URL = 'wss://dstream.binancefuture.com/'
-    VSTREAM_URL = 'wss://vstream.binance.{}/'
-    VSTREAM_TESTNET_URL = 'wss://testnetws.binanceops.{}/'
-    WSAPI_URL = 'wss://ws-api.binance.{}:443/ws-api/v3'
-    WSAPI_TESTNET_URL = 'wss://testnet.binance.vision/ws-api/v3'
+    STREAM_URL = "wss://stream.binance.{}:9443/"
+    STREAM_TESTNET_URL = "wss://testnet.binance.vision/"
+    FSTREAM_URL = "wss://fstream.binance.{}/"
+    FSTREAM_TESTNET_URL = "wss://stream.binancefuture.com/"
+    DSTREAM_URL = "wss://dstream.binance.{}/"
+    DSTREAM_TESTNET_URL = "wss://dstream.binancefuture.com/"
+    VSTREAM_URL = "wss://vstream.binance.{}/"
+    VSTREAM_TESTNET_URL = "wss://testnetws.binanceops.{}/"
+    WSAPI_URL = "wss://ws-api.binance.{}:443/ws-api/v3"
+    WSAPI_TESTNET_URL = "wss://testnet.binance.vision/ws-api/v3"
 
     WEBSOCKET_DEPTH_5 = "5"
     WEBSOCKET_DEPTH_10 = "10"
@@ -458,13 +455,21 @@ class BinanceSocketManager:
         stream_url = self.VSTREAM_URL
         if self.testnet:
             stream_url = self.VSTREAM_TESTNET_URL
-        return self._get_socket(path, stream_url, prefix, is_binary=True, socket_type=BinanceSocketType.OPTIONS)
-    
+        return self._get_socket(
+            path,
+            stream_url,
+            prefix,
+            is_binary=True,
+            socket_type=BinanceSocketType.OPTIONS,
+        )
+
     def _get_ws_api_socket(self):
         stream_url = self.WSAPI_URL
         if self.testnet:
             stream_url = self.WSAPI_TESTNET_URL
-        return self._get_socket('', stream_url, '', is_binary=False, socket_type=BinanceSocketType.WSAPI)
+        return self._get_socket(
+            "", stream_url, "", is_binary=False, socket_type=BinanceSocketType.WSAPI
+        )
 
     async def _exit_socket(self, path: str):
         await self._stop_socket(path)
@@ -1195,7 +1200,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = f'streams={"/".join(streams)}'
+        path = f"streams={'/'.join(streams)}"
         return self._get_socket(path, prefix="stream?")
 
     def options_multiplex_socket(self, streams: List[str]):
@@ -1240,7 +1245,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = f'streams={"/".join(streams)}'
+        path = f"streams={'/'.join(streams)}"
         return self._get_futures_socket(
             path, prefix="stream?", futures_type=futures_type
         )
@@ -1400,8 +1405,8 @@ class BinanceSocketManager:
         :param depth: optional Number of depth entries to return, default 10.
         :type depth: str
         """
-        return self._get_options_socket(symbol.lower() + '@depth' + str(depth))
-    
+        return self._get_options_socket(symbol.lower() + "@depth" + str(depth))
+
     async def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
@@ -1435,11 +1440,13 @@ class BinanceSocketManager:
             {}
 
         """
-        
+
         params.setdefault("timeInForce", self._client.TIME_IN_FORCE_GTC)
-        if 'newClientOrderId' not in params:
-            params['newClientOrderId'] = self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
-        
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
+            )
+
         payload = {
             "id": params.get("id", self._get_request_id()),
             "method": "order.test",
@@ -1450,12 +1457,12 @@ class BinanceSocketManager:
         await ws.__aenter__()
         await ws.send(payload)
         return ws
-    
+
     async def create_order(self, **params):
         """Create an order via WebSocket.
-        
+
         https://binance-docs.github.io/apidocs/websocket_api/en/#place-new-order-trade
-        
+
         :param id: The request ID to be used. By default uuid22() is used.
         :param symbol: The symbol to create an order for
         :param side: BUY or SELL
@@ -1464,11 +1471,13 @@ class BinanceSocketManager:
         :param kwargs: Additional order parameters
         """
         params.setdefault("timeInForce", self._client.TIME_IN_FORCE_GTC)
-        if 'newClientOrderId' not in params:
-            params['newClientOrderId'] = self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
-        
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self._client.SPOT_ORDER_PREFIX + self._client.uuid22()
+            )
+
         return await self._send_ws("order.place", True, params)
-    
+
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
@@ -1500,8 +1509,8 @@ class BinanceSocketManager:
 
         """
         params.update({
-            'type': self._client.ORDER_TYPE_LIMIT,
-            'timeInForce': timeInForce
+            "type": self._client.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
         })
         return self.create_order(**params)
 
@@ -1536,7 +1545,7 @@ class BinanceSocketManager:
 
         """
         params.update({
-            'side': self._client.SIDE_BUY,
+            "side": self._client.SIDE_BUY,
         })
         return self.order_limit(timeInForce=timeInForce, **params)
 
@@ -1568,9 +1577,7 @@ class BinanceSocketManager:
 
 
         """
-        params.update({
-            'side': self._client.SIDE_SELL
-        })
+        params.update({"side": self._client.SIDE_SELL})
         return self.order_limit(timeInForce=timeInForce, **params)
 
     def order_market(self, **params):
@@ -1598,9 +1605,7 @@ class BinanceSocketManager:
 
 
         """
-        params.update({
-            'type': self._client.ORDER_TYPE_MARKET
-        })
+        params.update({"type": self._client.ORDER_TYPE_MARKET})
         return self.create_order(**params)
 
     def order_market_buy(self, **params):
@@ -1625,9 +1630,7 @@ class BinanceSocketManager:
 
 
         """
-        params.update({
-            'side': self._client.SIDE_BUY
-        })
+        params.update({"side": self._client.SIDE_BUY})
         return self.order_market(**params)
 
     def order_market_sell(self, **params):
@@ -1652,12 +1655,9 @@ class BinanceSocketManager:
 
 
         """
-        params.update({
-            'side': self._client.SIDE_SELL
-        })
+        params.update({"side": self._client.SIDE_SELL})
         return self.order_market(**params)
-    
-    
+
     async def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
@@ -1671,120 +1671,122 @@ class BinanceSocketManager:
         :type origClientOrderId: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
-        
+
         """
-                
+
         return await self._send_ws("order.status", True, params)
-    
+
     async def cancel_order(self, **params):
         return await self._send_ws("order.cancel", True, params)
-    cancel_order.__doc__ = AsyncClient.cancel_order.__doc__
 
+    cancel_order.__doc__ = AsyncClient.cancel_order.__doc__
 
     async def cancel_and_replace_order(self, **params):
         return await self._send_ws("order.cancelReplace", True, params)
 
     async def get_open_orders(self, **params):
         return await self._send_ws("openOrders.status", True, params)
-    
+
     async def cancel_all_open_orders(self, **params):
         return await self._send_ws("openOrders.cancelAll", True, params)
 
     async def create_oco_order(self, **params):
         return await self._send_ws("orderList.place.oco", True, params)
-    
+
     async def create_oto_order(self, **params):
         return await self._send_ws("orderList.place.oto", True, params)
-    
+
     async def create_otoco_order(self, **params):
         return await self._send_ws("orderList.place.otoco", True, params)
-    
+
     async def get_oco_order(self, **params):
         return await self._send_ws("orderList.status", True, params)
-    
+
     async def cancel_oco_order(self, **params):
         return await self._send_ws("orderList.cancel", True, params)
-    
+
     async def get_oco_open_orders(self, **params):
         return await self._send_ws("openOrderLists.status", True, params)
-    
+
     async def create_sor_order(self, **params):
         return await self._send_ws("sor.order.place", True, params)
-    
+
     async def create_test_sor_order(self, **params):
         return await self._send_ws("sor.order.test", True, params)
-    
+
     async def get_account(self, **params):
         return await self._send_ws("account.status", True, params)
-    
+
     async def get_account_rate_limits_orders(self, **params):
         return await self._send_ws("account.rateLimits.orders", True, params)
-    
+
     async def get_all_orders(self, **params):
         return await self._send_ws("allOrders", True, params)
-    
+
     async def get_my_trades(self, **params):
         return await self._send_ws("myTrades", True, params)
-    
+
     async def get_prevented_matches(self, **params):
         return await self._send_ws("myPreventedMatches", True, params)
-    
+
     async def get_allocations(self, **params):
         return await self._send_ws("myAllocations", True, params)
-    
+
     async def get_commission_rates(self, **params):
         return await self._send_ws("account.commission", True, params)
-    
+
     async def get_order_book(self, **params):
         return await self._send_ws("depth", False, params)
-    
+
     async def get_recent_trades(self, **params):
         return await self._send_ws("trades.recent", False, params)
-    
+
     async def get_historical_trades(self, **params):
         return await self._send_ws("trades.historical", False, params)
-    
+
     async def get_aggregate_trades(self, **params):
         return await self._send_ws("trades.aggregate", False, params)
-    
+
     async def get_klines(self, **params):
         return await self._send_ws("klines", False, params)
-    
+
     async def get_uiKlines(self, **params):
         return await self._send_ws("uiKlines", False, params)
-    
+
     async def get_avg_price(self, **params):
         return await self._send_ws("avgPrice", False, params)
-    
+
     async def get_ticker(self, **params):
         return await self._send_ws("ticker.24hr", False, params)
-    
+
     async def get_trading_day_ticker(self, **params):
         return await self._send_ws("ticker.tradingDay", False, params)
-    
+
     async def get_symbol_ticker_window(self, **params):
         return await self._send_ws("ticker", False, params)
-    
+
     def get_symbol_ticker(self, **params):
-        self._loop.call_soon_threadsafe(asyncio.create_task, self._send_ws("ticker.price", False, params))
-        time.sleep(1) # TODO: fix. here to avoid race condition
+        self._loop.call_soon_threadsafe(
+            asyncio.create_task, self._send_ws("ticker.price", False, params)
+        )
+        time.sleep(1)  # TODO: fix. here to avoid race condition
         return self._get_ws_api_socket()
-    
+
     async def get_orderbook_ticker(self, **params):
         return await self._send_ws("ticker.book", False, params)
-    
+
     async def ping(self, **params):
         return await self._send_ws("ping", False, params)
-    
+
     async def get_time(self, **params):
         return await self._send_ws("time", False, params)
-    
+
     async def get_exchange_info(self, **params):
         return await self._send_ws("exchangeInfo", False, params)
 
-    async def _send_ws (self, method, signed, params):
+    async def _send_ws(self, method, signed, params):
         """Send payload to Binance Websocket API
-        
+
         :param method: method to call
         :param signed: whether to sign the params
         :param params: parameters for the method
@@ -1792,7 +1794,7 @@ class BinanceSocketManager:
         payload = {
             "id": params.get("id", self._get_request_id()),
             "method": method,
-            "params": params
+            "params": params,
         }
         if signed:
             payload["params"] = self._sign_params(params)
@@ -1801,18 +1803,17 @@ class BinanceSocketManager:
         await ws.__aenter__()
         await ws.send(payload)
         return ws
-        
-    def _sign_params (self, params):
+
+    def _sign_params(self, params):
         if "signature" in params:
             return params
         params.setdefault("apiKey", self._client.API_KEY)
-        params.setdefault("timestamp", int(time.time() * 1000 + self._client.timestamp_offset))
+        params.setdefault(
+            "timestamp", int(time.time() * 1000 + self._client.timestamp_offset)
+        )
         params = dict(sorted(params.items()))
-        return {
-            **params,
-            "signature": self._generate_ws_signature(params)
-        }
-        
+        return {**params, "signature": self._generate_ws_signature(params)}
+
     def _generate_ws_signature(self, data: Dict) -> str:
         sig_func = self._client._hmac_signature
         if self._client.PRIVATE_KEY:
@@ -1876,14 +1877,14 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             asyncio.create_task, self.start_listener(socket, socket_path, callback)
         )
         return socket_path
-    
+
     def get_symbol_ticker(self, callback: Callable, symbol: str) -> str:
         return self._start_async_socket(
             callback=callback,
-            socket_name='get_symbol_ticker',
+            socket_name="get_symbol_ticker",
             params={
-                'symbol': symbol,
-            }
+                "symbol": symbol,
+            },
         )
 
     def start_depth_socket(
