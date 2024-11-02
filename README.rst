@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v1.0.21
+Welcome to python-binance v1.0.22
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -32,6 +32,9 @@ If you want to automate interactions with Binance stick around.
     :align: middle
 
 **This project is powered by** |ico1|
+
+*Please make sure your* `python-binance` *version is* **v.1.0.20** *or higher.*
+*The previous versions are no longer recommended because some endpoints have been deprecated.*
 
 Source code
   https://github.com/sammchardy/python-binance

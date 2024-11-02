@@ -1,13 +1,28 @@
 Changelog
 =========
 
+v1.0.22 - 2024-10-29
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- futures all tickers stream
+- futures coin-m all tickers stream
+
+**Fixed**
+
+- hang in the ThreadedApiManager
+
+
 v1.0.21 - 2024-10-23
 ^^^^^^^^^^^^^^^^^^^^
 
 **Added**
+
 - Some new endpoints
 
 **Fixed**
+
 - url encoding for coin-m post endpoints
 - batch order endpoint
 - Some minor bug fixes
@@ -16,6 +31,7 @@ v1.0.20 - 2024-10-22
 ^^^^^^^^^^^^^^^^^^^^
 
 **Added**
+
 - EDDSA authentication
 - Portfolio Margin endpoints
 - Some new futures endpoints
@@ -23,6 +39,7 @@ v1.0.20 - 2024-10-22
 - Version override is possible now through `params`
 
 **Fixed**
+
 - Migrated `positionRisk` to v3
 - Fixed the error `AttributeError("'Connect' object has no attribute 'protocol'")`
 - Some minor bug fixes
