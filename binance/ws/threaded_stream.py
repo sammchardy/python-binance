@@ -2,8 +2,8 @@ import asyncio
 import threading
 from typing import Optional, Dict, Any
 
-from .client import AsyncClient
-from .helpers import get_loop
+from binance.client import AsyncClient
+from binance.helpers import get_loop
 
 
 class ThreadedApiManager(threading.Thread):

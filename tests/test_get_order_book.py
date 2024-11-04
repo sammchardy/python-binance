@@ -1,4 +1,5 @@
 import pytest
+from binance.client import Client
 from binance.exceptions import BinanceAPIException
 from binance import AsyncClient
 import os
@@ -80,3 +81,9 @@ async def test_futures_get_order_book_async():
         assert_ob(order_book)
     except BinanceAPIException as e:
         pytest.fail(f"API request failed: {str(e)}")
+
+@pytest.mark.asyncio()
+async def test_ws_get_order_book(clientAsync):
+        order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
+        assert_ob(order_book)
+

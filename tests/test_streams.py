@@ -1,4 +1,4 @@
-from binance.streams import BinanceSocketManager
+from binance.ws.streams import BinanceSocketManager
 from binance.client import AsyncClient
 import pytest
 

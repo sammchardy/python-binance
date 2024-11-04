@@ -15,6 +15,8 @@ from Crypto.Signature import pkcs1_15, eddsa
 from operator import itemgetter
 from urllib.parse import urlencode
 
+from binance.ws.websocket_api import WebsocketAPI
+
 from .helpers import interval_to_milliseconds, convert_ts_str, get_loop
 from .exceptions import (
     BinanceAPIException,
@@ -40,6 +42,8 @@ class BaseClient:
     OPTIONS_URL = "https://eapi.binance.{}/eapi"
     OPTIONS_TESTNET_URL = "https://testnet.binanceops.{}/eapi"
     PAPI_URL = "https://papi.binance.{}/papi"
+    WS_API_URL = "wss://ws-api.binance.{}/ws-api/v3"
+    WS_API_TESTNET_URL = "wss://testnet.binance.vision/ws-api/v3"
     PUBLIC_API_VERSION = "v1"
     PRIVATE_API_VERSION = "v3"
     MARGIN_API_VERSION = "v1"
@@ -158,6 +162,7 @@ class BaseClient:
         testnet: bool = False,
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
+        loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
         """Binance API Client constructor
 
@@ -196,6 +201,9 @@ class BaseClient:
         self.response = None
         self.testnet = testnet
         self.timestamp_offset = 0
+        ws_api_url = self.WS_API_TESTNET_URL if testnet else self.WS_API_URL.format(tld)
+        self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
+        self.loop = loop or get_loop()
 
     def _get_headers(self) -> Dict:
         headers = {
@@ -320,6 +328,44 @@ class BaseClient:
                 sig_func = self._ed25519_signature
         query_string = "&".join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
         return sig_func(query_string)
+
+    def _sign_ws_api_params(self, params):
+        if "signature" in params:
+            return params
+        params.setdefault("apiKey", self.API_KEY)
+        params.setdefault(
+            "timestamp", int(time.time() * 1000 + self.timestamp_offset)
+        )
+        params = dict(sorted(params.items()))
+        return {**params, "signature": self._generate_ws_api_signature(params)}
+
+    def _generate_ws_api_signature(self, data: Dict) -> str:
+        sig_func = self._hmac_signature
+        if self.PRIVATE_KEY:
+            if self._is_rsa:
+                sig_func = self._rsa_signature
+            else:
+                sig_func = self._ed25519_signature
+        query_string = urlencode(data)
+        return sig_func(query_string)
+
+    async def _ws_api_request(self, method:str, signed:bool, params: dict):
+        """Send request and wait for response"""
+        id = params.pop("id", self.uuid22())
+        payload = {
+            "id": id,
+            "method": method,
+            "params": params,
+        }
+        if signed:
+            payload["params"] = self._sign_ws_api_params(params)
+        return await self.ws_api.request(id, payload)
+    
+    def _ws_api_request_sync(self, method: str, signed: bool, params: dict):
+        """Send request to WS API and wait for response"""
+        # self.loop = get_loop()
+        # return self.loop.run_until_complete(self._ws_api_request(method, signed, params))
+        return asyncio.run(self._ws_api_request(method, signed, params))
 
     @staticmethod
     def _get_version(version: int, **kwargs) -> int:
@@ -10387,6 +10433,331 @@ class Client(BaseClient):
     def __del__(self):
         self.close_connection()
 
+    ############################################################
+    # WebSocket API methods
+    ############################################################
+    
+
+    def ws_create_test_order(self, **params):
+        """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#test-new-order-trade
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param type: required
+        :type type: str
+        :param timeInForce: required if limit order
+        :type timeInForce: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: The number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        .. code-block:: python
+            {}
+        """
+
+        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self.SPOT_ORDER_PREFIX + self.uuid22()
+            )
+        
+        return self._ws_api_request_sync("order.test", True, params)
+
+    def ws_create_order(self, **params):
+        """Create an order via WebSocket.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#place-new-order-trade
+        :param id: The request ID to be used. By default uuid22() is used.
+        :param symbol: The symbol to create an order for
+        :param side: BUY or SELL
+        :param type: Order type (e.g., LIMIT, MARKET)
+        :param quantity: The amount to buy or sell
+        :param kwargs: Additional order parameters
+        """
+        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self.SPOT_ORDER_PREFIX + self.uuid22()
+            )
+
+        return self._ws_api_request_sync("order.place", True, params)
+
+    def ws_order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit order
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({
+            "type": self.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
+        })
+        return self.ws_create_order(**params)
+
+    def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit buy order
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({
+            "side": self.SIDE_BUY,
+        })
+        return self.ws_order_limit(timeInForce=timeInForce, **params)
+
+    def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit sell order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_SELL})
+        return self.ws_order_limit(timeInForce=timeInForce, **params)
+
+    def ws_order_market(self, **params):
+        """Send in a new market order
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: amount the user wants to spend (when buying) or receive (when selling)
+            of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"type": self.ORDER_TYPE_MARKET})
+        return self.ws_create_order(**params)
+
+    def ws_order_market_buy(self, **params):
+        """Send in a new market buy order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to spend of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_BUY})
+        return self.ws_order_market(**params)
+
+    def ws_order_market_sell(self, **params):
+        """Send in a new market sell order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to receive of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_SELL})
+        return self.ws_order_market(**params)
+
+    def ws_get_order(self, **params):
+        """Check an order's status. Either orderId or origClientOrderId must be sent.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#query-order-user_data
+        :param symbol: required
+        :type symbol: str
+        :param orderId: The unique order id
+        :type orderId: int
+        :param origClientOrderId: optional
+        :type origClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        """
+
+        return self._ws_api_request_sync("order.status", True, params)
+
+    def ws_cancel_order(self, **params):
+        return self._ws_api_request_sync("order.cancel", True, params)
+    cancel_order.__doc__ = cancel_order.__doc__
+
+    def ws_cancel_and_replace_order(self, **params):
+        return self._ws_api_request_sync("order.cancelReplace", True, params)
+
+    def ws_get_open_orders(self, **params):
+        return self._ws_api_request_sync("openOrders.status", True, params)
+
+    def ws_cancel_all_open_orders(self, **params):
+        return self._ws_api_request_sync("openOrders.cancelAll", True, params)
+
+    def ws_create_oco_order(self, **params):
+        return self._ws_api_request_sync("orderList.place.oco", True, params)
+
+    def ws_create_oto_order(self, **params):
+        return self._ws_api_request_sync("orderList.place.oto", True, params)
+
+    def ws_create_otoco_order(self, **params):
+        return self._ws_api_request_sync("orderList.place.otoco", True, params)
+
+    def ws_get_oco_order(self, **params):
+        return self._ws_api_request_sync("orderList.status", True, params)
+
+    def ws_cancel_oco_order(self, **params):
+        return self._ws_api_request_sync("orderList.cancel", True, params)
+
+    def ws_get_oco_open_orders(self, **params):
+        return self._ws_api_request_sync("openOrderLists.status", True, params)
+
+    def ws_create_sor_order(self, **params):
+        return self._ws_api_request_sync("sor.order.place", True, params)
+
+    def ws_create_test_sor_order(self, **params):
+        return self._ws_api_request_sync("sor.order.test", True, params)
+
+    def ws_get_account(self, **params):
+        return self._ws_api_request_sync("account.status", True, params)
+
+    def ws_get_account_rate_limits_orders(self, **params):
+        return self._ws_api_request_sync("account.rateLimits.orders", True, params)
+
+    def ws_get_all_orders(self, **params):
+        return self._ws_api_request_sync("allOrders", True, params)
+
+    def ws_get_my_trades(self, **params):
+        return self._ws_api_request_sync("myTrades", True, params)
+
+    def ws_get_prevented_matches(self, **params):
+        return self._ws_api_request_sync("myPreventedMatches", True, params)
+
+    def ws_get_allocations(self, **params):
+        return self._ws_api_request_sync("myAllocations", True, params)
+
+    def ws_get_commission_rates(self, **params):
+        return self._ws_api_request_sync("account.commission", True, params)
+
+    def ws_get_order_book(self, **params):
+        return self._ws_api_request_sync("depth", False, params)
+
+    def ws_get_recent_trades(self, **params):
+        return self._ws_api_request_sync("trades.recent", False, params)
+
+    def ws_get_historical_trades(self, **params):
+        return self._ws_api_request_sync("trades.historical", False, params)
+
+    def ws_get_aggregate_trades(self, **params):
+        return self._ws_api_request_sync("trades.aggregate", False, params)
+
+    def ws_get_klines(self, **params):
+        return self._ws_api_request_sync("klines", False, params)
+
+    def ws_get_uiKlines(self, **params):
+        return self._ws_api_request_sync("uiKlines", False, params)
+
+    def ws_get_avg_price(self, **params):
+        return self._ws_api_request_sync("avgPrice", False, params)
+
+    def ws_get_ticker(self, **params):
+        return self._ws_api_request_sync("ticker.24hr", False, params)
+
+    def ws_get_trading_day_ticker(self, **params):
+        return self._ws_api_request_sync("ticker.tradingDay", False, params)
+
+    def ws_get_symbol_ticker_window(self, **params):
+        return self._ws_api_request_sync("ticker", False, params)
+
+    def ws_get_symbol_ticker(self, **params):
+        return self._ws_api_request_sync("ticker.price", False, params)
+
+    def ws_get_orderbook_ticker(self, **params):
+        return self._ws_api_request_sync("ticker.book", False, params)
+
+    def ws_ping(self, **params):
+        return self._ws_api_request_sync("ping", False, params)
+
+    def ws_get_time(self, **params):
+        return self._ws_api_request_sync("time", False, params)
+
+    def ws_get_exchange_info(self, **params):
+        return self._ws_api_request_sync("exchangeInfo", False, params)
+
 
 class AsyncClient(BaseClient):
     def __init__(
@@ -10466,6 +10837,9 @@ class AsyncClient(BaseClient):
         if self.session:
             assert self.session
             await self.session.close()
+        if self.ws_api:
+            await self.ws_api.close()
+            self._ws_api = None
 
     async def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
@@ -13532,3 +13906,329 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api(
             "post", "margin/repay-debt", signed=True, data=params
         )
+  
+    
+    ############################################################
+    # WebSocket API methods
+    ############################################################
+    
+
+    async def ws_create_test_order(self, **params):
+        """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#test-new-order-trade
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param type: required
+        :type type: str
+        :param timeInForce: required if limit order
+        :type timeInForce: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: The number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        .. code-block:: python
+            {}
+        """
+
+        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self.SPOT_ORDER_PREFIX + self.uuid22()
+            )
+        
+        return await self._ws_api_request("order.test", True, params)
+
+    async def ws_create_order(self, **params):
+        """Create an order via WebSocket.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#place-new-order-trade
+        :param id: The request ID to be used. By default uuid22() is used.
+        :param symbol: The symbol to create an order for
+        :param side: BUY or SELL
+        :param type: Order type (e.g., LIMIT, MARKET)
+        :param quantity: The amount to buy or sell
+        :param kwargs: Additional order parameters
+        """
+        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = (
+                self.SPOT_ORDER_PREFIX + self.uuid22()
+            )
+
+        return await self._ws_api_request("order.place", True, params)
+
+    async def ws_order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit order
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param icebergQty: Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order.
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({
+            "type": self.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
+        })
+        return await self.ws_create_order(**params)
+
+    async def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit buy order
+        Any order with an icebergQty MUST have timeInForce set to GTC.
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({
+            "side": self.SIDE_BUY,
+        })
+        return await self.ws_order_limit(timeInForce=timeInForce, **params)
+
+    async def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+        """Send in a new limit sell order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param price: required
+        :type price: str
+        :param timeInForce: default Good till cancelled
+        :type timeInForce: str
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param stopPrice: Used with stop orders
+        :type stopPrice: decimal
+        :param icebergQty: Used with iceberg orders
+        :type icebergQty: decimal
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_SELL})
+        return await self.ws_order_limit(timeInForce=timeInForce, **params)
+
+    async def ws_order_market(self, **params):
+        """Send in a new market order
+        :param symbol: required
+        :type symbol: str
+        :param side: required
+        :type side: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: amount the user wants to spend (when buying) or receive (when selling)
+            of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"type": self.ORDER_TYPE_MARKET})
+        return await self.ws_create_order(**params)
+
+    async def ws_order_market_buy(self, **params):
+        """Send in a new market buy order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to spend of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_BUY})
+        return await self.ws_order_market(**params)
+
+    async def ws_order_market_sell(self, **params):
+        """Send in a new market sell order
+        :param symbol: required
+        :type symbol: str
+        :param quantity: required
+        :type quantity: decimal
+        :param quoteOrderQty: the amount the user wants to receive of the quote asset
+        :type quoteOrderQty: decimal
+        :param newClientOrderId: A unique id for the order. Automatically generated if not sent.
+        :type newClientOrderId: str
+        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :type newOrderRespType: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: WS response
+        See order endpoint for full response options
+        """
+        params.update({"side": self.SIDE_SELL})
+        return await self.ws_order_market(**params)
+
+    async def ws_get_order(self, **params):
+        """Check an order's status. Either orderId or origClientOrderId must be sent.
+        https://binance-docs.github.io/apidocs/websocket_api/en/#query-order-user_data
+        :param symbol: required
+        :type symbol: str
+        :param orderId: The unique order id
+        :type orderId: int
+        :param origClientOrderId: optional
+        :type origClientOrderId: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        """
+
+        return await self._ws_api_request("order.status", True, params)
+
+    async def ws_cancel_order(self, **params):
+        return await self._ws_api_request("order.cancel", True, params)
+    cancel_order.__doc__ = cancel_order.__doc__
+
+    async def ws_cancel_and_replace_order(self, **params):
+        return await self._ws_api_request("order.cancelReplace", True, params)
+
+    async def ws_get_open_orders(self, **params):
+        return await self._ws_api_request("openOrders.status", True, params)
+
+    async def ws_cancel_all_open_orders(self, **params):
+        return await self._ws_api_request("openOrders.cancelAll", True, params)
+
+    async def ws_create_oco_order(self, **params):
+        return await self._ws_api_request("orderList.place.oco", True, params)
+
+    async def ws_create_oto_order(self, **params):
+        return await self._ws_api_request("orderList.place.oto", True, params)
+
+    async def ws_create_otoco_order(self, **params):
+        return await self._ws_api_request("orderList.place.otoco", True, params)
+
+    async def ws_get_oco_order(self, **params):
+        return await self._ws_api_request("orderList.status", True, params)
+
+    async def ws_cancel_oco_order(self, **params):
+        return await self._ws_api_request("orderList.cancel", True, params)
+
+    async def ws_get_oco_open_orders(self, **params):
+        return await self._ws_api_request("openOrderLists.status", True, params)
+
+    async def ws_create_sor_order(self, **params):
+        return await self._ws_api_request("sor.order.place", True, params)
+
+    async def ws_create_test_sor_order(self, **params):
+        return await self._ws_api_request("sor.order.test", True, params)
+
+    async def ws_get_account(self, **params):
+        return await self._ws_api_request("account.status", True, params)
+
+    async def ws_get_account_rate_limits_orders(self, **params):
+        return await self._ws_api_request("account.rateLimits.orders", True, params)
+
+    async def ws_get_all_orders(self, **params):
+        return await self._ws_api_request("allOrders", True, params)
+
+    async def ws_get_my_trades(self, **params):
+        return await self._ws_api_request("myTrades", True, params)
+
+    async def ws_get_prevented_matches(self, **params):
+        return await self._ws_api_request("myPreventedMatches", True, params)
+
+    async def ws_get_allocations(self, **params):
+        return await self._ws_api_request("myAllocations", True, params)
+
+    async def ws_get_commission_rates(self, **params):
+        return await self._ws_api_request("account.commission", True, params)
+
+    async def ws_get_order_book(self, **params):
+        return await self._ws_api_request("depth", False, params)
+
+    async def ws_get_recent_trades(self, **params):
+        return await self._ws_api_request("trades.recent", False, params)
+
+    async def ws_get_historical_trades(self, **params):
+        return await self._ws_api_request("trades.historical", False, params)
+
+    async def ws_get_aggregate_trades(self, **params):
+        return await self._ws_api_request("trades.aggregate", False, params)
+
+    async def ws_get_klines(self, **params):
+        return await self._ws_api_request("klines", False, params)
+
+    async def ws_get_uiKlines(self, **params):
+        return await self._ws_api_request("uiKlines", False, params)
+
+    async def ws_get_avg_price(self, **params):
+        return await self._ws_api_request("avgPrice", False, params)
+
+    async def ws_get_ticker(self, **params):
+        return await self._ws_api_request("ticker.24hr", False, params)
+
+    async def ws_get_trading_day_ticker(self, **params):
+        return await self._ws_api_request("ticker.tradingDay", False, params)
+
+    async def ws_get_symbol_ticker_window(self, **params):
+        return await self._ws_api_request("ticker", False, params)
+
+    async def ws_get_symbol_ticker(self, **params):
+        return await self._ws_api_request("ticker.price", False, params)
+
+    async def ws_get_orderbook_ticker(self, **params):
+        return await self._ws_api_request("ticker.book", False, params)
+
+    async def ws_ping(self, **params):
+        return await self._ws_api_request("ping", False, params)
+
+    async def ws_get_time(self, **params):
+        return await self._ws_api_request("time", False, params)
+
+    async def ws_get_exchange_info(self, **params):
+        return await self._ws_api_request("exchangeInfo", False, params)
