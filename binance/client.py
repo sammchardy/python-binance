@@ -10463,7 +10463,6 @@ class Client(BaseClient):
             {}
         """
 
-        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
@@ -10479,7 +10478,6 @@ class Client(BaseClient):
         :param quantity: The amount to buy or sell
         :param kwargs: Additional order parameters
         """
-        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
@@ -13935,8 +13933,6 @@ class AsyncClient(BaseClient):
         .. code-block:: python
             {}
         """
-
-        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
@@ -13952,7 +13948,6 @@ class AsyncClient(BaseClient):
         :param quantity: The amount to buy or sell
         :param kwargs: Additional order parameters
         """
-        params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
