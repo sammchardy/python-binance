@@ -41,12 +41,7 @@ def interval_to_milliseconds(interval):
          int value of interval in milliseconds
     """
     ms = None
-    seconds_per_unit = {
-        "m": 60,
-        "h": 60 * 60,
-        "d": 24 * 60 * 60,
-        "w": 7 * 24 * 60 * 60
-    }
+    seconds_per_unit = {"m": 60, "h": 60 * 60, "d": 24 * 60 * 60, "w": 7 * 24 * 60 * 60}
 
     unit = interval[-1]
     if unit in seconds_per_unit:
@@ -106,7 +101,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
             interval=interval,
             limit=limit,
             startTime=start_ts,
-            endTime=end_ts
+            endTime=end_ts,
         )
 
         # handle the case where our start date is before the symbol pair listed on Binance
@@ -146,11 +141,8 @@ klines = get_historical_klines(symbol, interval, start, end)
 # open a file with filename including symbol, interval and start and end converted to milliseconds
 with open(
     "Binance_{}_{}_{}-{}.json".format(
-        symbol,
-        interval,
-        date_to_milliseconds(start),
-        date_to_milliseconds(end)
+        symbol, interval, date_to_milliseconds(start), date_to_milliseconds(end)
     ),
-    'w'  # set file write mode
+    "w",  # set file write mode
 ) as f:
     f.write(json.dumps(klines))

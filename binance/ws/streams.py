@@ -15,8 +15,6 @@ from binance.enums import ContractType
 from binance.helpers import get_loop
 
 
-
-
 class BinanceSocketType(str, Enum):
     SPOT = "Spot"
     USD_M_FUTURES = "USD_M_Futures"
@@ -866,7 +864,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = f'streams={"/".join(streams)}'
+        path = f"streams={'/'.join(streams)}"
         return self._get_socket(path, prefix="stream?")
 
     def options_multiplex_socket(self, streams: List[str]):
@@ -911,7 +909,7 @@ class BinanceSocketManager:
         Message Format - see Binance API docs for all types
 
         """
-        path = f'streams={"/".join(streams)}'
+        path = f"streams={'/'.join(streams)}"
         return self._get_futures_socket(
             path, prefix="stream?", futures_type=futures_type
         )

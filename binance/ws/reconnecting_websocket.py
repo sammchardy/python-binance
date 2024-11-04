@@ -14,6 +14,7 @@ from binance.exceptions import BinanceWebsocketUnableToConnect
 from binance.helpers import get_loop
 from binance.ws.constants import WSListenerState
 
+
 class ReconnectingWebsocket:
     MAX_RECONNECTS = 5
     MAX_RECONNECT_SECONDS = 60
@@ -71,7 +72,9 @@ class ReconnectingWebsocket:
         self._log.debug("Establishing new WebSocket connection")
         self.ws_state = WSListenerState.RECONNECTING
         await self._before_connect()
-        ws_url = f"{self._url}{getattr(self, '_prefix', '')}{getattr(self, '_path', '')}"
+        ws_url = (
+            f"{self._url}{getattr(self, '_prefix', '')}{getattr(self, '_path', '')}"
+        )
         self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
         try:
             self.ws = await self._conn.__aenter__()
@@ -135,7 +138,7 @@ class ReconnectingWebsocket:
                             self.ws.recv(), timeout=self.TIMEOUT
                         )
                         res = self._handle_message(res)
-                        print (res)
+                        print(res)
                         if res:
                             if self._queue.qsize() < self.MAX_QUEUE_SIZE:
                                 await self._queue.put(res)
@@ -143,12 +146,10 @@ class ReconnectingWebsocket:
                                 self._log.debug(
                                     f"Queue overflow {self.MAX_QUEUE_SIZE}. Message not filled"
                                 )
-                                await self._queue.put(
-                                    {
-                                        "e": "error",
-                                        "m": "Queue overflow. Message not filled",
-                                    }
-                                )
+                                await self._queue.put({
+                                    "e": "error",
+                                    "m": "Queue overflow. Message not filled",
+                                })
                                 raise BinanceWebsocketUnableToConnect
                 except asyncio.TimeoutError:
                     self._log.debug(f"no message in {self.TIMEOUT} seconds")

@@ -1,6 +1,3 @@
-
-
-
 import asyncio
 from binance.client import AsyncClient
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket

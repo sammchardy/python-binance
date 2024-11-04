@@ -12,20 +12,22 @@ if proxy:
 else:
     print("No proxy set")
 
+
 # Configure logging for all tests
 @pytest.fixture(autouse=True)
 def setup_logging():
     logging.basicConfig(
         level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        force=True  # This ensures the config is applied even if logging was initialized elsewhere
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        force=True,  # This ensures the config is applied even if logging was initialized elsewhere
     )
     console_handler = logging.StreamHandler()
-    console_handler.setFormatter(logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    ))
+    console_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    )
     logging.getLogger().addHandler(console_handler)
+
 
 @pytest.fixture(scope="module")
 def client():
@@ -35,11 +37,8 @@ def client():
 @pytest.fixture(scope="function")
 def clientAsync():
     # for now this is not working inside the tests
-    return AsyncClient(
-        api_key="api_key",
-        api_secret="api_secret",
-        https_proxy=proxy
-    )
+    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy)
+
 
 @pytest.fixture(autouse=True, scope="function")
 def event_loop():

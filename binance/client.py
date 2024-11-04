@@ -333,9 +333,7 @@ class BaseClient:
         if "signature" in params:
             return params
         params.setdefault("apiKey", self.API_KEY)
-        params.setdefault(
-            "timestamp", int(time.time() * 1000 + self.timestamp_offset)
-        )
+        params.setdefault("timestamp", int(time.time() * 1000 + self.timestamp_offset))
         params = dict(sorted(params.items()))
         return {**params, "signature": self._generate_ws_api_signature(params)}
 
@@ -349,7 +347,7 @@ class BaseClient:
         query_string = urlencode(data)
         return sig_func(query_string)
 
-    async def _ws_api_request(self, method:str, signed:bool, params: dict):
+    async def _ws_api_request(self, method: str, signed: bool, params: dict):
         """Send request and wait for response"""
         id = params.pop("id", self.uuid22())
         payload = {
@@ -360,7 +358,7 @@ class BaseClient:
         if signed:
             payload["params"] = self._sign_ws_api_params(params)
         return await self.ws_api.request(id, payload)
-    
+
     def _ws_api_request_sync(self, method: str, signed: bool, params: dict):
         """Send request to WS API and wait for response"""
         # self.loop = get_loop()
@@ -1790,11 +1788,9 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return self.order_limit(timeInForce=timeInForce, **params)
 
     def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10436,7 +10432,6 @@ class Client(BaseClient):
     ############################################################
     # WebSocket API methods
     ############################################################
-    
 
     def ws_create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
@@ -10468,10 +10463,8 @@ class Client(BaseClient):
 
         params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
-            params["newClientOrderId"] = (
-                self.SPOT_ORDER_PREFIX + self.uuid22()
-            )
-        
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+
         return self._ws_api_request_sync("order.test", True, params)
 
     def ws_create_order(self, **params):
@@ -10486,9 +10479,7 @@ class Client(BaseClient):
         """
         params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
-            params["newClientOrderId"] = (
-                self.SPOT_ORDER_PREFIX + self.uuid22()
-            )
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
         return self._ws_api_request_sync("order.place", True, params)
 
@@ -10657,6 +10648,7 @@ class Client(BaseClient):
 
     def ws_cancel_order(self, **params):
         return self._ws_api_request_sync("order.cancel", True, params)
+
     cancel_order.__doc__ = cancel_order.__doc__
 
     def ws_cancel_and_replace_order(self, **params):
@@ -11367,11 +11359,9 @@ class AsyncClient(BaseClient):
     order_limit.__doc__ = Client.order_limit.__doc__
 
     async def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return await self.order_limit(timeInForce=timeInForce, **params)
 
     order_limit_buy.__doc__ = Client.order_limit_buy.__doc__
@@ -13906,12 +13896,10 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api(
             "post", "margin/repay-debt", signed=True, data=params
         )
-  
-    
+
     ############################################################
     # WebSocket API methods
     ############################################################
-    
 
     async def ws_create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
@@ -13943,10 +13931,8 @@ class AsyncClient(BaseClient):
 
         params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
-            params["newClientOrderId"] = (
-                self.SPOT_ORDER_PREFIX + self.uuid22()
-            )
-        
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+
         return await self._ws_api_request("order.test", True, params)
 
     async def ws_create_order(self, **params):
@@ -13961,9 +13947,7 @@ class AsyncClient(BaseClient):
         """
         params.setdefault("timeInForce", self.TIME_IN_FORCE_GTC)
         if "newClientOrderId" not in params:
-            params["newClientOrderId"] = (
-                self.SPOT_ORDER_PREFIX + self.uuid22()
-            )
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
 
         return await self._ws_api_request("order.place", True, params)
 
@@ -13997,7 +13981,9 @@ class AsyncClient(BaseClient):
         })
         return await self.ws_create_order(**params)
 
-    async def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+    async def ws_order_limit_buy(
+        self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params
+    ):
         """Send in a new limit buy order
         Any order with an icebergQty MUST have timeInForce set to GTC.
         :param symbol: required
@@ -14026,7 +14012,9 @@ class AsyncClient(BaseClient):
         })
         return await self.ws_order_limit(timeInForce=timeInForce, **params)
 
-    async def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
+    async def ws_order_limit_sell(
+        self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params
+    ):
         """Send in a new limit sell order
         :param symbol: required
         :type symbol: str
@@ -14132,6 +14120,7 @@ class AsyncClient(BaseClient):
 
     async def ws_cancel_order(self, **params):
         return await self._ws_api_request("order.cancel", True, params)
+
     cancel_order.__doc__ = cancel_order.__doc__
 
     async def ws_cancel_and_replace_order(self, **params):

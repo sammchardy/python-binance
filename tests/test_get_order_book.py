@@ -56,6 +56,7 @@ def test_get_order_book_with_limit(client):
     except BinanceAPIException as e:
         pytest.fail(f"API request failed: {str(e)}")
 
+
 @pytest.mark.asyncio()
 async def test_get_order_book_async():
     try:
@@ -81,8 +82,8 @@ async def test_futures_get_order_book_async():
     except BinanceAPIException as e:
         pytest.fail(f"API request failed: {str(e)}")
 
+
 @pytest.mark.asyncio()
 async def test_ws_get_order_book(clientAsync):
-        order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
-        assert_ob(order_book)
-
+    order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
+    assert_ob(order_book)
