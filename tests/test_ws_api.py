@@ -15,7 +15,7 @@ proxy = os.getenv("PROXY")
 @pytest.fixture(scope="function")
 def client():
     """Fixture to create and cleanup client"""
-    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy)
+    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy, testnet=True)
 
 
 @pytest.mark.asyncio
