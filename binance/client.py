@@ -10649,7 +10649,6 @@ class Client(BaseClient):
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
         """
-
         return self._ws_api_request_sync("order.status", True, params)
 
     def ws_cancel_order(self, **params):
