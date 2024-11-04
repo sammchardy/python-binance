@@ -1,5 +1,4 @@
 import pytest
-from binance.client import Client
 from binance.exceptions import BinanceAPIException
 from binance import AsyncClient
 import os

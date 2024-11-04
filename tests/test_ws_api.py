@@ -4,7 +4,6 @@ import pytest
 import asyncio
 from binance import AsyncClient
 import os
-import pytest
 
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
 from binance.ws.constants import WSListenerState
