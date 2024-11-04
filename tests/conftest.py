@@ -36,8 +36,7 @@ def client():
 
 @pytest.fixture(scope="function")
 def clientAsync():
-    # for now this is not working inside the tests
-    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy)
+    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy, testnet=True)
 
 
 @pytest.fixture(autouse=True, scope="function")
