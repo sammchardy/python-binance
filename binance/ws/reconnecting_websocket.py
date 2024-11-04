@@ -7,7 +7,11 @@ from typing import Optional
 from asyncio import sleep
 from random import random
 
-from websockets import ConnectionClosedError
+try:
+    from websockets.exceptions import ConnectionClosedError  # type: ignore
+except ImportError:
+    from websockets import ConnectionClosedError  # type: ignore
+
 import websockets as ws
 
 from binance.exceptions import BinanceWebsocketUnableToConnect
