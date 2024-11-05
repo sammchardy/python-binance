@@ -8311,7 +8311,7 @@ class Client(BaseClient):
     def get_pay_trade_history(self, **params):
         """Get C2C Trade History
 
-        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+        https://binance-docs.github.io/apidocs/spot/en/#get-pay-trade-history-user_data
 
         :param startTime: optional
         :type startTime: int
@@ -8332,7 +8332,7 @@ class Client(BaseClient):
     def get_convert_trade_history(self, **params):
         """Get C2C Trade History
 
-        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+        https://binance-docs.github.io/apidocs/spot/en/#get-convert-trade-history-user_data
 
         :param startTime: required - Start Time - 1593511200000
         :type startTime: int
@@ -8347,6 +8347,25 @@ class Client(BaseClient):
 
         """
         return self._request_margin_api('get', 'convert/tradeFlow', signed=True, data=params)
+
+    def get_spot_rebate_history(self, **params):
+        """Get C2C Trade History
+
+        https://binance-docs.github.io/apidocs/spot/en/#get-spot-rebate-history-records-user_data
+
+        :param startTime: required - Start Time - 1593511200000
+        :type startTime: int
+        :param endTime: required - End Time - 1593511200000
+        :type endTime: int
+        :param page: optional - default 1
+        :type page: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_margin_api('get', 'rebate/taxQuery', signed=True, data=params)
 
     def convert_request_quote(self, **params):
         """Request a quote for the requested token pairs
