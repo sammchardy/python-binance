@@ -15,10 +15,12 @@ async def test_ws_api_public_endpoint(clientAsync):
     order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
     assert_ob(order_book)
 
+
 @pytest.mark.asyncio
 async def test_ws_api_private_endpoint(clientAsync):
     """Test normal order book request"""
     orders = await clientAsync.ws_get_all_orders(symbol="BTCUSDT")
+
 
 @pytest.mark.asyncio
 async def test_ws_futures_public_endpoint(clientAsync):
@@ -26,10 +28,12 @@ async def test_ws_futures_public_endpoint(clientAsync):
     order_book = await clientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
     assert_ob(order_book)
 
+
 @pytest.mark.asyncio
 async def test_ws_futures_private_endpoint(clientAsync):
     """Test normal order book request"""
     order_book = await clientAsync.ws_futures_get_all_orders(symbol="BTCUSDT")
+
 
 @pytest.mark.asyncio
 async def test_ws_get_symbol_ticker(clientAsync):
@@ -37,7 +41,6 @@ async def test_ws_get_symbol_ticker(clientAsync):
     ticker = await clientAsync.ws_get_symbol_ticker(symbol="BTCUSDT")
     assert "symbol" in ticker
     assert ticker["symbol"] == "BTCUSDT"
-
 
 
 @pytest.mark.asyncio

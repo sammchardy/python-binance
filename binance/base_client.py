@@ -1,4 +1,3 @@
-
 from base64 import b64encode
 from pathlib import Path
 import random
@@ -198,7 +197,9 @@ class BaseClient:
         self.timestamp_offset = 0
         ws_api_url = self.WS_API_TESTNET_URL if testnet else self.WS_API_URL.format(tld)
         self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
-        ws_future_url = self.WS_FUTURES_TESTNET_URL if testnet else self.WS_FUTURES_URL.format(tld)
+        ws_future_url = (
+            self.WS_FUTURES_TESTNET_URL if testnet else self.WS_FUTURES_URL.format(tld)
+        )
         self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld)
         self.loop = loop or get_loop()
 
@@ -355,14 +356,16 @@ class BaseClient:
         if signed:
             payload["params"] = self._sign_ws_params(params, self._generate_signature)
         return await self.ws_future.request(id, payload)
-    
+
     def _ws_futures_api_request_sync(self, method: str, signed: bool, params: dict):
         self.loop = get_loop()
-        return self.loop.run_until_complete(self._ws_api_request(method, signed, params))
+        return self.loop.run_until_complete(
+            self._ws_api_request(method, signed, params)
+        )
 
-    async def _make_sync (self, method):
+    async def _make_sync(self, method):
         return asyncio.run(method)
-    
+
     async def _ws_api_request(self, method: str, signed: bool, params: dict):
         """Send request and wait for response"""
         id = params.pop("id", self.uuid22())
@@ -372,13 +375,17 @@ class BaseClient:
             "params": params,
         }
         if signed:
-            payload["params"] = self._sign_ws_params(params, self._generate_ws_api_signature)
+            payload["params"] = self._sign_ws_params(
+                params, self._generate_ws_api_signature
+            )
         return await self.ws_api.request(id, payload)
 
     def _ws_api_request_sync(self, method: str, signed: bool, params: dict):
         """Send request to WS API and wait for response"""
         self.loop = get_loop()
-        return self.loop.run_until_complete(self._ws_api_request(method, signed, params))
+        return self.loop.run_until_complete(
+            self._ws_api_request(method, signed, params)
+        )
 
     @staticmethod
     def _get_version(version: int, **kwargs) -> int:

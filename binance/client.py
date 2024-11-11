@@ -6,7 +6,7 @@ import time
 from urllib.parse import urlencode
 from .base_client import BaseClient
 
-from .helpers import interval_to_milliseconds, convert_ts_str 
+from .helpers import interval_to_milliseconds, convert_ts_str
 from .exceptions import (
     BinanceAPIException,
     BinanceRequestException,
@@ -1352,11 +1352,9 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return self.order_limit(timeInForce=timeInForce, **params)
 
     def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10071,12 +10069,10 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "type": self.ORDER_TYPE_LIMIT,
-                "timeInForce": timeInForce,
-            }
-        )
+        params.update({
+            "type": self.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
+        })
         return self.ws_create_order(**params)
 
     def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10103,11 +10099,9 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return self.ws_order_limit(timeInForce=timeInForce, **params)
 
     def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10317,30 +10311,30 @@ class Client(BaseClient):
     def ws_get_exchange_info(self, **params):
         return self._ws_api_request_sync("exchangeInfo", False, params)
 
-####################################################
-# WS Futures Endpoints
-####################################################
+    ####################################################
+    # WS Futures Endpoints
+    ####################################################
     def ws_futures_get_order_book(self, **params):
         """
         Get the order book for a symbol
         https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api
         """
         return self._ws_futures_api_request_sync("depth", False, params)
-    
+
     def ws_futures_get_all_tickers(self, **params):
         """
         Latest price for a symbol or symbols
         https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api/Symbol-Price-Ticker
         """
         return self._ws_futures_api_request_sync("ticker.price", False, params)
-    
+
     def ws_futures_get_order_book_ticker(self, **params):
         """
         Best price/qty on the order book for a symbol or symbols.
         https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-api/Symbol-Order-Book-Ticker
         """
         return self._ws_futures_api_request_sync("ticker.book", False, params)
-    
+
     def ws_futures_create_order(self, **params):
         """
         Send in a new order
@@ -10349,7 +10343,7 @@ class Client(BaseClient):
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._ws_futures_api_request_sync("order.place", True, params)
-    
+
     def ws_futures_edit_order(self, **params):
         """
         Edit an order
@@ -10363,18 +10357,17 @@ class Client(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Order
         """
         return self._ws_futures_api_request_sync("order.cancel", True, params)
-    
+
     def ws_futures_get_order(self, **params):
         """
         Get an order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Query-Order
         """
         return self._ws_futures_api_request_sync("order.status", True, params)
-    
-    
+
     def ws_futures_v2_account_position(self, **params):
         """
-        Get current position information(only symbol that has position or open orders will be returned). 
+        Get current position information(only symbol that has position or open orders will be returned).
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Position-Info-V2
         """
         return self._ws_futures_api_request_sync("v2/account.position", True, params)
@@ -10385,7 +10378,7 @@ class Client(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Position-Information
         """
         return self._ws_futures_api_request_sync("account.position", True, params)
-    
+
     def ws_futures_v2_account_balance(self, **params):
         """
         Get current account information.
@@ -10406,7 +10399,7 @@ class Client(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information-V2
         """
         return self._ws_futures_api_request_sync("v2/account.status", True, params)
-    
+
     def ws_futures_account_status(self, **params):
         """
         Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in response section for detail.
