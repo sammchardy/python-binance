@@ -1,6 +1,5 @@
 import pytest
 
-
 @pytest.mark.asyncio()
 async def test_ws_get_order_book(clientAsync):
     await clientAsync.ws_get_order_book(symbol="BTCUSDT")

@@ -1,5 +1,5 @@
 import asyncio
-from binance.client import AsyncClient
+from binance.async_client import AsyncClient
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.constants import KEEPALIVE_TIMEOUT
 

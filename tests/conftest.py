@@ -1,5 +1,6 @@
 import pytest
-from binance.client import Client, AsyncClient
+from binance.client import Client 
+from binance.async_client import AsyncClient
 import os
 import asyncio
 import logging
@@ -12,6 +13,8 @@ if proxy:
 else:
     print("No proxy set")
 
+api_key = os.getenv("API_KEY")
+api_secret = os.getenv("API_SECRET")
 
 # Configure logging for all tests
 @pytest.fixture(autouse=True)
@@ -29,14 +32,14 @@ def setup_logging():
     logging.getLogger().addHandler(console_handler)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def client():
-    return Client("test_api_key", "test_api_secret", {"proxies": proxies})
+    return Client(api_key, api_secret, {"proxies": proxies})
 
 
 @pytest.fixture(scope="function")
 def clientAsync():
-    return AsyncClient(api_key="api_key", api_secret="api_secret", https_proxy=proxy, testnet=True)
+    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=True)
 
 
 @pytest.fixture(autouse=True, scope="function")

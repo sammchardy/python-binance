@@ -9,7 +9,7 @@ from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.threaded_stream import ThreadedApiManager
 
 
-from binance.client import AsyncClient
+from binance.async_client import AsyncClient
 from binance.enums import FuturesType
 from binance.enums import ContractType
 from binance.helpers import get_loop
