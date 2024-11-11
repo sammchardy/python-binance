@@ -17,7 +17,7 @@ api_key = os.getenv("TEST_API_KEY")
 api_secret = os.getenv("TEST_API_SECRET")
 futures_api_key = os.getenv("TEST_FUTURES_API_KEY")
 futures_api_secret = os.getenv("TEST_FUTURES_API_SECRET")
-testnet = os.getenv("TEST_TESTNET")
+testnet = os.getenv("TEST_TESTNET", "true").lower() == "true"
 
 
 # Configure logging for all tests
