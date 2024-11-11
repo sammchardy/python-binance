@@ -2,7 +2,7 @@ import asyncio
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlencode
-
+import time
 import aiohttp
 
 from binance.enums import HistoricalKlinesType

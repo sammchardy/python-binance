@@ -10,9 +10,9 @@ from .test_get_order_book import assert_ob
 
 
 @pytest.mark.asyncio
-async def test_ws_api_public_endpoint(clientAsyncAsync):
+async def test_ws_api_public_endpoint(clientAsync):
     """Test normal order book request"""
-    order_book = await clientAsyncAsync.ws_get_order_book(symbol="BTCUSDT")
+    order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
     assert_ob(order_book)
 
 @pytest.mark.asyncio
