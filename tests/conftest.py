@@ -1,5 +1,5 @@
 import pytest
-from binance.client import Client 
+from binance.client import Client
 from binance.async_client import AsyncClient
 import os
 import asyncio
@@ -15,6 +15,7 @@ else:
 
 api_key = os.getenv("API_KEY")
 api_secret = os.getenv("API_SECRET")
+
 
 # Configure logging for all tests
 @pytest.fixture(autouse=True)
