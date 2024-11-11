@@ -1,4 +1,3 @@
-from binance import AsyncClient
 import os
 import pytest
 
