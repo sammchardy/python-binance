@@ -1,4 +1,3 @@
-from binance.client import Client
 
 def test_client_initialization(client):
     assert client.API_KEY == "test_api_key"
