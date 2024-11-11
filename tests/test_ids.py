@@ -2,7 +2,7 @@ import requests_mock
 import pytest
 from aioresponses import aioresponses
 
-from binance.client import Client, AsyncClient
+from binance import Client, AsyncClient
 
 client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 
