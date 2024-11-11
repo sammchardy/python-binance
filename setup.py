@@ -31,7 +31,7 @@ setup(
     license='MIT',
     author_email='',
     install_requires=[
-        'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets', 'pycryptodome'
+        'requests', 'six', 'dateparser', 'aiohttp', 'ujson', 'websockets', 'pycryptodome', 'websockets_proxy'
     ],
     keywords='binance exchange rest api bitcoin ethereum btc eth neo',
     classifiers=[

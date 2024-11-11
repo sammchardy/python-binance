@@ -4,3 +4,4 @@ pycryptodome
 requests
 ujson
 websockets
+websockets_proxy

@@ -18,6 +18,7 @@ from .exceptions import BinanceWebsocketUnableToConnect
 from .enums import ContractType
 from .helpers import get_loop
 from .threaded_stream import ThreadedApiManager
+from websockets_proxy import Proxy, proxy_connect
 
 KEEPALIVE_TIMEOUT = 5 * 60  # 5 minutes
 
@@ -52,6 +53,7 @@ class ReconnectingWebsocket:
         prefix: str = "ws/",
         is_binary: bool = False,
         exit_coro=None,
+        https_proxy: Optional[str] = None,
         **kwargs,
     ):
         self._loop = get_loop()
@@ -69,6 +71,7 @@ class ReconnectingWebsocket:
         self._queue = asyncio.Queue()
         self._handle_read_loop = None
         self._ws_kwargs = kwargs
+        self._https_proxy = https_proxy
 
     async def __aenter__(self):
         await self.connect()
@@ -91,7 +94,13 @@ class ReconnectingWebsocket:
         await self._before_connect()
         assert self._path
         ws_url = self._url + self._prefix + self._path
-        self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
+
+        if self._https_proxy is not None:
+            proxy = Proxy.from_url(self._https_proxy)
+            self._conn = proxy_connect(ws_url, close_timeout=0.1, proxy=proxy, **self._ws_kwargs)  # type: ignore
+        else:
+            self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
+
         try:
             self.ws = await self._conn.__aenter__()
         except:  # noqa
@@ -389,6 +398,7 @@ class BinanceSocketManager:
                 prefix=prefix,
                 exit_coro=lambda p: self._exit_socket(f"{socket_type}_{p}"),
                 is_binary=is_binary,
+                https_proxy=self._client.https_proxy,
                 **self.ws_kwargs,
             )
 
@@ -411,6 +421,7 @@ class BinanceSocketManager:
                 exit_coro=self._exit_socket,
                 is_binary=is_binary,
                 user_timeout=self._user_timeout,
+                https_proxy=self._client.https_proxy,
                 **self.ws_kwargs,
             )
 
@@ -1401,10 +1412,11 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         tld: str = "com",
         testnet: bool = False,
         session_params: Optional[Dict[str, Any]] = None,
+        https_proxy: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
         super().__init__(
-            api_key, api_secret, requests_params, tld, testnet, session_params, loop
+            api_key, api_secret, requests_params, tld, testnet, session_params, https_proxy, loop
         )
         self._bsm: Optional[BinanceSocketManager] = None
 
