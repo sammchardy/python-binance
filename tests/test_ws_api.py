@@ -23,16 +23,16 @@ async def test_ws_api_private_endpoint(clientAsync):
 
 
 @pytest.mark.asyncio
-async def test_ws_futures_public_endpoint(clientAsync):
+async def test_ws_futures_public_endpoint(futuresClientAsync):
     """Test normal order book request"""
-    order_book = await clientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
+    order_book = await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
     assert_ob(order_book)
 
 
 @pytest.mark.asyncio
-async def test_ws_futures_private_endpoint(clientAsync):
+async def test_ws_futures_private_endpoint(futuresClientAsync):
     """Test normal order book request"""
-    order_book = await clientAsync.ws_futures_get_all_orders(symbol="BTCUSDT")
+    await futuresClientAsync.ws_futures_v2_account_position(symbol="BTCUSDT")
 
 
 @pytest.mark.asyncio

@@ -1,9 +1,5 @@
 import pytest
 from binance.exceptions import BinanceAPIException
-import os
-
-proxies = {}
-proxy = os.getenv("PROXY")
 
 
 def assert_ob(order_book):
