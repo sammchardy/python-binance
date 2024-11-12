@@ -63,8 +63,10 @@ jobs:
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
     - name: Type check with pyright
       run: pyright
-    - name: Test with tox
-      run: tox -e py
+    - name: pytest
+      run: pytest -v tests/  --doctest-modules --cov binance --cov-report term-missing 
+    # - name: Test with tox
+    #   run: tox -e py
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:

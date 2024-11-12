@@ -360,7 +360,7 @@ class BaseClient:
     def _ws_futures_api_request_sync(self, method: str, signed: bool, params: dict):
         self.loop = get_loop()
         return self.loop.run_until_complete(
-            self._ws_api_request(method, signed, params)
+            self._ws_futures_api_request(method, signed, params)
         )
 
     async def _make_sync(self, method):
