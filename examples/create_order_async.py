@@ -5,7 +5,7 @@ import asyncio
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root)
 
-from binance.client import AsyncClient
+from binance import AsyncClient
 
 
 # create futures order
