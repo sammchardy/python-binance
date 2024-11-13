@@ -14,11 +14,10 @@ def test_ws_futures_get_all_tickers(futuresClient):
 def test_ws_futures_get_order_book_ticker(futuresClient):
     futuresClient.ws_futures_get_order_book_ticker()
 
+
 def test_ws_futures_create_get_edit_cancel_order(futuresClient):
     ticker = futuresClient.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
-    positions = futuresClient.ws_futures_v2_account_position(
-        symbol="LTCUSDT"
-    )
+    positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
     order = futuresClient.ws_futures_create_order(
         symbol=ticker["symbol"],
         side="BUY",

@@ -2,6 +2,8 @@ from typing import Dict
 import asyncio
 import json
 
+from websockets import WebSocketClientProtocol
+
 from .constants import WSListenerState
 from .reconnecting_websocket import ReconnectingWebsocket
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
@@ -53,7 +55,7 @@ class WebsocketAPI(ReconnectingWebsocket):
             try:
                 if (
                     self.ws is None
-                    or self.ws.closed
+                    or (isinstance(self.ws, WebSocketClientProtocol) and self.ws.closed)
                     or self.ws_state != WSListenerState.STREAMING
                 ):
                     await self.connect()
