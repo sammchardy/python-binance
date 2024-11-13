@@ -2,7 +2,7 @@ from typing import Dict
 import asyncio
 import json
 
-from websockets import WebSocketClientProtocol
+from websockets.client import WebSocketClientProtocol
 
 from .constants import WSListenerState
 from .reconnecting_websocket import ReconnectingWebsocket
