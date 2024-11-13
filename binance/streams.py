@@ -79,7 +79,8 @@ class ReconnectingWebsocket:
             await self._exit_coro(self._path)
         self.ws_state = WSListenerState.EXITING
         if self.ws:
-            self.ws.fail_connection()
+            # self.ws.fail_connection()
+            await self.ws.close()
         if self._conn and hasattr(self._conn, "protocol"):
             await self._conn.__aexit__(exc_type, exc_val, exc_tb)
         self.ws = None
