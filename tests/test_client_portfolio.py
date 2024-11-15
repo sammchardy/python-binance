@@ -1,3 +1,8 @@
+import pytest
+
+# Apply the 'portfolio' mark to all tests in this file
+pytestmark = pytest.mark.portfolio
+
 
 def test_papi_get_balance(client):
     client.papi_get_balance()

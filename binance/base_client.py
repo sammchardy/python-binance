@@ -206,6 +206,7 @@ class BaseClient:
     def _get_headers(self) -> Dict:
         headers = {
             "Accept": "application/json",
+            "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",  # noqa
         }
         if self.API_KEY:

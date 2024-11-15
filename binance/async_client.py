@@ -1766,6 +1766,14 @@ class AsyncClient(BaseClient):
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_api("post", "order", True, data=params)
 
+    async def futures_modify_order(self, **params):
+        """Modify an existing order. Currently only LIMIT order modification is supported.
+
+        https://binance-docs.github.io/apidocs/futures/en/#modify-order-trade
+
+        """
+        return await self._request_futures_api("put", "order", True, data=params)
+
     async def futures_create_test_order(self, **params):
         return await self._request_futures_api("post", "order/test", True, data=params)
 
