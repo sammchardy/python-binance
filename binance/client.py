@@ -7372,6 +7372,8 @@ class Client(BaseClient):
         https://binance-docs.github.io/apidocs/futures/en/#cancel-multiple-orders-trade
 
         """
+        query_string = urlencode(params)
+        query_string = query_string.replace("%27", "%22")
         return self._request_futures_api("delete", "batchOrders", True, data=params)
 
     def futures_countdown_cancel_all(self, **params):

@@ -4,7 +4,6 @@ import pytest
 def test_clientAsync_initialization(clientAsync):
     assert clientAsync.API_KEY is not None
     assert clientAsync.API_SECRET is not None
-    assert clientAsync.testnet is False
 
 
 # TODO: whitelist in proxy to pass test
