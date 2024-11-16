@@ -2453,7 +2453,7 @@ class Client(BaseClient):
     def get_current_order_count(self):
         """Displays the user's current order count usage for all intervals.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-current-order-count-usage-trade
+        https://binance-docs.github.io/apidocs/spot/en/#query-unfilled-order-count-user_data
 
         :returns: API response
 
@@ -2477,7 +2477,7 @@ class Client(BaseClient):
             ]
 
         """
-        return self._get('rateLimit/order', True, data=params)
+        return self._get('rateLimit/order', True, self.PRIVATE_API_VERSION)
 
     def get_prevented_matches(self, **params):
         """Displays the list of orders that were expired because of STP.
