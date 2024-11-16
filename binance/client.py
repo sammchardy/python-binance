@@ -2450,7 +2450,7 @@ class Client(BaseClient):
         """
         return self._get("myTrades", True, data=params)
 
-    def get_current_order_count(self):
+    def get_current_order_count(self, **params):
         """Displays the user's current order count usage for all intervals.
 
         https://binance-docs.github.io/apidocs/spot/en/#query-unfilled-order-count-user_data
@@ -11215,8 +11215,8 @@ class AsyncClient(BaseClient):
 
     get_my_trades.__doc__ = Client.get_my_trades.__doc__
 
-    async def get_current_order_count(self):
-        return await self._get("rateLimit/order", True)
+    async def get_current_order_count(self, **params):
+        return await self._get("rateLimit/order", True, data=params, version=self.PRIVATE_API_VERSION)
 
     get_current_order_count.__doc__ = Client.get_current_order_count.__doc__
 
