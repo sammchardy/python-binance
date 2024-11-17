@@ -2477,7 +2477,7 @@ class Client(BaseClient):
             ]
 
         """
-        return self._get("rateLimit/order", True, data=params)
+        return self._get("rateLimit/order", True, version=self.PRIVATE_API_VERSION, data=params)
 
     def get_prevented_matches(self, **params):
         """Displays the list of orders that were expired because of STP.
