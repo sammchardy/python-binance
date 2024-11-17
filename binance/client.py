@@ -2262,7 +2262,7 @@ class Client(BaseClient):
             }
         Similar to POST /api/v3/order, additional mandatory parameters are determined by type.
 
-        Response format varies depending on whether the processing of the message succeeded, partially succeeded, or failed. 
+        Response format varies depending on whether the processing of the message succeeded, partially succeeded, or failed.
 
         :raises: BinanceRequestException, BinanceAPIException
 
