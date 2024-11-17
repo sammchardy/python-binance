@@ -68,6 +68,7 @@ Features
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
+- CRUDE over websockets, create/fetch/edit through websockets for minimum latency.
 - Symbol Depth Cache
 - Historical Kline/Candle fetching function
 - Withdraw functionality
@@ -160,6 +161,9 @@ pass `testnet=True` when creating the client.
     # fetch weekly klines since it listed
     klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
+    # create order through websockets
+    order_ws = client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
+
     # socket manager using threads
     twm = ThreadedWebsocketManager()
     twm.start()
@@ -237,10 +241,13 @@ for more information.
             print(kline)
 
         # fetch 30 minute klines for the last month of 2017
-        klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+        klines = await client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
 
         # fetch weekly klines since it listed
-        klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+        klines = await client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+
+        # create order through websockets
+        order_ws = await client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
 
         # setup an async context the Depth Cache and exit after 5 messages
         async with DepthCacheManager(client, symbol='ETHBTC') as dcm_socket:

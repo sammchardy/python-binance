@@ -40,6 +40,24 @@ def test_spot_market_id():
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
 
 
+def test_spot_cancel_replace_id():
+    with requests_mock.mock() as m:
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            json={},
+            status_code=200,
+        )
+        client.cancel_replace_order(
+            cancelOrderId="orderId",
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
+        )
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
+        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+
+
 def test_swap_id():
     with requests_mock.mock() as m:
         m.post("https://fapi.binance.com/fapi/v1/order", json={}, status_code=200)
@@ -144,6 +162,29 @@ async def test_spot_id_async():
         )
         await clientAsync.create_order(
             symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
+
+
+@pytest.mark.asyncio()
+async def test_spot_cancel_replace_id_async():
+    clientAsync = AsyncClient(
+        api_key="api_key", api_secret="api_secret"
+    )  # reuse client later
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            client_order_id = kwargs["data"][0][1]
+            assert client_order_id.startswith("x-HNA2TXFJ")
+
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.cancel_replace_order(
+            orderId="id", symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
 

@@ -142,7 +142,6 @@ class ReconnectingWebsocket:
                             self.ws.recv(), timeout=self.TIMEOUT
                         )
                         res = self._handle_message(res)
-                        print(res)
                         if res:
                             if self._queue.qsize() < self.MAX_QUEUE_SIZE:
                                 await self._queue.put(res)
