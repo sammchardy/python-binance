@@ -2267,8 +2267,10 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._post("order/cancelReplace", True, data=params)
-    
+
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
@@ -2477,7 +2479,7 @@ class Client(BaseClient):
             ]
 
         """
-        return self._get("rateLimit/order", True, version=self.PRIVATE_API_VERSION, data=params)
+        return self._get("rateLimit/order", True, data=params)
 
     def get_prevented_matches(self, **params):
         """Displays the list of orders that were expired because of STP.
@@ -11181,8 +11183,10 @@ class AsyncClient(BaseClient):
         return await self._delete("openOrders", True, data=params)
 
     async def cancel_replace_order(self, **params):
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._post("order/cancelReplace", signed=True, data=params)
-    
+
     async def get_open_orders(self, **params):
         return await self._get("openOrders", True, data=params)
 
@@ -11216,7 +11220,7 @@ class AsyncClient(BaseClient):
     get_my_trades.__doc__ = Client.get_my_trades.__doc__
 
     async def get_current_order_count(self, **params):
-        return await self._get("rateLimit/order", True, data=params, version=self.PRIVATE_API_VERSION)
+        return await self._get("rateLimit/order", True, data=params)
 
     get_current_order_count.__doc__ = Client.get_current_order_count.__doc__
 
