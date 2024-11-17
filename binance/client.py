@@ -2161,7 +2161,7 @@ class Client(BaseClient):
         return self._delete("order", True, data=params)
 
     def cancel_all_open_orders(self, **params):
-        return self._delete('openOrders', True, data=params)
+        return self._delete("openOrders", True, data=params)
 
     def cancel_replace_order(self, **params):
         """Cancels an existing order and places a new order on the same symbol.
@@ -2267,7 +2267,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._post('order/cancelReplace', True, data=params)
+        return self._post("order/cancelReplace", True, data=params)
     
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
@@ -2477,7 +2477,7 @@ class Client(BaseClient):
             ]
 
         """
-        return self._get('rateLimit/order', True, self.PRIVATE_API_VERSION)
+        return self._get("rateLimit/order", True, data=params)
 
     def get_prevented_matches(self, **params):
         """Displays the list of orders that were expired because of STP.
@@ -4827,7 +4827,7 @@ class Client(BaseClient):
         )
 
     def cancel_all_open_margin_orders(self, **params):
-        return self._request_margin_api('delete', 'margin/openOrders', signed=True, data=params)
+        return self._request_margin_api("delete", "margin/openOrders", signed=True, data=params)
     
     def set_margin_max_leverage(self, **params):
         """Adjust cross margin max leverage
@@ -11178,10 +11178,10 @@ class AsyncClient(BaseClient):
     cancel_order.__doc__ = Client.cancel_order.__doc__
 
     async def cancel_all_open_orders(self, **params):
-        return await self._delete('openOrders', True, data=params)
+        return await self._delete("openOrders", True, data=params)
 
     async def cancel_replace_order(self, **params):
-        return await self._post('order/cancelReplace', signed=True, data=params)
+        return await self._post("order/cancelReplace", signed=True, data=params)
     
     async def get_open_orders(self, **params):
         return await self._get("openOrders", True, data=params)
@@ -11662,7 +11662,7 @@ class AsyncClient(BaseClient):
     cancel_margin_order.__doc__ = Client.cancel_margin_order.__doc__
 
     async def cancel_all_open_margin_orders(self, **params):
-        return await self._request_margin_api('delete', 'margin/openOrders', signed=True, data=params)
+        return await self._request_margin_api("delete", "margin/openOrders", signed=True, data=params)
     
     cancel_all_open_margin_orders.__doc__ = Client.cancel_all_open_margin_orders.__doc__
     
