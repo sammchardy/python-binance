@@ -210,20 +210,28 @@ async def test_futures_create_test_order(futuresClientAsync):
     )
 
 
-@pytest.mark.skip(reason="Not implemented")
 async def test_futures_place_batch_order_and_cancel(futuresClientAsync):
     ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
     positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
     orders = await futuresClientAsync.futures_place_batch_order(
         batchOrders=[
             {
-                "symbol": ticker["symbol"],
-                "side": "BUY",
                 "positionSide": positions[0]["positionSide"],
-                "type": "LIMIT",
-                "timeInForce": "GTC",
-                "quantity": "0.1",
                 "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "quantity": "0.1",
+                "side": "BUY",
+                "symbol": ticker["symbol"],
+                "timeInForce": "GTC",
+                "type": "LIMIT",
+            },
+            {
+                "side": "BUY",
+                "type": "LIMIT",
+                "positionSide": positions[0]["positionSide"],
+                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "quantity": "0.1",
+                "symbol": ticker["symbol"],
+                "timeInForce": "GTC",
             }
         ]
     )
@@ -282,7 +290,6 @@ async def test_futures_position_margin_history(futuresClientAsync):
     position = await futuresClientAsync.futures_position_margin_history(
         symbol="LTCUSDT"
     )
-    print(position)
 
 
 async def test_futures_position_information(futuresClientAsync):

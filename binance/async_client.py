@@ -131,30 +131,31 @@ class AsyncClient(BaseClient):
         **kwargs,
     ):
         uri = self._create_api_uri(path, signed, version)
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_api(
         self, method, path, signed=False, version=1, **kwargs
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version=version)
-
-        return await self._request(method, uri, signed, False, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_data_api(
         self, method, path, signed=False, **kwargs
     ) -> Dict:
         uri = self._create_futures_data_api_uri(path)
-
-        return await self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_api(
         self, method, path, signed=False, version=1, **kwargs
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
-
-        return await self._request(method, uri, signed, False, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_data_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -162,12 +163,14 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
+        force_params = kwargs.pop('force_params', True)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_margin_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -175,7 +178,8 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_papi_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -183,7 +187,8 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_papi_api_uri(path, version)
 
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
@@ -1781,10 +1786,11 @@ class AsyncClient(BaseClient):
         for order in params["batchOrders"]:
             if "newClientOrderId" not in order:
                 order["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        query_string = urlencode(params)
-        query_string = query_string.replace("%27", "%22")
+                order = self._order_params(order)
+        query_string = urlencode(params).replace("%40", "@").replace("%27", "%22")
         params["batchOrders"] = query_string[12:]
-        return await self._request_futures_api("post", "batchOrders", True, data=params)
+
+        return await self._request_futures_api("post", "batchOrders", True, data=params, force_params=True)
 
     async def futures_get_order(self, **params):
         return await self._request_futures_api("get", "order", True, data=params)
@@ -1804,8 +1810,10 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_cancel_orders(self, **params):
+        # query_string = urlencode(str(params["orderidList"])).replace("%40", "@").replace("%27", "%22")
+        # params["orderidList"] = query_string
         return await self._request_futures_api(
-            "delete", "batchOrders", True, data=params
+            "delete", "batchOrders", True, data=params, force_params=True
         )
 
     async def futures_countdown_cancel_all(self, **params):
@@ -2035,7 +2043,7 @@ class AsyncClient(BaseClient):
 
     async def futures_coin_cancel_all_open_orders(self, **params):
         return await self._request_futures_coin_api(
-            "delete", "allOpenOrders", signed=True, data=params
+            "delete", "allOpenOrders", signed=True, data=params, force_params=True
         )
 
     async def futures_coin_cancel_orders(self, **params):

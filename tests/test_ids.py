@@ -1,3 +1,4 @@
+import re
 import requests_mock
 import pytest
 from aioresponses import aioresponses
@@ -153,11 +154,11 @@ async def test_swap_id_async():
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-Cb7ytekJ")
+            assert "x-Cb7ytekJ" in url.query["newClientOrderId"]
 
+        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/order\?.*")
         m.post(
-            "https://fapi.binance.com/fapi/v1/order",
+            url_pattern,
             payload={"id": 1},
             status=200,
             callback=handler,
@@ -237,7 +238,7 @@ async def test_swap_batch_id_async():
         clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+            assert "x-Cb7ytekJ" in kwargs["data"]
 
         m.post(
             "https://fapi.binance.com/fapi/v1/batchOrders",

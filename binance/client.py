@@ -87,8 +87,9 @@ class Client(BaseClient):
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version)
-
-        return self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop('force_params', False)
+        
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
@@ -101,7 +102,7 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
-        return self._request(method, uri, signed, False, **kwargs)
+        return self._request(method, uri, signed, True, **kwargs)
 
     def _request_futures_coin_data_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -7324,7 +7325,7 @@ class Client(BaseClient):
         query_string = urlencode(params)
         query_string = query_string.replace("%27", "%22")
         params["batchOrders"] = query_string[12:]
-        return self._request_futures_api("post", "batchOrders", True, data=params)
+        return self._request_futures_api("post", "batchOrders", True, data=params, force_params=True)
 
     def futures_get_order(self, **params):
         """Check an order's status.
