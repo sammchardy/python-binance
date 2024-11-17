@@ -1,6 +1,5 @@
 import os
 import sys
-import asyncio
 
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,6 +9,7 @@ from binance.client import Client
 
 ## create order using websockets sync
 ## the API is very similar to the REST API
+
 
 def main():
     api_key = ""  # your api_key here
@@ -21,6 +21,7 @@ def main():
         type="MARKET",
         quantity=0.1,
     )
-    print(order['orderId'])
+    print(order["orderId"])
+
 
 main()
