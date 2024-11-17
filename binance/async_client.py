@@ -726,8 +726,8 @@ class AsyncClient(BaseClient):
 
     get_my_trades.__doc__ = Client.get_my_trades.__doc__
 
-    async def get_current_order_count(self):
-        return await self._get("rateLimit/order", True)
+    async def get_current_order_count(self, **params):
+        return await self._get("rateLimit/order", True, data=params)
 
     get_current_order_count.__doc__ = Client.get_current_order_count.__doc__
 
@@ -1171,6 +1171,13 @@ class AsyncClient(BaseClient):
         )
 
     cancel_margin_order.__doc__ = Client.cancel_margin_order.__doc__
+
+    async def cancel_all_open_margin_orders(self, **params):
+        return await self._request_margin_api(
+            "delete", "margin/openOrders", signed=True, data=params
+        )
+
+    cancel_all_open_margin_orders.__doc__ = Client.cancel_all_open_margin_orders.__doc__
 
     async def set_margin_max_leverage(self, **params):
         return await self._request_margin_api(
@@ -3384,6 +3391,14 @@ class AsyncClient(BaseClient):
         return await self._ws_api_request("order.cancel", True, params)
 
     cancel_order.__doc__ = cancel_order.__doc__
+
+    async def cancel_all_open_orders(self, **params):
+        return await self._delete("openOrders", True, data=params)
+
+    async def cancel_replace_order(self, **params):
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+        return await self._post("order/cancelReplace", signed=True, data=params)
 
     async def ws_cancel_and_replace_order(self, **params):
         return await self._ws_api_request("order.cancelReplace", True, params)

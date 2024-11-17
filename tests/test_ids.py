@@ -41,12 +41,21 @@ def test_spot_market_id():
 
 def test_spot_cancel_replace_id():
     with requests_mock.mock() as m:
-        m.post("https://api.binance.com/api/v3/order/cancelReplace", json={}, status_code=200)
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            json={},
+            status_code=200,
+        )
         client.cancel_replace_order(
-            cancelOrderId="orderId", symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+            cancelOrderId="orderId",
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+
 
 def test_swap_id():
     with requests_mock.mock() as m:
@@ -177,6 +186,7 @@ async def test_spot_cancel_replace_id_async():
             orderId="id", symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_swap_id_async():

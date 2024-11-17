@@ -4435,8 +4435,10 @@ class Client(BaseClient):
         )
 
     def cancel_all_open_margin_orders(self, **params):
-        return self._request_margin_api("delete", "margin/openOrders", signed=True, data=params)
-    
+        return self._request_margin_api(
+            "delete", "margin/openOrders", signed=True, data=params
+        )
+
     def set_margin_max_leverage(self, **params):
         """Adjust cross margin max leverage
 
