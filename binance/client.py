@@ -87,8 +87,8 @@ class Client(BaseClient):
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version)
-        force_params = kwargs.pop('force_params', False)
-        
+        force_params = kwargs.pop("force_params", False)
+
         return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
@@ -7441,7 +7441,9 @@ class Client(BaseClient):
         query_string = urlencode(params)
         query_string = query_string.replace("%27", "%22")
         params["batchOrders"] = query_string[12:]
-        return self._request_futures_api("post", "batchOrders", True, data=params, force_params=True)
+        return self._request_futures_api(
+            "post", "batchOrders", True, data=params, force_params=True
+        )
 
     def futures_get_order(self, **params):
         """Check an order's status.
@@ -10525,3 +10527,192 @@ class Client(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information
         """
         return self._ws_futures_api_request_sync("account.status", True, params)
+
+    ###############################################
+    ### Gift card api
+    ###############################################
+    def gift_card_fetch_token_limit(self, **params):
+        """Verify which tokens are available for you to create Stablecoin-Denominated gift cards
+        https://developers.binance.com/docs/gift_card/market-data/Fetch-Token-Limit
+
+        :param baseToken: The token you want to pay, example: BUSD
+        :type baseToken: str
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": [
+                    {
+                        "coin": "BNB",
+                        "fromMin": "0.01",
+                        "fromMax": "1"
+                    }
+                ],
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "get", "giftcard/buyCode/token-limit", signed=True, data=params
+        )
+
+    def gift_card_fetch_rsa_public_key(self, **params):
+        """This API is for fetching the RSA Public Key. This RSA Public key will be used to encrypt the card code.
+
+        Important Note:
+        The RSA Public key fetched is valid only for the current day.
+
+        https://developers.binance.com/docs/gift_card/market-data/Fetch-RSA-Public-Key
+        :param recvWindow: The receive window for the request in milliseconds (optional)
+        :type recvWindow: int
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXBBVKLAc1GQ5FsIFFqOHrPTox5noBONIKr+IAedTR9FkVxq6e65updEbfdhRNkMOeYIO2i0UylrjGC0X8YSoIszmrVHeV0l06Zh1oJuZos1+7N+WLuz9JvlPaawof3GUakTxYWWCa9+8KIbLKsoKMdfS96VT+8iOXO3quMGKUmQIDAQAB",
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "get", "giftcard/cryptography/rsa-public-key", signed=True, data=params
+        )
+
+    def gift_card_verify(self, **params):
+        """This API is for verifying whether the Binance Gift Card is valid or not by entering Gift Card Number.
+
+        Important Note:
+        If you enter the wrong Gift Card Number 5 times within an hour, you will no longer be able
+        to verify any Gift Card Number for that hour.
+
+        https://developers.binance.com/docs/gift_card/market-data/Verify-Binance-Gift-Card-by-Gift-Card-Number
+
+        :param referenceNo: Enter the Gift Card Number
+        :type referenceNo: str
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": {
+                    "valid": true,
+                    "token": "BNB",     # coin
+                    "amount": "0.00000001"  # amount
+                },
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "get", "giftcard/verify", signed=True, data=params
+        )
+
+    def gift_card_redeem(self, **params):
+        """This API is for redeeming a Binance Gift Card. Once redeemed, the coins will be deposited in your funding wallet.
+
+        Important Note:
+        If you enter the wrong redemption code 5 times within 24 hours, you will no longer be able to
+        redeem any Binance Gift Cards that day.
+
+        Code Format Options:
+        - Plaintext
+        - Encrypted (Recommended for better security)
+
+        For encrypted format:
+        1. Fetch RSA public key from the RSA public key endpoint
+        2. Encrypt the code using algorithm: RSA/ECB/OAEPWithSHA-256AndMGF1Padding
+
+        https://developers.binance.com/docs/gift_card/market-data/Redeem-a-Binance-Gift-Card
+        :param code: Redemption code of Binance Gift Card to be redeemed, supports both Plaintext & Encrypted code
+        :type code: str
+        :param externalUid: External unique ID representing a user on the partner platform.
+                          Helps identify redemption behavior and control risks/limits.
+                          Max 400 characters. (optional)
+        :type externalUid: str
+        :param recvWindow: The receive window for the request in milliseconds (optional)
+        :type recvWindow: int
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": {
+                    "referenceNo": "0033002328060227",
+                    "identityNo": "10317392647411060736",
+                    "token": "BNB",
+                    "amount": "0.00000001"
+                },
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "post", "giftcard/redeemCode", signed=True, data=params
+        )
+
+    def gift_card_create(self, **params):
+        """
+        This API is for creating a Binance Gift Card.
+
+        To get started with, please make sure:
+
+        - You have a Binance account
+        - You have passed KYB
+        - You have a sufﬁcient balance(Gift Card amount and fee amount) in your Binance funding wallet
+        - You need Enable Withdrawals for the API Key which requests this endpoint.
+
+        https://developers.binance.com/docs/gift_card/market-data
+
+        :param token: The token type contained in the Binance Gift Card
+        :type token: str
+        :param amount: The amount of the token contained in the Binance Gift Card
+        :type amount: float
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": {
+                    "referenceNo": "0033002144060553",
+                    "code": "6H9EKF5ECCWFBHGE",
+                    "expiredTime": 1727417154000
+                },
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "post", "giftcard/createCode", signed=True, data=params
+        )
+
+    def gift_card_create_dual_token(self, **params):
+        """This API is for creating a dual-token ( stablecoin-denominated) Binance Gift Card. You may create a gift card using USDT as baseToken, that is redeemable to another designated token (faceToken). For example, you can create a fixed-value BTC gift card and pay with 100 USDT plus 1 USDT fee. This gift card can keep the value fixed at 100 USDT before redemption, and will be redeemable to BTC equivalent to 100 USDT upon redemption.
+
+        Once successfully created, the amount of baseToken (e.g. USDT) in the fixed-value gift card along with the fee would be deducted from your funding wallet.
+
+        To get started with, please make sure:
+        - You have a Binance account
+        - You have passed KYB
+        - You have a sufﬁcient balance(Gift Card amount and fee amount) in your Binance funding wallet
+        - You need Enable Withdrawals for the API Key which requests this endpoint.
+
+        https://developers.binance.com/docs/gift_card/market-data/Create-a-dual-token-gift-card
+        :param baseToken: The token you want to pay, example: BUSD
+        :type baseToken: str
+        :param faceToken: The token you want to buy, example: BNB. If faceToken = baseToken, it's the same as createCode endpoint.
+        :type faceToken: str
+        :param discount: Stablecoin-denominated card discount percentage, Example: 1 for 1% discount. Scale should be less than 6.
+        :type discount: float
+        :return: api response
+        .. code-block:: python
+            {
+                "code": "000000",
+                "message": "success",
+                "data": {
+                    "referenceNo": "0033002144060553",
+                    "code": "6H9EKF5ECCWFBHGE",
+                    "expiredTime": 1727417154000
+                },
+                "success": true
+            }
+        """
+        return self._request_margin_api(
+            "post", "giftcard/buyCode", signed=True, data=params
+        )

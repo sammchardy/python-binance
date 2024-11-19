@@ -232,7 +232,7 @@ async def test_futures_place_batch_order_and_cancel(futuresClientAsync):
                 "quantity": "0.1",
                 "symbol": ticker["symbol"],
                 "timeInForce": "GTC",
-            }
+            },
         ]
     )
     for order in orders:

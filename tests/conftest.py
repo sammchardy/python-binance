@@ -48,7 +48,7 @@ def client():
 
 
 @pytest.fixture(scope="function")
-def optionsClient():
+def liveClient():
     return Client(api_key, api_secret, {"proxies": proxies}, testnet=False)
 
 
@@ -72,7 +72,7 @@ def futuresClientAsync():
 
 
 @pytest.fixture(scope="function")
-def optionsClientAsync():
+def liveClientAsync():
     return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
 
 
@@ -105,6 +105,12 @@ def pytest_addoption(parser):
         default=False,
         help="Run portfolio tests",
     )
+    parser.addoption(
+        "--run-gift-card",
+        action="store_true",
+        default=False,
+        help="Run gift card tests",
+    )
 
 
 def pytest_configure(config):
@@ -118,6 +124,9 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "portfolio: mark a test as part of the portfolio tests"
     )
+    config.addinivalue_line(
+        "markers", "gift_card: mark a test as part of the gift card tests"
+    )
 
 
 def pytest_collection_modifyitems(config, items):
@@ -125,6 +134,7 @@ def pytest_collection_modifyitems(config, items):
     skip_futures = pytest.mark.skip(reason="need --run-futures option to run")
     skip_margin = pytest.mark.skip(reason="need --run-margin option to run")
     skip_portfolio = pytest.mark.skip(reason="need --run-portfolio option to run")
+    skip_gift_card = pytest.mark.skip(reason="need --run-gift-card option to run")
     for item in items:
         if "spot" in item.keywords and not config.getoption("--run-spot"):
             item.add_marker(skip_spot)
@@ -134,3 +144,5 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_margin)
         if "portfolio" in item.keywords and not config.getoption("--run-portfolio"):
             item.add_marker(skip_portfolio)
+        if "gift_card" in item.keywords and not config.getoption("--run-gift-card"):
+            item.add_marker(skip_gift_card)

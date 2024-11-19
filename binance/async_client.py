@@ -131,7 +131,7 @@ class AsyncClient(BaseClient):
         **kwargs,
     ):
         uri = self._create_api_uri(path, signed, version)
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_api(
@@ -139,14 +139,14 @@ class AsyncClient(BaseClient):
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version=version)
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_data_api(
         self, method, path, signed=False, **kwargs
     ) -> Dict:
         uri = self._create_futures_data_api_uri(path)
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_api(
@@ -154,7 +154,7 @@ class AsyncClient(BaseClient):
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_data_api(
@@ -163,12 +163,12 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
-        force_params = kwargs.pop('force_params', True)
+        force_params = kwargs.pop("force_params", True)
 
         return await self._request(method, uri, signed, force_params, **kwargs)
 
@@ -178,7 +178,7 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_papi_api(
@@ -187,7 +187,7 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_papi_api_uri(path, version)
 
-        force_params = kwargs.pop('force_params', False)
+        force_params = kwargs.pop("force_params", False)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
@@ -1797,7 +1797,9 @@ class AsyncClient(BaseClient):
         query_string = urlencode(params).replace("%40", "@").replace("%27", "%22")
         params["batchOrders"] = query_string[12:]
 
-        return await self._request_futures_api("post", "batchOrders", True, data=params, force_params=True)
+        return await self._request_futures_api(
+            "post", "batchOrders", True, data=params, force_params=True
+        )
 
     async def futures_get_order(self, **params):
         return await self._request_futures_api("get", "order", True, data=params)
@@ -3610,3 +3612,51 @@ class AsyncClient(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information
         """
         return await self._ws_futures_api_request("account.status", True, params)
+
+    ####################################################
+    # Gift Card API Endpoints
+    ####################################################
+
+    async def gift_card_fetch_token_limit(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/buyCode/token-limit", signed=True, data=params
+        )
+
+    gift_card_fetch_token_limit.__doc__ = Client.gift_card_fetch_token_limit.__doc__
+
+    async def gift_card_fetch_rsa_public_key(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/cryptography/rsa-public-key", signed=True, data=params
+        )
+
+    gift_card_fetch_rsa_public_key.__doc__ = (
+        Client.gift_card_fetch_rsa_public_key.__doc__
+    )
+
+    async def gift_card_verify(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/verify", signed=True, data=params
+        )
+
+    gift_card_verify.__doc__ = Client.gift_card_verify.__doc__
+
+    async def gift_card_redeem(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/redeemCode", signed=True, data=params
+        )
+
+    gift_card_redeem.__doc__ = Client.gift_card_redeem.__doc__
+
+    async def gift_card_create(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/createCode", signed=True, data=params
+        )
+
+    gift_card_create.__doc__ = Client.gift_card_create.__doc__
+
+    async def gift_card_create_dual_token(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/buyCode", signed=True, data=params
+        )
+
+    gift_card_create_dual_token.__doc__ = Client.gift_card_create_dual_token.__doc__
