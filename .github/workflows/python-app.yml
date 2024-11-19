@@ -41,7 +41,7 @@ jobs:
       TEST_FUTURES_API_SECRET: "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
     strategy:
       matrix:
-        max-parallel: 1
+        max-parallel: 2
         python: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
     - uses: actions/checkout@v4
