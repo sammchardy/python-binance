@@ -1924,6 +1924,8 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
+        if "listClientOrderId" not in params:
+            params["listClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return self._post("orderList/oco", True, data=params)
 
     def order_oco_buy(self, **params):
@@ -11143,6 +11145,8 @@ class AsyncClient(BaseClient):
     order_market_sell.__doc__ = Client.order_market_sell.__doc__
 
     async def create_oco_order(self, **params):
+        if "listClientOrderId" not in params:
+            params["listClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._post("orderList/oco", True, data=params)
 
     create_oco_order.__doc__ = Client.create_oco_order.__doc__
