@@ -1,10 +1,14 @@
 import asyncio
-from unittest.mock import AsyncMock, patch
 import pytest
 
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
 from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
+
+try:
+    from unittest.mock import AsyncMock, patch  # Python 3.8+
+except ImportError:
+    from asynctest import CoroutineMock as AsyncMock, patch  # Python 3.7
 
 
 @pytest.mark.asyncio()
