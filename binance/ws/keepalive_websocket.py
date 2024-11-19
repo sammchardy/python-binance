@@ -87,7 +87,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                     await self._client.isolated_margin_stream_keepalive(
                         self._keepalive_type, self._path
                     )
-        except Exception:
-            pass  # Ignore
+        except Exception as e:
+            self._log.error(f"error in keepalive_socket: {e}")
         finally:
             self._start_socket_timer()

@@ -115,6 +115,8 @@ class WebsocketAPI(ReconnectingWebsocket):
 
         except asyncio.TimeoutError:
             raise BinanceWebsocketUnableToConnect("Request timed out")
+        except Exception as e:
+            raise e
         finally:
             self._responses.pop(id, None)
 

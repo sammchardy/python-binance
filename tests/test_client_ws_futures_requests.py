@@ -1,3 +1,5 @@
+import pytest
+from binance.exceptions import BinanceAPIException
 from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 
@@ -5,6 +7,11 @@ from .test_order import assert_contract_order
 def test_ws_futures_get_order_book(futuresClient):
     orderbook = futuresClient.ws_futures_get_order_book(symbol="BTCUSDT")
     assert_ob(orderbook)
+
+
+def test_bad_request(futuresClient):
+    with pytest.raises(BinanceAPIException):
+        futuresClient.ws_futures_get_order_book()
 
 
 def test_ws_futures_get_all_tickers(futuresClient):
@@ -25,7 +32,7 @@ def test_ws_futures_create_get_edit_cancel_order(futuresClient):
         type="LIMIT",
         timeInForce="GTC",
         quantity=0.1,
-        price=str(round(float(ticker["bidPrice"]) - 1)),
+        price=str(round(float(ticker["bidPrice"]) - 2)),
     )
     assert_contract_order(futuresClient, order)
     order = futuresClient.ws_futures_edit_order(
