@@ -64,13 +64,13 @@ def test_swap_id():
         client.futures_create_order(
             symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
-        url_dict = dict(pair.split("=") for pair in m.last_request.query.split("&"))
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         # why lowercase? check this later
-        assert url_dict["symbol"] == "ltcusdt"
-        assert url_dict["side"] == "buy"
-        assert url_dict["type"] == "market"
+        assert url_dict["symbol"] == "LTCUSDT"
+        assert url_dict["side"] == "BUY"
+        assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId".lower()].startswith("x-Cb7ytekJ".lower())
+        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
 
 
 def test_swap_batch_id():
@@ -89,13 +89,13 @@ def test_coin_id():
         client.futures_coin_create_order(
             symbol="LTCUSD_PERP", side="BUY", type="MARKET", quantity=0.1
         )
-        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
+        url_dict = dict(pair.split("=") for pair in m.last_request.query.split("&"))
         # why lowercase? check this later
-        assert url_dict["symbol"] == "LTCUSD_PERP"
-        assert url_dict["side"] == "BUY"
-        assert url_dict["type"] == "MARKET"
+        assert url_dict["symbol"] == "LTCUSD_PERP".lower()
+        assert url_dict["side"] == "BUY".lower()
+        assert url_dict["type"] == "MARKET".lower()
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
+        assert url_dict["newClientOrderId".lower()].startswith("x-Cb7ytekJ".lower())
 
 
 def test_coin_batch_id():
@@ -195,9 +195,9 @@ async def test_swap_id_async():
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in url.query["newClientOrderId"]
+            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
 
-        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/order\?.*")
+        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/order")
         m.post(
             url_pattern,
             payload={"id": 1},

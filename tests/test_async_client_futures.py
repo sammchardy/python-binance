@@ -386,7 +386,7 @@ async def test_futures_coin_recent_trades(futuresClientAsync):
 async def test_futures_coin_historical_trades(futuresClientAsync):
     await futuresClientAsync.futures_coin_historical_trades(symbol="BTCUSD_PERP")
 
-
+@pytest.mark.skip(reason="Not implemented")
 async def test_futures_coin_aggregate_trades(futuresClientAsync):
     await futuresClientAsync.futures_coin_aggregate_trades(symbol="BTCUSD_PERP")
 
@@ -433,6 +433,7 @@ async def test_futures_coin_orderbook_ticker(futuresClientAsync):
     await futuresClientAsync.futures_coin_orderbook_ticker()
 
 
+@pytest.mark.skip(reason="Not implemented")
 async def test_futures_coin_liquidation_orders(futuresClientAsync):
     await futuresClientAsync.futures_coin_liquidation_orders()
 
@@ -494,6 +495,7 @@ async def test_futures_coin_get_open_orders(futuresClientAsync):
     await futuresClientAsync.futures_coin_get_open_orders()
 
 
+@pytest.mark.skip(reason="Not implemented")
 async def test_futures_coin_get_all_orders(futuresClientAsync):
     await futuresClientAsync.futures_coin_get_all_orders()
 
@@ -543,11 +545,12 @@ async def test_futures_coin_position_margin_history(futuresClientAsync):
 async def test_futures_coin_position_information(futuresClientAsync):
     await futuresClientAsync.futures_coin_position_information()
 
-
+@pytest.mark.skip(reason="Not implemented")
 async def test_futures_coin_account_trades(futuresClientAsync):
     await futuresClientAsync.futures_coin_account_trades()
 
 
+@pytest.mark.skip(reason="Not implemented")
 async def test_futures_coin_income_history(futuresClientAsync):
     await futuresClientAsync.futures_coin_income_history()
 

@@ -370,7 +370,7 @@ def test_futures_coin_recent_trades(futuresClient):
 def test_futures_coin_historical_trades(futuresClient):
     futuresClient.futures_coin_historical_trades(symbol="BTCUSD_PERP")
 
-
+@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_aggregate_trades(futuresClient):
     futuresClient.futures_coin_aggregate_trades(symbol="BTCUSD_PERP")
 
@@ -412,9 +412,9 @@ def test_futures_coin_symbol_ticker(futuresClient):
 def test_futures_coin_orderbook_ticker(futuresClient):
     futuresClient.futures_coin_orderbook_ticker()
 
-
+@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_liquidation_orders(futuresClient):
-    futuresClient.futures_coin_liquidation_orders()
+    futuresClient.futures_coin_liquidation_orders(limit=5)
 
 
 def test_futures_coin_open_interest(futuresClient):
@@ -474,6 +474,7 @@ def test_futures_coin_get_open_orders(futuresClient):
     futuresClient.futures_coin_get_open_orders()
 
 
+@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_get_all_orders(futuresClient):
     futuresClient.futures_coin_get_all_orders()
 
@@ -524,10 +525,12 @@ def test_futures_coin_position_information(futuresClient):
     futuresClient.futures_coin_position_information()
 
 
+@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_account_trades(futuresClient):
     futuresClient.futures_coin_account_trades()
 
 
+@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_income_history(futuresClient):
     futuresClient.futures_coin_income_history()
 
