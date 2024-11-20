@@ -1474,7 +1474,7 @@ class Client(BaseClient):
     def create_oco_order(self, **params):
         """Send in a new OCO order
 
-        https://binance-docs.github.io/apidocs/spot/en/#new-oco-trade
+        https://binance-docs.github.io/apidocs/spot/en/#new-order-list-oco-trade
 
         :param symbol: required
         :type symbol: str
@@ -1531,7 +1531,9 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        return self._post("order/oco", True, data=params)
+        if "listClientOrderId" not in params:
+            params["listClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+        return self._post("orderList/oco", True, data=params)
 
     def order_oco_buy(self, **params):
         """Send in a new OCO buy order

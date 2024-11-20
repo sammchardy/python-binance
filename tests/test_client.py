@@ -96,6 +96,23 @@ def test_stream_get_listen_key_and_close(client):
 
 
 # Quoting interface endpoints
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_status(client):
+    client.get_account_status()
+
+
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_api_trading_status(client):
+    client.get_account_api_trading_status()
+
+
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_api_permissions(client):
+    client.get_account_api_permissions()
+
+
+def test_get_dust_assets(client):
+    client.get_dust_assets()
 
 
 #########################

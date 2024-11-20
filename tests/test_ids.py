@@ -58,6 +58,16 @@ def test_spot_cancel_replace_id():
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
 
 
+def test_spot_oco_order_id():
+    with requests_mock.mock() as m:
+        m.post("https://api.binance.com/api/v3/orderList/oco", json={}, status_code=200)
+        client.create_oco_order(
+            symbol="LTCUSDT", side="BUY", aboveType="MARKET", quantity=0.1
+        )
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
+        assert url_dict["listClientOrderId"].startswith("x-HNA2TXFJ")
+
+
 def test_swap_id():
     with requests_mock.mock() as m:
         m.post("https://fapi.binance.com/fapi/v1/order", json={}, status_code=200)
@@ -269,6 +279,27 @@ async def test_coin_id_async():
         )
         await clientAsync.futures_coin_create_order(
             symbol="LTCUSD_PERP", side="BUY", type="MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
+
+
+@pytest.mark.asyncio()
+async def test_spot_oco_id():
+    clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            client_order_id = kwargs["data"][0][1]
+            assert client_order_id.startswith("x-HNA2TXFJ")
+
+        m.post(
+            "https://api.binance.com/api/v3/orderList/oco",
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.create_oco_order(
+            symbol="BTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
 

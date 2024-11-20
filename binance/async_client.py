@@ -662,11 +662,6 @@ class AsyncClient(BaseClient):
 
     order_market_sell.__doc__ = Client.order_market_sell.__doc__
 
-    async def create_oco_order(self, **params):
-        return await self._post("order/oco", True, data=params)
-
-    create_oco_order.__doc__ = Client.create_oco_order.__doc__
-
     async def order_oco_buy(self, **params):
         params.update({"side": self.SIDE_BUY})
         return await self.create_oco_order(**params)
@@ -1819,8 +1814,6 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_cancel_orders(self, **params):
-        # query_string = urlencode(str(params["orderidList"])).replace("%40", "@").replace("%27", "%22")
-        # params["orderidList"] = query_string
         return await self._request_futures_api(
             "delete", "batchOrders", True, data=params, force_params=True
         )
@@ -3186,6 +3179,11 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api(
             "post", "margin/repay-debt", signed=True, data=params
         )
+
+    async def create_oco_order(self, **params):
+        if "listClientOrderId" not in params:
+            params["listClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+        return await self._post("orderList/oco", True, data=params)
 
     ############################################################
     # WebSocket API methods
