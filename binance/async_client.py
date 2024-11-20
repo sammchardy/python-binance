@@ -146,7 +146,7 @@ class AsyncClient(BaseClient):
         self, method, path, signed=False, **kwargs
     ) -> Dict:
         uri = self._create_futures_data_api_uri(path)
-        force_params = kwargs.pop("force_params", False)
+        force_params = kwargs.pop("force_params", True)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_api(
@@ -163,7 +163,7 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
-        force_params = kwargs.pop("force_params", False)
+        force_params = kwargs.pop("force_params", True)
         return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:

@@ -94,7 +94,8 @@ class Client(BaseClient):
     def _request_futures_data_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_futures_data_api_uri(path)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_futures_coin_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -102,7 +103,8 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_futures_coin_data_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -110,12 +112,14 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
 
-        return self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_margin_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -123,14 +127,16 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
-        return self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_papi_api(
         self, method, path, signed=False, version=1, **kwargs
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_papi_api_uri(path, version)
-        return self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
