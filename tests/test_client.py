@@ -111,6 +111,7 @@ def test_get_account_api_permissions(client):
     client.get_account_api_permissions()
 
 
+@pytest.mark.skip(reason="Endpoint not working on testnet")
 def test_get_dust_assets(client):
     client.get_dust_assets()
 
