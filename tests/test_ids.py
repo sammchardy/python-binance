@@ -2,7 +2,7 @@ import requests_mock
 import pytest
 from aioresponses import aioresponses
 
-from binance.client import Client, AsyncClient
+from binance import Client, AsyncClient
 
 client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 
@@ -41,12 +41,21 @@ def test_spot_market_id():
 
 def test_spot_cancel_replace_id():
     with requests_mock.mock() as m:
-        m.post("https://api.binance.com/api/v3/order/cancelReplace", json={}, status_code=200)
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            json={},
+            status_code=200,
+        )
         client.cancel_replace_order(
-            cancelOrderId="orderId", symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+            cancelOrderId="orderId",
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+
 
 def test_spot_oco_order_id():
     with requests_mock.mock() as m:
@@ -56,6 +65,7 @@ def test_spot_oco_order_id():
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         assert url_dict["listClientOrderId"].startswith("x-HNA2TXFJ")
+
 
 def test_swap_id():
     with requests_mock.mock() as m:
@@ -187,6 +197,7 @@ async def test_spot_cancel_replace_id_async():
         )
         await clientAsync.close_connection()
 
+
 @pytest.mark.asyncio()
 async def test_swap_id_async():
     clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
@@ -290,6 +301,7 @@ async def test_spot_oco_id():
             symbol="BTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_swap_batch_id_async():

@@ -1,4 +1,3 @@
-from binance.client import AsyncClient
 import os
 import pytest
 
@@ -28,36 +27,24 @@ def test_coin_ping(client):
 
 
 @pytest.mark.asyncio()
-async def test_papi_ping_async():
-    clientAsync = AsyncClient(
-        api_key="api_key", api_secret="api_secret", https_proxy=proxy
-    )
+async def test_papi_ping_async(clientAsync):
     ping_response = await clientAsync.papi_ping()
     assert ping_response is not None
 
 
 @pytest.mark.asyncio()
-async def test_ping_async():
-    clientAsync = AsyncClient(
-        api_key="api_key", api_secret="api_secret", https_proxy=proxy
-    )
+async def test_ping_async(clientAsync):
     ping_response = await clientAsync.ping()
     assert ping_response is not None
 
 
 @pytest.mark.asyncio()
-async def test_futures_ping_async():
-    clientAsync = AsyncClient(
-        api_key="api_key", api_secret="api_secret", https_proxy=proxy
-    )
+async def test_futures_ping_async(clientAsync):
     ping_response = await clientAsync.futures_ping()
     assert ping_response is not None
 
 
 @pytest.mark.asyncio()
-async def test_coin_ping_async():
-    clientAsync = AsyncClient(
-        api_key="api_key", api_secret="api_secret", https_proxy=proxy
-    )
+async def test_coin_ping_async(clientAsync):
     ping_response = await clientAsync.futures_coin_ping()
     assert ping_response is not None

@@ -36,6 +36,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROXY: "http://51.83.140.52:16301"
+      TEST_TESTNET: "true"
+      TEST_API_KEY: "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
+      TEST_API_SECRET: "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
+      TEST_FUTURES_API_KEY: "227719da8d8499e8d3461587d19f259c0b39c2b462a77c9b748a6119abd74401"
+      TEST_FUTURES_API_SECRET: "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
     strategy:
       matrix:
         python: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]

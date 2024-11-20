@@ -2,8 +2,8 @@ import asyncio
 import threading
 from typing import Optional, Dict, Any
 
-from .client import AsyncClient
-from .helpers import get_loop
+from binance.async_client import AsyncClient
+from binance.helpers import get_loop
 
 
 class ThreadedApiManager(threading.Thread):
@@ -32,8 +32,7 @@ class ThreadedApiManager(threading.Thread):
             "session_params": session_params,
         }
 
-    async def _before_socket_listener_start(self):
-        ...
+    async def _before_socket_listener_start(self): ...
 
     async def socket_listener(self):
         self._client = await AsyncClient.create(loop=self._loop, **self._client_params)

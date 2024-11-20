@@ -1,4 +1,4 @@
-from binance.depthcache import DepthCache
+from binance.ws.depthcache import DepthCache
 from decimal import Decimal
 import pytest
 
