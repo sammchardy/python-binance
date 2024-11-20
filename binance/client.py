@@ -10327,6 +10327,7 @@ class Client(BaseClient):
 
     def ws_cancel_order(self, **params):
         return self._ws_api_request_sync("order.cancel", True, params)
+
     cancel_order.__doc__ = cancel_order.__doc__
 
     def ws_cancel_and_replace_order(self, **params):

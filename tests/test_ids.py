@@ -56,6 +56,7 @@ def test_spot_cancel_replace_id():
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
 
+
 def test_spot_oco_order_id():
     with requests_mock.mock() as m:
         m.post("https://api.binance.com/api/v3/orderList/oco", json={}, status_code=200)
@@ -64,6 +65,7 @@ def test_spot_oco_order_id():
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         assert url_dict["listClientOrderId"].startswith("x-HNA2TXFJ")
+
 
 def test_swap_id():
     with requests_mock.mock() as m:
@@ -299,6 +301,7 @@ async def test_spot_oco_id():
             symbol="BTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_swap_batch_id_async():
