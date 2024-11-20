@@ -657,11 +657,6 @@ class AsyncClient(BaseClient):
 
     order_market_sell.__doc__ = Client.order_market_sell.__doc__
 
-    async def create_oco_order(self, **params):
-        return await self._post("order/oco", True, data=params)
-
-    create_oco_order.__doc__ = Client.create_oco_order.__doc__
-
     async def order_oco_buy(self, **params):
         params.update({"side": self.SIDE_BUY})
         return await self.create_oco_order(**params)
