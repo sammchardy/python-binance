@@ -3168,6 +3168,11 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api(
             "post", "margin/repay-debt", signed=True, data=params
         )
+        
+    async def create_oco_order(self, **params):
+        if "listClientOrderId" not in params:
+            params["listClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
+        return await self._post("orderList/oco", True, data=params)
 
     ############################################################
     # WebSocket API methods
