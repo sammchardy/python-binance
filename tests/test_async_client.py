@@ -81,6 +81,9 @@ async def test_get_asset_balance(clientAsync):
     await clientAsync.get_asset_balance(asset="BTC")
 
 
+async def test_get_asset_balance_no_asset_provided(clientAsync):
+    await clientAsync.get_asset_balance()
+
 async def test_get_my_trades(clientAsync):
     await clientAsync.get_my_trades(symbol="BTCUSDT")
 
