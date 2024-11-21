@@ -82,6 +82,7 @@ def test_get_asset_balance(client):
 def test_get_asset_balance_no_asset_provided(client):
     client.get_asset_balance()
 
+
 def test_get_my_trades(client):
     client.get_my_trades(symbol="BTCUSDT")
 
