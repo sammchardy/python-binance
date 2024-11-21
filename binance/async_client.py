@@ -710,13 +710,16 @@ class AsyncClient(BaseClient):
 
     get_account.__doc__ = Client.get_account.__doc__
 
-    async def get_asset_balance(self, asset, **params):
+    async def get_asset_balance(self, asset = None, **params):
         res = await self.get_account(**params)
         # find asset balance in list of balances
         if "balances" in res:
-            for bal in res["balances"]:
-                if bal["asset"].lower() == asset.lower():
-                    return bal
+            if asset:
+                for bal in res["balances"]:
+                    if bal["asset"].lower() == asset.lower():
+                        return bal
+            else:
+                return res["balances"]
         return None
 
     get_asset_balance.__doc__ = Client.get_asset_balance.__doc__

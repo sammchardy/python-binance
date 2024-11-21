@@ -1997,10 +1997,10 @@ class Client(BaseClient):
         """
         return self._get("account", True, data=params)
 
-    def get_asset_balance(self, asset, **params):
+    def get_asset_balance(self, asset = None, **params):
         """Get current asset balance.
 
-        :param asset: required
+        :param asset: optional - the asset to get the balance of
         :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2021,9 +2021,12 @@ class Client(BaseClient):
         res = self.get_account(**params)
         # find asset balance in list of balances
         if "balances" in res:
-            for bal in res["balances"]:
-                if bal["asset"].lower() == asset.lower():
-                    return bal
+            if asset:
+                for bal in res["balances"]:
+                    if bal["asset"].lower() == asset.lower():
+                        return bal
+            else:
+                return res["balances"]
         return None
 
     def get_my_trades(self, **params):
