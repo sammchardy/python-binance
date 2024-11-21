@@ -7926,7 +7926,7 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api(
-            "delete", "allOpenOrders", signed=True, data=params
+            "delete", "allOpenOrders", signed=True, force_params=True, data=params
         )
 
     def futures_coin_cancel_orders(self, **params):
