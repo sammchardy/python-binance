@@ -14,7 +14,6 @@ try:
 except ImportError:
     pass
 
-
 try:
     from websockets.exceptions import ConnectionClosedError  # type: ignore
 except ImportError:
