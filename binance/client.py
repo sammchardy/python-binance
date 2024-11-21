@@ -103,7 +103,7 @@ class Client(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
 
-        force_params = kwargs.pop("force_params", True)
+        force_params = kwargs.pop("force_params", False)
         return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_futures_coin_data_api(
