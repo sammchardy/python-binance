@@ -1,6 +1,5 @@
 from typing import Dict
 import asyncio
-import json
 
 from websockets import WebSocketClientProtocol  # type: ignore
 
@@ -31,7 +30,7 @@ class WebsocketAPI(ReconnectingWebsocket):
             if parsed_msg["status"] != 200:
                 throwError = True
                 exception = BinanceAPIException(
-                    parsed_msg, parsed_msg["status"], json.dumps(parsed_msg["error"])
+                    parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
                 )
         if req_id is not None and req_id in self._responses:
             if throwError and exception is not None:
@@ -102,7 +101,7 @@ class WebsocketAPI(ReconnectingWebsocket):
                 raise BinanceWebsocketUnableToConnect(
                     "Trying to send request while WebSocket is not connected"
                 )
-            await self.ws.send(json.dumps(payload))
+            await self.ws.send(self.json_dumps(payload))
 
             # Wait for response
             response = await asyncio.wait_for(future, timeout=self.TIMEOUT)
