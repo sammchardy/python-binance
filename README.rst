@@ -68,7 +68,7 @@ Features
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
-- CRUDE over websockets, create/fetch/edit through websockets for minimum latency.
+- CRUD over websockets, create/fetch/edit through websockets for minimum latency.
 - Symbol Depth Cache
 - Historical Kline/Candle fetching function
 - Withdraw functionality
