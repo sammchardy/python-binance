@@ -77,7 +77,7 @@ Features
 - Futures Trading
 - Porfolio Margin Trading
 - Vanilla Options
-- Proxy support
+- Proxy support (REST and WS)
 - Orjson support for faster JSON parsing
 - Support other domains (.us, .jp, etc)
 

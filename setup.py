@@ -34,7 +34,6 @@ setup(
         "six",
         "dateparser",
         "aiohttp",
-        "ujson",
         "websockets",
         "pycryptodome",
     ],
