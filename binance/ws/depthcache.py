@@ -4,7 +4,7 @@ import asyncio
 import time
 from typing import Optional, Dict, Callable
 
-from .helpers import get_loop
+from ..helpers import get_loop
 from .streams import BinanceSocketManager
 from .threaded_stream import ThreadedApiManager
 

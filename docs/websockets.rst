@@ -1,7 +1,28 @@
 Websockets
 ==========
 
-There are 2 ways to interact with websockets.
+API Requests via Websockets
+--------------------------
+
+Some API endpoints can be accessed via websockets. For supported endpoints, you can make requests using either the synchronous or asynchronous client:
+
+* Synchronous client: ``client.ws_<endpoint_name>``
+* Asynchronous client: ``async_client.ws_<endpoint_name>``
+
+Example usage:
+
+.. code:: python
+
+    # Synchronous
+    client.ws_get_order_book(symbol="BTCUSDT")
+
+    # Asynchronous
+    await async_client.ws_get_order_book(symbol="BTCUSDT")
+
+Websocket Managers for Streaming Data
+-----------------
+
+There are 2 ways to interact with websockets for streaming data:
 
 with `ThreadedWebsocketManager <binance.html#binance.websockets.ThreadedWebsocketManager>`_ or `BinanceSocketManager <binance.html#binance.websockets.BinanceSocketManager>`_.
 
