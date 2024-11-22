@@ -7,6 +7,13 @@ from typing import Optional
 from asyncio import sleep
 from random import random
 
+# load orjson if available, otherwise default to json
+orjson = None
+try:
+    import orjson as orjson
+except ImportError:
+    pass
+
 try:
     from websockets.exceptions import ConnectionClosedError  # type: ignore
 except ImportError:
@@ -51,6 +58,16 @@ class ReconnectingWebsocket:
         self._queue = asyncio.Queue()
         self._handle_read_loop = None
         self._ws_kwargs = kwargs
+
+    def json_dumps(self, msg):
+        if orjson:
+            return orjson.dumps(msg)
+        return json.dumps(msg)
+
+    def json_loads(self, msg):
+        if orjson:
+            return orjson.loads(msg)
+        return json.loads(msg)
 
     async def __aenter__(self):
         await self.connect()
@@ -114,7 +131,7 @@ class ReconnectingWebsocket:
             except (ValueError, OSError):
                 return None
         try:
-            return json.loads(evt)
+            return self.json_loads(evt)
         except ValueError:
             self._log.debug(f"error parsing evt json:{evt}")
             return None
