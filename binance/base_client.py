@@ -10,6 +10,7 @@ import time
 from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
 from Crypto.Signature import pkcs1_15, eddsa
+import urllib.parse as _urlencode
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -300,13 +301,19 @@ class BaseClient:
         assert self.PRIVATE_KEY
         h = SHA256.new(query_string.encode("utf-8"))
         signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)  # type: ignore
-        return b64encode(signature).decode()
+        res = b64encode(signature).decode()
+        return self.encode_uri_component(res)
+
+    @staticmethod
+    def encode_uri_component(uri, safe="~()*!.'"):
+        return _urlencode.quote(uri, safe=safe)
 
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
-        return b64encode(
+        res = b64encode(
             eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())
         ).decode()  # type: ignore
+        return self.encode_uri_component(res)
 
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
@@ -325,7 +332,8 @@ class BaseClient:
             else:
                 sig_func = self._ed25519_signature
         query_string = "&".join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
-        return sig_func(query_string)
+        res = sig_func(query_string)
+        return res
 
     def _sign_ws_params(self, params, signature_func):
         if "signature" in params:
