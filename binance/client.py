@@ -7,7 +7,11 @@ from urllib.parse import urlencode, quote
 
 from .base_client import BaseClient
 
-from .helpers import convert_list_to_json_array, interval_to_milliseconds, convert_ts_str
+from .helpers import (
+    convert_list_to_json_array,
+    interval_to_milliseconds,
+    convert_ts_str,
+)
 from .exceptions import (
     BinanceAPIException,
     BinanceRequestException,
@@ -7493,7 +7497,6 @@ class Client(BaseClient):
 
         """
         return self._request_futures_api("delete", "allOpenOrders", True, data=params)
-    
 
     def futures_cancel_orders(self, **params):
         """Cancel multiple futures orders
@@ -7502,10 +7505,16 @@ class Client(BaseClient):
 
         """
         if params.get("orderidlist"):
-            params["orderidlist"] = quote(convert_list_to_json_array(params["orderidlist"]))
+            params["orderidlist"] = quote(
+                convert_list_to_json_array(params["orderidlist"])
+            )
         if params.get("origclientorderidlist"):
-            params["origclientorderidlist"] = quote(convert_list_to_json_array(params["origclientorderidlist"]))
-        return self._request_futures_api("delete", "batchOrders", True, force_params=True, data=params)
+            params["origclientorderidlist"] = quote(
+                convert_list_to_json_array(params["origclientorderidlist"])
+            )
+        return self._request_futures_api(
+            "delete", "batchOrders", True, force_params=True, data=params
+        )
 
     def futures_countdown_cancel_all(self, **params):
         """Cancel all open orders of the specified symbol at the end of the specified countdown.
@@ -7940,9 +7949,13 @@ class Client(BaseClient):
 
         """
         if params.get("orderidlist"):
-            params["orderidlist"] = quote(convert_list_to_json_array(params["orderidlist"]))
+            params["orderidlist"] = quote(
+                convert_list_to_json_array(params["orderidlist"])
+            )
         if params.get("origclientOrderidlist"):
-            params["origclientorderidlist"] = quote(convert_list_to_json_array(params["origclientorderidlist"]))
+            params["origclientorderidlist"] = quote(
+                convert_list_to_json_array(params["origclientorderidlist"])
+            )
         return self._request_futures_coin_api(
             "delete", "batchOrders", True, data=params
         )

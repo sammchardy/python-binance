@@ -468,7 +468,11 @@ class BaseClient:
 
         # Temporary fix for Signature issue while using batchOrders in AsyncClient
         if "params" in kwargs.keys():
-            if "batchOrders" in kwargs["params"] or "orderidlist" in kwargs["params"] or "origclientorderidlist" in kwargs["params"]:
+            if (
+                "batchOrders" in kwargs["params"]
+                or "orderidlist" in kwargs["params"]
+                or "origclientorderidlist" in kwargs["params"]
+            ):
                 kwargs["data"] = kwargs["params"]
                 del kwargs["params"]
 

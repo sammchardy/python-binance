@@ -240,12 +240,16 @@ async def test_futures_place_batch_order_and_cancel(futuresClientAsync):
 
     # Cancel using orderidlist
     order_ids = [order["orderId"] for order in orders][:1]
-    cancelled_orders = await futuresClientAsync.futures_cancel_orders(symbol=orders[0]["symbol"], orderidlist=order_ids)
+    cancelled_orders = await futuresClientAsync.futures_cancel_orders(
+        symbol=orders[0]["symbol"], orderidlist=order_ids
+    )
     for order in cancelled_orders:
         assert_contract_order(futuresClientAsync, order)
     # Cancel using origClientOrderIdList
     client_order_ids = [order["clientOrderId"] for order in orders][1:]
-    cancelled_orders = await futuresClientAsync.futures_cancel_orders(symbol=orders[0]["symbol"], origclientorderidlist=client_order_ids)
+    cancelled_orders = await futuresClientAsync.futures_cancel_orders(
+        symbol=orders[0]["symbol"], origclientorderidlist=client_order_ids
+    )
     for order in cancelled_orders:
         assert_contract_order(futuresClientAsync, order)
 
