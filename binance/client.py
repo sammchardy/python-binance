@@ -60,6 +60,10 @@ class Client(BaseClient):
     ):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        if method.upper() in ["POST", "PUT", "DELETE"]:
+            headers = kwargs.get("headers", {})
+            headers.update({"Content-Type": "application/x-www-form-urlencoded"})
+
         self.response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(self.response)
 
@@ -1364,11 +1368,9 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return self.order_limit(timeInForce=timeInForce, **params)
 
     def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10224,12 +10226,10 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "type": self.ORDER_TYPE_LIMIT,
-                "timeInForce": timeInForce,
-            }
-        )
+        params.update({
+            "type": self.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
+        })
         return self.ws_create_order(**params)
 
     def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10256,11 +10256,9 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return self.ws_order_limit(timeInForce=timeInForce, **params)
 
     def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):

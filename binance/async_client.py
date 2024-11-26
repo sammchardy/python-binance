@@ -108,6 +108,10 @@ class AsyncClient(BaseClient):
     ):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        if method.upper() in ["POST", "PUT", "DELETE"]:
+            headers = kwargs.get("headers", {})
+            headers.update({"Content-Type": "application/x-www-form-urlencoded"})
+
         async with getattr(self.session, method)(
             uri, proxy=self.https_proxy, **kwargs
         ) as response:
@@ -634,11 +638,9 @@ class AsyncClient(BaseClient):
     order_limit.__doc__ = Client.order_limit.__doc__
 
     async def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return await self.order_limit(timeInForce=timeInForce, **params)
 
     order_limit_buy.__doc__ = Client.order_limit_buy.__doc__
@@ -3286,12 +3288,10 @@ class AsyncClient(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "type": self.ORDER_TYPE_LIMIT,
-                "timeInForce": timeInForce,
-            }
-        )
+        params.update({
+            "type": self.ORDER_TYPE_LIMIT,
+            "timeInForce": timeInForce,
+        })
         return await self.ws_create_order(**params)
 
     async def ws_order_limit_buy(
@@ -3320,11 +3320,9 @@ class AsyncClient(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update(
-            {
-                "side": self.SIDE_BUY,
-            }
-        )
+        params.update({
+            "side": self.SIDE_BUY,
+        })
         return await self.ws_order_limit(timeInForce=timeInForce, **params)
 
     async def ws_order_limit_sell(
