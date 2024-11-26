@@ -634,9 +634,11 @@ class AsyncClient(BaseClient):
     order_limit.__doc__ = Client.order_limit.__doc__
 
     async def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
-        params.update({
-            "side": self.SIDE_BUY,
-        })
+        params.update(
+            {
+                "side": self.SIDE_BUY,
+            }
+        )
         return await self.order_limit(timeInForce=timeInForce, **params)
 
     order_limit_buy.__doc__ = Client.order_limit_buy.__doc__
@@ -715,13 +717,16 @@ class AsyncClient(BaseClient):
 
     get_account.__doc__ = Client.get_account.__doc__
 
-    async def get_asset_balance(self, asset, **params):
+    async def get_asset_balance(self, asset=None, **params):
         res = await self.get_account(**params)
         # find asset balance in list of balances
         if "balances" in res:
-            for bal in res["balances"]:
-                if bal["asset"].lower() == asset.lower():
-                    return bal
+            if asset:
+                for bal in res["balances"]:
+                    if bal["asset"].lower() == asset.lower():
+                        return bal
+            else:
+                return res["balances"]
         return None
 
     get_asset_balance.__doc__ = Client.get_asset_balance.__doc__
@@ -3281,10 +3286,12 @@ class AsyncClient(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update({
-            "type": self.ORDER_TYPE_LIMIT,
-            "timeInForce": timeInForce,
-        })
+        params.update(
+            {
+                "type": self.ORDER_TYPE_LIMIT,
+                "timeInForce": timeInForce,
+            }
+        )
         return await self.ws_create_order(**params)
 
     async def ws_order_limit_buy(
@@ -3313,9 +3320,11 @@ class AsyncClient(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update({
-            "side": self.SIDE_BUY,
-        })
+        params.update(
+            {
+                "side": self.SIDE_BUY,
+            }
+        )
         return await self.ws_order_limit(timeInForce=timeInForce, **params)
 
     async def ws_order_limit_sell(

@@ -79,6 +79,7 @@ Features
 - Vanilla Options
 - Proxy support
 - Support other domains (.us, .jp, etc)
+- Support for the Gift Card API
 
 Upgrading to v1.0.0+
 --------------------

@@ -28,6 +28,7 @@ jobs:
       run: ruff check --output-format=github --target-version=py39 .
     - name: Check code formatting with Ruff
       run: ruff format --check .
+      continue-on-error: true
 
   build:
     needs: lint

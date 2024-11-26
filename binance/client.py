@@ -1364,9 +1364,11 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
 
         """
-        params.update({
-            "side": self.SIDE_BUY,
-        })
+        params.update(
+            {
+                "side": self.SIDE_BUY,
+            }
+        )
         return self.order_limit(timeInForce=timeInForce, **params)
 
     def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -2002,10 +2004,10 @@ class Client(BaseClient):
         """
         return self._get("account", True, data=params)
 
-    def get_asset_balance(self, asset, **params):
+    def get_asset_balance(self, asset=None, **params):
         """Get current asset balance.
 
-        :param asset: required
+        :param asset: optional - the asset to get the balance of
         :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2026,9 +2028,12 @@ class Client(BaseClient):
         res = self.get_account(**params)
         # find asset balance in list of balances
         if "balances" in res:
-            for bal in res["balances"]:
-                if bal["asset"].lower() == asset.lower():
-                    return bal
+            if asset:
+                for bal in res["balances"]:
+                    if bal["asset"].lower() == asset.lower():
+                        return bal
+            else:
+                return res["balances"]
         return None
 
     def get_my_trades(self, **params):
@@ -10219,10 +10224,12 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update({
-            "type": self.ORDER_TYPE_LIMIT,
-            "timeInForce": timeInForce,
-        })
+        params.update(
+            {
+                "type": self.ORDER_TYPE_LIMIT,
+                "timeInForce": timeInForce,
+            }
+        )
         return self.ws_create_order(**params)
 
     def ws_order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
@@ -10249,9 +10256,11 @@ class Client(BaseClient):
         :returns: WS response
         See order endpoint for full response options
         """
-        params.update({
-            "side": self.SIDE_BUY,
-        })
+        params.update(
+            {
+                "side": self.SIDE_BUY,
+            }
+        )
         return self.ws_order_limit(timeInForce=timeInForce, **params)
 
     def ws_order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):

@@ -47,6 +47,6 @@ def test_encryption():
             ping=False,
         )
         signature = client._generate_signature(data)
-        assert signature == case["expected_signature"], (
-            f"Test failed: {case['description']}"
-        )
+        assert (
+            signature == case["expected_signature"]
+        ), f"Test failed: {case['description']}"
