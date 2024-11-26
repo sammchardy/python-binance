@@ -1,7 +1,8 @@
 import asyncio
+import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 import time
 import aiohttp
 
@@ -11,7 +12,7 @@ from binance.exceptions import (
     BinanceRequestException,
     NotImplementedException,
 )
-from binance.helpers import convert_ts_str, get_loop, interval_to_milliseconds
+from binance.helpers import convert_list_to_json_array, convert_ts_str, get_loop, interval_to_milliseconds
 from .base_client import BaseClient
 from .client import Client
 
@@ -1814,6 +1815,10 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_cancel_orders(self, **params):
+        if params.get("orderidlist"):
+            params["orderidlist"] = quote(convert_list_to_json_array(params["orderidlist"]))
+        if params.get("origclientorderidlist"):
+            params["origclientorderidlist"] = quote(convert_list_to_json_array(params["origclientorderidlist"]))
         return await self._request_futures_api(
             "delete", "batchOrders", True, data=params, force_params=True
         )
@@ -2049,6 +2054,10 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_coin_cancel_orders(self, **params):
+        if params.get("orderidlist"):
+            params["orderidlist"] = quote(convert_list_to_json_array(params["orderidlist"]))
+        if params.get("origclientorderidlist"):
+            params["origclientorderidlist"] = quote(convert_list_to_json_array(params["origclientorderidlist"]))
         return await self._request_futures_coin_api(
             "delete", "batchOrders", True, data=params
         )

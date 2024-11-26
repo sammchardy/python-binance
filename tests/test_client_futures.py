@@ -221,16 +221,30 @@ def test_futures_place_batch_order_and_cancel(futuresClient):
                 "timeInForce": "GTC",
                 "quantity": "0.1",
                 "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+            },
+            {
+                "symbol": ticker["symbol"],
+                "type": "LIMIT",
+                "side": "BUY",
+                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "positionSide": positions[0]["positionSide"],
+                "timeInForce": "GTC",
+                "quantity": "0.1",
             }
         ]
     )
     for order in orders:
         assert_contract_order(futuresClient, order)
-
-    order_ids = [order["orderId"] for order in orders]
-    # orders = futuresClient.futures_cancel_orders(symbol=orders[0]["symbol"], orderidList=order_ids)
-    # for order in orders:
-    #     assert_contract_order(futuresClient, order)
+    # Cancel using orderidlist
+    order_ids = [order["orderId"] for order in orders][:1]
+    cancelled_orders = futuresClient.futures_cancel_orders(symbol=orders[0]["symbol"], orderidlist=order_ids)
+    for order in cancelled_orders:
+        assert_contract_order(futuresClient, order)
+    # Cancel using origClientOrderIdList
+    client_order_ids = [order["clientOrderId"] for order in orders][1:]
+    cancelled_orders = futuresClient.futures_cancel_orders(symbol=orders[0]["symbol"], origclientorderidlist=client_order_ids)
+    for order in cancelled_orders:
+        assert_contract_order(futuresClient, order)
 
 
 def test_futures_get_open_orders(futuresClient):

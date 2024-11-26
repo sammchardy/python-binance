@@ -1,5 +1,6 @@
 import asyncio
 from decimal import Decimal
+import json
 from typing import Union, Optional, Dict
 
 import dateparser
@@ -78,6 +79,13 @@ def convert_ts_str(ts_str):
     if type(ts_str) == int:
         return ts_str
     return date_to_milliseconds(ts_str)
+
+
+def convert_list_to_json_array(l):
+    if l is None:
+        return l
+    res = json.dumps(l)
+    return res.replace(" ", "")
 
 
 def get_loop():
