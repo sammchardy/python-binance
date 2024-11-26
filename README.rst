@@ -68,7 +68,7 @@ Features
 - No need to generate timestamps yourself, the wrapper does it for you
 - Response exception handling
 - Websocket handling with reconnection and multiplexed connections
-- CRUDE over websockets, create/fetch/edit through websockets for minimum latency.
+- CRUD over websockets, create/fetch/edit through websockets for minimum latency.
 - Symbol Depth Cache
 - Historical Kline/Candle fetching function
 - Withdraw functionality
@@ -77,7 +77,8 @@ Features
 - Futures Trading
 - Porfolio Margin Trading
 - Vanilla Options
-- Proxy support
+- Proxy support (REST and WS)
+- Orjson support for faster JSON parsing
 - Support other domains (.us, .jp, etc)
 - Support for the Gift Card API
 
@@ -275,13 +276,19 @@ for more information.
         await client.close_connection()
 
     if __name__ == "__main__":
-
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
 
 The library is under `MIT license`, that means it's absolutely free for any developer to build commercial and opensource software on top of it, but use it at your own risk with no warranties, as is.
 
+
+Orjson support
+-------------------
+
+Python-binance also supports `orjson` for parsing JSON since it is much faster than the builtin library. This is especially important when using websockets because some exchanges return big messages that need to be parsed and dispatched as quickly as possible.
+
+However, `orjson` is not enabled by default because it is not supported by every python interpreter. If you want to opt-in, you just need to install it (`pip install orjson`) on your local environment. Python-binance will detect the installion and pick it up automatically.
 
 Star history
 ------------

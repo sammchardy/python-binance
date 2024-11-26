@@ -7,10 +7,27 @@ from typing import Optional
 from asyncio import sleep
 from random import random
 
+# load orjson if available, otherwise default to json
+orjson = None
+try:
+    import orjson as orjson
+except ImportError:
+    pass
+
 try:
     from websockets.exceptions import ConnectionClosedError  # type: ignore
 except ImportError:
     from websockets import ConnectionClosedError  # type: ignore
+
+
+Proxy = None
+proxy_connect = None
+try:
+    from websockets_proxy import Proxy as w_Proxy, proxy_connect as w_proxy_connect
+    Proxy = w_Proxy
+    proxy_connect = w_proxy_connect
+except ImportError:
+    pass
 
 import websockets as ws
 
@@ -34,6 +51,7 @@ class ReconnectingWebsocket:
         prefix: str = "ws/",
         is_binary: bool = False,
         exit_coro=None,
+        https_proxy: Optional[str] = None,
         **kwargs,
     ):
         self._loop = get_loop()
@@ -50,7 +68,18 @@ class ReconnectingWebsocket:
         self.ws_state = WSListenerState.INITIALISING
         self._queue = asyncio.Queue()
         self._handle_read_loop = None
+        self._https_proxy = https_proxy
         self._ws_kwargs = kwargs
+
+    def json_dumps(self, msg):
+        if orjson:
+            return orjson.dumps(msg)
+        return json.dumps(msg)
+
+    def json_loads(self, msg):
+        if orjson:
+            return orjson.loads(msg)
+        return json.loads(msg)
 
     async def __aenter__(self):
         await self.connect()
@@ -76,10 +105,20 @@ class ReconnectingWebsocket:
         self._log.debug("Establishing new WebSocket connection")
         self.ws_state = WSListenerState.RECONNECTING
         await self._before_connect()
+
         ws_url = (
             f"{self._url}{getattr(self, '_prefix', '')}{getattr(self, '_path', '')}"
         )
-        self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
+
+        # handle https_proxy
+        if self._https_proxy:
+            if not Proxy or not proxy_connect:
+                raise ImportError("websockets_proxy is not installed, please install it to use a websockets proxy (pip install websockets_proxy)")
+            proxy = Proxy.from_url(self._https_proxy) # type: ignore
+            self._conn = proxy_connect(ws_url, close_timeout=0.1, proxy=proxy, **self._ws_kwargs) # type: ignore
+        else:
+            self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
+
         try:
             self.ws = await self._conn.__aenter__()
         except Exception as e:  # noqa
@@ -114,7 +153,7 @@ class ReconnectingWebsocket:
             except (ValueError, OSError):
                 return None
         try:
-            return json.loads(evt)
+            return self.json_loads(evt)
         except ValueError:
             self._log.debug(f"error parsing evt json:{evt}")
             return None

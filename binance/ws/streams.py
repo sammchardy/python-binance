@@ -82,6 +82,7 @@ class BinanceSocketManager:
                 prefix=prefix,
                 exit_coro=lambda p: self._exit_socket(f"{socket_type}_{p}"),
                 is_binary=is_binary,
+                https_proxy=self._client.https_proxy,
                 **self.ws_kwargs,
             )
 
@@ -104,6 +105,7 @@ class BinanceSocketManager:
                 exit_coro=self._exit_socket,
                 is_binary=is_binary,
                 user_timeout=self._user_timeout,
+                https_proxy=self._client.https_proxy,
                 **self.ws_kwargs,
             )
 
@@ -1094,10 +1096,11 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         tld: str = "com",
         testnet: bool = False,
         session_params: Optional[Dict[str, Any]] = None,
+        https_proxy: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
         super().__init__(
-            api_key, api_secret, requests_params, tld, testnet, session_params, loop
+            api_key, api_secret, requests_params, tld, testnet, session_params, https_proxy, loop
         )
         self._bsm: Optional[BinanceSocketManager] = None
 
