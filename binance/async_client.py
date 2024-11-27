@@ -5,7 +5,6 @@ from urllib.parse import urlencode, quote
 import time
 import aiohttp
 import yarl
-import json
 
 from binance.enums import HistoricalKlinesType
 from binance.exceptions import (
