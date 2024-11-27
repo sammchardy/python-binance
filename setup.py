@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-from setuptools import setup
+from setuptools import setup, find_packages
 import codecs
 import os
 import re
-
 
 with codecs.open(
     os.path.join(os.path.abspath(os.path.dirname(__file__)), "binance", "__init__.py"),
@@ -21,7 +20,7 @@ with open("README.rst", "r") as fh:
 setup(
     name="python-binance",
     version=version,
-    packages=["binance"],
+    packages=find_packages(exclude=['tests', 'examples']),
     description="Binance REST API python implementation",
     long_description=long_description,
     long_description_content_type="text/x-rst",
