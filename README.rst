@@ -66,7 +66,9 @@ Features
 - Testnet support for Spot, Futures and Vanilla Options
 - Simple handling of authentication include RSA and EDDSA keys
 - No need to generate timestamps yourself, the wrapper does it for you
+- RecvWindow sent by default
 - Response exception handling
+- Customizable HTTP headers
 - Websocket handling with reconnection and multiplexed connections
 - CRUD over websockets, create/fetch/edit through websockets for minimum latency.
 - Symbol Depth Cache
@@ -165,6 +167,9 @@ pass `testnet=True` when creating the client.
 
     # create order through websockets
     order_ws = client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
+
+    # get account using custom headers
+    account = client.get_account(headers={'MyCustomKey': 'MyCustomValue'})
 
     # socket manager using threads
     twm = ThreadedWebsocketManager()
