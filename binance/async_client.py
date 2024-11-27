@@ -106,8 +106,9 @@ class AsyncClient(BaseClient):
 
         if method == 'get':
             # url encode the query string
-            uri = f"{uri}?{kwargs['params']}"
-            kwargs.pop('params')
+            if 'params' in kwargs:
+                uri = f"{uri}?{kwargs['params']}"
+                kwargs.pop('params')
 
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True), proxy=self.https_proxy, **kwargs
