@@ -1,4 +1,3 @@
-import re
 import requests_mock
 import pytest
 from aioresponses import aioresponses
