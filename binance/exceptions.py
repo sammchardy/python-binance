@@ -79,4 +79,5 @@ class NotImplementedException(Exception):
         super().__init__(message)
 
 
-class UnknownDateFormat(Exception): ...
+class UnknownDateFormat(Exception):
+    ...

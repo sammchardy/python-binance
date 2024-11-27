@@ -1,11 +1,14 @@
+import pytest
+
+
 def test_client_initialization(client):
     assert client.API_KEY is not None
     assert client.API_SECRET is not None
 
 
-# TODO: whitelist in proxy to pass test
-# def test_get_products(client):
-#     client.get_products()
+@pytest.mark.skip(reason="Endpoint not documented")
+def test_get_products(client):
+    client.get_products()
 
 
 def test_get_exchange_info(client):
@@ -76,6 +79,10 @@ def test_get_asset_balance(client):
     client.get_asset_balance(asset="BTC")
 
 
+def test_get_asset_balance_no_asset_provided(client):
+    client.get_asset_balance()
+
+
 def test_get_my_trades(client):
     client.get_my_trades(symbol="BTCUSDT")
 
@@ -84,21 +91,33 @@ def test_get_system_status(client):
     client.get_system_status()
 
 
-# TODO: Tests not working on testnet
-# def test_get_account_status(client):
-#     client.get_account_status()
+# User Stream Endpoints
 
 
-# def test_get_account_api_trading_status(client):
-#     client.get_account_api_trading_status()
+def test_stream_get_listen_key_and_close(client):
+    listen_key = client.stream_get_listen_key()
+    client.stream_close(listen_key)
 
 
-# def test_get_account_api_permissions(client):
-#     client.get_account_api_permissions()
+# Quoting interface endpoints
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_status(client):
+    client.get_account_status()
 
 
-# def test_get_dust_assets(client):
-#     client.get_dust_assets()
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_api_trading_status(client):
+    client.get_account_api_trading_status()
+
+
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_account_api_permissions(client):
+    client.get_account_api_permissions()
+
+
+@pytest.mark.skip(reason="Endpoint not working on testnet")
+def test_get_dust_assets(client):
+    client.get_dust_assets()
 
 
 #########################

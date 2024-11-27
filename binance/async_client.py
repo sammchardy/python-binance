@@ -1,7 +1,7 @@
 import asyncio
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 import time
 import aiohttp
 import yarl
@@ -12,7 +12,12 @@ from binance.exceptions import (
     BinanceRequestException,
     NotImplementedException,
 )
-from binance.helpers import convert_ts_str, get_loop, interval_to_milliseconds
+from binance.helpers import (
+    convert_list_to_json_array,
+    convert_ts_str,
+    get_loop,
+    interval_to_milliseconds,
+)
 from .base_client import BaseClient
 from .client import Client
 
@@ -102,16 +107,32 @@ class AsyncClient(BaseClient):
     async def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
+        # this check needs to be done before __get_request_kwargs to avoid
+        # polluting the signature
+        headers = {}
+        if method.upper() in ["POST", "PUT", "DELETE"]:
+            headers.update({"Content-Type": "application/x-www-form-urlencoded"})
+
+        if "data" in kwargs:
+            for key in kwargs["data"]:
+                if key == "headers":
+                    headers.update(kwargs["data"][key])
+                    del kwargs["data"][key]
+                    break
+
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        if method == 'get':
+        if method == "get":
             # url encode the query string
-            if 'params' in kwargs:
+            if "params" in kwargs:
                 uri = f"{uri}?{kwargs['params']}"
-                kwargs.pop('params')
+                kwargs.pop("params")
 
         async with getattr(self.session, method)(
-            yarl.URL(uri, encoded=True), proxy=self.https_proxy, **kwargs
+            yarl.URL(uri, encoded=True),
+            proxy=self.https_proxy,
+            headers=headers,
+            **kwargs,
         ) as response:
             self.response = response
             return await self._handle_response(response)
@@ -138,30 +159,31 @@ class AsyncClient(BaseClient):
         **kwargs,
     ):
         uri = self._create_api_uri(path, signed, version)
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_api(
         self, method, path, signed=False, version=1, **kwargs
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_api_uri(path, version=version)
-
-        return await self._request(method, uri, signed, False, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_data_api(
         self, method, path, signed=False, **kwargs
     ) -> Dict:
         uri = self._create_futures_data_api_uri(path)
-
-        return await self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_api(
         self, method, path, signed=False, version=1, **kwargs
     ) -> Dict:
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_api_url(path, version=version)
-
-        return await self._request(method, uri, signed, False, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_futures_coin_data_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -169,12 +191,14 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_futures_coin_data_api_url(path, version=version)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        force_params = kwargs.pop("force_params", True)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_options_api_uri(path)
+        force_params = kwargs.pop("force_params", True)
 
-        return await self._request(method, uri, signed, True, **kwargs)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_margin_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -182,7 +206,8 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_margin_api_uri(path, version)
 
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_papi_api(
         self, method, path, signed=False, version=1, **kwargs
@@ -190,7 +215,8 @@ class AsyncClient(BaseClient):
         version = self._get_version(version, **kwargs)
         uri = self._create_papi_api_uri(path, version)
 
-        return await self._request(method, uri, signed, **kwargs)
+        force_params = kwargs.pop("force_params", False)
+        return await self._request(method, uri, signed, force_params, **kwargs)
 
     async def _request_website(self, method, path, signed=False, **kwargs) -> Dict:
         uri = self._create_website_uri(path)
@@ -712,13 +738,16 @@ class AsyncClient(BaseClient):
 
     get_account.__doc__ = Client.get_account.__doc__
 
-    async def get_asset_balance(self, asset, **params):
+    async def get_asset_balance(self, asset=None, **params):
         res = await self.get_account(**params)
         # find asset balance in list of balances
         if "balances" in res:
-            for bal in res["balances"]:
-                if bal["asset"].lower() == asset.lower():
-                    return bal
+            if asset:
+                for bal in res["balances"]:
+                    if bal["asset"].lower() == asset.lower():
+                        return bal
+            else:
+                return res["balances"]
         return None
 
     get_asset_balance.__doc__ = Client.get_asset_balance.__doc__
@@ -1775,6 +1804,14 @@ class AsyncClient(BaseClient):
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_api("post", "order", True, data=params)
 
+    async def futures_modify_order(self, **params):
+        """Modify an existing order. Currently only LIMIT order modification is supported.
+
+        https://binance-docs.github.io/apidocs/futures/en/#modify-order-trade
+
+        """
+        return await self._request_futures_api("put", "order", True, data=params)
+
     async def futures_create_test_order(self, **params):
         return await self._request_futures_api("post", "order/test", True, data=params)
 
@@ -1782,10 +1819,13 @@ class AsyncClient(BaseClient):
         for order in params["batchOrders"]:
             if "newClientOrderId" not in order:
                 order["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        query_string = urlencode(params)
-        query_string = query_string.replace("%27", "%22")
+                order = self._order_params(order)
+        query_string = urlencode(params).replace("%40", "@").replace("%27", "%22")
         params["batchOrders"] = query_string[12:]
-        return await self._request_futures_api("post", "batchOrders", True, data=params)
+
+        return await self._request_futures_api(
+            "post", "batchOrders", True, data=params, force_params=True
+        )
 
     async def futures_get_order(self, **params):
         return await self._request_futures_api("get", "order", True, data=params)
@@ -1805,8 +1845,16 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_cancel_orders(self, **params):
+        if params.get("orderidlist"):
+            params["orderidlist"] = quote(
+                convert_list_to_json_array(params["orderidlist"])
+            )
+        if params.get("origclientorderidlist"):
+            params["origclientorderidlist"] = quote(
+                convert_list_to_json_array(params["origclientorderidlist"])
+            )
         return await self._request_futures_api(
-            "delete", "batchOrders", True, data=params
+            "delete", "batchOrders", True, data=params, force_params=True
         )
 
     async def futures_countdown_cancel_all(self, **params):
@@ -2036,10 +2084,18 @@ class AsyncClient(BaseClient):
 
     async def futures_coin_cancel_all_open_orders(self, **params):
         return await self._request_futures_coin_api(
-            "delete", "allOpenOrders", signed=True, data=params
+            "delete", "allOpenOrders", signed=True, data=params, force_params=True
         )
 
     async def futures_coin_cancel_orders(self, **params):
+        if params.get("orderidlist"):
+            params["orderidlist"] = quote(
+                convert_list_to_json_array(params["orderidlist"])
+            )
+        if params.get("origclientorderidlist"):
+            params["origclientorderidlist"] = quote(
+                convert_list_to_json_array(params["origclientorderidlist"])
+            )
         return await self._request_futures_coin_api(
             "delete", "batchOrders", True, data=params
         )
@@ -3601,3 +3657,51 @@ class AsyncClient(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information
         """
         return await self._ws_futures_api_request("account.status", True, params)
+
+    ####################################################
+    # Gift Card API Endpoints
+    ####################################################
+
+    async def gift_card_fetch_token_limit(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/buyCode/token-limit", signed=True, data=params
+        )
+
+    gift_card_fetch_token_limit.__doc__ = Client.gift_card_fetch_token_limit.__doc__
+
+    async def gift_card_fetch_rsa_public_key(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/cryptography/rsa-public-key", signed=True, data=params
+        )
+
+    gift_card_fetch_rsa_public_key.__doc__ = (
+        Client.gift_card_fetch_rsa_public_key.__doc__
+    )
+
+    async def gift_card_verify(self, **params):
+        return await self._request_margin_api(
+            "get", "giftcard/verify", signed=True, data=params
+        )
+
+    gift_card_verify.__doc__ = Client.gift_card_verify.__doc__
+
+    async def gift_card_redeem(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/redeemCode", signed=True, data=params
+        )
+
+    gift_card_redeem.__doc__ = Client.gift_card_redeem.__doc__
+
+    async def gift_card_create(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/createCode", signed=True, data=params
+        )
+
+    gift_card_create.__doc__ = Client.gift_card_create.__doc__
+
+    async def gift_card_create_dual_token(self, **params):
+        return await self._request_margin_api(
+            "post", "giftcard/buyCode", signed=True, data=params
+        )
+
+    gift_card_create_dual_token.__doc__ = Client.gift_card_create_dual_token.__doc__

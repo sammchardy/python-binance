@@ -188,10 +188,12 @@ class ReconnectingWebsocket:
                                 self._log.debug(
                                     f"Queue overflow {self.MAX_QUEUE_SIZE}. Message not filled"
                                 )
-                                await self._queue.put({
-                                    "e": "error",
-                                    "m": "Queue overflow. Message not filled",
-                                })
+                                await self._queue.put(
+                                    {
+                                        "e": "error",
+                                        "m": "Queue overflow. Message not filled",
+                                    }
+                                )
                                 raise BinanceWebsocketUnableToConnect
                 except asyncio.TimeoutError:
                     self._log.debug(f"no message in {self.TIMEOUT} seconds")

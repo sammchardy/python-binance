@@ -34,7 +34,8 @@ class ThreadedApiManager(threading.Thread):
             "https_proxy": https_proxy,
         }
 
-    async def _before_socket_listener_start(self): ...
+    async def _before_socket_listener_start(self):
+        ...
 
     async def socket_listener(self):
         self._client = await AsyncClient.create(loop=self._loop, **self._client_params)

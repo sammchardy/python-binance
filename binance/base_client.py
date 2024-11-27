@@ -60,7 +60,7 @@ class BaseClient:
 
     REQUEST_TIMEOUT: float = 10
 
-    REQUEST_RECVWINDOW: int = 10000 # 10 seconds
+    REQUEST_RECVWINDOW: int = 10000  # 10 seconds
 
     SYMBOL_TYPE_SPOT = "SPOT"
 
@@ -209,6 +209,7 @@ class BaseClient:
     def _get_headers(self) -> Dict:
         headers = {
             "Accept": "application/json",
+            "Content-Type": "application/json",
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",  # noqa
         }
         if self.API_KEY:
@@ -480,8 +481,13 @@ class BaseClient:
             del kwargs["data"]
 
         # Temporary fix for Signature issue while using batchOrders in AsyncClient
-        if "params" in kwargs.keys() and "batchOrders" in kwargs["params"]:
-            kwargs["data"] = kwargs["params"]
-            del kwargs["params"]
+        if "params" in kwargs.keys():
+            if (
+                "batchOrders" in kwargs["params"]
+                or "orderidlist" in kwargs["params"]
+                or "origclientorderidlist" in kwargs["params"]
+            ):
+                kwargs["data"] = kwargs["params"]
+                del kwargs["params"]
 
         return kwargs

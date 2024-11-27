@@ -2,6 +2,8 @@ coverage
 pytest
 pytest-asyncio
 pytest-cov
+pytest-xdist
+pytest-rerunfailures
 requests-mock
 tox
 setuptools
