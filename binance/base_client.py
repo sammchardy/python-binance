@@ -60,6 +60,8 @@ class BaseClient:
 
     REQUEST_TIMEOUT: float = 10
 
+    REQUEST_RECVWINDOW: int = 10000 # 10 seconds
+
     SYMBOL_TYPE_SPOT = "SPOT"
 
     ORDER_STATUS_NEW = "NEW"
@@ -455,6 +457,8 @@ class BaseClient:
             kwargs["data"]["timestamp"] = int(
                 time.time() * 1000 + self.timestamp_offset
             )
+            if self.REQUEST_RECVWINDOW:
+                kwargs["data"]["recvWindow"] = self.REQUEST_RECVWINDOW
             kwargs["data"]["signature"] = self._generate_signature(kwargs["data"])
 
         # sort get and post params to match signature order
