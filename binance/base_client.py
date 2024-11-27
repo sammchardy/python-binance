@@ -60,7 +60,7 @@ class BaseClient:
 
     REQUEST_TIMEOUT: float = 10
 
-    REQUEST_RECVWINDOW: int = 10000 # 10 seconds
+    REQUEST_RECVWINDOW: int = 10000  # 10 seconds
 
     SYMBOL_TYPE_SPOT = "SPOT"
 

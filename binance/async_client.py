@@ -108,7 +108,6 @@ class AsyncClient(BaseClient):
     async def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
-
         # this check needs to be done before __get_request_kwargs to avoid
         # polluting the signature
         headers = {}
@@ -124,14 +123,17 @@ class AsyncClient(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        if method == 'get':
+        if method == "get":
             # url encode the query string
-            if 'params' in kwargs:
+            if "params" in kwargs:
                 uri = f"{uri}?{kwargs['params']}"
-                kwargs.pop('params')
+                kwargs.pop("params")
 
         async with getattr(self.session, method)(
-            yarl.URL(uri, encoded=True), proxy=self.https_proxy, headers=headers, **kwargs
+            yarl.URL(uri, encoded=True),
+            proxy=self.https_proxy,
+            headers=headers,
+            **kwargs,
         ) as response:
             self.response = response
             return await self._handle_response(response)

@@ -16,6 +16,7 @@ def test_get_headers():
         assert "Content-Type" in headers
         assert headers["Content-Type"] == "application/json"
 
+
 def test_post_headers():
     with requests_mock.mock() as m:
         m.post("https://api.binance.com/api/v3/order", json={}, status_code=200)
@@ -24,13 +25,21 @@ def test_post_headers():
         assert "Content-Type" in headers
         assert headers["Content-Type"] == "application/x-www-form-urlencoded"
 
+
 def test_post_headers_overriden():
     with requests_mock.mock() as m:
         m.post("https://api.binance.com/api/v3/order", json={}, status_code=200)
-        client.create_order(symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1, headers={"Content-Type": "myvalue"})
+        client.create_order(
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
+            headers={"Content-Type": "myvalue"},
+        )
         headers = m.last_request._request.headers
         assert "Content-Type" in headers
         assert headers["Content-Type"] == "myvalue"
+
 
 @pytest.mark.asyncio()
 async def test_post_headers_async():
@@ -50,8 +59,11 @@ async def test_post_headers_async():
             status=200,
             callback=handler,
         )
-        await clientAsync.create_order(symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
+        await clientAsync.create_order(
+            symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_post_headers_overriden_async():
@@ -71,6 +83,11 @@ async def test_post_headers_overriden_async():
             status=200,
             callback=handler,
         )
-        await clientAsync.create_order(symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1, headers={"Content-Type": "myvalue"})
+        await clientAsync.create_order(
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
+            headers={"Content-Type": "myvalue"},
+        )
         await clientAsync.close_connection()
-

@@ -58,7 +58,6 @@ class Client(BaseClient):
     def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
-
         headers = {}
         if method.upper() in ["POST", "PUT", "DELETE"]:
             headers.update({"Content-Type": "application/x-www-form-urlencoded"})
