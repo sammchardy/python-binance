@@ -109,6 +109,7 @@ class AsyncClient(BaseClient):
     ):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        headers = {}
         if method.upper() in ["POST", "PUT", "DELETE"]:
             headers = kwargs.get("headers", {})
             headers.update({"Content-Type": "application/x-www-form-urlencoded"})
@@ -120,7 +121,7 @@ class AsyncClient(BaseClient):
                 kwargs.pop('params')
 
         async with getattr(self.session, method)(
-            yarl.URL(uri, encoded=True), proxy=self.https_proxy, **kwargs
+            yarl.URL(uri, encoded=True), proxy=self.https_proxy, headers=headers, **kwargs
         ) as response:
             self.response = response
             return await self._handle_response(response)

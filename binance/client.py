@@ -60,11 +60,12 @@ class Client(BaseClient):
     ):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        headers={}
         if method.upper() in ["POST", "PUT", "DELETE"]:
             headers = kwargs.get("headers", {})
             headers.update({"Content-Type": "application/x-www-form-urlencoded"})
 
-        self.response = getattr(self.session, method)(uri, **kwargs)
+        self.response = getattr(self.session, method)(uri, headers=headers, **kwargs)
         return self._handle_response(self.response)
 
     @staticmethod
