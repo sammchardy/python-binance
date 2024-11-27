@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlencode
 import time
 import aiohttp
+import yarl
 
 from binance.enums import HistoricalKlinesType
 from binance.exceptions import (
@@ -103,8 +104,14 @@ class AsyncClient(BaseClient):
     ):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        if method == 'get':
+            # url encode the query string
+            if 'params' in kwargs:
+                uri = f"{uri}?{kwargs['params']}"
+                kwargs.pop('params')
+
         async with getattr(self.session, method)(
-            uri, proxy=self.https_proxy, **kwargs
+            yarl.URL(uri, encoded=True), proxy=self.https_proxy, **kwargs
         ) as response:
             self.response = response
             return await self._handle_response(response)

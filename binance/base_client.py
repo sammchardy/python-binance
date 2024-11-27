@@ -10,6 +10,7 @@ import time
 from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
 from Crypto.Signature import pkcs1_15, eddsa
+import urllib.parse as _urlencode
 from operator import itemgetter
 from urllib.parse import urlencode
 
@@ -58,6 +59,8 @@ class BaseClient:
     BASE_ENDPOINT_4 = "4"
 
     REQUEST_TIMEOUT: float = 10
+
+    REQUEST_RECVWINDOW: int = 10000 # 10 seconds
 
     SYMBOL_TYPE_SPOT = "SPOT"
 
@@ -300,13 +303,21 @@ class BaseClient:
         assert self.PRIVATE_KEY
         h = SHA256.new(query_string.encode("utf-8"))
         signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)  # type: ignore
-        return b64encode(signature).decode()
+        res = b64encode(signature).decode()
+        # return self.encode_uri_component(res)
+        return res
+
+    @staticmethod
+    def encode_uri_component(uri, safe="~()*!.'"):
+        return _urlencode.quote(uri, safe=safe)
 
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
-        return b64encode(
+        res = b64encode(
             eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())
         ).decode()  # type: ignore
+        # return self.encode_uri_component(res)
+        return res
 
     def _hmac_signature(self, query_string: str) -> str:
         assert self.API_SECRET, "API Secret required for private endpoints"
@@ -317,7 +328,7 @@ class BaseClient:
         )
         return m.hexdigest()
 
-    def _generate_signature(self, data: Dict) -> str:
+    def _generate_signature(self, data: Dict, uri_encode=True) -> str:
         sig_func = self._hmac_signature
         if self.PRIVATE_KEY:
             if self._is_rsa:
@@ -325,7 +336,8 @@ class BaseClient:
             else:
                 sig_func = self._ed25519_signature
         query_string = "&".join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
-        return sig_func(query_string)
+        res = sig_func(query_string)
+        return self.encode_uri_component(res) if uri_encode else res
 
     def _sign_ws_params(self, params, signature_func):
         if "signature" in params:
@@ -445,6 +457,8 @@ class BaseClient:
             kwargs["data"]["timestamp"] = int(
                 time.time() * 1000 + self.timestamp_offset
             )
+            if self.REQUEST_RECVWINDOW:
+                kwargs["data"]["recvWindow"] = self.REQUEST_RECVWINDOW
             kwargs["data"]["signature"] = self._generate_signature(kwargs["data"])
 
         # sort get and post params to match signature order
