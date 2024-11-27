@@ -3,6 +3,7 @@ from setuptools import setup
 import codecs
 import os
 import re
+from setuptools import setup, find_packages
 
 
 with codecs.open(
@@ -21,7 +22,7 @@ with open("README.rst", "r") as fh:
 setup(
     name="python-binance",
     version=version,
-    packages=["binance"],
+    packages=find_packages(exclude=['tests', 'examples']),
     description="Binance REST API python implementation",
     long_description=long_description,
     long_description_content_type="text/x-rst",

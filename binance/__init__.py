@@ -4,7 +4,7 @@
 
 """
 
-__version__ = "1.0.22"
+__version__ = "1.0.23"
 
 from binance.async_client import AsyncClient  # noqa
 from binance.client import Client  # noqa
