@@ -5,6 +5,7 @@ from urllib.parse import urlencode, quote
 import time
 import aiohttp
 import yarl
+import json
 
 from binance.enums import HistoricalKlinesType
 from binance.exceptions import (
@@ -107,12 +108,21 @@ class AsyncClient(BaseClient):
     async def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
-        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
+        # this check needs to be done before __get_request_kwargs to avoid
+        # polluting the signature
         headers = {}
         if method.upper() in ["POST", "PUT", "DELETE"]:
-            headers = kwargs.get("headers", {})
             headers.update({"Content-Type": "application/x-www-form-urlencoded"})
+
+        if "data" in kwargs:
+            for key in kwargs["data"]:
+                if key == "headers":
+                    headers.update(kwargs["data"][key])
+                    del kwargs["data"][key]
+                    break
+
+        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         if method == 'get':
             # url encode the query string

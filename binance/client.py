@@ -58,12 +58,19 @@ class Client(BaseClient):
     def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
-        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        headers={}
+        headers = {}
         if method.upper() in ["POST", "PUT", "DELETE"]:
-            headers = kwargs.get("headers", {})
             headers.update({"Content-Type": "application/x-www-form-urlencoded"})
+
+        if "data" in kwargs:
+            for key in kwargs["data"]:
+                if key == "headers":
+                    headers.update(kwargs["data"][key])
+                    del kwargs["data"][key]
+                    break
+
+        kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         self.response = getattr(self.session, method)(uri, headers=headers, **kwargs)
         return self._handle_response(self.response)
