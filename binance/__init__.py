@@ -18,4 +18,13 @@ from binance.ws.streams import (
     ThreadedWebsocketManager,  # noqa
     BinanceSocketType,  # noqa
 )
+
+from binance.ws.keepalive_websocket import KeepAliveWebsocket  # noqa
+
+from binance.ws.reconnecting_websocket import ReconnectingWebsocket  # noqa
+
+from binance.ws.constants import * # noqa
+
+from binance.exceptions import *  # noqa
+
 from binance.enums import *  # noqa
