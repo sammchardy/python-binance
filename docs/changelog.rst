@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.0.24 - 2024-11-28
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Exposed internal classes for easier subclassing
+
+
+**Fixed**
+
+- Fixed package outdated structure causing import errors
+
 v1.0.23 - 2024-11-27
 ^^^^^^^^^^^^^^^^^^^^
 
