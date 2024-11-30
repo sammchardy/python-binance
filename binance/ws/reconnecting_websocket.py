@@ -24,6 +24,7 @@ Proxy = None
 proxy_connect = None
 try:
     from websockets_proxy import Proxy as w_Proxy, proxy_connect as w_proxy_connect
+
     Proxy = w_Proxy
     proxy_connect = w_proxy_connect
 except ImportError:
@@ -31,7 +32,10 @@ except ImportError:
 
 import websockets as ws
 
-from binance.exceptions import BinanceWebsocketUnableToConnect
+from binance.exceptions import (
+    BinanceWebsocketUnableToConnect,
+    BinanceWebsocketQueueOverflow,
+)
 from binance.helpers import get_loop
 from binance.ws.constants import WSListenerState
 
@@ -197,15 +201,15 @@ class ReconnectingWebsocket:
                                 await self._queue.put(res)
                             else:
                                 self._log.error(
-                                    f"Queue overflow {self.MAX_QUEUE_SIZE}. Message not filled"
+                                    f"Queue overflow: size {self._queue.qsize()} exceeds maximum {self.MAX_QUEUE_SIZE}"
                                 )
-                                await self._queue.put(
-                                    {
-                                        "e": "error",
-                                        "m": "Queue overflow. Message not filled",
-                                    }
+                                await self._queue.put({
+                                    "e": "error",
+                                    "m": "Queue overflow: messages are being dropped",
+                                })
+                                raise BinanceWebsocketQueueOverflow(
+                                    f"Message queue size {self._queue.qsize()} exceeded maximum {self.MAX_QUEUE_SIZE}"
                                 )
-                                raise BinanceWebsocketUnableToConnect
                 except asyncio.TimeoutError:
                     self._log.error(f"no message in {self.TIMEOUT} seconds")
                     # _no_message_received_reconnect
@@ -220,6 +224,9 @@ class ReconnectingWebsocket:
                     self._log.error(f"DNS Error ({e})")
                 except BinanceWebsocketUnableToConnect as e:
                     self._log.error(f"BinanceWebsocketUnableToConnect ({e})")
+                    break
+                except BinanceWebsocketQueueOverflow as e:
+                    self._log.error(f"BinanceWebsocketQueueOverflow ({e})")
                     break
                 except Exception as e:
                     self._log.error(f"Unknown exception ({e})")
