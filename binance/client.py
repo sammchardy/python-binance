@@ -8093,7 +8093,7 @@ class Client(BaseClient):
             "delete", "listenKey", signed=False, data=params
         )
 
-    def futures_coin_account_order_history_download_id(self, **params):
+    def futures_coin_account_order_history_download(self, **params):
         """Get Download Id For Futures Order History
 
         https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Order-History
@@ -8166,7 +8166,7 @@ class Client(BaseClient):
         """
         return self._request_futures_coin_api("get", "order/asyn/id", True, data=params)
 
-    def futures_coin_account_trade_download_id(self, **params):
+    def futures_coin_account_trade_history_download(self, **params):
         """Get Download Id For Futures Trade History (USER_DATA)
 
         https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Trade-History
@@ -8194,7 +8194,7 @@ class Client(BaseClient):
         """
         return self._request_futures_coin_api("get", "trade/asyn", True, data=params)
 
-    def futures_coin_account_trade_download_link(self, **params):
+    def futures_coin_account_trade_history_download_link(self, **params):
         """Get futures trade download link by Id
 
         https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Futures-Trade-Download-Link-by-Id

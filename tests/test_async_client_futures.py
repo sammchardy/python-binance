@@ -582,8 +582,8 @@ async def test_futures_coin_stream_close(futuresClientAsync):
 
 
 @pytest.mark.skip(reason="No sandbox support")
-async def test_futures_coin_account_order_history_download_id(futuresClientAsync):
-    await futuresClientAsync.futures_coin_account_order_download_id()
+async def test_futures_coin_account_order_history_download(futuresClientAsync):
+    await futuresClientAsync.futures_coin_account_order_download()
 
 
 @pytest.mark.skip(reason="No sandbox support")
@@ -592,10 +592,10 @@ async def test_futures_coin_account_order_download_id(futuresClientAsync):
 
 
 @pytest.mark.skip(reason="No sandbox support")
-async def test_futures_coin_account_trade_history_download_id(futuresClientAsync):
-    await futuresClientAsync.futures_coin_account_trade_download_id()
+async def test_futures_coin_account_trade_history_download(futuresClientAsync):
+    await futuresClientAsync.futures_coin_account_trade_history_download()
 
 
 @pytest.mark.skip(reason="No sandbox support")
 async def test_futures_coin_account_trade_download_id(futuresClientAsync):
-    await futuresClientAsync.futures_coin_account_trade_download_link(downloadId="123")
+    await futuresClientAsync.futures_coin_account_trade_history_download_link(downloadId="123")

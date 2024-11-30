@@ -568,7 +568,7 @@ def test_futures_coin_stream_close(futuresClient):
     futuresClient.futures_coin_stream_close(listenKey=listen_key)
 
 
-def test_futures_coin_account_order_history_download_id(futuresClient):
+def test_futures_coin_account_order_history_download(futuresClient):
     expected_response = {
         "avgCostTimestampOfLast30d": 7241837,
         "downloadId": "546975389218332672",
@@ -585,7 +585,7 @@ def test_futures_coin_account_order_history_download_id(futuresClient):
             url_pattern,
             json=expected_response,
         )
-        response = futuresClient.futures_coin_account_order_download_id()
+        response = futuresClient.futures_coin_account_order_history_download()
         assert response == expected_response
 
 
@@ -604,11 +604,10 @@ def test_futures_coin_account_order_download_id(futuresClient):
             json=expected_response,
         )
 
-        response = futuresClient.futures_coin_account_order_download_link(
+        response = futuresClient.futures_coin_accout_order_history_download_link(
             downloadId="123"
         )
         assert response == expected_response
-
 
 def test_futures_coin_account_trade_history_download_id(futuresClient):
     expected_response = {
@@ -627,11 +626,11 @@ def test_futures_coin_account_trade_history_download_id(futuresClient):
             url_pattern,
             json=expected_response,
         )
-        response = futuresClient.futures_coin_account_trade_download_id()
+        response = futuresClient.futures_coin_account_trade_history_download()
         assert response == expected_response
 
 
-def test_futures_coin_account_trade_download_id(futuresClient):
+def test_futures_coin_account_trade_history_download_link(futuresClient):
     expected_response = {"link": "hello"}
     url_pattern = re.compile(
         r"https://(?:testnet\.)?binancefuture\.com/dapi/v1/trade/asyn/id"
@@ -646,7 +645,7 @@ def test_futures_coin_account_trade_download_id(futuresClient):
             json=expected_response,
         )
 
-        response = futuresClient.futures_coin_account_trade_download_link(
+        response = futuresClient.futures_coin_account_trade_history_download_link(
             downloadId="123"
         )
         assert response == expected_response
