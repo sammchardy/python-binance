@@ -73,6 +73,11 @@ class BinanceWebsocketUnableToConnect(Exception):
     pass
 
 
+class BinanceWebsocketQueueOverflow(Exception):
+    """Raised when the websocket message queue exceeds its maximum size."""
+    pass
+
+
 class NotImplementedException(Exception):
     def __init__(self, value):
         message = f"Not implemented: {value}"
