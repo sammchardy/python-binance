@@ -98,7 +98,6 @@ class ReconnectingWebsocket:
             await self._conn.__aexit__(exc_type, exc_val, exc_tb)
         self.ws = None
         if self._handle_read_loop:
-            self._log.error("CANCEL read_loop")
             await self._kill_read_loop()
 
     async def connect(self):
@@ -150,13 +149,23 @@ class ReconnectingWebsocket:
         if self._is_binary:
             try:
                 evt = gzip.decompress(evt)
-            except (ValueError, OSError):
-                return None
+            except (ValueError, OSError) as e:
+                self._log.error(f"Failed to decompress message: {(e)}")
+                raise
+            except Exception as e:
+                self._log.error(f"Unexpected decompression error: {(e)}")
+                raise
         try:
             return self.json_loads(evt)
-        except ValueError:
-            self._log.debug(f"error parsing evt json:{evt}")
-            return None
+        except ValueError as e:
+            self._log.error(f"JSON Value Error parsing message: Error: {(e)}")
+            raise
+        except TypeError as e:
+            self._log.error(f"JSON Type Error parsing message. Error: {(e)}")
+            raise
+        except Exception as e:
+            self._log.error(f"Unexpected error parsing message. Error: {(e)}")
+            raise
 
     async def _read_loop(self):
         try:
@@ -174,6 +183,7 @@ class ReconnectingWebsocket:
                         await asyncio.sleep(0.1)
                         continue
                     elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
+                        self._log.error("WS CLOSED")
                         await self._reconnect()
                     elif self.ws_state == WSListenerState.STREAMING:
                         assert self.ws
@@ -181,11 +191,12 @@ class ReconnectingWebsocket:
                             self.ws.recv(), timeout=self.TIMEOUT
                         )
                         res = self._handle_message(res)
+                        self._log.debug(f"Received message: {res}")
                         if res:
                             if self._queue.qsize() < self.MAX_QUEUE_SIZE:
                                 await self._queue.put(res)
                             else:
-                                self._log.debug(
+                                self._log.error(
                                     f"Queue overflow {self.MAX_QUEUE_SIZE}. Message not filled"
                                 )
                                 await self._queue.put(
@@ -196,22 +207,22 @@ class ReconnectingWebsocket:
                                 )
                                 raise BinanceWebsocketUnableToConnect
                 except asyncio.TimeoutError:
-                    self._log.debug(f"no message in {self.TIMEOUT} seconds")
+                    self._log.error(f"no message in {self.TIMEOUT} seconds")
                     # _no_message_received_reconnect
                 except asyncio.CancelledError as e:
-                    self._log.debug(f"cancelled error {e}")
+                    self._log.error(f"cancelled error {e}")
                     break
                 except asyncio.IncompleteReadError as e:
-                    self._log.debug(f"incomplete read error ({e})")
+                    self._log.error(f"incomplete read error ({e})")
                 except ConnectionClosedError as e:
-                    self._log.debug(f"connection close error ({e})")
+                    self._log.error(f"connection close error ({e})")
                 except gaierror as e:
-                    self._log.debug(f"DNS Error ({e})")
+                    self._log.error(f"DNS Error ({e})")
                 except BinanceWebsocketUnableToConnect as e:
-                    self._log.debug(f"BinanceWebsocketUnableToConnect ({e})")
+                    self._log.error(f"BinanceWebsocketUnableToConnect ({e})")
                     break
                 except Exception as e:
-                    self._log.debug(f"Unknown exception ({e})")
+                    self._log.error(f"Unknown exception ({e})")
                     continue
         finally:
             self._handle_read_loop = None  # Signal the coro is stopped
