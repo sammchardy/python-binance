@@ -211,7 +211,7 @@ class ReconnectingWebsocket:
                                     f"Message queue size {self._queue.qsize()} exceeded maximum {self.MAX_QUEUE_SIZE}"
                                 )
                 except asyncio.TimeoutError:
-                    self._log.error(f"no message in {self.TIMEOUT} seconds")
+                    self._log.debug(f"no message in {self.TIMEOUT} seconds")
                     # _no_message_received_reconnect
                 except asyncio.CancelledError as e:
                     self._log.error(f"cancelled error {e}")
