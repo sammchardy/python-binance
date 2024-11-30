@@ -8093,6 +8093,146 @@ class Client(BaseClient):
             "delete", "listenKey", signed=False, data=params
         )
 
+    def futures_coin_account_order_history_download_id(self, **params):
+        """Get Download Id For Futures Order History
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Order-History
+
+        :param startTime: required - Start timestamp in ms
+        :type startTime: int
+        :param endTime: required - End timestamp in ms
+        :type endTime: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "avgCostTimestampOfLast30d": 7241837,  # Average time taken for data download in the past 30 days
+                "downloadId": "546975389218332672"
+            }
+
+        Note:
+            - Request Limitation is 10 times per month, shared by front end download page and rest api
+            - The time between startTime and endTime can not be longer than 1 year
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api(
+            "get", "order/asyn", signed=True, data=params
+        )
+
+    def futures_coin_accout_order_history_download_link(self, **params):
+        """Get futures order history download link by Id
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
+
+        :param downloadId: required - Download ID obtained from futures_coin_download_id
+        :type downloadId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "downloadId": "545923594199212032",
+                "status": "completed",     # Enum：completed，processing
+                "url": "www.binance.com",  # The link is mapped to download id
+                "notified": true,          # ignore
+                "expirationTimestamp": 1645009771000,  # The link would expire after this timestamp
+                "isExpired": null
+            }
+
+            # OR (Response when server is processing)
+            {
+                "downloadId": "545923594199212032",
+                "status": "processing",
+                "url": "",
+                "notified": false,
+                "expirationTimestamp": -1,
+                "isExpired": null
+            }
+
+        Note:
+            - Download link expiration: 24h
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "order/asyn/id", True, data=params)
+
+    def futures_coin_account_trade_download_id(self, **params):
+        """Get Download Id For Futures Trade History (USER_DATA)
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Trade-History
+
+        :param startTime: required - Start timestamp in ms
+        :type startTime: int
+        :param endTime: required - End timestamp in ms
+        :type endTime: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "avgCostTimestampOfLast30d": 7241837,  # Average time taken for data download in the past 30 days
+                "downloadId": "546975389218332672"
+            }
+
+        Note:
+            - Request Limitation is 5 times per month, shared by front end download page and rest api
+            - The time between startTime and endTime can not be longer than 1 year
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "trade/asyn", True, data=params)
+
+    def futures_coin_account_trade_download_link(self, **params):
+        """Get futures trade download link by Id
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Futures-Trade-Download-Link-by-Id
+
+        :param downloadId: required - Download ID obtained from futures_coin_trade_download_id
+        :type downloadId: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "downloadId": "545923594199212032",
+                "status": "completed",     # Enum：completed，processing
+                "url": "www.binance.com",  # The link is mapped to download id
+                "notified": true,          # ignore
+                "expirationTimestamp": 1645009771000,  # The link would expire after this timestamp
+                "isExpired": null
+            }
+
+            # OR (Response when server is processing)
+            {
+                "downloadId": "545923594199212032",
+                "status": "processing",
+                "url": "",
+                "notified": false,
+                "expirationTimestamp": -1,
+                "isExpired": null
+            }
+
+        Note:
+            - Download link expiration: 24h
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "trade/asyn/id", True, data=params)
+
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
 
