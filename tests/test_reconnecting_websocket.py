@@ -1,12 +1,18 @@
+import sys
 import pytest
 import gzip
 import json
-from unittest.mock import AsyncMock, patch, create_autospec
+from unittest.mock import patch, create_autospec
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.constants import WSListenerState
 from binance.exceptions import BinanceWebsocketUnableToConnect
-from websockets import WebSocketClientProtocol
+from websockets import WebSocketClientProtocol  # type: ignore
 from websockets.protocol import State
+
+try:
+    from unittest.mock import AsyncMock  # Python 3.8+
+except ImportError:
+    from asynctest import CoroutineMock as AsyncMock  # Python 3.7
 
 
 @pytest.mark.asyncio
@@ -74,6 +80,7 @@ async def test_recv_message():
     assert result == {"test": "data"}
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_before_reconnect():
     ws = ReconnectingWebsocket(url="wss://test.url")
@@ -92,6 +99,7 @@ def test_get_reconnect_wait():
     assert 1 <= wait_time <= ws.MAX_RECONNECT_SECONDS
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_connect_max_reconnects_exceeded():
     """Test ws.connect exceeds maximum reconnect attempts."""
@@ -112,6 +120,7 @@ async def test_connect_max_reconnects_exceeded():
     assert ws._reconnects == ws.MAX_RECONNECTS
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_recieve_invalid_json():
     # Create mock WebSocket client
@@ -130,6 +139,7 @@ async def test_recieve_invalid_json():
             assert msg["type"] == "JSONDecodeError"  # JSON parsing error
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_receive_valid_json():
     # Create mock WebSocket client
@@ -148,6 +158,7 @@ async def test_receive_valid_json():
             assert msg == json.loads(msgRecv)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_connect_fails_to_connect_on_enter_context():
     """Test ws.connect raises a ConnectionClosedError."""
@@ -159,6 +170,7 @@ async def test_connect_fails_to_connect_on_enter_context():
         await ws.__aenter__()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
 @pytest.mark.asyncio
 async def test_connect_fails_to_connect_after_disconnect():
     # Create mock WebSocket client
