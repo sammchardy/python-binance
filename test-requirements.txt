@@ -1,9 +1,9 @@
 coverage
-flake8
 pytest
 pytest-asyncio
 pytest-cov
-pytest-flake8
+pytest-xdist
+pytest-rerunfailures
 requests-mock
 tox
 setuptools

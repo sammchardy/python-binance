@@ -1,6 +1,42 @@
 Changelog
 =========
 
+v1.0.24 - 2024-11-28
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Exposed internal classes for easier subclassing
+
+
+**Fixed**
+
+- Fixed package outdated structure causing import errors
+
+v1.0.23 - 2024-11-27
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- CRUD over Websockets (create/fetch/edit/cancel) through Websockets
+- orjson support
+- overridable `headers` per request
+- added default recvWindow parameter
+- Proxy support for Websockets
+- Gift card API
+- `cancel_replace_order`, `cancel_all_open_orders`  and `cancel_all_open_margin_orders` thanks to @m-HD
+- missing `futures_modify_order` from async client
+- ruff format
+- missing endpoint for `futures_edit_order`
+
+**Fixed**
+
+- updated `create_oco_order` endpoint
+- batch orders signature issue
+- `fail_connection` issue related to the `websockets` upgrade
+- `eddsa` signature issue
+
+
 v1.0.22 - 2024-10-29
 ^^^^^^^^^^^^^^^^^^^^
 

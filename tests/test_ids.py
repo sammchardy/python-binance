@@ -1,8 +1,9 @@
+import re
 import requests_mock
 import pytest
 from aioresponses import aioresponses
 
-from binance.client import Client, AsyncClient
+from binance import Client, AsyncClient
 
 client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 
@@ -39,19 +40,47 @@ def test_spot_market_id():
         assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
 
 
+def test_spot_cancel_replace_id():
+    with requests_mock.mock() as m:
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            json={},
+            status_code=200,
+        )
+        client.cancel_replace_order(
+            cancelOrderId="orderId",
+            symbol="LTCUSDT",
+            side="BUY",
+            type="MARKET",
+            quantity=0.1,
+        )
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
+        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+
+
+def test_spot_oco_order_id():
+    with requests_mock.mock() as m:
+        m.post("https://api.binance.com/api/v3/orderList/oco", json={}, status_code=200)
+        client.create_oco_order(
+            symbol="LTCUSDT", side="BUY", aboveType="MARKET", quantity=0.1
+        )
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
+        assert url_dict["listClientOrderId"].startswith("x-HNA2TXFJ")
+
+
 def test_swap_id():
     with requests_mock.mock() as m:
         m.post("https://fapi.binance.com/fapi/v1/order", json={}, status_code=200)
         client.futures_create_order(
             symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
-        url_dict = dict(pair.split("=") for pair in m.last_request.query.split("&"))
+        url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
         # why lowercase? check this later
-        assert url_dict["symbol"] == "ltcusdt"
-        assert url_dict["side"] == "buy"
-        assert url_dict["type"] == "market"
+        assert url_dict["symbol"] == "LTCUSDT"
+        assert url_dict["side"] == "BUY"
+        assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId".lower()].startswith("x-Cb7ytekJ".lower())
+        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
 
 
 def test_swap_batch_id():
@@ -148,16 +177,39 @@ async def test_spot_id_async():
 
 
 @pytest.mark.asyncio()
+async def test_spot_cancel_replace_id_async():
+    clientAsync = AsyncClient(
+        api_key="api_key", api_secret="api_secret"
+    )  # reuse client later
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            client_order_id = kwargs["data"][0][1]
+            assert client_order_id.startswith("x-HNA2TXFJ")
+
+        m.post(
+            "https://api.binance.com/api/v3/order/cancelReplace",
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.cancel_replace_order(
+            orderId="id", symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
+
+
+@pytest.mark.asyncio()
 async def test_swap_id_async():
     clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-Cb7ytekJ")
+            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
 
+        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/order")
         m.post(
-            "https://fapi.binance.com/fapi/v1/order",
+            url_pattern,
             payload={"id": 1},
             status=200,
             callback=handler,
@@ -232,12 +284,33 @@ async def test_coin_id_async():
 
 
 @pytest.mark.asyncio()
+async def test_spot_oco_id():
+    clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            client_order_id = kwargs["data"][0][1]
+            assert client_order_id.startswith("x-HNA2TXFJ")
+
+        m.post(
+            "https://api.binance.com/api/v3/orderList/oco",
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.create_oco_order(
+            symbol="BTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
+
+
+@pytest.mark.asyncio()
 async def test_swap_batch_id_async():
     with aioresponses() as m:
         clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+            assert "x-Cb7ytekJ" in kwargs["data"]
 
         m.post(
             "https://fapi.binance.com/fapi/v1/batchOrders",

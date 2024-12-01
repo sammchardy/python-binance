@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v1.0.22
+Welcome to python-binance v1.0.24
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -33,6 +33,9 @@ If you want to automate interactions with Binance stick around.
 
 **This project is powered by** |ico1|
 
+*Please make sure your* `python-binance` *version is* **v.1.0.20** *or higher.*
+*The previous versions are no longer recommended because some endpoints have been deprecated.*
+
 Source code
   https://github.com/sammchardy/python-binance
 
@@ -63,8 +66,11 @@ Features
 - Testnet support for Spot, Futures and Vanilla Options
 - Simple handling of authentication include RSA and EDDSA keys
 - No need to generate timestamps yourself, the wrapper does it for you
+- RecvWindow sent by default
 - Response exception handling
-- Websocket handling with reconnection, multiplexed connections and sync/async callbacks
+- Customizable HTTP headers
+- Websocket handling with reconnection and multiplexed connections
+- CRUD over websockets, create/fetch/edit through websockets for minimum latency.
 - Symbol Depth Cache
 - Historical Kline/Candle fetching function
 - Withdraw functionality
@@ -73,8 +79,10 @@ Features
 - Futures Trading
 - Porfolio Margin Trading
 - Vanilla Options
-- Proxy support
+- Proxy support (REST and WS)
+- Orjson support for faster JSON parsing
 - Support other domains (.us, .jp, etc)
+- Support for the Gift Card API
 
 Upgrading to v1.0.0+
 --------------------
@@ -157,6 +165,12 @@ pass `testnet=True` when creating the client.
     # fetch weekly klines since it listed
     klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
+    # create order through websockets
+    order_ws = client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
+
+    # get account using custom headers
+    account = client.get_account(headers={'MyCustomKey': 'MyCustomValue'})
+
     # socket manager using threads
     twm = ThreadedWebsocketManager()
     twm.start()
@@ -234,10 +248,13 @@ for more information.
             print(kline)
 
         # fetch 30 minute klines for the last month of 2017
-        klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+        klines = await client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
 
         # fetch weekly klines since it listed
-        klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+        klines = await client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+
+        # create order through websockets
+        order_ws = await client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
 
         # setup an async context the Depth Cache and exit after 5 messages
         async with DepthCacheManager(client, symbol='ETHBTC') as dcm_socket:
@@ -264,13 +281,19 @@ for more information.
         await client.close_connection()
 
     if __name__ == "__main__":
-
         loop = asyncio.get_event_loop()
         loop.run_until_complete(main())
 
 
 The library is under `MIT license`, that means it's absolutely free for any developer to build commercial and opensource software on top of it, but use it at your own risk with no warranties, as is.
 
+
+Orjson support
+-------------------
+
+Python-binance also supports `orjson` for parsing JSON since it is much faster than the builtin library. This is especially important when using websockets because some exchanges return big messages that need to be parsed and dispatched as quickly as possible.
+
+However, `orjson` is not enabled by default because it is not supported by every python interpreter. If you want to opt-in, you just need to install it (`pip install orjson`) on your local environment. Python-binance will detect the installion and pick it up automatically.
 
 Star history
 ------------

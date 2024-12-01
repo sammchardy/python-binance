@@ -46,7 +46,7 @@ def test_encryption():
             private_key_pass=case["password"],
             ping=False,
         )
-        signature = client._generate_signature(data)
-        assert (
-            signature == case["expected_signature"]
-        ), f"Test failed: {case['description']}"
+        signature = client._generate_signature(data, False)
+        assert signature == case["expected_signature"], (
+            f"Test failed: {case['description']}"
+        )
