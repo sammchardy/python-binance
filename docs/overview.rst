@@ -246,4 +246,34 @@ For Windows environments
     C:\>set HTTP_PROXY=http://10.10.1.10:3128
     C:\>set HTTPS_PROXY=http://10.10.1.10:1080
 
+Logging
+-------
+
+python-binance uses the Python logging module. You can enable logging to help debug issues and monitor your application.
+
+Basic Logging Setup
+~~~~~~~~~~~~~~~~~~
+
+To enable debug logging, add this at the start of your script:
+
+.. code:: python
+
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+
+Advanced Logging Setup
+~~~~~~~~~~~~~~~~~~~~~
+
+For more detailed logging with timestamps and log levels:
+
+.. code:: python
+
+    import logging
+
+    # Configure logging
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    )
+
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel
