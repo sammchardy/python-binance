@@ -71,7 +71,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             if listen_key != self._path:
                 self._log.debug("listen key changed: reconnect")
                 self._path = listen_key
-                await self._reconnect()
+                self._reconnect()
             else:
                 self._log.debug("listen key same: keepalive")
                 if self._keepalive_type == "user":
