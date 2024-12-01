@@ -2,6 +2,7 @@ import sys
 from binance import BinanceSocketManager
 import pytest
 
+
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_socket_stopped_on_aexit(clientAsync):
