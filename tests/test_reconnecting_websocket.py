@@ -140,7 +140,7 @@ async def test_connect_disconnect_after_connect():
 
     with patch.object(ws._log, 'error') as mock_log:
         await ws.connect()
-        mock_log.assert_called_with(f"Failed to connect to websocket")
+        mock_log.assert_called_with("Failed to connect to websocket")
 
     assert ws.ws_state == WSListenerState.RECONNECTING
     ws._after_connect.assert_not_awaited()
