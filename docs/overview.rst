@@ -215,7 +215,7 @@ Check out the `requests documentation <http://docs.python-requests.org/en/master
 
 **Proxy Settings**
 
-You can use the Requests Settings method above
+You can use the Requests Settings method above. For websockets python 3.8+ is required
 
 .. code:: python
 
