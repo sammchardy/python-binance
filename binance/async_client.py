@@ -2165,6 +2165,42 @@ class AsyncClient(BaseClient):
             "put", "listenKey", signed=False, data=params
         )
 
+    async def futures_coin_account_order_history_download(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "order/asyn", True, data=params
+        )
+
+    futures_coin_account_order_history_download.__doc__ = (
+        Client.futures_coin_account_order_history_download.__doc__
+    )
+
+    async def futures_coin_account_order_history_download_link(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "order/asyn/id", True, data=params
+        )
+
+    futures_coin_account_order_history_download_link.__doc__ = (
+        Client.futures_coin_accout_order_history_download_link.__doc__
+    )
+
+    async def futures_coin_account_trade_history_download(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "trade/asyn", True, data=params
+        )
+
+    futures_coin_account_trade_history_download.__doc__ = (
+        Client.futures_coin_account_trade_history_download.__doc__
+    )
+
+    async def futures_coin_account_trade_history_download_link(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "trade/asyn/id", True, data=params
+        )
+
+    futures_coin_account_trade_history_download_link.__doc__ = (
+        Client.futures_coin_account_trade_history_download_link.__doc__
+    )
+
     async def futures_coin_stream_close(self, listenKey):
         params = {"listenKey": listenKey}
         return await self._request_futures_coin_api(

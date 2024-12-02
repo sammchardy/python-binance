@@ -1,6 +1,8 @@
 from datetime import datetime
+import re
 
 import pytest
+import requests_mock
 from .test_order import assert_contract_order
 from .test_get_order_book import assert_ob
 
@@ -536,21 +538,18 @@ def test_futures_coin_change_position_margin(futuresClient):
     futuresClient.futures_coin_change_position_margin()
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_position_margin_history(futuresClient):
-    futuresClient.futures_coin_position_margin_history()
+    futuresClient.futures_coin_position_margin_history(symbol="LTCUSD_PERP")
 
 
 def test_futures_coin_position_information(futuresClient):
     futuresClient.futures_coin_position_information()
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_account_trades(futuresClient):
     futuresClient.futures_coin_account_trades()
 
 
-@pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_income_history(futuresClient):
     futuresClient.futures_coin_income_history()
 
@@ -567,3 +566,109 @@ def test_futures_coin_get_position_mode(futuresClient):
 def test_futures_coin_stream_close(futuresClient):
     listen_key = futuresClient.futures_coin_stream_get_listen_key()
     futuresClient.futures_coin_stream_close(listenKey=listen_key)
+
+########################################################
+# Test block trades
+########################################################
+
+@pytest.mark.skip(reason="No sandbox support")
+def test_futures_coin_account_order_history_download(futuresClient):
+    futuresClient.futures_coin_account_order_download()
+
+
+@pytest.mark.skip(reason="No sandbox support")
+def test_futures_coin_account_order_download_id(futuresClient):
+    futuresClient.futures_coin_account_order_download_link(downloadId="123")
+
+
+@pytest.mark.skip(reason="No sandbox support")
+def test_futures_coin_account_trade_history_download(futuresClient):
+    futuresClient.futures_coin_account_trade_history_download()
+
+
+@pytest.mark.skip(reason="No sandbox support")
+def test_futures_coin_account_trade_download_id(futuresClient):
+    futuresClient.futures_coin_account_trade_history_download_link(downloadId="123")
+
+
+def test_futures_coin_account_order_history_download_mock(futuresClient):
+    expected_response = {
+        "avgCostTimestampOfLast30d": 7241837,
+        "downloadId": "546975389218332672",
+    }
+    url_pattern = re.compile(
+        r"https://(?:testnet\.)?binancefuture\.com/dapi/v1/order/asyn"
+        r"\?recvWindow=\d+"
+        r"&timestamp=\d+"
+        r"&signature=[a-f0-9]{64}"
+    )
+
+    with requests_mock.mock() as m:
+        m.get(
+            url_pattern,
+            json=expected_response,
+        )
+        response = futuresClient.futures_coin_account_order_history_download()
+        assert response == expected_response
+
+
+def test_futures_coin_account_order_download_id_mock(futuresClient):
+    expected_response = {"link": "hello"}
+    url_pattern = re.compile(
+        r"https://(?:testnet\.)?binancefuture\.com/dapi/v1/order/asyn/id"
+        r"\?downloadId=123"
+        r"&recvWindow=\d+"
+        r"&timestamp=\d+"
+        r"&signature=.+"
+    )
+    with requests_mock.mock() as m:
+        m.get(
+            url_pattern,
+            json=expected_response,
+        )
+
+        response = futuresClient.futures_coin_accout_order_history_download_link(
+            downloadId="123"
+        )
+        assert response == expected_response
+
+def test_futures_coin_account_trade_history_download_id_mock(futuresClient):
+    expected_response = {
+        "avgCostTimestampOfLast30d": 7241837,
+        "downloadId": "546975389218332672",
+    }
+    url_pattern = re.compile(
+        r"https://(?:testnet\.)?binancefuture\.com/dapi/v1/trade/asyn"
+        r"\?recvWindow=\d+"
+        r"&timestamp=\d+"
+        r"&signature=[a-f0-9]{64}"
+    )
+
+    with requests_mock.mock() as m:
+        m.get(
+            url_pattern,
+            json=expected_response,
+        )
+        response = futuresClient.futures_coin_account_trade_history_download()
+        assert response == expected_response
+
+
+def test_futures_coin_account_trade_history_download_link_mock(futuresClient):
+    expected_response = {"link": "hello"}
+    url_pattern = re.compile(
+        r"https://(?:testnet\.)?binancefuture\.com/dapi/v1/trade/asyn/id"
+        r"\?downloadId=123"
+        r"&recvWindow=\d+"
+        r"&timestamp=\d+"
+        r"&signature=.+"
+    )
+    with requests_mock.mock() as m:
+        m.get(
+            url_pattern,
+            json=expected_response,
+        )
+
+        response = futuresClient.futures_coin_account_trade_history_download_link(
+            downloadId="123"
+        )
+        assert response == expected_response
