@@ -8699,6 +8699,285 @@ class Client(BaseClient):
         """
         return self._request_options_api("get", "userTrades", signed=True, data=params)
 
+    ####################################################
+    # Options - Market Maker Block Trade
+    ####################################################
+
+    def options_create_block_trade_order(self, **params):
+        """New Block Trade Order (TRADE)
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade
+
+        :param liquidity: required - Taker or Maker
+        :type liquidity: str
+        :param symbol: required - Option trading pair, e.g BTC-200730-9000-C
+        :type symbol: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param price: required - Order Price
+        :type price: float
+        :param quantity: required - Order Quantity
+        :type quantity: float
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "3668822b8-1baa-6a2f-adb8-d3de6289b361",
+                "expireTime": 1730171888109,
+                "liquidity": "TAKER",
+                "status": "RECEIVED",
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "BUY",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "post", "block/order/create", signed=True, data=params
+        )
+
+    def options_cancel_block_trade_order(self, **params):
+        """Cancel Block Trade Order (TRADE)
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Cancel-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "delete", "block/order/create", signed=True, data=params
+        )
+
+    def options_extend_block_trade_order(self, **params):
+        """Extend Block Trade Order (TRADE)
+
+        Extends a block trade expire time by 30 mins from the current time.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Extend-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "3668822b8-1baa-6a2f-adb8-d3de6289b361",
+                "expireTime": 1730172007000,
+                "liquidity": "TAKER",
+                "status": "RECEIVED",
+                "createTime": 1730170088111,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "BUY",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "put", "block/order/create", signed=True, data=params
+        )
+
+    def options_get_block_trade_orders(self, **params):
+        """Query Block Trade Order (TRADE)
+
+        Check block trade order status.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Query-Block-Trade-Order
+
+        :param blockOrderMatchingKey: optional - Returns specific block trade for this key
+        :type blockOrderMatchingKey: str
+        :param endTime: optional
+        :type endTime: int
+        :param startTime: optional
+        :type startTime: int
+        :param underlying: optional
+        :type underlying: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "blockTradeSettlementKey": "7d046e6e-a429-4335-ab9d-6a681febcde5",
+                    "expireTime": 1730172115801,
+                    "liquidity": "TAKER",
+                    "status": "RECEIVED",
+                    "createTime": 1730170315803,
+                    "legs": [
+                        {
+                            "symbol": "BNB-241101-700-C",
+                            "side": "BUY",
+                            "quantity": "1.2",
+                            "price": "2.8"
+                        }
+                    ]
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/order/orders", signed=True, data=params
+        )
+
+    def options_accept_block_trade_order(self, **params):
+        """Accept Block Trade Order (TRADE)
+
+        Accept a block trade order.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Accept-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "7d046e6e-a429-4335-ab9d-6a681febcde5",
+                "expireTime": 1730172115801,
+                "liquidity": "MAKER",
+                "status": "ACCEPTED",
+                "createTime": 1730170315803,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "SELL",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "post", "block/order/execute", signed=True, data=params
+        )
+
+    def options_get_block_trade_order(self, **params):
+        """Query Block Trade Details (USER_DATA)
+
+        Query block trade details; returns block trade details from counterparty's perspective.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Query-Block-Trade-Detail
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "12b96c28-ba05-8906-c89t-703215cfb2e6",
+                "expireTime": 1730171860460,
+                "liquidity": "MAKER",
+                "status": "RECEIVED",
+                "createTime": 1730170060462,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "SELL",
+                        "quantity": "1.66",
+                        "price": "20"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/order/execute", signed=True, data=params
+        )
+
+    def options_account_get_block_trades(self, **params):
+        """Account Block Trade List (USER_DATA)
+
+        Gets block trades for a specific account.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Account-Block-Trade-List
+
+        :param endTime: optional
+        :type endTime: int
+        :param startTime: optional
+        :type startTime: int
+        :param underlying: optional
+        :type underlying: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "parentOrderId": "4675011431944499201",
+                    "crossType": "USER_BLOCK",
+                    "legs": [
+                        {
+                            "createTime": 1730170445600,
+                            "updateTime": 1730170445600,
+                            "symbol": "BNB-241101-700-C",
+                            "orderId": "4675011431944499203",
+                            "orderPrice": 2.8,
+                            "orderQuantity": 1.2,
+                            "orderStatus": "FILLED",
+                            "executedQty": 1.2,
+                            "executedAmount": 3.36,
+                            "fee": 0.336,
+                            "orderType": "PREV_QUOTED",
+                            "orderSide": "BUY",
+                            "id": "1125899906900937837",
+                            "tradeId": 1,
+                            "tradePrice": 2.8,
+                            "tradeQty": 1.2,
+                            "tradeTime": 1730170445600,
+                            "liquidity": "TAKER",
+                            "commission": 0.336
+                        }
+                    ],
+                    "blockTradeSettlementKey": "7d085e6e-a229-2335-ab9d-6a581febcd25"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/user-trades", signed=True, data=params
+        )
+
     # Fiat Endpoints
 
     def get_fiat_deposit_withdraw_history(self, **params):
