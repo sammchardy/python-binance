@@ -3705,3 +3705,66 @@ class AsyncClient(BaseClient):
         )
 
     gift_card_create_dual_token.__doc__ = Client.gift_card_create_dual_token.__doc__
+
+    ####################################################
+    # Options - Market Maker Block Trade
+    ####################################################
+
+    async def options_create_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "post", "block/order/create", signed=True, data=params
+        )
+
+    options_create_block_trade_order.__doc__ = (
+        Client.options_create_block_trade_order.__doc__
+    )
+
+    async def options_cancel_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "delete", "block/order/create", signed=True, data=params
+        )
+
+    options_cancel_block_trade_order.__doc__ = (
+        Client.options_cancel_block_trade_order.__doc__
+    )
+
+    async def options_extend_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "put", "block/order/create", signed=True, data=params
+        )
+
+    options_extend_block_trade_order.__doc__ = (
+        Client.options_extend_block_trade_order.__doc__
+    )
+
+    async def options_get_block_trade_orders(self, **params):
+        return await self._request_options_api(
+            "get", "block/order/orders", signed=True, data=params
+        )
+
+    options_get_block_trade_orders.__doc__ = (
+        Client.options_get_block_trade_orders.__doc__
+    )
+
+    async def options_accept_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "post", "block/order/execute", signed=True, data=params
+        )
+
+    options_accept_block_trade_order.__doc__ = (
+        Client.options_accept_block_trade_order.__doc__
+    )
+
+    async def options_get_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "get", "block/order/execute", signed=True, data=params
+        )
+
+    options_get_block_trade_order.__doc__ = Client.options_get_block_trade_order.__doc__
+
+    async def options_account_get_block_trades(self, **params):
+        return await self._request_options_api(
+            "get", "block/user-trades", signed=True, data=params
+        )
+
+    options_account_get_block_trades.__doc__ = Client.options_account_get_block_trades.__doc__
