@@ -124,8 +124,8 @@ async def test_message_handling(clientAsync):
     assert result == no_id_msg
 
     # Test invalid JSON
-    result = clientAsync.ws_api._handle_message("invalid json")
-    assert result is None
+    with pytest.raises(json.JSONDecodeError):
+        clientAsync.ws_api._handle_message("invalid json")
 
 
 @pytest.mark.asyncio(scope="function")

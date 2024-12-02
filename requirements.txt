@@ -3,3 +3,4 @@ dateparser
 pycryptodome
 requests
 websockets
+websockets_proxy; python_version >= '3.8'
