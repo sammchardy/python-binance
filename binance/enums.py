@@ -71,6 +71,9 @@ class HistoricalKlinesType(Enum):
     FUTURES = 2
     FUTURES_COIN = 3
     FUTURES_MARK_PRICE = 4
+    FUTURES_INDEX_PRICE = 5
+    FUTURES_COIN_MARK_PRICE = 6
+    FUTURES_COIN_INDEX_PRICE = 7
 
 
 class FuturesType(Enum):

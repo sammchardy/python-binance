@@ -700,6 +700,8 @@ class Client(BaseClient):
             return self.futures_coin_klines(**params)
         elif HistoricalKlinesType.FUTURES_MARK_PRICE == klines_type:
             return self.futures_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_INDEX_PRICE == klines_type:
+            return self.futures_index_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
