@@ -40,6 +40,10 @@ def test_futures_klines(futuresClient):
     futuresClient.futures_klines(symbol="BTCUSDT", interval="1h")
 
 
+def test_futures_mark_price_klines(futuresClient):
+    futuresClient.futures_mark_price_klines(symbol="BTCUSDT", interval="1h")
+
+
 def test_futures_continous_klines(futuresClient):
     futuresClient.futures_continous_klines(
         pair="BTCUSDT", contractType="PERPETUAL", interval="1h"

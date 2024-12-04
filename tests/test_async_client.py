@@ -57,6 +57,10 @@ async def test_get_klines(clientAsync):
     await clientAsync.get_klines(symbol="BTCUSDT", interval="1d")
 
 
+async def test_futures_mark_price_klines(clientAsync):
+    await clientAsync.futures_mark_price_klines(symbol="BTCUSDT", interval="1h")
+
+
 async def test_get_avg_price(clientAsync):
     await clientAsync.get_avg_price(symbol="BTCUSDT")
 
