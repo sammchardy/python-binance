@@ -7829,7 +7829,6 @@ class Client(BaseClient):
         """
         return self._request_futures_coin_api("get", "indexPriceKlines", data=params)
 
-
     def futures_coin_premium_index_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
@@ -7837,7 +7836,6 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api("get", "premiumIndexKlines", data=params)
-
 
     def futures_coin_mark_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..

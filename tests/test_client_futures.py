@@ -579,9 +579,11 @@ def test_futures_coin_stream_close(futuresClient):
     listen_key = futuresClient.futures_coin_stream_get_listen_key()
     futuresClient.futures_coin_stream_close(listenKey=listen_key)
 
+
 ########################################################
 # Test block trades
 ########################################################
+
 
 @pytest.mark.skip(reason="No sandbox support")
 def test_futures_coin_account_order_history_download(futuresClient):
@@ -643,6 +645,7 @@ def test_futures_coin_account_order_download_id_mock(futuresClient):
             downloadId="123"
         )
         assert response == expected_response
+
 
 def test_futures_coin_account_trade_history_download_id_mock(futuresClient):
     expected_response = {

@@ -1676,25 +1676,19 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api("get", "klines", data=params)
 
     async def futures_mark_price_klines(self, **params):
-            return await self._request_futures_api("get", "markPriceKlines", data=params)
+        return await self._request_futures_api("get", "markPriceKlines", data=params)
 
-    futures_mark_price_klines.__doc__ = (
-            Client.futures_mark_price_klines.__doc__
-        )
+    futures_mark_price_klines.__doc__ = Client.futures_mark_price_klines.__doc__
 
     async def futures_index_price_klines(self, **params):
-            return await self._request_futures_api("get", "indexPriceKlines", data=params)
+        return await self._request_futures_api("get", "indexPriceKlines", data=params)
 
-    futures_index_price_klines.__doc__ = (
-            Client.futures_index_price_klines.__doc__
-        )
+    futures_index_price_klines.__doc__ = Client.futures_index_price_klines.__doc__
 
     async def futures_premium_index_klines(self, **params):
-            return await self._request_futures_api("get", "premiumIndexKlines", data=params)
+        return await self._request_futures_api("get", "premiumIndexKlines", data=params)
 
-    futures_premium_index_klines.__doc__ = (
-            Client.futures_index_price_klines.__doc__
-        )
+    futures_premium_index_klines.__doc__ = Client.futures_index_price_klines.__doc__
 
     async def futures_continous_klines(self, **params):
         return await self._request_futures_api("get", "continuousKlines", data=params)
@@ -2020,13 +2014,17 @@ class AsyncClient(BaseClient):
         return await self._request_futures_coin_api(
             "get", "markPriceKlines", data=params
         )
+
     futures_coin_mark_price_klines.__doc__ = Client.futures_mark_price_klines.__doc__
 
     async def futures_coin_premium_index_klines(self, **params):
         return await self._request_futures_coin_api(
             "get", "premiumIndexKlines", data=params
         )
-    futures_coin_premium_index_klines.__doc__ = (Client.futures_premium_index_klines.__doc__)
+
+    futures_coin_premium_index_klines.__doc__ = (
+        Client.futures_premium_index_klines.__doc__
+    )
 
     async def futures_coin_mark_price(self, **params):
         return await self._request_futures_coin_api("get", "premiumIndex", data=params)
@@ -3839,4 +3837,6 @@ class AsyncClient(BaseClient):
             "get", "block/user-trades", signed=True, data=params
         )
 
-    options_account_get_block_trades.__doc__ = Client.options_account_get_block_trades.__doc__
+    options_account_get_block_trades.__doc__ = (
+        Client.options_account_get_block_trades.__doc__
+    )

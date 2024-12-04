@@ -68,6 +68,7 @@ async def test_futures_index_price_klines(clientAsync):
 async def test_futures_premium_index_klines(clientAsync):
     await clientAsync.futures_premium_index_klines(symbol="BTCUSDT", interval="1h")
 
+
 @pytest.mark.skip(reason="network error")
 async def test_futures_coin_premium_index_klines(clientAsync):
     await clientAsync.futures_coin_premium_index_klines(symbol="BTCUSD", interval="1h")
