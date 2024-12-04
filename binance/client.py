@@ -7112,6 +7112,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "indexPriceKlines", data=params)
 
+    def futures_premium_index_klines(self, **params):
+        """Premium index kline bars of a symbol.l. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#premium-index-kline-data
+
+        """
+        return self._request_futures_api("get", "premiumIndexKlines", data=params)
+
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
