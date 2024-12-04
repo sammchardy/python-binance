@@ -702,6 +702,10 @@ class Client(BaseClient):
             return self.futures_mark_price_klines(**params)
         elif HistoricalKlinesType.FUTURES_INDEX_PRICE == klines_type:
             return self.futures_index_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_MARK_PRICE == klines_type:
+            return self.futures_coin_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_INDEX_PRICE == klines_type:
+            return self.futures_coin_index_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -7824,6 +7828,16 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api("get", "indexPriceKlines", data=params)
+
+
+    def futures_coin_premium_index_klines(self, **params):
+        """Kline/candlestick bars for the index price of a pair..
+
+        https://binance-docs.github.io/apidocs/delivery/en/#premium-index-kline-data
+
+        """
+        return self._request_futures_coin_api("get", "premiumIndexKlines", data=params)
+
 
     def futures_coin_mark_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..

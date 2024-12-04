@@ -406,6 +406,10 @@ class AsyncClient(BaseClient):
             return await self.futures_mark_price_klines(**params)
         elif HistoricalKlinesType.FUTURES_INDEX_PRICE == klines_type:
             return await self.futures_index_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_MARK_PRICE == klines_type:
+            return await self.futures_coin_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_INDEX_PRICE == klines_type:
+            return await self.futures_coin_index_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -2016,6 +2020,13 @@ class AsyncClient(BaseClient):
         return await self._request_futures_coin_api(
             "get", "markPriceKlines", data=params
         )
+    futures_coin_mark_price_klines.__doc__ = Client.futures_mark_price_klines.__doc__
+
+    async def futures_coin_premium_index_klines(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "premiumIndexKlines", data=params
+        )
+    futures_coin_premium_index_klines.__doc__ = (Client.futures_premium_index_klines.__doc__)
 
     async def futures_coin_mark_price(self, **params):
         return await self._request_futures_coin_api("get", "premiumIndex", data=params)
