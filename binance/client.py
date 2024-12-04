@@ -7102,6 +7102,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "markPriceKlines", data=params)
 
+    def futures_index_price_klines(self, **params):
+        """Kline/candlestick bars for the index price of a symbol. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#index-price-kline-candlestick-data
+
+        """
+        return self._request_futures_api("get", "indexPriceKlines", data=params)
+
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
