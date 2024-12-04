@@ -698,6 +698,8 @@ class Client(BaseClient):
             return self.futures_klines(**params)
         elif HistoricalKlinesType.FUTURES_COIN == klines_type:
             return self.futures_coin_klines(**params)
+        elif HistoricalKlinesType.FUTURES_MARK_PRICE == klines_type:
+            return self.futures_mark_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -7092,6 +7094,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "klines", data=params)
 
+    def futures_mark_price_klines(self, **params):
+        """Kline/candlestick bars for the mark price of a symbol. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#mark-price-kline-candlestick-data
+
+        """
+        return self._request_futures_api("get", "markPriceKlines", data=params)
+
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
@@ -7126,6 +7136,34 @@ class Client(BaseClient):
             end_str=end_str,
             limit=limit,
             klines_type=HistoricalKlinesType.FUTURES,
+        )
+
+    def futures_historical_mark_price_klines(
+        self, symbol, interval, start_str, end_str=None, limit=500
+    ):
+        """Get historical futures mark price klines from Binance
+
+        :param symbol: Name of symbol pair e.g. BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+
+        :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
+
+        """
+        return self._historical_klines(
+            symbol,
+            interval,
+            start_str,
+            end_str=end_str,
+            limit=limit,
+            klines_type=HistoricalKlinesType.FUTURES_MARK_PRICE,
         )
 
     def futures_historical_klines_generator(
