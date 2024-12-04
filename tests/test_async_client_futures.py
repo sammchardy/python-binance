@@ -598,4 +598,6 @@ async def test_futures_coin_account_trade_history_download(futuresClientAsync):
 
 @pytest.mark.skip(reason="No sandbox support")
 async def test_futures_coin_account_trade_download_id(futuresClientAsync):
-    await futuresClientAsync.futures_coin_account_trade_history_download_link(downloadId="123")
+    await futuresClientAsync.futures_coin_account_trade_history_download_link(
+        downloadId="123"
+    )
