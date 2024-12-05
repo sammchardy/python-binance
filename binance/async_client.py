@@ -3840,3 +3840,49 @@ class AsyncClient(BaseClient):
     options_account_get_block_trades.__doc__ = (
         Client.options_account_get_block_trades.__doc__
     )
+
+    async def margin_next_hourly_interest_rate(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/next-hourly-interest-rate", signed=True, data=params
+        )
+
+    margin_next_hourly_interest_rate.__doc__ = (
+        Client.margin_next_hourly_interest_rate.__doc__
+    )
+
+    async def margin_interest_history(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/interestHistory", signed=True, data=params
+        )
+
+    margin_interest_history.__doc__ = Client.margin_interest_history.__doc__
+
+    async def margin_borrow_repay(self, **params):
+        return await self._request_margin_api(
+            "post", "margin/borrow-repay", signed=True, data=params
+        )
+
+    margin_borrow_repay.__doc__ = Client.margin_borrow_repay.__doc__
+
+    async def margin_get_borrow_repay_records(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/borrow-repay", signed=True, data=params
+        )
+
+    margin_get_borrow_repay_records.__doc__ = (
+        Client.margin_get_borrow_repay_records.__doc__
+    )
+
+    async def margin_interest_rate_history(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/interestRateHistory", signed=True, data=params
+        )
+
+    margin_interest_rate_history.__doc__ = Client.margin_interest_rate_history.__doc__
+
+    async def margin_max_borrowable(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/maxBorrowable", signed=True, data=params
+        )
+
+    margin_max_borrowable.__doc__ = Client.margin_max_borrowable.__doc__

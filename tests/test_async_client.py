@@ -184,3 +184,45 @@ async def test_ws_get_time(clientAsync):
 
 async def test_ws_get_exchange_info(clientAsync):
     await clientAsync.ws_get_exchange_info(symbol="BTCUSDT")
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_next_hourly_interest_rate(clientAsync):
+    await clientAsync.margin_next_hourly_interest_rate(
+        assets="BTC",
+        isIsolated="FALSE"
+    )
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_interest_history(clientAsync):
+    await clientAsync.margin_interest_history(
+        asset="BTC",
+    )
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_borrow_repay(clientAsync):
+    await clientAsync.margin_borrow_repay(
+        asset="BTC",
+        amount=0.1,
+        isIsolated="FALSE",
+        symbol="BTCUSDT",
+        type="BORROW"
+    )
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_get_borrow_repay_records(clientAsync):
+    await clientAsync.margin_get_borrow_repay_records(
+        asset="BTC",
+        isolatedSymbol="BTCUSDT",
+    )
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_interest_rate_history(clientAsync):
+    await clientAsync.margin_interest_rate_history(
+        asset="BTC",
+    )
+
+@pytest.mark.skip(reason="can't test margin endpoints")
+async def test_margin_max_borrowable(clientAsync):
+    await clientAsync.margin_max_borrowable(
+        asset="BTC",
+    )
