@@ -592,3 +592,44 @@ def test_margin_disable_fast_withdraw_switch(client):
 
 def test_margin_enable_fast_withdraw_switch(client):
     client.enable_fast_withdraw_switch()
+
+def test_margin_next_hourly_interest_rate(client):
+    client.margin_next_hourly_interest_rate(
+        assets="BTC",
+        isIsolated="FALSE"
+    )
+
+def test_margin_interest_history(client):
+    client.margin_interest_history(
+        asset="BTC",
+    )
+
+def test_margin_borrow_repay(client):
+    client.margin_borrow_repay(
+        asset="BTC",
+        amount=0.1,
+        isIsolated="FALSE",
+        symbol="BTCUSDT",
+        type="BORROW"
+    )
+
+def test_margin_get_borrow_repay_records(client):
+    client.margin_get_borrow_repay_records(
+        asset="BTC",
+        isolatedSymbol="BTCUSDT",
+        txId=2970933056,
+        startTime=1563438204000,
+        endTime=1563438204000,
+        current=1,
+        size=10
+    )
+
+def test_margin_interest_rate_history(client):
+    client.margin_interest_rate_history(
+        asset="BTC",
+    )
+
+def test_margin_max_borrowable(client):
+    client.margin_max_borrowable(
+        asset="BTC",
+    )
