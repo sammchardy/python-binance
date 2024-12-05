@@ -1,6 +1,28 @@
 Changelog
 =========
 
+v1.0.25 - 2024-12-05
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- borrow-repay endpoints (margin_interest_rate_history/margin_get_borrow_repay_records/margin_borrow_repay/etc)
+- futures_mark_price_klines thanks to @zhen1007
+- futures_index_price_klines and futures_premium_index_klines
+- HistoricalKlinesType enum enhanced
+- block trades endpoints (options_create_block_trade_order, options_cancel_block_trade_order, etc)
+- dapi asyn endpoints (futures_coin_account_order_history_download, futures_coin_account_order_history_download_link, etc)
+
+
+**Fixed**
+
+- Removed unnecessary logs with `error` level
+- Remove CANCEL read_loop error log
+- Fix error type for when message queue is full
+- Fixes that if first connect fails it would not throw and let the user wait indefinitely
+- Improves error handling passing to user error type for different scenarios
+
+
 v1.0.24 - 2024-11-28
 ^^^^^^^^^^^^^^^^^^^^
 
