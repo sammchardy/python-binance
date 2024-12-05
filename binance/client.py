@@ -11246,3 +11246,212 @@ class Client(BaseClient):
         return self._request_margin_api(
             "post", "giftcard/buyCode", signed=True, data=params
         )
+
+    ####################################################
+    # Borrow and repay Endpoints
+    ####################################################
+
+    def margin_next_hourly_interest_rate(self, **params):
+        """Get future hourly interest rate (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay
+
+        :param assets: required - List of assets, separated by commas, up to 20
+        :type assets: str
+        :param isIsolated: required - for isolated margin or not, "TRUE", "FALSE"
+        :type isIsolated: bool
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "asset": "BTC",
+                    "nextHourlyInterestRate": "0.00000571"
+                },
+                {
+                    "asset": "ETH",
+                    "nextHourlyInterestRate": "0.00000578"
+                }
+            ]
+        """
+        return self._request_margin_api(
+            "get", "margin/next-hourly-interest-rate", signed=True, data=params
+        )
+
+    def margin_interest_history(self, **params):
+        """Get Interest History (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-Interest-History
+
+        :param asset: optional
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: optional - Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: optional - Default:10 Max:100
+        :type size: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "rows": [
+                    {
+                    "txId": 1352286576452864727,
+                    "interestAccuredTime": 1672160400000,
+                    "asset": "USDT",
+                    "rawAsset": “USDT”,  // will not be returned for isolated margin
+                    "principal": "45.3313",
+                    "interest": "0.00024995",
+                    "interestRate": "0.00013233",
+                    "type": "ON_BORROW",
+                    "isolatedSymbol": "BNBUSDT"  // isolated symbol, will not be returned for crossed margin
+                    }
+                ],
+                "total": 1
+                }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/interestHistory", signed=True, data=params
+        )
+
+    def margin_borrow_repay(self, **params):
+        """Margin Account Borrow/Repay (MARGIN)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Margin-Account-Borrow-Repay
+
+        :param asset: required
+        :type asset: str
+        :param amount: required
+        :type amount: float
+        :param isIsolated: optional - for isolated margin or not, "TRUE", "FALSE", default "FALSE"
+        :type isIsolated: str
+        :param symbol: optional - isolated symbol
+        :type symbol: str
+        :param type: str
+        :type type: str - BORROW or REPAY
+
+        :returns: API response
+        .. code-block:: python
+            {
+                //transaction id
+                "tranId": 100000001
+            }
+
+        """
+        return self._request_margin_api(
+            "post", "margin/borrow-repay", signed=True, data=params
+        )
+
+    def margin_get_borrow_repay_records(self, **params):
+        """Query Query borrow/repay records in Margin account (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Borrow-Repay
+
+        :param asset: required
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+        :param txId: optional - the tranId in POST /sapi/v1/margin/loan
+        :type txId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: optional - Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: optional - Default:10 Max:100
+        :type size: int
+
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "rows": [
+                {
+                    "type": "AUTO", // AUTO,MANUAL for Cross Margin Borrow; MANUAL，AUTO，BNB_AUTO_REPAY，POINT_AUTO_REPAY for Cross Margin Repay; AUTO，MANUAL for Isolated Margin Borrow/Repay;
+                    "isolatedSymbol": "BNBUSDT",     // isolated symbol, will not be returned for crossed margin
+                    "amount": "14.00000000",   // Total amount borrowed/repaid
+                    "asset": "BNB",
+                    "interest": "0.01866667",    // Interest repaid
+                    "principal": "13.98133333",   // Principal repaid
+                    "status": "CONFIRMED",   //one of PENDING (pending execution), CONFIRMED (successfully execution), FAILED (execution failed, nothing happened to your account);
+                    "timestamp": 1563438204000,
+                    "txId": 2970933056
+                }
+            ],
+            "total": 1
+        }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/borrow-repay", signed=True, data=params
+        )
+
+    def margin_interest_rate_history(self, **params):
+        """Query Margin Interest Rate History (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Margin-Interest-Rate-History
+
+        :param asset: required
+        :type asset: str
+        :param vipLevel: optional
+        :type vipLevel: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+
+        :returns: API response
+
+        .. code-block:: python
+        [
+            {
+                "asset": "BTC",
+                "dailyInterestRate": "0.00025000",
+                "timestamp": 1611544731000,
+                "vipLevel": 1
+            },
+            {
+                "asset": "BTC",
+                "dailyInterestRate": "0.00035000",
+                "timestamp": 1610248118000,
+                "vipLevel": 1
+            }
+        ]
+
+        """
+        return self._request_margin_api(
+            "get", "margin/interestRateHistory", signed=True, data=params
+        )
+
+    def margin_max_borrowable(self, **params):
+        """Query Max Borrow (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Max-Borrow
+
+        :param asset: required
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+        {
+            "amount": "1.69248805", // account's currently max borrowable amount with sufficient system availability
+            "borrowLimit": "60" // max borrowable amount limited by the account level
+        }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/maxBorrowable", signed=True, data=params
+        )
