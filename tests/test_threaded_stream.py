@@ -1,9 +1,9 @@
 import time
 import pytest
 import asyncio
-from binance.streams import ThreadedWebsocketManager
+from binance.ws.streams import ThreadedWebsocketManager
 import os
-from binance.threaded_stream import ThreadedApiManager
+from binance.ws.threaded_stream import ThreadedApiManager
 from unittest.mock import Mock
 
 # For Python 3.7 compatibility
@@ -74,13 +74,11 @@ def test_threaded_api_manager(manager):
     wait_time = 10
     start_time = time.time()
 
-    while not all(
-        [
-            received_mini_ticker.is_set(),
-            received_depth.is_set(),
-            received_ticker.is_set(),
-        ]
-    ):
+    while not all([
+        received_mini_ticker.is_set(),
+        received_depth.is_set(),
+        received_ticker.is_set(),
+    ]):
         time.sleep(0.1)
         if time.time() - start_time > wait_time:
             pytest.fail(f"Did not receive all callbacks within {wait_time} seconds")
