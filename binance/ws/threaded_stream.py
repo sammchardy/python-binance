@@ -34,8 +34,7 @@ class ThreadedApiManager(threading.Thread):
             "https_proxy": https_proxy,
         }
 
-    async def _before_socket_listener_start(self):
-        ...
+    async def _before_socket_listener_start(self): ...
 
     async def socket_listener(self):
         self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
@@ -55,7 +54,7 @@ class ThreadedApiManager(threading.Thread):
                     continue
                 else:
                     if not msg:
-                        continue # Handle both async and sync callbacks
+                        continue  # Handle both async and sync callbacks
                     if asyncio.iscoroutinefunction(callback):
                         await callback(msg)
                     else:
@@ -81,8 +80,7 @@ class ThreadedApiManager(threading.Thread):
         if self._client and self._loop and not self._loop.is_closed():
             try:
                 future = asyncio.run_coroutine_threadsafe(
-                    self.stop_client(), 
-                    self._loop
+                    self.stop_client(), self._loop
                 )
                 future.result(timeout=5)  # Add timeout to prevent hanging
             except Exception as e:
