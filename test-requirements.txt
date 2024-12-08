@@ -8,3 +8,4 @@ requests-mock
 tox
 setuptools
 aioresponses
+pre-commit

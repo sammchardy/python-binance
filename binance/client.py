@@ -698,6 +698,14 @@ class Client(BaseClient):
             return self.futures_klines(**params)
         elif HistoricalKlinesType.FUTURES_COIN == klines_type:
             return self.futures_coin_klines(**params)
+        elif HistoricalKlinesType.FUTURES_MARK_PRICE == klines_type:
+            return self.futures_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_INDEX_PRICE == klines_type:
+            return self.futures_index_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_MARK_PRICE == klines_type:
+            return self.futures_coin_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_INDEX_PRICE == klines_type:
+            return self.futures_coin_index_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -7092,6 +7100,30 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "klines", data=params)
 
+    def futures_mark_price_klines(self, **params):
+        """Kline/candlestick bars for the mark price of a symbol. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#mark-price-kline-candlestick-data
+
+        """
+        return self._request_futures_api("get", "markPriceKlines", data=params)
+
+    def futures_index_price_klines(self, **params):
+        """Kline/candlestick bars for the index price of a symbol. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#index-price-kline-candlestick-data
+
+        """
+        return self._request_futures_api("get", "indexPriceKlines", data=params)
+
+    def futures_premium_index_klines(self, **params):
+        """Premium index kline bars of a symbol.l. Klines are uniquely identified by their open time.
+
+        https://binance-docs.github.io/apidocs/futures/en/#premium-index-kline-data
+
+        """
+        return self._request_futures_api("get", "premiumIndexKlines", data=params)
+
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
@@ -7126,6 +7158,34 @@ class Client(BaseClient):
             end_str=end_str,
             limit=limit,
             klines_type=HistoricalKlinesType.FUTURES,
+        )
+
+    def futures_historical_mark_price_klines(
+        self, symbol, interval, start_str, end_str=None, limit=500
+    ):
+        """Get historical futures mark price klines from Binance
+
+        :param symbol: Name of symbol pair e.g. BNBBTC
+        :type symbol: str
+        :param interval: Binance Kline interval
+        :type interval: str
+        :param start_str: Start date string in UTC format or timestamp in milliseconds
+        :type start_str: str|int
+        :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
+        :type end_str: str|int
+        :param limit: Default 500; max 1000.
+        :type limit: int
+
+        :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
+
+        """
+        return self._historical_klines(
+            symbol,
+            interval,
+            start_str,
+            end_str=end_str,
+            limit=limit,
+            klines_type=HistoricalKlinesType.FUTURES_MARK_PRICE,
         )
 
     def futures_historical_klines_generator(
@@ -7769,6 +7829,14 @@ class Client(BaseClient):
         """
         return self._request_futures_coin_api("get", "indexPriceKlines", data=params)
 
+    def futures_coin_premium_index_klines(self, **params):
+        """Kline/candlestick bars for the index price of a pair..
+
+        https://binance-docs.github.io/apidocs/delivery/en/#premium-index-kline-data
+
+        """
+        return self._request_futures_coin_api("get", "premiumIndexKlines", data=params)
+
     def futures_coin_mark_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
@@ -8092,6 +8160,146 @@ class Client(BaseClient):
         return self._request_futures_coin_api(
             "delete", "listenKey", signed=False, data=params
         )
+
+    def futures_coin_account_order_history_download(self, **params):
+        """Get Download Id For Futures Order History
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Order-History
+
+        :param startTime: required - Start timestamp in ms
+        :type startTime: int
+        :param endTime: required - End timestamp in ms
+        :type endTime: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "avgCostTimestampOfLast30d": 7241837,  # Average time taken for data download in the past 30 days
+                "downloadId": "546975389218332672"
+            }
+
+        Note:
+            - Request Limitation is 10 times per month, shared by front end download page and rest api
+            - The time between startTime and endTime can not be longer than 1 year
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api(
+            "get", "order/asyn", signed=True, data=params
+        )
+
+    def futures_coin_accout_order_history_download_link(self, **params):
+        """Get futures order history download link by Id
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
+
+        :param downloadId: required - Download ID obtained from futures_coin_download_id
+        :type downloadId: str
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "downloadId": "545923594199212032",
+                "status": "completed",     # Enum：completed，processing
+                "url": "www.binance.com",  # The link is mapped to download id
+                "notified": true,          # ignore
+                "expirationTimestamp": 1645009771000,  # The link would expire after this timestamp
+                "isExpired": null
+            }
+
+            # OR (Response when server is processing)
+            {
+                "downloadId": "545923594199212032",
+                "status": "processing",
+                "url": "",
+                "notified": false,
+                "expirationTimestamp": -1,
+                "isExpired": null
+            }
+
+        Note:
+            - Download link expiration: 24h
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "order/asyn/id", True, data=params)
+
+    def futures_coin_account_trade_history_download(self, **params):
+        """Get Download Id For Futures Trade History (USER_DATA)
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Trade-History
+
+        :param startTime: required - Start timestamp in ms
+        :type startTime: int
+        :param endTime: required - End timestamp in ms
+        :type endTime: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "avgCostTimestampOfLast30d": 7241837,  # Average time taken for data download in the past 30 days
+                "downloadId": "546975389218332672"
+            }
+
+        Note:
+            - Request Limitation is 5 times per month, shared by front end download page and rest api
+            - The time between startTime and endTime can not be longer than 1 year
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "trade/asyn", True, data=params)
+
+    def futures_coin_account_trade_history_download_link(self, **params):
+        """Get futures trade download link by Id
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Futures-Trade-Download-Link-by-Id
+
+        :param downloadId: required - Download ID obtained from futures_coin_trade_download_id
+        :type downloadId: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "downloadId": "545923594199212032",
+                "status": "completed",     # Enum：completed，processing
+                "url": "www.binance.com",  # The link is mapped to download id
+                "notified": true,          # ignore
+                "expirationTimestamp": 1645009771000,  # The link would expire after this timestamp
+                "isExpired": null
+            }
+
+            # OR (Response when server is processing)
+            {
+                "downloadId": "545923594199212032",
+                "status": "processing",
+                "url": "",
+                "notified": false,
+                "expirationTimestamp": -1,
+                "isExpired": null
+            }
+
+        Note:
+            - Download link expiration: 24h
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_coin_api("get", "trade/asyn/id", True, data=params)
 
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
@@ -8698,6 +8906,285 @@ class Client(BaseClient):
 
         """
         return self._request_options_api("get", "userTrades", signed=True, data=params)
+
+    ####################################################
+    # Options - Market Maker Block Trade
+    ####################################################
+
+    def options_create_block_trade_order(self, **params):
+        """New Block Trade Order (TRADE)
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade
+
+        :param liquidity: required - Taker or Maker
+        :type liquidity: str
+        :param symbol: required - Option trading pair, e.g BTC-200730-9000-C
+        :type symbol: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param price: required - Order Price
+        :type price: float
+        :param quantity: required - Order Quantity
+        :type quantity: float
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "3668822b8-1baa-6a2f-adb8-d3de6289b361",
+                "expireTime": 1730171888109,
+                "liquidity": "TAKER",
+                "status": "RECEIVED",
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "BUY",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "post", "block/order/create", signed=True, data=params
+        )
+
+    def options_cancel_block_trade_order(self, **params):
+        """Cancel Block Trade Order (TRADE)
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Cancel-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {}
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "delete", "block/order/create", signed=True, data=params
+        )
+
+    def options_extend_block_trade_order(self, **params):
+        """Extend Block Trade Order (TRADE)
+
+        Extends a block trade expire time by 30 mins from the current time.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Extend-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "3668822b8-1baa-6a2f-adb8-d3de6289b361",
+                "expireTime": 1730172007000,
+                "liquidity": "TAKER",
+                "status": "RECEIVED",
+                "createTime": 1730170088111,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "BUY",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "put", "block/order/create", signed=True, data=params
+        )
+
+    def options_get_block_trade_orders(self, **params):
+        """Query Block Trade Order (TRADE)
+
+        Check block trade order status.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Query-Block-Trade-Order
+
+        :param blockOrderMatchingKey: optional - Returns specific block trade for this key
+        :type blockOrderMatchingKey: str
+        :param endTime: optional
+        :type endTime: int
+        :param startTime: optional
+        :type startTime: int
+        :param underlying: optional
+        :type underlying: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "blockTradeSettlementKey": "7d046e6e-a429-4335-ab9d-6a681febcde5",
+                    "expireTime": 1730172115801,
+                    "liquidity": "TAKER",
+                    "status": "RECEIVED",
+                    "createTime": 1730170315803,
+                    "legs": [
+                        {
+                            "symbol": "BNB-241101-700-C",
+                            "side": "BUY",
+                            "quantity": "1.2",
+                            "price": "2.8"
+                        }
+                    ]
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/order/orders", signed=True, data=params
+        )
+
+    def options_accept_block_trade_order(self, **params):
+        """Accept Block Trade Order (TRADE)
+
+        Accept a block trade order.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Accept-Block-Trade-Order
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "7d046e6e-a429-4335-ab9d-6a681febcde5",
+                "expireTime": 1730172115801,
+                "liquidity": "MAKER",
+                "status": "ACCEPTED",
+                "createTime": 1730170315803,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "SELL",
+                        "quantity": "1.2",
+                        "price": "2.8"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "post", "block/order/execute", signed=True, data=params
+        )
+
+    def options_get_block_trade_order(self, **params):
+        """Query Block Trade Details (USER_DATA)
+
+        Query block trade details; returns block trade details from counterparty's perspective.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Query-Block-Trade-Detail
+
+        :param blockOrderMatchingKey: required - Block Order Matching Key
+        :type blockOrderMatchingKey: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "blockTradeSettlementKey": "12b96c28-ba05-8906-c89t-703215cfb2e6",
+                "expireTime": 1730171860460,
+                "liquidity": "MAKER",
+                "status": "RECEIVED",
+                "createTime": 1730170060462,
+                "legs": [
+                    {
+                        "symbol": "BNB-241101-700-C",
+                        "side": "SELL",
+                        "quantity": "1.66",
+                        "price": "20"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/order/execute", signed=True, data=params
+        )
+
+    def options_account_get_block_trades(self, **params):
+        """Account Block Trade List (USER_DATA)
+
+        Gets block trades for a specific account.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-block-trade/Account-Block-Trade-List
+
+        :param endTime: optional
+        :type endTime: int
+        :param startTime: optional
+        :type startTime: int
+        :param underlying: optional
+        :type underlying: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "parentOrderId": "4675011431944499201",
+                    "crossType": "USER_BLOCK",
+                    "legs": [
+                        {
+                            "createTime": 1730170445600,
+                            "updateTime": 1730170445600,
+                            "symbol": "BNB-241101-700-C",
+                            "orderId": "4675011431944499203",
+                            "orderPrice": 2.8,
+                            "orderQuantity": 1.2,
+                            "orderStatus": "FILLED",
+                            "executedQty": 1.2,
+                            "executedAmount": 3.36,
+                            "fee": 0.336,
+                            "orderType": "PREV_QUOTED",
+                            "orderSide": "BUY",
+                            "id": "1125899906900937837",
+                            "tradeId": 1,
+                            "tradePrice": 2.8,
+                            "tradeQty": 1.2,
+                            "tradeTime": 1730170445600,
+                            "liquidity": "TAKER",
+                            "commission": 0.336
+                        }
+                    ],
+                    "blockTradeSettlementKey": "7d085e6e-a229-2335-ab9d-6a581febcd25"
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        return self._request_options_api(
+            "get", "block/user-trades", signed=True, data=params
+        )
 
     # Fiat Endpoints
 
@@ -10758,4 +11245,213 @@ class Client(BaseClient):
         """
         return self._request_margin_api(
             "post", "giftcard/buyCode", signed=True, data=params
+        )
+
+    ####################################################
+    # Borrow and repay Endpoints
+    ####################################################
+
+    def margin_next_hourly_interest_rate(self, **params):
+        """Get future hourly interest rate (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay
+
+        :param assets: required - List of assets, separated by commas, up to 20
+        :type assets: str
+        :param isIsolated: required - for isolated margin or not, "TRUE", "FALSE"
+        :type isIsolated: bool
+
+        :returns: API response
+
+        .. code-block:: python
+            [
+                {
+                    "asset": "BTC",
+                    "nextHourlyInterestRate": "0.00000571"
+                },
+                {
+                    "asset": "ETH",
+                    "nextHourlyInterestRate": "0.00000578"
+                }
+            ]
+        """
+        return self._request_margin_api(
+            "get", "margin/next-hourly-interest-rate", signed=True, data=params
+        )
+
+    def margin_interest_history(self, **params):
+        """Get Interest History (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-Interest-History
+
+        :param asset: optional
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: optional - Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: optional - Default:10 Max:100
+        :type size: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "rows": [
+                    {
+                    "txId": 1352286576452864727,
+                    "interestAccuredTime": 1672160400000,
+                    "asset": "USDT",
+                    "rawAsset": “USDT”,  // will not be returned for isolated margin
+                    "principal": "45.3313",
+                    "interest": "0.00024995",
+                    "interestRate": "0.00013233",
+                    "type": "ON_BORROW",
+                    "isolatedSymbol": "BNBUSDT"  // isolated symbol, will not be returned for crossed margin
+                    }
+                ],
+                "total": 1
+                }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/interestHistory", signed=True, data=params
+        )
+
+    def margin_borrow_repay(self, **params):
+        """Margin Account Borrow/Repay (MARGIN)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Margin-Account-Borrow-Repay
+
+        :param asset: required
+        :type asset: str
+        :param amount: required
+        :type amount: float
+        :param isIsolated: optional - for isolated margin or not, "TRUE", "FALSE", default "FALSE"
+        :type isIsolated: str
+        :param symbol: optional - isolated symbol
+        :type symbol: str
+        :param type: str
+        :type type: str - BORROW or REPAY
+
+        :returns: API response
+        .. code-block:: python
+            {
+                //transaction id
+                "tranId": 100000001
+            }
+
+        """
+        return self._request_margin_api(
+            "post", "margin/borrow-repay", signed=True, data=params
+        )
+
+    def margin_get_borrow_repay_records(self, **params):
+        """Query Query borrow/repay records in Margin account (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Borrow-Repay
+
+        :param asset: required
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+        :param txId: optional - the tranId in POST /sapi/v1/margin/loan
+        :type txId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param current: optional - Currently querying page. Start from 1. Default:1
+        :type current: int
+        :param size: optional - Default:10 Max:100
+        :type size: int
+
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "rows": [
+                {
+                    "type": "AUTO", // AUTO,MANUAL for Cross Margin Borrow; MANUAL，AUTO，BNB_AUTO_REPAY，POINT_AUTO_REPAY for Cross Margin Repay; AUTO，MANUAL for Isolated Margin Borrow/Repay;
+                    "isolatedSymbol": "BNBUSDT",     // isolated symbol, will not be returned for crossed margin
+                    "amount": "14.00000000",   // Total amount borrowed/repaid
+                    "asset": "BNB",
+                    "interest": "0.01866667",    // Interest repaid
+                    "principal": "13.98133333",   // Principal repaid
+                    "status": "CONFIRMED",   //one of PENDING (pending execution), CONFIRMED (successfully execution), FAILED (execution failed, nothing happened to your account);
+                    "timestamp": 1563438204000,
+                    "txId": 2970933056
+                }
+            ],
+            "total": 1
+        }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/borrow-repay", signed=True, data=params
+        )
+
+    def margin_interest_rate_history(self, **params):
+        """Query Margin Interest Rate History (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Margin-Interest-Rate-History
+
+        :param asset: required
+        :type asset: str
+        :param vipLevel: optional
+        :type vipLevel: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+
+        :returns: API response
+
+        .. code-block:: python
+        [
+            {
+                "asset": "BTC",
+                "dailyInterestRate": "0.00025000",
+                "timestamp": 1611544731000,
+                "vipLevel": 1
+            },
+            {
+                "asset": "BTC",
+                "dailyInterestRate": "0.00035000",
+                "timestamp": 1610248118000,
+                "vipLevel": 1
+            }
+        ]
+
+        """
+        return self._request_margin_api(
+            "get", "margin/interestRateHistory", signed=True, data=params
+        )
+
+    def margin_max_borrowable(self, **params):
+        """Query Max Borrow (USER_DATA)
+
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Query-Max-Borrow
+
+        :param asset: required
+        :type asset: str
+        :param isolatedSymbol: optional - isolated symbol
+        :type isolatedSymbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+        {
+            "amount": "1.69248805", // account's currently max borrowable amount with sufficient system availability
+            "borrowLimit": "60" // max borrowable amount limited by the account level
+        }
+
+        """
+        return self._request_margin_api(
+            "get", "margin/maxBorrowable", signed=True, data=params
         )

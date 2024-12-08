@@ -216,12 +216,13 @@ can do this.
 Websocket Errors
 ----------------
 
-If the websocket is disconnected and is unable to reconnect, a message is sent to the callback to indicate this. The format is
+If an error occurs, a message is sent to the callback to indicate this. The format is
 
 .. code:: python
 
     {
         'e': 'error',
+        'type': 'BinanceWebsocketUnableToConnect',
         'm': 'Max reconnect retries reached'
     }
 
@@ -232,6 +233,8 @@ If the websocket is disconnected and is unable to reconnect, a message is sent t
         else:
             # process message normally
 
+Websocket Examples
+----------------
 
 `Multiplex Socket <binance.html#binance.websockets.BinanceSocketManager.multiplex_socket>`_
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

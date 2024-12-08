@@ -18,9 +18,11 @@ def date_to_milliseconds(date_str):
     :type date_str: str
     """
     # get epoch value in UTC
+    assert date_str is not None
     epoch = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
     # parse our date string
     d = dateparser.parse(date_str)
+    assert d is not None
     # if the date is not timezone aware apply UTC timezone
     if d.tzinfo is None or d.tzinfo.utcoffset(d) is None:
         d = d.replace(tzinfo=pytz.utc)
@@ -82,7 +84,7 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 
     # convert interval to useful value in seconds
     timeframe = interval_to_milliseconds(interval)
-
+    assert timeframe is not None
     # convert our date strings to milliseconds
     start_ts = date_to_milliseconds(start_str)
 

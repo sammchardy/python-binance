@@ -402,6 +402,14 @@ class AsyncClient(BaseClient):
             return await self.futures_klines(**params)
         elif HistoricalKlinesType.FUTURES_COIN == klines_type:
             return await self.futures_coin_klines(**params)
+        elif HistoricalKlinesType.FUTURES_MARK_PRICE == klines_type:
+            return await self.futures_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_INDEX_PRICE == klines_type:
+            return await self.futures_index_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_MARK_PRICE == klines_type:
+            return await self.futures_coin_mark_price_klines(**params)
+        elif HistoricalKlinesType.FUTURES_COIN_INDEX_PRICE == klines_type:
+            return await self.futures_coin_index_price_klines(**params)
         else:
             raise NotImplementedException(klines_type)
 
@@ -1667,6 +1675,21 @@ class AsyncClient(BaseClient):
     async def futures_klines(self, **params):
         return await self._request_futures_api("get", "klines", data=params)
 
+    async def futures_mark_price_klines(self, **params):
+        return await self._request_futures_api("get", "markPriceKlines", data=params)
+
+    futures_mark_price_klines.__doc__ = Client.futures_mark_price_klines.__doc__
+
+    async def futures_index_price_klines(self, **params):
+        return await self._request_futures_api("get", "indexPriceKlines", data=params)
+
+    futures_index_price_klines.__doc__ = Client.futures_index_price_klines.__doc__
+
+    async def futures_premium_index_klines(self, **params):
+        return await self._request_futures_api("get", "premiumIndexKlines", data=params)
+
+    futures_premium_index_klines.__doc__ = Client.futures_index_price_klines.__doc__
+
     async def futures_continous_klines(self, **params):
         return await self._request_futures_api("get", "continuousKlines", data=params)
 
@@ -1992,6 +2015,17 @@ class AsyncClient(BaseClient):
             "get", "markPriceKlines", data=params
         )
 
+    futures_coin_mark_price_klines.__doc__ = Client.futures_mark_price_klines.__doc__
+
+    async def futures_coin_premium_index_klines(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "premiumIndexKlines", data=params
+        )
+
+    futures_coin_premium_index_klines.__doc__ = (
+        Client.futures_premium_index_klines.__doc__
+    )
+
     async def futures_coin_mark_price(self, **params):
         return await self._request_futures_coin_api("get", "premiumIndex", data=params)
 
@@ -2164,6 +2198,42 @@ class AsyncClient(BaseClient):
         return await self._request_futures_coin_api(
             "put", "listenKey", signed=False, data=params
         )
+
+    async def futures_coin_account_order_history_download(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "order/asyn", True, data=params
+        )
+
+    futures_coin_account_order_history_download.__doc__ = (
+        Client.futures_coin_account_order_history_download.__doc__
+    )
+
+    async def futures_coin_account_order_history_download_link(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "order/asyn/id", True, data=params
+        )
+
+    futures_coin_account_order_history_download_link.__doc__ = (
+        Client.futures_coin_accout_order_history_download_link.__doc__
+    )
+
+    async def futures_coin_account_trade_history_download(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "trade/asyn", True, data=params
+        )
+
+    futures_coin_account_trade_history_download.__doc__ = (
+        Client.futures_coin_account_trade_history_download.__doc__
+    )
+
+    async def futures_coin_account_trade_history_download_link(self, **params):
+        return await self._request_futures_coin_api(
+            "get", "trade/asyn/id", True, data=params
+        )
+
+    futures_coin_account_trade_history_download_link.__doc__ = (
+        Client.futures_coin_account_trade_history_download_link.__doc__
+    )
 
     async def futures_coin_stream_close(self, listenKey):
         params = {"listenKey": listenKey}
@@ -3705,3 +3775,114 @@ class AsyncClient(BaseClient):
         )
 
     gift_card_create_dual_token.__doc__ = Client.gift_card_create_dual_token.__doc__
+
+    ####################################################
+    # Options - Market Maker Block Trade
+    ####################################################
+
+    async def options_create_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "post", "block/order/create", signed=True, data=params
+        )
+
+    options_create_block_trade_order.__doc__ = (
+        Client.options_create_block_trade_order.__doc__
+    )
+
+    async def options_cancel_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "delete", "block/order/create", signed=True, data=params
+        )
+
+    options_cancel_block_trade_order.__doc__ = (
+        Client.options_cancel_block_trade_order.__doc__
+    )
+
+    async def options_extend_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "put", "block/order/create", signed=True, data=params
+        )
+
+    options_extend_block_trade_order.__doc__ = (
+        Client.options_extend_block_trade_order.__doc__
+    )
+
+    async def options_get_block_trade_orders(self, **params):
+        return await self._request_options_api(
+            "get", "block/order/orders", signed=True, data=params
+        )
+
+    options_get_block_trade_orders.__doc__ = (
+        Client.options_get_block_trade_orders.__doc__
+    )
+
+    async def options_accept_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "post", "block/order/execute", signed=True, data=params
+        )
+
+    options_accept_block_trade_order.__doc__ = (
+        Client.options_accept_block_trade_order.__doc__
+    )
+
+    async def options_get_block_trade_order(self, **params):
+        return await self._request_options_api(
+            "get", "block/order/execute", signed=True, data=params
+        )
+
+    options_get_block_trade_order.__doc__ = Client.options_get_block_trade_order.__doc__
+
+    async def options_account_get_block_trades(self, **params):
+        return await self._request_options_api(
+            "get", "block/user-trades", signed=True, data=params
+        )
+
+    options_account_get_block_trades.__doc__ = (
+        Client.options_account_get_block_trades.__doc__
+    )
+
+    async def margin_next_hourly_interest_rate(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/next-hourly-interest-rate", signed=True, data=params
+        )
+
+    margin_next_hourly_interest_rate.__doc__ = (
+        Client.margin_next_hourly_interest_rate.__doc__
+    )
+
+    async def margin_interest_history(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/interestHistory", signed=True, data=params
+        )
+
+    margin_interest_history.__doc__ = Client.margin_interest_history.__doc__
+
+    async def margin_borrow_repay(self, **params):
+        return await self._request_margin_api(
+            "post", "margin/borrow-repay", signed=True, data=params
+        )
+
+    margin_borrow_repay.__doc__ = Client.margin_borrow_repay.__doc__
+
+    async def margin_get_borrow_repay_records(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/borrow-repay", signed=True, data=params
+        )
+
+    margin_get_borrow_repay_records.__doc__ = (
+        Client.margin_get_borrow_repay_records.__doc__
+    )
+
+    async def margin_interest_rate_history(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/interestRateHistory", signed=True, data=params
+        )
+
+    margin_interest_rate_history.__doc__ = Client.margin_interest_rate_history.__doc__
+
+    async def margin_max_borrowable(self, **params):
+        return await self._request_margin_api(
+            "get", "margin/maxBorrowable", signed=True, data=params
+        )
+
+    margin_max_borrowable.__doc__ = Client.margin_max_borrowable.__doc__

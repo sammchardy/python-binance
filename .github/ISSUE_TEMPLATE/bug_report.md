@@ -22,5 +22,18 @@ A clear and concise description of what you expected to happen.
  - OS: [e.g. Mac, Ubuntu]
  - python-binance version
 
-**Logs or Additional context**
+**Logs**
+Please set logging to debug and paste any logs here, or upload `debug.log` file to the issue.
+```python
+import logging
+# This will log to both console and file
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+handlers=[
+logging.FileHandler('debug.log'),
+logging.StreamHandler()
+]
+)
+```
+
+**Additional context**
 Add any other context about the problem here.
