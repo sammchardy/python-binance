@@ -5,6 +5,8 @@ import os
 import asyncio
 import logging
 
+from binance.ws.streams import ThreadedWebsocketManager
+
 proxies = {}
 proxy = os.getenv("PROXY")
 
@@ -75,6 +77,11 @@ def futuresClientAsync():
 def liveClientAsync():
     return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
 
+@pytest.fixture(scope="function")
+def manager():
+    return ThreadedWebsocketManager(
+        api_key="test_key", api_secret="test_secret", https_proxy=proxy, testnet=True
+    )
 
 @pytest.fixture(autouse=True, scope="function")
 def event_loop():
