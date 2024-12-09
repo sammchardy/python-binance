@@ -71,7 +71,19 @@ class Client(BaseClient):
 
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
-        self.response = getattr(self.session, method)(uri, headers=headers, **kwargs)
+        data = kwargs.get("data")
+        if data:
+            del kwargs["data"]
+
+        if signed and self.PRIVATE_KEY and data: # handle issues with signing using eddsa/rsa and POST requests
+            dict_data = Client.convert_to_dict(data)
+            signature = dict_data["signature"] if "signature" in dict_data else  None
+            if signature:
+                del dict_data["signature"]
+            url_encoded_data = urlencode(dict_data)
+            data = f"{url_encoded_data}&signature={signature}"
+
+        self.response = getattr(self.session, method)(uri, headers=headers, data=data, **kwargs)
         return self._handle_response(self.response)
 
     @staticmethod
