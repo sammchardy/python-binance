@@ -312,6 +312,11 @@ class BaseClient:
     def encode_uri_component(uri, safe="~()*!.'"):
         return _urlencode.quote(uri, safe=safe)
 
+    @staticmethod
+    def convert_to_dict(list_tuples):
+        dictionary = dict((key, value) for key, value in list_tuples)
+        return dictionary
+
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
         res = b64encode(
