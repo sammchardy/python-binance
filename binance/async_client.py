@@ -129,7 +129,7 @@ class AsyncClient(BaseClient):
                 kwargs.pop("params")
 
         data = kwargs.get("data")
-        if data:
+        if data is not None:
             del kwargs["data"]
 
         if signed and self.PRIVATE_KEY and data: # handle issues with signing using eddsa/rsa and POST requests

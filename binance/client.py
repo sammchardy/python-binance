@@ -72,7 +72,7 @@ class Client(BaseClient):
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         data = kwargs.get("data")
-        if data:
+        if data is not None:
             del kwargs["data"]
 
         if signed and self.PRIVATE_KEY and data: # handle issues with signing using eddsa/rsa and POST requests
