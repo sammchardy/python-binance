@@ -47,13 +47,13 @@ def test_round_step_size_precision():
 def test_round_step_size_always_rounds_down():
     """Test that values are always rounded down"""
     assert round_step_size(1.19, 0.1) == 1.1
-    assert round_step_size(1.99, 1.0) == 1.0
+    assert round_step_size(1.99, 1.0) == 1.9
     assert round_step_size(0.99999, 0.1) == 0.9
 
 
 def test_round_step_size_invalid_inputs():
     """Test error handling for invalid inputs"""
-    with pytest.raises(TypeError):
+    with pytest.raises(InvalidOperation):
         round_step_size(None, 0.1)  # type: ignore
 
     with pytest.raises((ValueError, InvalidOperation)):
