@@ -1,7 +1,7 @@
 Binance API
 ===========
 
-client module
+Client module
 -------------
 
 .. automodule:: binance.client
@@ -9,10 +9,34 @@ client module
     :undoc-members:
     :show-inheritance:
 
+Async client module
+-------------------
+
+.. automodule:: binance.async_client
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Websockets module
+-----------------
+
+.. automodule:: binance.ws.streams
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Threaded streams module
+-----------------------
+
+.. automodule:: binance.ws.threaded_stream
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 depthcache module
 -----------------
 
-.. automodule:: binance.depthcache
+.. automodule:: binance.ws.depthcache
     :members:
     :undoc-members:
     :show-inheritance:
@@ -29,14 +53,6 @@ helpers module
 --------------
 
 .. automodule:: binance.helpers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-websockets module
------------------
-
-.. automodule:: binance.streams
     :members:
     :undoc-members:
     :show-inheritance:
