@@ -7293,6 +7293,14 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "ticker/bookTicker", data=params)
 
+    def futures_index_price_constituents(self, **params):
+        """Get index price constituents
+
+        https://binance-docs.github.io/apidocs/futures/en/#query-index-price-constituents
+
+        """
+        return self._request_futures_api("get", "constituents", data=params)
+
     def futures_liquidation_orders(self, **params):
         """Get all liquidation orders
 
@@ -7896,6 +7904,14 @@ class Client(BaseClient):
 
         """
         return self._request_futures_coin_api("get", "ticker/bookTicker", data=params)
+
+    def futures_coin_index_price_constituents(self, **params):
+        """Get index price constituents
+
+        https://binance-docs.github.io/apidocs/delivery/en/#query-index-price-constituents
+
+        """
+        return self._request_futures_coin_api("get", "constituents", data=params)
 
     def futures_coin_liquidation_orders(self, **params):
         """Get all liquidation orders
