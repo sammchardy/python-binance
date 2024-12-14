@@ -1762,6 +1762,10 @@ class AsyncClient(BaseClient):
     async def futures_index_price_constituents(self, **params):
         return await self._request_futures_api("get", "constituents", data=params)
 
+    futures_index_price_constituents.__doc__ = (
+        Client.futures_index_price_constituents.__doc__
+    )
+
     async def futures_liquidation_orders(self, **params):
         return await self._request_futures_api(
             "get", "forceOrders", signed=True, data=params
@@ -2061,6 +2065,10 @@ class AsyncClient(BaseClient):
 
     async def futures_coin_index_price_constituents(self, **params):
         return await self._request_futures_coin_api("get", "constituents", data=params)
+
+    futures_coin_index_price_constituents.__doc__ = (
+        Client.futures_index_price_constituents.__doc__
+    )
 
     async def futures_coin_liquidation_orders(self, **params):
         return await self._request_futures_coin_api(
