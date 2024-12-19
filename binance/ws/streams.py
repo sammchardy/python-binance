@@ -94,7 +94,7 @@ class BinanceSocketManager:
         stream_url: Optional[str] = None,
         prefix: str = "ws/",
         is_binary: bool = False,
-    ):
+    ) -> KeepAliveWebsocket:
         conn_id = f"{BinanceSocketType.ACCOUNT}_{path}"
         if conn_id not in self._conns:
             self._conns[conn_id] = KeepAliveWebsocket(
