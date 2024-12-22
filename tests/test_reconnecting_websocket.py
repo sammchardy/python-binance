@@ -8,6 +8,7 @@ from binance.ws.constants import WSListenerState
 from binance.exceptions import BinanceWebsocketUnableToConnect
 from websockets import WebSocketClientProtocol  # type: ignore
 from websockets.protocol import State
+import asyncio
 
 try:
     from unittest.mock import AsyncMock  # Python 3.8+
@@ -175,7 +176,7 @@ async def test_connect_fails_to_connect_on_enter_context():
 async def test_connect_fails_to_connect_after_disconnect():
     # Create mock WebSocket client
     mock_socket = create_autospec(WebSocketClientProtocol)
-    mock_socket.recv = AsyncMock(return_value='{"e": "value"}')
+    mock_socket.recv = AsyncMock(side_effect=delayed_return)
     mock_socket.state = AsyncMock()
 
     # Create mock connect that succeeds first, then fails
@@ -200,3 +201,8 @@ async def test_connect_fails_to_connect_after_disconnect():
             # After retrying to reconnect, receive BinanceWebsocketUnableToConnect
             assert msg["e"] == "error"
             assert msg["type"] == "BinanceWebsocketUnableToConnect"
+
+
+async def delayed_return():
+    await asyncio.sleep(0.1)  # 100 ms delay
+    return '{"e": "value"}'
