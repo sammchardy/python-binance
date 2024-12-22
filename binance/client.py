@@ -32,6 +32,7 @@ class Client(BaseClient):
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         ping: Optional[bool] = True,
+        time_unit: Optional[str] = None,
     ):
         super().__init__(
             api_key,
@@ -42,6 +43,7 @@ class Client(BaseClient):
             testnet,
             private_key,
             private_key_pass,
+            time_unit=time_unit,
         )
 
         # init DNS and SSL cert

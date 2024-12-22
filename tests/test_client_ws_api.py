@@ -1,3 +1,5 @@
+from binance.client import Client
+from .conftest import proxies, api_key, api_secret, testnet
 from .test_get_order_book import assert_ob
 
 
@@ -60,3 +62,31 @@ def test_ws_get_time(client):
 
 def test_ws_get_exchange_info(client):
     client.ws_get_exchange_info(symbol="BTCUSDT")
+
+
+def test_ws_time_microseconds():
+    micro_client = Client(
+        api_key,
+        api_secret,
+        {"proxies": proxies},
+        testnet=testnet,
+        time_unit="MICROSECOND",
+    )
+    micro_trades = micro_client.ws_get_recent_trades(symbol="BTCUSDT")
+    assert len(str(micro_trades[0]["time"])) >= 16, (
+        "WS time should be in microseconds (16+ digits)"
+    )
+
+
+def test_ws_time_milliseconds():
+    milli_client = Client(
+        api_key,
+        api_secret,
+        {"proxies": proxies},
+        testnet=testnet,
+        time_unit="MILLISECOND",
+    )
+    milli_trades = milli_client.ws_get_recent_trades(symbol="BTCUSDT")
+    assert len(str(milli_trades[0]["time"])) == 13, (
+        "WS time should be in milliseconds (13 digits)"
+    )

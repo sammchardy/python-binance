@@ -36,6 +36,7 @@ class AsyncClient(BaseClient):
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         https_proxy: Optional[str] = None,
+        time_unit: Optional[str] = None,
     ):
         self.https_proxy = https_proxy
         self.loop = loop or get_loop()
@@ -49,6 +50,7 @@ class AsyncClient(BaseClient):
             testnet,
             private_key,
             private_key_pass,
+            time_unit=time_unit,
         )
 
     @classmethod
@@ -132,9 +134,11 @@ class AsyncClient(BaseClient):
         if data is not None:
             del kwargs["data"]
 
-        if signed and self.PRIVATE_KEY and data: # handle issues with signing using eddsa/rsa and POST requests
+        if (
+            signed and self.PRIVATE_KEY and data
+        ):  # handle issues with signing using eddsa/rsa and POST requests
             dict_data = Client.convert_to_dict(data)
-            signature = dict_data["signature"] if "signature" in dict_data else  None
+            signature = dict_data["signature"] if "signature" in dict_data else None
             if signature:
                 del dict_data["signature"]
             url_encoded_data = urlencode(dict_data)
