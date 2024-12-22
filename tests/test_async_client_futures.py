@@ -93,6 +93,10 @@ async def test_futures_orderbook_ticker(futuresClientAsync):
     await futuresClientAsync.futures_orderbook_ticker()
 
 
+async def test_futures_index_index_price_constituents(futuresClientAsync):
+    await futuresClientAsync.futures_index_price_constituents(symbol="BTCUSD")
+
+
 async def test_futures_liquidation_orders(futuresClientAsync):
     await futuresClientAsync.futures_liquidation_orders()
 
@@ -442,6 +446,10 @@ async def test_futures_coin_symbol_ticker(futuresClientAsync):
 
 async def test_futures_coin_orderbook_ticker(futuresClientAsync):
     await futuresClientAsync.futures_coin_orderbook_ticker()
+
+
+async def test_futures_coin_index_index_price_constituents(futuresClientAsync):
+    await futuresClientAsync.futures_coin_index_price_constituents(symbol="BTCUSD")
 
 
 @pytest.mark.skip(reason="Not implemented")

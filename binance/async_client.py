@@ -128,10 +128,23 @@ class AsyncClient(BaseClient):
                 uri = f"{uri}?{kwargs['params']}"
                 kwargs.pop("params")
 
+        data = kwargs.get("data")
+        if data is not None:
+            del kwargs["data"]
+
+        if signed and self.PRIVATE_KEY and data: # handle issues with signing using eddsa/rsa and POST requests
+            dict_data = Client.convert_to_dict(data)
+            signature = dict_data["signature"] if "signature" in dict_data else  None
+            if signature:
+                del dict_data["signature"]
+            url_encoded_data = urlencode(dict_data)
+            data = f"{url_encoded_data}&signature={signature}"
+
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True),
             proxy=self.https_proxy,
             headers=headers,
+            data=data,
             **kwargs,
         ) as response:
             self.response = response
@@ -1746,6 +1759,13 @@ class AsyncClient(BaseClient):
     async def futures_orderbook_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/bookTicker", data=params)
 
+    async def futures_index_price_constituents(self, **params):
+        return await self._request_futures_api("get", "constituents", data=params)
+
+    futures_index_price_constituents.__doc__ = (
+        Client.futures_index_price_constituents.__doc__
+    )
+
     async def futures_liquidation_orders(self, **params):
         return await self._request_futures_api(
             "get", "forceOrders", signed=True, data=params
@@ -2042,6 +2062,13 @@ class AsyncClient(BaseClient):
         return await self._request_futures_coin_api(
             "get", "ticker/bookTicker", data=params
         )
+
+    async def futures_coin_index_price_constituents(self, **params):
+        return await self._request_futures_coin_api("get", "constituents", data=params)
+
+    futures_coin_index_price_constituents.__doc__ = (
+        Client.futures_coin_index_price_constituents.__doc__
+    )
 
     async def futures_coin_liquidation_orders(self, **params):
         return await self._request_futures_coin_api(
