@@ -3918,7 +3918,7 @@ class AsyncClient(BaseClient):
 # Futures Data
 ####################################################
 
-    async def futures_historial_data_link(self, **params):
+    async def futures_historical_data_link(self, **params):
         return await self._request_margin_api("get", "futures/data/histDataLink", signed=True, data=params)
 
-    futures_historial_data_link.__doc__ = Client.futures_historial_data_link.__doc__
+    futures_historical_data_link.__doc__ = Client.futures_historical_data_link.__doc__
