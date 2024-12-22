@@ -3550,7 +3550,7 @@ class AsyncClient(BaseClient):
     async def ws_cancel_order(self, **params):
         return await self._ws_api_request("order.cancel", True, params)
 
-    cancel_order.__doc__ = cancel_order.__doc__
+    ws_cancel_order.__doc__ = Client.ws_cancel_order.__doc__
 
     async def cancel_all_open_orders(self, **params):
         return await self._delete("openOrders", True, data=params)
@@ -3560,104 +3560,172 @@ class AsyncClient(BaseClient):
             params["newClientOrderId"] = self.SPOT_ORDER_PREFIX + self.uuid22()
         return await self._post("order/cancelReplace", signed=True, data=params)
 
+    cancel_replace_order.__doc__ = Client.cancel_replace_order.__doc__
+
     async def ws_cancel_and_replace_order(self, **params):
         return await self._ws_api_request("order.cancelReplace", True, params)
+
+    ws_cancel_and_replace_order.__doc__ = Client.ws_cancel_and_replace_order.__doc__
 
     async def ws_get_open_orders(self, **params):
         return await self._ws_api_request("openOrders.status", True, params)
 
+    ws_get_open_orders.__doc__ = Client.ws_get_open_orders.__doc__
+
     async def ws_cancel_all_open_orders(self, **params):
         return await self._ws_api_request("openOrders.cancelAll", True, params)
+
+    ws_cancel_all_open_orders.__doc__ = Client.ws_cancel_all_open_orders.__doc__
 
     async def ws_create_oco_order(self, **params):
         return await self._ws_api_request("orderList.place.oco", True, params)
 
+    ws_create_oco_order.__doc__ = Client.ws_create_oco_order.__doc__
+
     async def ws_create_oto_order(self, **params):
         return await self._ws_api_request("orderList.place.oto", True, params)
+
+    ws_create_oto_order.__doc__ = Client.ws_create_oto_order.__doc__
 
     async def ws_create_otoco_order(self, **params):
         return await self._ws_api_request("orderList.place.otoco", True, params)
 
+    ws_create_otoco_order.__doc__ = Client.ws_create_otoco_order.__doc__
+
     async def ws_get_oco_order(self, **params):
         return await self._ws_api_request("orderList.status", True, params)
+
+    ws_get_oco_order.__doc__ = Client.ws_get_oco_order.__doc__
 
     async def ws_cancel_oco_order(self, **params):
         return await self._ws_api_request("orderList.cancel", True, params)
 
+    ws_cancel_oco_order.__doc__ = Client.ws_cancel_oco_order.__doc__
+
     async def ws_get_oco_open_orders(self, **params):
         return await self._ws_api_request("openOrderLists.status", True, params)
+
+    ws_get_oco_open_orders.__doc__ = Client.ws_get_oco_open_orders.__doc__
 
     async def ws_create_sor_order(self, **params):
         return await self._ws_api_request("sor.order.place", True, params)
 
+    ws_create_sor_order.__doc__ = Client.ws_create_sor_order.__doc__
+
     async def ws_create_test_sor_order(self, **params):
         return await self._ws_api_request("sor.order.test", True, params)
+
+    ws_create_test_sor_order.__doc__ = Client.ws_create_test_sor_order.__doc__
 
     async def ws_get_account(self, **params):
         return await self._ws_api_request("account.status", True, params)
 
+    ws_get_account.__doc__ = Client.ws_get_account.__doc__
+
     async def ws_get_account_rate_limits_orders(self, **params):
         return await self._ws_api_request("account.rateLimits.orders", True, params)
+
+    ws_get_account_rate_limits_orders.__doc__ = Client.ws_get_account_rate_limits_orders.__doc__
 
     async def ws_get_all_orders(self, **params):
         return await self._ws_api_request("allOrders", True, params)
 
+    ws_get_all_orders.__doc__ = Client.ws_get_all_orders.__doc__
+
     async def ws_get_my_trades(self, **params):
         return await self._ws_api_request("myTrades", True, params)
+
+    ws_get_my_trades.__doc__ = Client.ws_get_my_trades.__doc__
 
     async def ws_get_prevented_matches(self, **params):
         return await self._ws_api_request("myPreventedMatches", True, params)
 
+    ws_get_prevented_matches.__doc__ = Client.ws_get_prevented_matches.__doc__
+
     async def ws_get_allocations(self, **params):
         return await self._ws_api_request("myAllocations", True, params)
+
+    ws_get_allocations.__doc__ = Client.ws_get_allocations.__doc__
 
     async def ws_get_commission_rates(self, **params):
         return await self._ws_api_request("account.commission", True, params)
 
+    ws_get_commission_rates.__doc__ = Client.ws_get_commission_rates.__doc__
+
     async def ws_get_order_book(self, **params):
         return await self._ws_api_request("depth", False, params)
+
+    ws_get_order_book.__doc__ = Client.ws_get_order_book.__doc__
 
     async def ws_get_recent_trades(self, **params):
         return await self._ws_api_request("trades.recent", False, params)
 
+    ws_get_recent_trades.__doc__ = Client.ws_get_recent_trades.__doc__
+
     async def ws_get_historical_trades(self, **params):
         return await self._ws_api_request("trades.historical", False, params)
+
+    ws_get_historical_trades.__doc__ = Client.ws_get_historical_trades.__doc__
 
     async def ws_get_aggregate_trades(self, **params):
         return await self._ws_api_request("trades.aggregate", False, params)
 
+    ws_get_aggregate_trades.__doc__ = Client.ws_get_aggregate_trades.__doc__
+
     async def ws_get_klines(self, **params):
         return await self._ws_api_request("klines", False, params)
+
+    ws_get_klines.__doc__ = Client.ws_get_klines.__doc__
 
     async def ws_get_uiKlines(self, **params):
         return await self._ws_api_request("uiKlines", False, params)
 
+    ws_get_uiKlines.__doc__ = Client.ws_get_uiKlines.__doc__
+
     async def ws_get_avg_price(self, **params):
         return await self._ws_api_request("avgPrice", False, params)
+
+    ws_get_avg_price.__doc__ = Client.ws_get_avg_price.__doc__
 
     async def ws_get_ticker(self, **params):
         return await self._ws_api_request("ticker.24hr", False, params)
 
+    ws_get_ticker.__doc__ = Client.ws_get_ticker.__doc__
+
     async def ws_get_trading_day_ticker(self, **params):
         return await self._ws_api_request("ticker.tradingDay", False, params)
+
+    ws_get_trading_day_ticker.__doc__ = Client.ws_get_trading_day_ticker.__doc__
 
     async def ws_get_symbol_ticker_window(self, **params):
         return await self._ws_api_request("ticker", False, params)
 
+    ws_get_symbol_ticker_window.__doc__ = Client.ws_get_symbol_ticker_window.__doc__
+
     async def ws_get_symbol_ticker(self, **params):
         return await self._ws_api_request("ticker.price", False, params)
+
+    ws_get_symbol_ticker.__doc__ = Client.ws_get_symbol_ticker.__doc__
 
     async def ws_get_orderbook_ticker(self, **params):
         return await self._ws_api_request("ticker.book", False, params)
 
+    ws_get_orderbook_ticker.__doc__ = Client.ws_get_orderbook_ticker.__doc__
+
     async def ws_ping(self, **params):
         return await self._ws_api_request("ping", False, params)
+
+    ws_ping.__doc__ = Client.ws_ping.__doc__
 
     async def ws_get_time(self, **params):
         return await self._ws_api_request("time", False, params)
 
+    ws_get_time.__doc__ = Client.ws_get_time.__doc__
+
     async def ws_get_exchange_info(self, **params):
         return await self._ws_api_request("exchangeInfo", False, params)
+
+    ws_get_exchange_info.__doc__ = Client.ws_get_exchange_info.__doc__
 
     ####################################################
     # FUTURES WS API Endpoints
