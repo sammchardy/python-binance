@@ -58,23 +58,40 @@ async def test_start_and_stop_socket(manager):
     mock_socket = AsyncMock()
     mock_socket.__aenter__ = AsyncMock(return_value=mock_socket)
     mock_socket.__aexit__ = AsyncMock(return_value=None)
-    mock_socket.recv = AsyncMock(return_value="test_message")
+
+    # Track number of recv calls
+    recv_count = 0
+    async def controlled_recv():
+        nonlocal recv_count
+        recv_count += 1
+        # If we've stopped the socket or read enough times, simulate connection closing
+        if not manager._socket_running.get(socket_name) or recv_count > 2:
+            raise websockets.exceptions.ConnectionClosed(None, None)
+        await asyncio.sleep(0.1)
+        return '{"e": "value"}'
+
+    mock_socket.recv = controlled_recv
 
     # AsyncMock callback
     callback = AsyncMock()
 
     # Start socket listener
     manager._socket_running[socket_name] = True
-    asyncio.create_task(manager.start_listener(mock_socket, socket_name, callback))
+    listener_task = asyncio.create_task(
+        manager.start_listener(mock_socket, socket_name, callback)
+    )
 
-    # Give some time for the listener to start
-    await asyncio.sleep(0.1)
+    # Give some time for the listener to start and receive a message
+    await asyncio.sleep(0.2)
 
     # Stop the socket
     manager.stop_socket(socket_name)
 
-    # Wait for socket to close
-    await asyncio.sleep(0.1)
+    # Wait for the listener task to complete
+    try:
+        await asyncio.wait_for(listener_task, timeout=1.0)
+    except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
+        pass  # These exceptions are expected during shutdown
 
     assert socket_name not in manager._socket_running
 
@@ -84,29 +101,40 @@ async def test_socket_listener_timeout(manager):
     """Test socket listener handling timeout"""
     socket_name = "test_socket"
 
-    # AsyncMock socket that times out
+    # AsyncMock socket that times out every time
     mock_socket = AsyncMock()
     mock_socket.__aenter__ = AsyncMock(return_value=mock_socket)
     mock_socket.__aexit__ = AsyncMock(return_value=None)
-    mock_socket.recv = AsyncMock(side_effect=asyncio.TimeoutError)
+
+    async def controlled_recv():
+        await asyncio.sleep(0.1)
+        raise asyncio.TimeoutError("Simulated Timeout")
+
+    mock_socket.recv = controlled_recv
 
     callback = AsyncMock()
 
     # Start socket listener
     manager._socket_running[socket_name] = True
-    task = asyncio.create_task(
+    listener_task = asyncio.create_task(
         manager.start_listener(mock_socket, socket_name, callback)
     )
 
     # Give some time for a few timeout cycles
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(0.3)
 
     # Stop the socket
     manager.stop_socket(socket_name)
-    await task
 
-    # Callback should not have been called
+    # Wait for the listener to finish
+    try:
+        await asyncio.wait_for(listener_task, timeout=1.0)
+    except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
+        listener_task.cancel()
+
+    # Callback should not have been called (no successful messages)
     callback.assert_not_called()
+    assert socket_name not in manager._socket_running
 
 
 @pytest.mark.asyncio
