@@ -13468,3 +13468,50 @@ class Client(BaseClient):
         return self._request_margin_api(
             "get", "margin/maxBorrowable", signed=True, data=params
         )
+
+####################################################
+# Futures Data
+####################################################
+
+    def futures_historical_data_link(self, **params):
+        """Get Future TickLevel Orderbook Historical Data Download Link.
+
+        https://developers.binance.com/docs/derivatives/futures-data/market-data
+
+        :param symbol: STRING - Required - Symbol name, e.g. BTCUSDT or BTCUSD_PERP
+        :type symbol: str
+        :param dataType: ENUM - Required - Data type:
+            - T_DEPTH for ticklevel orderbook data
+            - S_DEPTH for orderbook snapshot data
+        :type dataType: str
+        :param startTime: LONG - Required - Start time in milliseconds
+        :type startTime: int
+        :param endTime: LONG - Required - End time in milliseconds
+        :type endTime: int
+        :param recvWindow: LONG - Optional - Number of milliseconds after timestamp the request is valid for
+        :type recvWindow: int
+        :param timestamp: LONG - Required - Current timestamp in milliseconds
+        :type timestamp: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "data": [
+                    {
+                        "day": "2023-06-30",
+                        "url": "https://bin-prod-user-rebate-bucket.s3.ap-northeast-1.amazonaws.com/future-data-symbol-update/2023-06-30/BTCUSDT_T_DEPTH_2023-06-30.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230925T025710Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIAVL364M5ZNFZ74IPP%2F20230925%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Signature=5fffcb390d10f34d71615726f81f99e42d80a11532edeac77b858c51a88cbf59"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - The span between startTime and endTime can't be more than 7 days
+            - The download link will be valid for 1 day
+            - Only VIP users can query this endpoint
+            - Weight: 200
+        """
+        return self._request_margin_api("get", "futures/data/histDataLink", signed=True, data=params)
