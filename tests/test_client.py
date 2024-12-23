@@ -1,4 +1,6 @@
 import pytest
+from binance.client import Client
+from .conftest import proxies, api_key, api_secret, testnet
 
 
 def test_client_initialization(client):
@@ -183,3 +185,31 @@ def test_ws_get_time(client):
 
 def test_ws_get_exchange_info(client):
     client.ws_get_exchange_info(symbol="BTCUSDT")
+
+
+def test_time_unit_microseconds():
+    micro_client = Client(
+        api_key,
+        api_secret,
+        {"proxies": proxies},
+        testnet=testnet,
+        time_unit="MICROSECOND",
+    )
+    micro_trades = micro_client.get_recent_trades(symbol="BTCUSDT")
+    assert len(str(micro_trades[0]["time"])) >= 16, (
+        "Time should be in microseconds (16+ digits)"
+    )
+
+
+def test_time_unit_milloseconds():
+    milli_client = Client(
+        api_key,
+        api_secret,
+        {"proxies": proxies},
+        testnet=testnet,
+        time_unit="MILLISECOND",
+    )
+    milli_trades = milli_client.get_recent_trades(symbol="BTCUSDT")
+    assert len(str(milli_trades[0]["time"])) == 13, (
+        "Time should be in milliseconds (13 digits)"
+    )
