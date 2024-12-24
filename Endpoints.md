@@ -629,20 +629,25 @@
     client.futures_open_interest(symbol)
     ``` 
   - **GET /futures/data/openInterestHist** (Open Interest Statistics.)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.futures_open_interest_hist(symbol)
+    ``` 
   - **GET /futures/data/topLongShortAccountRatio** (Top Trader Long/Short Ratio (Accounts) (MARKET_DATA).)
-
-    > :warning: Not yet implemented
+    ```python 
+    client.futures_top_longshort_account_ratio(symbol)
+    ``` 
   - **GET /futures/data/topLongShortPositionRatio** (Top Trader Long/Short Ratio (Positions).)
-
-    > :warning: Not yet implemented
+    ```python
+    client.futures_top_longshort_position_ratio(symbol)
+    ```
   - **GET /futures/data/globalLongShortAccountRatio** (Long/Short Ratio.)
-
-    > :warning: Not yet implemented
+    ```python
+    client.futures_global_longshort_ratio(symbol)
+    ```
   - **GET /futures/data/takerlongshortRatio** (Taker Buy/Sell Volume.)
-
-    > :warning: Not yet implemented
+    ```python
+    client.futures_taker_longshort_ratio(symbol)
+    ```
   - **GET /fapi/v1/lvtKlines** (Historical BLVT NAV Kline/Candlestick.)
 
     > :warning: Not yet implemented
