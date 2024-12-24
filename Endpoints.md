@@ -630,23 +630,23 @@
     ``` 
   - **GET /futures/data/openInterestHist** (Open Interest Statistics.)
     ```python 
-    client.futures_open_interest_hist(symbol)
+    client.futures_open_interest_hist(symbol, period, limit, startTime, endTime)
     ``` 
   - **GET /futures/data/topLongShortAccountRatio** (Top Trader Long/Short Ratio (Accounts) (MARKET_DATA).)
     ```python 
-    client.futures_top_longshort_account_ratio(symbol)
+    client.futures_top_longshort_account_ratio(symbol, period, limit, startTime, endTime)
     ``` 
   - **GET /futures/data/topLongShortPositionRatio** (Top Trader Long/Short Ratio (Positions).)
     ```python
-    client.futures_top_longshort_position_ratio(symbol)
+    client.futures_top_longshort_position_ratio(symbol, period, limit, startTime, endTime)
     ```
   - **GET /futures/data/globalLongShortAccountRatio** (Long/Short Ratio.)
     ```python
-    client.futures_global_longshort_ratio(symbol)
+    client.futures_global_longshort_ratio(symbol, period, limit, startTime, endTime)
     ```
   - **GET /futures/data/takerlongshortRatio** (Taker Buy/Sell Volume.)
     ```python
-    client.futures_taker_longshort_ratio(symbol)
+    client.futures_taker_longshort_ratio(symbol, period, limit, startTime, endTime)
     ```
   - **GET /fapi/v1/lvtKlines** (Historical BLVT NAV Kline/Candlestick.)
 

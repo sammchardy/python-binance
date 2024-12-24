@@ -79,19 +79,19 @@ def test_futures_funding_rate(futuresClient):
 
 
 def test_futures_top_longshort_account_ratio(futuresClient):
-    futuresClient.futures_top_longshort_account_ratio()
+    futuresClient.futures_top_longshort_account_ratio(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_top_longshort_position_ratio(futuresClient):
-    futuresClient.futures_top_longshort_position_ratio()
+    futuresClient.futures_top_longshort_position_ratio(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_global_longshort_ratio(futuresClient):
-    futuresClient.futures_global_longshort_ratio()
+    futuresClient.futures_global_longshort_ratio(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_taker_longshort_ratio(futuresClient):
-    futuresClient.futures_taker_longshort_ratio()
+    futuresClient.futures_taker_longshort_ratio(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_ticker(futuresClient):
@@ -135,7 +135,7 @@ def test_futures_index_info(futuresClient):
 
 
 def test_futures_open_interest_hist(futuresClient):
-    futuresClient.futures_open_interest_hist(symbol="BTCUSDT")
+    futuresClient.futures_open_interest_hist(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_leverage_bracket(futuresClient):
