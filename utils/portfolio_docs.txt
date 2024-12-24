@@ -1,0 +1,4766 @@
+Logo
+Spot/Margin/Savings/Mining
+USDⓈ-M Futures
+COIN-M Futures
+European Options
+WebSocket API
+Portfolio Margin
+简体中文
+Search
+Change Log
+General Info
+Market Data Endpoints
+New Order
+Cancel Order
+Query Order
+Account
+User Data Streams
+Error Codes
+Binance Futures
+Change Log
+Important Documentation Notice
+
+Binance has launched its new API Documentation Portal. The existing GitHub API documentation is now deprecated and set to go offline in the upcoming few months following user migration; the exact date will be determined and communicated in due course.
+
+During this transition phase, both sites will be maintained. However, any new services will only be published in the new portal moving forward.
+
+Here's a reference table of the links for the current and new API documentation:
+
+Functionality	Current Documentation	New Documentation
+Spot Trading	Current Documentation	New Documentation
+Spot Websocket API	Current Documentation	New Documentation
+Margin Trading	Current Documentation	New Documentation
+Derivative UM Futures	Current Documentation	New Documentation
+Derivative CM Futures	Current Documentation	New Documentation
+Derivative Options	Current Documentation	New Documentation
+Derivative Portfolio Margin	Current Documentation	New Documentation
+Wallet	Current Documentation	New Documentation
+Sub Account	Current Documentation	New Documentation
+Simple Earn	Current Documentation	New Documentation
+Dual Investment	Current Documentation	New Documentation
+Auto Invest	Current Documentation	New Documentation
+Staking	Current Documentation	New Documentation
+Mining	Current Documentation	New Documentation
+Algo Trading	Current Documentation	New Documentation
+Copy Trading	Current Documentation	New Documentation
+Derivative Porfolio Margin Pro	Current Documentation	New Documentation
+Fiat	Current Documentation	New Documentation
+C2C	Current Documentation	New Documentation
+VIP Loan	Current Documentation	New Documentation
+Crypto Loan	Current Documentation	New Documentation
+Pay	Current Documentation	New Documentation
+Convert	Current Documentation	New Documentation
+Rebate	Current Documentation	New Documentation
+NFT	Current Documentation	New Documentation
+Gift Card	Current Documentation	New Documentation
+2024-04-09
+
+Futures Good-Till-Cancel (GTC) timeInForce will have a one-year validity period after order placement. GTC orders longer than one-year will be automatically canceled. This applies to all order types including reduceOnly but does not affect part-filled orders or strategy trading or copy-trading orders.
+2024-01-19
+
+REST
+
+New endpoints PUT /papi/v1/um/order and PUT /papi/v1/cm/order to support UM/CM limit order modify
+New endpoints GET /papi/v1/um/orderAmendment and GET /papi/v1/cm/orderAmendment to get UM/CM order modify history
+2024-01-11
+
+Self-Trade Prevention(Released):
+
+Self-Trade Prevention (aka STP) will be added to the system. This will prevent orders from matching with orders from the same account, or accounts under the same tradeGroupId. For more detail, please check FAQ
+User can set selfTradePreventionMode when placing new orders. All symbols support the following STP mode:
+NONE: No Self-Trade Prevention
+EXPIRE_TAKER: expire taker order when STP trigger
+EXPIRE_BOTH: expire taker and maker order when STP trigger
+EXPIRE_MAKER: expire maker order when STP trigger
+REST Update:
+New order status EXPIRED_IN_MATCH - This means that the order expired due to STP being triggered.
+GET /papi/v1/um/account: Add new field tradeGroupId in response to show user's tradeGroupId
+Add optional parameter selfTradePreventionMode in the endpoints below to set order's STP mode:
+POST /papi/v1/um/order
+POST/papi/v1/um/conditional/order
+POST /papi/v1/margin/order
+POST /papi/v1/margin/order/oco
+Add new field selfTradePreventionMode in response of the endpoints below to show order's STP mode:
+
+POST /papi/v1/um/order
+POST/papi/v1/um/conditional/order
+GET /papi/v1/um/order
+GET /papi/v1/um/openOrder
+GET /papi/v1/um/openOrders
+GET /papi/v1/um/allOrders
+GET /papi/v1/um/conditional/openOrder
+GET /papi/v1/um/conditional/openOrders
+GET /papi/v1/um/conditional/orderHistory
+GET /papi/v1/um/conditional/allOrders
+DELETE /papi/v1/um/order
+DELETE /papi/v1/um/conditional/order
+DELETE /papi/v1/margin/order
+DELETE /papi/v1/margin/allOpenOrders
+DELETE /papi/v1/margin/orderList
+GET /papi/v1/margin/order
+GET /papi/v1/margin/allOrders
+GET /papi/v1/margin/orderList
+GET /papi/v1/margin/allOrderList
+GET /papi/v1/margin/openOrderList
+WEBSOCKET User Data Stream:
+
+Add new field V in ORDER_TRADE_UPDATE and CONDITIONAL_ORDER_TRADE_UPDATE to order STP mode.
+
+New fields for executionReport (These fields will only appear if the order has expired due to STP trigger)
+
+u - tradeGroupId
+v - preventedMatchId
+U - counterOrderId
+A - preventedQuantity
+B - lastPreventedQuantity
+Good Till Date TIF(Released)
+
+USDⓈ margin future will support Good To Date TIF. Orders with the TIF set to GTD will be automatically canceled by the goodTillDate time.
+
+REST Update:
+
+Add optional parameter goodTillDate in the endpoints below to set order's goodTillDate :
+
+POST /papi/v1/um/order
+POST/papi/v1/um/conditional/order
+Add new field goodTillDate in response of the endpoints below to show order's goodTillDate:
+
+POST /papi/v1/um/order
+POST/papi/v1/um/conditional/order
+GET /papi/v1/um/order
+GET /papi/v1/um/openOrder
+GET /papi/v1/um/openOrders
+GET /papi/v1/um/allOrders
+GET /papi/v1/um/conditional/openOrder
+GET /papi/v1/um/conditional/openOrders
+GET /papi/v1/um/conditional/orderHistory
+GET /papi/v1/um/conditional/allOrders
+DELETE /papi/v1/um/order
+DELETE /papi/v1/um/conditional/order
+WEBSOCKET User Data Stream:
+
+Add new field gtd in ORDER_TRADE_UPDATE and CONDITIONAL_ORDER_TRADE_UPDATE to order good till date.
+
+Breakeven Price(Released)
+
+REST Update
+
+Add new field breakEvenPrice in The following endpoint
+
+GET /papi/v1/um/account
+GET /papi/v1/um/positionRisk
+GET /papi/v1/cm/account
+GET /papi/v1/cm/positionRisk
+WEBSOCKET
+
+New field bep represents Break-Even Price in position P of payload to event: Balance and Position Update – "e": "ACCOUNT_UPDATE"
+
+2023-09-22
+
+Update on endpoints:
+
+GET /papi/v1/um/positionRisk: add response field liquidationPrice
+GET /papi/v1/cm/positionRisk: add response field liquidationPrice
+GET /papi/v1/um/leverageBracket: add response field notionalCoef
+GET /papi/v1/cm/leverageBracket: add response field notionalCoef
+Websocket User Data Streams Update:
+
+outboundAccountPosition event add new field updateId U
+balanceUpdate event add new field updateId U
+2023-09-04
+
+Expect 2023-09-07 Release
+
+Overall papi order ratelimit change from 2400 orders/min to 1200 orders/min, impacted endpoints are:
+POST /papi/v1/um/order
+POST /papi/v1/cm/order
+POST /papi/v1/margin/order
+POST /papi/v1/margin/order/oco
+POST /papi/v1/um/conditional/order
+POST /papi/v1/cm/conditional/order
+2023-08-18
+
+New endpoints for Query Order:
+GET /papi/v1/margin/order: Query Margin Account Order
+GET /papi/v1/margin/openOrders: Query Current Margin Open Order
+GET /papi/v1/margin/allOrders: Query All Margin Account Orders
+GET /papi/v1/margin/orderList: Query Margin Account's OCO
+GET /papi/v1/margin/allOrderList: Query Margin Account's all OCO
+GET /papi/v1/margin/openOrderList: Query Margin Account's Open OCO
+GET /papi/v1/margin/myTrades: Query Margin Account's Trade List
+2023-07-28
+
+New endpoints for account:
+POST /papi/v1/asset-collection: Fund Collection by Asset
+2023-07-20
+
+New endpoints for account:
+GET /papi/v1/um/adlQuantile: UM Position ADL Quantile Estimation
+GET /papi/v1/cm/adlQuantile: CM Position ADL Quantile Estimation
+2023-07-18
+
+New endpoints for account:
+POST /papi/v1/repay-futures-switch: Change Auto-repay-futures Status
+GET /papi/v1/repay-futures-switch: Get Auto-repay-futures Status
+POST /papi/v1/repay-futures-negative-balance: Repay futures Negative Balance
+2023-07-13
+
+New USER DATA STREAM event riskLevelChange（effective 2023-07-14）
+2023-07-11
+
+REST
+
+Add new endpoint POST /papi/v1/ping for connectivity test
+2023-06-19
+
+REST
+
+Add fields CONTRACT_PRICE，priceProtect in endpoints POST /papi/v1/um/conditional/order and POST/papi/v1/cm/conditional/order
+2023-06-01
+
+REST
+
+The endpoints below will be deployed on 2023-06-02:
+New endpoints GET /papi/v1/um/income and GET /papi/v1/cm/income to query portfolio margin UM/CM income history
+New endpoints GET /papi/v1/um/account and GET /papi/v1/cm/account to query portfolio margin UM/CM account history
+2023-05-04
+
+API doc for portfolio margin
+General Info
+General API Information
+The base endpoint is: https://papi.binance.com
+All endpoints return either a JSON object or raw primitive.
+Data is returned in ascending order. Oldest first, newest last.
+All time and timestamp related fields are in UTC milliseconds.
+All data types adopt definition in JAVA.
+HTTP Return Codes
+HTTP 4XX return codes are used for for malformed requests; the issue is on the sender's side.
+HTTP 403 return code is used when the WAF Limit (Web Application Firewall) has been violated.
+HTTP 429 return code is used when breaking a request rate limit.
+HTTP 418 return code is used when an IP has been auto-banned for continuing to send requests after receiving 429 codes.
+HTTP 5XX return codes are used for internal errors; the issue is on Binance's side.
+If there is an error message "Request occur unknown error.", please retry later.
+HTTP 503 return code is used when:
+If there is an error message "Unknown error, please check your request or try again later." returned in the response, the API successfully sent the request but not get a response within the timeout period.It is important to NOT treat this as a failure operation; the execution status is UNKNOWN and could have been a success;
+If there is an error message "Service Unavailable." returned in the response, it means this is a failure API operation and the service might be unavailable at the moment, you need to retry later.
+If there is an error message "Internal error; unable to process your request. Please try again." returned in the response, it means this is a failure API operation and you can resend your request if you need.
+Error Codes and Messages
+Any endpoint can return an ERROR
+Specific error codes and messages defined in Error Codes.
+General Information on Endpoints
+For GET endpoints, parameters must be sent as a query string.
+For POST, PUT, and DELETE endpoints, the parameters may be sent as a query string or in the request body with content type application/x-www-form-urlencoded. You may mix parameters between both the query string and request body if you wish to do so.
+Parameters may be sent in any order.
+If a parameter sent in both the query string and request body, the query string parameter will be used.
+LIMITS
+A 429 will be returned when either rate limit is violated.
+ Binance has the right to further tighten the rate limits on users with intent to attack.
+IP Limits
+Every request will contain X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter) in the response headers which has the current used weight for the IP for all request rate limiters defined.
+Each route has a weight which determines for the number of requests each endpoint counts for. Heavier endpoints and endpoints that do operations on multiple symbols will have a heavier weight.
+When a 429 is received, it's your obligation as an API to back off and not spam the API.
+Repeatedly violating rate limits and/or failing to back off after receiving 429s will result in an automated IP ban (HTTP status 418).
+IP bans are tracked and scale in duration for repeat offenders, from 2 minutes to 3 days.
+The limits on the API are based on the IPs, not the API keys.
+Portfolio Margin IP Limit is 6000/min.
+ It is strongly recommended to use websocket stream for getting data as much as possible, which can not only ensure the timeliness of the message, but also reduce the access restriction pressure caused by the request.
+Order Rate Limits
+Every order response will contain a X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter) header which has the current order count for the account for all order rate limiters defined.
+Rejected/unsuccessful orders are not guaranteed to have X-MBX-ORDER-COUNT-** headers in the response.
+The order rate limit is counted against each account.
+Portfolio Margin Order Limits are 1200/min.
+Endpoint Security Type
+Each endpoint has a security type that determines the how you will interact with it.
+API-keys are passed into the Rest API via the X-MBX-APIKEY header.
+API-keys and secret-keys are case sensitive.
+API-keys can be configured to only access certain types of secure endpoints. For example, one API-key could be used for TRADE only, while another API-key can access everything except for TRADE routes.
+By default, API-keys can access all secure routes.
+Security Type	Description
+NONE	Endpoint can be accessed freely.
+TRADE	Endpoint requires sending a valid API-Key and signature.
+USER_DATA	Endpoint requires sending a valid API-Key and signature.
+USER_STREAM	Endpoint requires sending a valid API-Key and signature.
+SIGNED (TRADE and USER_DATA) Endpoint Security
+SIGNED endpoints require an additional parameter, signature, to be sent in the query string or request body.
+Endpoints use HMAC SHA256 signatures. The HMAC SHA256 signature is a keyed HMAC SHA256 operation. Use your secretKey as the key and totalParams as the value for the HMAC operation.
+The signature is not case sensitive.
+Please make sure the signature is the end part of your query string or request body.
+totalParams is defined as the query string concatenated with the request body.
+Timing security
+A SIGNED endpoint also requires a parameter, timestamp, to be sent which should be the millisecond timestamp of when the request was created and sent.
+An additional parameter, recvWindow, may be sent to specify the number of milliseconds after timestamp the request is valid for. If recvWindow is not sent, it defaults to 5000. recvWindow cannot exceed 60000.
+If the server determines that the timestamp sent by the client is more than one second in the future of the server time, the request will also be rejected.
+Serious trading is about timing. Networks can be unstable and unreliable, which can lead to requests taking varying amounts of time to reach the servers. With recvWindow, you can specify that the request must be processed within a certain number of milliseconds or be rejected by the server.
+
+ It is recommended to use a small recvWindow of 5000 or less! The max cannot go beyond 60,000!
+SIGNED Endpoint Examples for POST /papi/v1/um/order
+Here is a step-by-step example of how to send a valid signed payload from the Linux command line using echo, openssl, and curl.
+
+Key	Value
+apiKey	22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn
+secretKey	YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG
+Parameter	Value
+symbol	BTCUSDT
+side	BUY
+type	LIMIT
+timeInForce	GTC
+quantity	1
+price	2000
+recvWindow	5000
+timestamp	1611825601400
+Example 1: As a request body
+Example 1
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= 7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://papi.binance.com/papi/v1/order' -d 'symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400&signature=7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7'
+
+requestBody:
+symbol=BTCUSDT &side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=2000
+&recvWindow=5000
+&timestamp=1611825601400
+
+Example 2: As a query string
+Example 2
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= 7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7
+curl command:
+
+    (HMAC SHA256)
+   $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://papi.binance.com/papi/v1/order?symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400&signature=7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7'
+queryString:
+
+symbol=BTCUSDT
+&side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=2000
+&recvWindow=5000
+&timestamp=1611825601400
+
+Example 3: Mixed query string and request body
+Example 3
+
+HMAC SHA256 signature:
+
+   $ echo -n "symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTCquantity=0.01&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= fa6045c54fb02912b766442be1f66fab619217e551a4fb4f8a1ee000df914d8e
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://papi.binance.com/papi/v1/order?symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=0.01&price=2000&recvWindow=5000&timestamp=1611825601400&signature=fa6045c54fb02912b766442be1f66fab619217e551a4fb4f8a1ee000df914d8e'
+queryString:
+symbol=BTCUSDT&side=BUY&type=LIMIT&timeInForce=GTC
+
+requestBody:
+quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400
+
+Note that the signature is different in example 3. There is no & between "GTC" and "quantity=1".
+
+### RSA Keys - SIGNED Endpoint Examples for POST /papi/v1/um/order
+
+This will be a step by step process how to create the signature payload to send a valid signed payload.
+We support PKCS#8 currently.
+To get your API key, you need to upload your RSA Public Key to your account and a corresponding API key will be provided for you.
+For this example, the private key will be referenced as test-prv-key.pem
+
+Key	Value
+apiKey	vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2
+Parameter	Value
+symbol	BTCUSDT
+side	BUY
+type	LIMIT
+timeInForce	GTC
+quantity	1
+price	2000
+recvWindow	5000
+timestamp	1611825601400
+Step 1: Construct the payload
+
+Arrange the list of parameters into a string. Separate each parameter with a &.
+
+Step 2: Compute the signature:
+
+2.1 - Encode signature payload as ASCII data.
+
+Step 2.2 console $ echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSDT&side=SELL&type=MARKET&quantity=1.23' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem
+
+2.2 - Sign payload using RSASSA-PKCS1-v1_5 algorithm with SHA-256 hash function.
+
+Step 2.3 console $ echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSDT&side=SELL&type=MARKET&quantity=1.23' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem | openssl enc -base64 aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+
+2.3 - Encode output as base64 string.
+
+Step 2.4 console $ echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSDT&side=SELL&type=MARKET&quantity=1.23' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem | openssl enc -base64 | tr -d '\n' aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+
+2.4 - Delete any newlines in the signature.
+
+Step 2.5 console aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+
+2.5 - Since the signature may contain / and =, this could cause issues with sending the request. So the signature has to be URL encoded.
+
+Step 2.6 console curl -H "X-MBX-APIKEY: vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2" -X POST 'https://papi.binance.com/papi/v1/um/order?timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSDT&side=SELL&type=MARKET&quantity=1.23&signature=aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D'
+
+2.6 - curl command
+
+Bash script
+
+#!/usr/bin/env bash
+# Set up authentication:
+apiKey="vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2"   ### REPLACE THIS WITH YOUR API KEY
+# Set up the request:
+apiMethod="POST"
+apiCall="v1/order"
+apiParams="timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSDT&side=SELL&type=MARKET&quantity=1.23"
+function rawurlencode {
+    local value="$1"
+    local len=${#value}
+    local encoded=""
+    local pos c o
+    for (( pos=0 ; pos<len ; pos++ ))
+    do
+        c=${value:$pos:1}
+        case "$c" in
+            [-_.~a-zA-Z0-9] ) o="${c}" ;;
+            * )   printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="$o"
+    done
+    echo "$encoded"
+}
+ts=$(date +%s000)
+paramsWithTs="$apiParams&timestamp=$ts"
+rawSignature=$(echo -n "$paramsWithTs" \
+               | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem \  ### THIS IS YOUR PRIVATE KEY. DO NOT SHARE THIS FILE WITH ANYONE.
+               | openssl enc -base64 \
+               | tr -d '\n')
+signature=$(rawurlencode "$rawSignature")
+curl -H "X-MBX-APIKEY: $apiKey" -X $apiMethod \
+    "https://papi.binance.com/papi/$apiCall?$paramsWithTs&signature=$signature"
+A sample Bash script containing similar steps is available in the right side.
+
+Public API Definitions
+Terminology
+baseasseet refers to the asset that is the quantity of a symbol.
+quoteAsset refers to the asset that is the price of a symbol.
+Margin refers to Cross Margin
+UM refers to USD-M Futures
+CM refers to Coin-M Futures
+ENUM definitions
+Order side
+
+BUY
+SELL
+Position side for Futures
+
+BOTH
+LONG
+SHORT
+Time in force
+
+GTC - Good Till Cancel
+IOC - Immediate or Cancel
+FOK - Fill or Kill
+GTX - Good Till Crossing (Post Only)
+GTD - Good Till Date
+Response Type (newOrderRespType)
+
+ACK
+RESULT
+Order types (type)
+
+LIMIT
+MARKET
+Conditional Order types (strategyType)
+
+STOP
+STOP_MARKET
+TAKE_PROFIT
+TAKE_PROFIT_MARKET
+TRAILING_STOP_MARKET
+Working Type for Futures Conditional Orders (workingType)
+
+MARK_PRICE
+Order status (status)
+
+NEW
+CANCELED
+REJECTED
+PARTIALLY_FILLED
+FILLED
+EXPIRED
+Conditional Order status (strategyStatus)
+
+NEW
+CANCELED
+TRIGGERED - conditional order is triggered
+FINISHED - triggered order is filled
+EXPIRED
+Futures Contract type (contractType):
+
+PERPETUAL
+CURRENT_MONTH
+NEXT_MONTH
+CURRENT_QUARTER
+NEXT_QUARTER
+PERPETUAL_DELIVERING
+Contract status(contractStatus，status):
+
+PENDING_TRADING
+TRADING
+PRE_DELIVERING
+DELIVERING
+DELIVERED
+PRE_SETTLE
+SETTLING
+CLOSE
+Rate limiters (rateLimitType)
+
+REQUEST_WEIGHT
+ORDERS
+REQUEST_WEIGHT
+
+  {
+    "rateLimitType": "REQUEST_WEIGHT",
+    "interval": "MINUTE",
+    "intervalNum": 1,
+    "limit": 6000
+  }
+ORDERS
+
+  {
+    "rateLimitType": "ORDERS",
+    "interval": "MINUTE",
+    "intervalNum": 1,
+    "limit": 1200
+   }
+Rate limit intervals (interval)
+
+MINUTE
+Filters
+Filters define trading rules on a symbol or an exchange.
+
+Symbol filters
+PRICE_FILTER
+The PRICE_FILTER defines the price rules for a symbol. There are 3 parts:
+
+minPrice defines the minimum price/stopPrice allowed; disabled on minPrice == 0.
+maxPrice defines the maximum price/stopPrice allowed; disabled on maxPrice == 0.
+tickSize defines the intervals that a price/stopPrice can be increased/decreased by; disabled on tickSize == 0.
+Any of the above variables can be set to 0, which disables that rule in the price filter. In order to pass the price filter, the following must be true for price/stopPrice of the enabled rules:
+
+sell order price >= minPrice
+buy order price <= maxPrice
+(price-minPrice) % tickSize == 0
+ExchangeInfo format: javascript { "filterType": "PRICE_FILTER", "minPrice": "0.00000100", "maxPrice": "100000.00000000", "tickSize": "0.00000100" }
+
+LOT_SIZE
+The LOT_SIZE filter defines the quantity (aka "lots" in auction terms) rules for a symbol. There are 3 parts:
+
+minQty defines the minimum quantity allowed.
+maxQty defines the maximum quantity allowed.
+stepSize defines the intervals that a quantity can be increased/decreased by.
+In order to pass the lot size, the following must be true for quantity:
+
+quantity >= minQty
+quantity <= maxQty
+(quantity-minQty) % stepSize == 0
+/exchangeInfo format: javascript { "filterType": "LOT_SIZE", "minQty": "0.00100000", "maxQty": "100000.00000000", "stepSize": "0.00100000" }
+
+PERCENT_PRICE
+The PERCENT_PRICE filter defines valid range for a price based on the mark price in Futures and on the average of the previous trades in Cross Margin. For Cross Margin avgPriceMins is the number of minutes the average price is calculated over. 0 means the last price is used.
+
+In order to pass the percent price, the following must be true for price: * Futures BUY: price <= markPrice * multiplierUp SELL: price >= markPrice * multiplierDown * Cross Margin BUY: price <= weightedAveragePrice * multiplierUp SELL: price >= weightedAveragePrice * multiplierDown
+
+MIN_NOTIONAL
+The MIN_NOTIONAL filter defines the minimum notional value allowed for an order on a symbol. An order's notional value is the price * quantity. Since MARKET orders have no price, the mark price is used in Futures and the average price is used over the last avgPriceMins for Cross Margin. avgPriceMins is the number of minutes the average price is calculated over. 0 means the last price is used.
+
+MARKET_LOT_SIZE
+The MARKET_LOT_SIZE filter defines the quantity (aka "lots" in auction terms) rules for MARKET orders on a symbol. There are 3 parts:
+
+minQty defines the minimum quantity allowed.
+maxQty defines the maximum quantity allowed.
+stepSize defines the intervals that a quantity can be increased/decreased by.
+In order to pass the market lot size, the following must be true for quantity:
+
+quantity >= minQty
+quantity <= maxQty
+(quantity-minQty) % stepSize == 0
+/exchangeInfo format:
+
+{
+  "filterType": "MARKET_LOT_SIZE",
+  "minQty": "0.00100000",
+  "maxQty": "100000.00000000",
+  "stepSize": "0.00100000"
+}
+MAX_NUM_ORDERS
+The MAX_NUM_ORDERS filter defines the maximum number of orders an account is allowed to have open on a symbol. Note that both "algo" orders and normal orders are counted for this filter.
+
+/exchangeInfo format: javascript { "filterType": "MAX_NUM_ORDERS", "limit": 200 }
+
+MAX_NUM_ALGO_ORDERS
+The MAX_NUM_ALGO_ORDERS filter defines the maximum number of all kinds of algo orders an account is allowed to have open on a symbol. The algo orders include STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, and TRAILING_STOP_MARKET orders.
+
+/exchangeInfo format: javascript { "filterType": "MAX_NUM_ALGO_ORDERS", "limit": 100 }
+
+Market Data Endpoints
+Test Connectivity
+Response:
+
+{}
+GET /papi/v1/ping
+
+Test connectivity to the Rest API.
+
+Weight: 1
+
+Parameters: NONE
+
+New Order
+Send in a new order/orders.
+
+New UM Order (TRADE)
+Response:
+
+{
+    "clientOrderId": "testOrder",
+    "cumQty": "0",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 22542179,
+    "avgPrice": "0.00000",
+    "origQty": "10",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GTD",
+    "type": "MARKET",
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 1693207680000,      //order pre-set auot cancel time for TIF GTD order
+    "updateTime": 1566818724722
+}
+POST /papi/v1/um/order (HMAC SHA256)
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+type	ENUM	YES	LIMIT, MARKET
+timeInForce	ENUM	NO
+quantity	DECIMAL	NO
+reduceOnly	STRING	NO	"true" or "false". default "false". Cannot be sent in Hedge Mode .
+price	DECIMAL	NO
+newClientOrderId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+newOrderRespType	ENUM	NO	ACK, RESULT, default ACK
+selfTradePreventionMode	ENUM	NO	NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire taker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers
+goodTillDate	LONG	NO	order cancel time for timeInForce GTD, mandatory when timeInforce set to GTD; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000Mode. It must be sent in Hedge Mode.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Additional mandatory parameters based on type:
+
+Type	Additional mandatory parameters
+LIMIT	timeInForce, quantity, price
+MARKET	quantity
+If newOrderRespType is sent as RESULT :
+
+MARKET order: the final FILLED result of the order will be return directly.
+LIMIT order with special timeInForce: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+selfTradePreventionMode is only effective when timeInForce set to IOC or GTC or GTD.
+
+In extreme market conditions, timeInForce GTD order auto cancel time might be delayed comparing to goodTillDate
+
+New CM Order (TRADE)
+Response:
+
+{
+    "clientOrderId": "testOrder",
+    "cumQty": "0",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 22542179,
+    "avgPrice": "0.0",
+    "origQty": "10",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "timeInForce": "GTC",
+    "type": "MARKET",
+    "updateTime": 1566818724722
+}
+POST /papi/v1/cm/order (HMAC SHA256)
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+type	ENUM	YES	"LIMIT", "MARKET"
+timeInForce	ENUM	NO
+quantity	DECIMAL	NO
+reduceOnly	STRING	NO	"true" or "false". default "false". Cannot be sent in Hedge Mode.
+price	DECIMAL	NO
+newClientOrderId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+newOrderRespType	ENUM	NO	"ACK", "RESULT", default "ACK"
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Additional mandatory parameters based on type:
+
+Type	Additional mandatory parameters
+LIMIT	timeInForce, quantity, price
+MARKET	quantity
+If newOrderRespType is sent as RESULT :
+MARKET order: the final FILLED result of the order will be return directly.
+LIMIT order with special timeInForce: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+New Margin Order (TRADE)
+Response:
+
+{
+  "symbol": "BTCUSDT",
+  "orderId": 28,
+  "clientOrderId": "6gCrw2kRUAF9CvJDGP16IP",
+  "transactTime": 1507725176595,
+  "price": "1.00000000",
+  "selfTradePreventionMode": "NONE", //self trading preventation mode
+  "origQty": "10.00000000",
+  "executedQty": "10.00000000",
+  "cummulativeQuoteQty": "10.00000000",
+  "status": "FILLED",
+  "timeInForce": "GTC",
+  "type": "MARKET",
+  "side": "SELL",
+  "marginBuyBorrowAmount": 5,       // will not return if no margin trade happens
+  "marginBuyBorrowAsset": "BTC",    // will not return if no margin trade happens
+  "fills": [
+    {
+      "price": "4000.00000000",
+      "qty": "1.00000000",
+      "commission": "4.00000000",
+      "commissionAsset": "USDT"
+    },
+    {
+      "price": "3999.00000000",
+      "qty": "5.00000000",
+      "commission": "19.99500000",
+      "commissionAsset": "USDT"
+    }
+  ]
+}
+POST /papi/v1/margin/order
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES	BUY ; SELL
+type	ENUM	YES
+quantity	DECIMAL	NO
+quoteOrderQty	DECIMAL	NO
+price	DECIMAL	NO
+stopPrice	DECIMAL	NO	Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders.
+newClientOrderId	STRING	NO	A unique id among open orders. Automatically generated if not sent.
+newOrderRespType	ENUM	NO	Set the response JSON. ACK, RESULT, or FULL; MARKET and LIMIT order types default to FULL, all other orders default to ACK.
+icebergQty	DECIMAL	NO	Used with LIMIT, STOP_LOSS_LIMIT, and TAKE_PROFIT_LIMIT to create an iceberg order
+sideEffectType	ENUM	NO	NO_SIDE_EFFECT, MARGIN_BUY, AUTO_REPAY,AUTO_BORROW_REPAY; default NO_SIDE_EFFECT.
+timeInForce	ENUM	NO	GTC,IOC,FOK
+selfTradePreventionMode	ENUM	NO	NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire taker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers
+autoRepayAtCancel	BOOLEAN	NO	只有在自动借款单或者自动借还单生效，true表示的是撤单后需要把订单产生的借款归还，默认为true
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Margin Account Borrow (MARGIN)
+Response:
+
+{
+    //transaction id
+    "tranId": 100000001
+}
+POST /papi/v1/marginLoan
+
+Apply for a margin loan.
+
+Weight: 100
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+amount	DECIMAL	YES
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Margin Account Repay (MARGIN)
+Response:
+
+{
+    //transaction id
+    "tranId": 100000001
+}
+POST /papi/v1/repayLoan
+
+Repay for a margin loan.
+
+Weight: 100
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+amount	DECIMAL	YES
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Margin Account New OCO (TRADE)
+Response:
+
+{
+  "orderListId": 0,
+  "contingencyType": "OCO",
+  "listStatusType": "EXEC_STARTED",
+  "listOrderStatus": "EXECUTING",
+  "listClientOrderId": "JYVpp3F0f5CAG15DhtrqLp",
+  "transactionTime": 1563417480525,
+  "symbol": "LTCBTC",
+  "marginBuyBorrowAmount": "5",       // will not return if no margin trade happens
+  "marginBuyBorrowAsset": "BTC",    // will not return if no margin trade happens
+  "orders": [
+    {
+      "symbol": "LTCBTC",
+      "orderId": 2,
+      "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos"
+    },
+    {
+      "symbol": "LTCBTC",
+      "orderId": 3,
+      "clientOrderId": "xTXKaGYd4bluPVp78IVRvl"
+    }
+  ],
+  "orderReports": [
+    {
+      "symbol": "LTCBTC",
+      "orderId": 2,
+      "orderListId": 0,
+      "clientOrderId": "Kk7sqHb9J6mJWTMDVW7Vos",
+      "transactTime": 1563417480525,
+      "price": "0.000000",
+      "origQty": "0.624363",
+      "executedQty": "0.000000",
+      "cummulativeQuoteQty": "0.000000",
+      "status": "NEW",
+      "timeInForce": "GTC",
+      "type": "STOP_LOSS",
+      "side": "BUY",
+      "stopPrice": "0.960664"，
+      "selfTradePreventionMode": "EXPIRE_BOTH"
+    },
+    {
+      "symbol": "LTCBTC",
+      "orderId": 3,
+      "orderListId": 0,
+      "clientOrderId": "xTXKaGYd4bluPVp78IVRvl",
+      "transactTime": 1563417480525,
+      "price": "0.036435",
+      "origQty": "0.624363",
+      "executedQty": "0.000000",
+      "cummulativeQuoteQty": "0.000000",
+      "status": "NEW",
+      "timeInForce": "GTC",
+      "type": "LIMIT_MAKER",
+      "side": "BUY"，
+      "selfTradePreventionMode": "EXPIRE_BOTH"
+    }
+  ]
+}
+POST /papi/v1/margin/order/oco
+
+Send in a new OCO for a margin account
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+listClientOrderId	STRING	NO	A unique Id for the entire orderList
+side	ENUM	YES
+quantity	DECIMAL	YES
+limitClientOrderId	STRING	NO	A unique Id for the limit order
+price	DECIMAL	YES
+limitIcebergQty	DECIMAL	NO
+stopClientOrderId	STRING	NO	A unique Id for the stop loss/stop loss limit leg
+stopPrice	DECIMAL	YES
+stopLimitPrice	DECIMAL	NO	If provided, stopLimitTimeInForce is required.
+stopIcebergQty	DECIMAL	NO
+stopLimitTimeInForce	ENUM	NO	Valid values are GTC/FOK/IOC
+newOrderRespType	ENUM	NO	Set the response JSON.
+sideEffectType	ENUM	NO	NO_SIDE_EFFECT, MARGIN_BUY, AUTO_REPAY,AUTO_BORROW_REPAY; default NO_SIDE_EFFECT.
+selfTradePreventionMode	ENUM	NO	NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire taker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers
+autoRepayAtCancel	BOOLEAN	NO	只有在自动借款单或者自动借还单生效，true表示的是撤单后需要把订单产生的借款归还，默认为true
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Other Info: * Price Restrictions: * SELL: Limit Price > Last Price > Stop Price * BUY: Limit Price < Last Price < Stop Price * Quantity Restrictions: * Both legs must have the same quantity * ICEBERG quantities however do not have to be the same. * Order Rate Limit * OCO counts as 2 orders against the order rate limit.
+
+New UM Conditional Order (TRADE)
+Response:
+
+{
+    "newClientStrategyId": "testOrder",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "10",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",        // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "timeInForce": "GTD",
+    "activatePrice": "9020",    // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",         // callback rate, only return with TRAILING_STOP_MARKET order
+    "bookTime": 1566818724710,  // order place time
+    "updateTime": 1566818724722
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false,
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 1693207680000      //order pre-set auot cancel time for TIF GTD order
+}
+POST/papi/v1/um/conditional/order
+
+Weight(Order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+strategyType	ENUM	YES	"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET", and "TRAILING_STOP_MARKET"
+timeInForce	ENUM	NO
+quantity	DECIMAL	NO
+reduceOnly	STRING	NO	"true" or "false". default "false". Cannot be sent in Hedge Mode ; cannot be sent with closePosition=true
+price	DECIMAL	NO
+workingType	ENUM	NO	stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE". Default "CONTRACT_PRICE"
+priceProtect	STRING	NO	"TRUE" or "FALSE", default "FALSE". Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders
+newClientStrategyId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,32}$
+stopPrice	DECIMAL	NO	Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+activationPrice	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, default as the mark price
+callbackRate	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, min 0.1, max 5 where 1 for 1%
+selfTradePreventionMode	ENUM	NO	NONE:No STP / EXPIRE_TAKER:expire taker order when STP triggers/ EXPIRE_MAKER:expire taker order when STP triggers/ EXPIRE_BOTH:expire both orders when STP triggers
+goodTillDate	LONG	NO	order cancel time for timeInForce GTD, mandatory when timeInforce set to GTD; order the timestamp only retains second-level precision, ms part will be ignored; The goodTillDate timestamp must be greater than the current time plus 600 seconds and smaller than 253402300799000Mode. It must be sent in Hedge Mode.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Additional mandatory parameters based on type:
+
+Type	Additional mandatory parameters
+STOP/TAKE_PROFIT	quantity, price, stopPrice
+STOP_MARKET/TAKE_PROFIT_MARKET	stopPrice
+TRAILING_STOP_MARKET	callbackRate
+Order with type STOP/TAKE_PROFIT, parameter timeInForce can be sent ( default GTC).
+Condition orders will be triggered when:
+STOP, STOP_MARKET:
+BUY: "MARK_PRICE" >= stopPrice
+SELL: "MARK_PRICE" <= stopPrice
+TAKE_PROFIT, TAKE_PROFIT_MARKET:
+BUY: "MARK_PRICE" <= stopPrice
+SELL: "MARK_PRICE" >= stopPrice
+TRAILING_STOP_MARKET:
+BUY: the lowest mark price after order placed <= activationPrice, and the latest mark price >= the lowest mark price * (1 + callbackRate)
+SELL: the highest mark price after order placed >= activationPrice, and the latest mark price <= the highest mark price * (1 - callbackRate)
+For TRAILING_STOP_MARKET, if you got such error code. {"code": -2021, "msg": "Order would immediately trigger."} means that the parameters you send do not meet the following requirements:
+BUY: activationPrice should be smaller than latest mark price.
+SELL: activationPrice should be larger than latest mark price.
+Condition orders will be triggered when:
+
+If parameterpriceProtectis sent as true:
+when price reaches the stopPrice ，the difference rate between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than the "triggerProtect" of the symbol
+"triggerProtect" of a symbol can be got from GET /fapi/v1/exchangeInfo
+STOP, STOP_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+TAKE_PROFIT, TAKE_PROFIT_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+selfTradePreventionMode is only effective when timeInForce set to IOC or GTC or GTD.
+
+In extreme market conditions, timeInForce GTD order auto cancel time might be delayed comparing to goodTillDate
+
+New CM Conditional Order (TRADE)
+Response:
+
+{
+    "newClientStrategyId": "testOrder",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "10",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",        // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "timeInForce": "GTC",
+    "activatePrice": "9020",    // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",         // callback rate, only return with TRAILING_STOP_MARKET order
+    "bookTime": 1566818724710,  // order place time
+    "updateTime": 1566818724722
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false
+}
+POST /papi/v1/cm/conditional/order
+
+Weight(Order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+strategyType	ENUM	YES	"STOP", "STOP_MARKET", "TAKE_PROFIT", "TAKE_PROFIT_MARKET", and "TRAILING_STOP_MARKET"
+timeInForce	ENUM	NO
+quantity	DECIMAL	NO
+reduceOnly	STRING	NO	"true" or "false". default "false". Cannot be sent in Hedge Mode
+price	DECIMAL	NO
+workingType	ENUM	NO	stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE". Default "CONTRACT_PRICE"
+priceProtect	STRING	NO	"TRUE" or "FALSE", default "FALSE". Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders
+newClientStrategyId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,36}$
+stopPrice	DECIMAL	NO	Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+activationPrice	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, default as the mark price
+callbackRate	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, min 0.1, max 5 where 1 for 1%
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Additional mandatory parameters based on type:
+
+Type	Additional mandatory parameters
+STOP/TAKE_PROFIT	quantity, price, stopPrice
+STOP_MARKET/TAKE_PROFIT_MARKET	stopPrice
+TRAILING_STOP_MARKET	callbackRate
+Order with type STOP/TAKE_PROFIT, parameter timeInForce can be sent ( default GTC).
+Condition orders will be triggered when:
+STOP, STOP_MARKET:
+BUY: "MARK_PRICE" >= stopPrice
+SELL: "MARK_PRICE" <= stopPrice
+TAKE_PROFIT, TAKE_PROFIT_MARKET:
+BUY: "MARK_PRICE" <= stopPrice
+SELL: "MARK_PRICE" >= stopPrice
+TRAILING_STOP_MARKET:
+BUY: the lowest mark price after order placed <= activationPrice, and the latest mark price >= the lowest mark price * (1 + callbackRate)
+SELL: the highest mark price after order placed >= activationPrice, and the latest mark price <= the highest mark price * (1 - callbackRate)
+For TRAILING_STOP_MARKET, if you got such error code. {"code": -2021, "msg": "Order would immediately trigger."} means that the parameters you send do not meet the following requirements:
+BUY: activationPrice should be smaller than latest mark price.
+SELL: activationPrice should be larger than latest mark price.
+Condition orders will be triggered when:
+
+If parameterpriceProtectis sent as true:
+when price reaches the stopPrice ，the difference rate between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than the "triggerProtect" of the symbol
+"triggerProtect" of a symbol can be got from GET /fapi/v1/exchangeInfo
+STOP, STOP_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+TAKE_PROFIT, TAKE_PROFIT_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+Modify UM Order (TRADE)
+Response:
+
+{
+    "orderId": 20072994037,
+    "symbol": "BTCUSDT",
+    "status": "NEW",
+    "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+    "price": "30005",
+    "avgPrice": "0.0",
+    "origQty": "1",
+    "executedQty": "0",
+    "cumQty": "0",
+    "cumQuote": "0",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "LONG",
+    "origType": "LIMIT",
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0      //order pre-set auot cancel time for TIF GTD order
+    "updateTime": 1629182711600
+}
+PUT /papi/v1/um/order (HMAC SHA256)
+
+Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+symbol	STRING	YES
+side	ENUM	YES	SELL, BUY
+quantity	DECIMAL	YES	Order quantity
+price	DECIMAL	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Both quantity and price must be sent
+When the new quantity or price doesn't satisfy PRICE_FILTER / PERCENT_FILTER / LOT_SIZE, amendment will be rejected and the order will stay as it is.
+However the order will be cancelled by the amendment in the following situations:
+when the order is in partially filled status and the new quantity <= executedQty
+When the order is GTX and the new price will cause it to be executed immediately
+Modify CM Order (TRADE)
+Response:
+
+
+{
+    "orderId": 20072994037,
+    "symbol": "BTCUSD_PERP",
+    "pair": "BTCUSD",
+    "status": "NEW",
+    "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+    "price": "30005",
+    "avgPrice": "0.0",
+    "origQty": "1",
+    "executedQty": "0",
+    "cumQty": "0",
+    "cumBase": "0",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "LONG",
+    "origType": "LIMIT",
+    "updateTime": 1629182711600
+}
+PUT/papi/v1/cm/order (HMAC SHA256)
+
+Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+symbol	STRING	YES
+side	ENUM	YES	SELL, BUY
+quantity	DECIMAL	YES	Order quantity
+price	DECIMAL	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Both quantity and price must be sent
+When the new quantity or price doesn't satisfy PRICE_FILTER / PERCENT_FILTER / LOT_SIZE, amendment will be rejected and the order will stay as it is.
+However the order will be cancelled by the amendment in the following situations:
+when the order is in partially filled status and the new quantity <= executedQty
+When the order is GTX and the new price will cause it to be executed immediately
+Cancel Order
+Cancel an active order/orders.
+
+Cancel UM Order (TRADE)
+Response:
+
+{
+    "avgPrice": "0.00000",
+    "clientOrderId": "myOrder1",
+    "cumQty": "0",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 4611875134427365377,
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "CANCELED",
+    "symbol": "BTCUSDT",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1571110484038,
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+DELETE /papi/v1/um/order (HMAC SHA256)
+
+Cancel an active UM LIMIT order
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent.
+Cancel All UM Open Orders (TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "The operation of cancel all open order is done."
+}
+DELETE /papi/v1/um/allOpenOrders (HMAC SHA256)
+
+Cancel all active LIMIT orders on specific symbol
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Cancel CM Order (TRADE)
+Response:
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "myOrder1",
+    "cumQty": "0",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 283194212,
+    "origQty": "2",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "CANCELED",
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1571110484038,
+}
+DELETE /papi/v1/cm/order (HMAC SHA256)
+
+Cancel an active LIMIT order
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent.
+Cancel All CM Open Orders (TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "The operation of cancel all open order is done."
+}
+DELETE /papi/v1/cm/allOpenOrders (HMAC SHA256)
+
+Cancel all active LIMIT orders on specific symbol
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Cancel Margin Account Order (TRADE)
+Response:
+
+{
+  "symbol": "LTCBTC",
+  "orderId": 28,
+  "origClientOrderId": "myOrder1",
+  "clientOrderId": "cancelMyOrder1",
+  "price": "1.00000000",
+  "origQty": "10.00000000",
+  "executedQty": "8.00000000",
+  "cummulativeQuoteQty": "8.00000000",
+  "status": "CANCELED",
+  "timeInForce": "GTC",
+  "type": "LIMIT",
+  "side": "SELL"，
+  "selfTradePreventionMode": "EXPIRE_TAKER"
+}
+DELETE /papi/v1/margin/order (HMAC SHA256)
+
+Cancel Margin Account Order
+
+Weight: 2
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+newClientOrderId	STRING	NO	Used to uniquely identify this cancel. Automatically generated by default.
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent.
+Cancel Margin Account All Open Orders on a Symbol (TRADE)
+Response:
+
+[
+  {
+    "symbol": "BTCUSDT",
+    "origClientOrderId": "E6APeyTJvkMvLMYMqu1KQ4",
+    "orderId": 11,
+    "orderListId": -1,
+    "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",
+    "price": "0.089853",
+    "origQty": "0.178622",
+    "executedQty": "0.000000",
+    "cummulativeQuoteQty": "0.000000",
+    "status": "CANCELED",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "side": "BUY"
+  },
+  {
+    "orderListId": 1929,
+    "contingencyType": "OCO",
+    "listStatusType": "ALL_DONE",
+    "listOrderStatus": "ALL_DONE",
+    "listClientOrderId": "2inzWQdDvZLHbbAmAozX2N",
+    "transactionTime": 1585230948299,
+    "symbol": "BTCUSDT",
+    "orders": [
+      {
+        "symbol": "BTCUSDT",
+        "orderId": 20,
+        "clientOrderId": "CwOOIPHSmYywx6jZX77TdL"
+      },
+      {
+        "symbol": "BTCUSDT",
+        "orderId": 21,
+        "clientOrderId": "461cPg51vQjV3zIMOXNz39"
+      }
+    ],
+    "orderReports": [
+      {
+        "symbol": "BTCUSDT",
+        "origClientOrderId": "CwOOIPHSmYywx6jZX77TdL",
+        "orderId": 20,
+        "orderListId": 1929,
+        "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",
+        "price": "0.668611",
+        "origQty": "0.690354",
+        "executedQty": "0.000000",
+        "cummulativeQuoteQty": "0.000000",
+        "status": "CANCELED",
+        "timeInForce": "GTC",
+        "type": "STOP_LOSS_LIMIT",
+        "side": "BUY",
+        "stopPrice": "0.378131",
+        "icebergQty": "0.017083"，
+        "selfTradePreventionMode": "EXPIRE_TAKER"
+      },
+      {
+        "symbol": "BTCUSDT",
+        "origClientOrderId": "461cPg51vQjV3zIMOXNz39",
+        "orderId": 21,
+        "orderListId": 1929,
+        "clientOrderId": "pXLV6Hz6mprAcVYpVMTGgx",
+        "price": "0.008791",
+        "origQty": "0.690354",
+        "executedQty": "0.000000",
+        "cummulativeQuoteQty": "0.000000",
+        "status": "CANCELED",
+        "timeInForce": "GTC",
+        "type": "LIMIT_MAKER",
+        "side": "BUY",
+        "icebergQty": "0.639962"，
+        "selfTradePreventionMode": "EXPIRE_TAKER"
+      }
+    ]
+  }
+]
+DELETE /papi/v1/margin/allOpenOrders (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Cancel Margin Account OCO Orders(TRADE)
+Response:
+
+{
+  "orderListId": 0,
+  "contingencyType": "OCO",
+  "listStatusType": "ALL_DONE",
+  "listOrderStatus": "ALL_DONE",
+  "listClientOrderId": "C3wyj4WVEktd7u9aVBRXcN",
+  "transactionTime": 1574040868128,
+  "symbol": "LTCBTC",
+  "orders": [
+    {
+      "symbol": "LTCBTC",
+      "orderId": 2,
+      "clientOrderId": "pO9ufTiFGg3nw2fOdgeOXa"
+    },
+    {
+      "symbol": "LTCBTC",
+      "orderId": 3,
+      "clientOrderId": "TXOvglzXuaubXAaENpaRCB"
+    }
+  ],
+  "orderReports": [
+    {
+      "symbol": "LTCBTC",
+      "origClientOrderId": "pO9ufTiFGg3nw2fOdgeOXa",
+      "orderId": 2,
+      "orderListId": 0,
+      "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+      "price": "1.00000000",
+      "origQty": "10.00000000",
+      "executedQty": "0.00000000",
+      "cummulativeQuoteQty": "0.00000000",
+      "status": "CANCELED",
+      "timeInForce": "GTC",
+      "type": "STOP_LOSS_LIMIT",
+      "side": "SELL",
+      "stopPrice": "1.00000000"，
+      "selfTradePreventionMode": "EXPIRE_BOTH"
+    },
+    {
+      "symbol": "LTCBTC",
+      "origClientOrderId": "TXOvglzXuaubXAaENpaRCB",
+      "orderId": 3,
+      "orderListId": 0,
+      "clientOrderId": "unfWT8ig8i0uj6lPuYLez6",
+      "price": "3.00000000",
+      "origQty": "10.00000000",
+      "executedQty": "0.00000000",
+      "cummulativeQuoteQty": "0.00000000",
+      "status": "CANCELED",
+      "timeInForce": "GTC",
+      "type": "LIMIT_MAKER",
+      "side": "SELL"，
+      "stopPrice": "1.00000000"，
+      "selfTradePreventionMode": "EXPIRE_BOTH"
+    }
+  ]
+}
+DELETE /papi/v1/margin/orderList (HMAC SHA256)
+
+Cancel Margin Account OCO Orders
+
+Weight: 2
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderListId	LONG	NO	Either orderListId or listClientOrderId must be provided
+listClientOrderId	STRING	NO	Either orderListId or listClientOrderId must be provided
+newClientOrderId	STRING	NO	Used to uniquely identify this cancel. Automatically generated by default
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Additional notes: Canceling an individual leg will cancel the entire OCO
+Cancel UM Conditional Order (TRADE)
+Response:
+
+{
+    "newClientStrategyId": "myOrder1",
+    "strategyId":123445,
+    "strategyStatus":"CANCELED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "11",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "bookTime": 1566818724710,
+    "updateTime": 1566818724722,
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false,
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+DELETE /papi/v1/um/conditional/order (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either strategyId or newClientStrategyId must be sent.
+Cancel All UM Open Conditional Orders (TRADE)
+Response:
+
+{
+    "code": "200",
+    "msg": "The operation of cancel all conditional open order is done."
+}
+DELETE /papi/v1/um/conditional/allOpenOrders (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Cancel CM Conditional Order (TRADE)
+Response:
+
+{
+    "newClientStrategyId": "myOrder1",
+    "strategyId":123445,
+    "strategyStatus":"CANCELED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "11",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD",
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "bookTime": 1566818724710,
+    "updateTime": 1566818724722,
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false
+}
+DELETE /papi/v1/cm/conditional/order (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either strategyId or newClientStrategyId must be sent.
+Cancel All CM Open Conditional Orders (TRADE)
+Response:
+
+{
+    "code": "200",
+    "msg": "The operation of cancel all conditional open order is done."
+}
+DELETE /papi/v1/cm/conditional/allOpenOrders (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Query Order
+Query UM Order (USER_DATA)
+Response:
+
+{
+    "avgPrice": "0.00000",
+    "clientOrderId": "abc",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSDT",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075,        // update time
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+GET /papi/v1/um/order (HMAC SHA256)
+
+Check an UM order's status.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either orderId or origClientOrderId must be sent. * These orders will not be found: * order status is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 3 days < current time
+
+Query Current UM Open Order (USER_DATA)
+Response:
+
+{
+    "avgPrice": "0.00000",
+    "clientOrderId": "abc",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSDT",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075，
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+GET /papi/v1/um/openOrder (HMAC SHA256)
+
+Query current UM open order
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either orderId or origClientOrderId must be sent. * If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+
+Query All Current UM Open Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.00000",
+    "clientOrderId": "abc",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSDT",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075，       // update time
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+  }
+]
+GET /papi/v1/um/openOrders (HMAC SHA256)
+
+Get all open orders on a symbol. Careful when accessing this with no symbol.
+
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * If the symbol is not sent, orders for all symbols will be returned in an array.
+
+Query All UM Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.00000",
+    "clientOrderId": "abc",
+    "cumQuote": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSDT",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075,        // update time
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+  }
+]
+GET /papi/v1/um/allOrders (HMAC SHA256)
+
+Get all account UM orders; active, canceled, or filled.
+
+These orders will not be found:
+order status is CANCELED or EXPIRED, AND
+order has NO filled trade, AND
+created time + 3 days < current time
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1000.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+The query time period must be less then 7 days( default as the recent 7 days).
+Query CM Order (USER_DATA)
+Response:
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "status": "NEW",
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "positionSide": "SHORT",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075        // update time
+}
+GET /papi/v1/cm/order (HMAC SHA256)
+
+Check an CM order's status.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either orderId or origClientOrderId must be sent. * These orders will not be found: * order status is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 3 days < current time
+
+Query Current CM Open Order (USER_DATA)
+Response:
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD"
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075        // update time
+}
+GET /papi/v1/cm/openOrder (HMAC SHA256)
+
+Query current CM open order
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either orderId or origClientOrderId must be sent. * If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+
+Query All Current CM Open Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSD_200925",
+    "pair":"BTCUSD",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075        // update time
+  }
+]
+GET /papi/v1/cm/openOrders (HMAC SHA256)
+
+Get all open orders on a symbol. Careful when accessing this with no symbol.
+
+Weight:
+
+1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * If the symbol is not sent, orders for all symbols will be returned in an array.
+
+Query All CM Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "LIMIT",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "updateTime": 1579276756075       // update time
+  }
+]
+GET /papi/v1/cm/allOrders (HMAC SHA256)
+
+Get all account CM orders; active, canceled, or filled.
+
+Weight:
+
+20 with symbol 40 with pair
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+pair	STRING	NO
+orderId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 50; max 100.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either symbol or pair must be sent.
+If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+These orders will not be found:
+order status is CANCELED or EXPIRED, AND
+order has NO filled trade, AND
+created time + 3 days < current time
+Query Current UM Open Conditional Order (USER_DATA)
+Response:
+
+{
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+GET /papi/v1/um/conditional/openOrder (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either strategyId or newClientStrategyId must be sent. * If the queried order has been CANCELED, TRIGGERED或EXPIRED, the error message "Order does not exist" will be returned.
+
+Query All Current UM Open Conditional Orders (USER_DATA)
+Response:
+
+[
+  {
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",               // callback rate, only return with TRAILING_STOP_MARKET order
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+  }
+]
+GET /papi/v1/um/conditional/openOrders (HMAC SHA256)
+
+Get all open conditional orders on a symbol. Careful when accessing this with no symbol.
+
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * If the symbol is not sent, orders for all symbols will be returned in an array.
+
+Query UM Conditional Order History (USER_DATA)
+Response:
+
+{
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"TRIGGERED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "orderId":12132343435,     //Normal orderID after trigger if appliable，only have when the strategy is triggered
+    "status": "NEW",          //Normal order status after trigger if appliable, only have when the strategy is triggered
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "triggerTime": 1566818724750,
+    "timeInForce": "GTC",
+    "type": "MARKET",   //Normal order type after trigger if appliable
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",               // callback rate, only return with TRAILING_STOP_MARKET order
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false,
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+}
+GET /papi/v1/um/conditional/orderHistory (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either strategyId or newClientStrategyId must be sent. * NEW orders will not be found. * These orders will not be found: * order status is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 7 days < current time
+
+Query All UM Conditional Orders (USER_DATA)
+Response:
+
+[
+  {
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"TRIGGERED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSDT",
+    "orderId":12132343435,     //Normal orderID after trigger if appliable, only have when the strategy is triggered
+    "status": "NEW",             //Normal order status after trigger if appliable, only have when the strategy is triggered
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "triggerTime": 1566818724750,
+    "timeInForce": "GTC",
+    "type": "MARKET",     //Normal order type after trigger if appliable
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                // callback rate, only return with TRAILING_STOP_MARKET order
+    "selfTradePreventionMode": "NONE", //self trading preventation mode
+    "goodTillDate": 0
+  }
+]
+GET /papi/v1/um/conditional/allOrders (HMAC SHA256)
+
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+strategyId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1000.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * These orders will not be found: * order strategyStatus is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 7 days < current time * The query time period must be less than 7 days( default as the recent 7 days).
+
+Query Current CM Open Conditional Order (USER_DATA)
+Response:
+
+{
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD",
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3"                 // callback rate, only return with TRAILING_STOP_MARKET order
+}
+GET /papi/v1/cm/conditional/openOrder (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either strategyId or newClientStrategyId must be sent. * If the queried order has been triggered, cancelled or expired, the error message "Order does not exist" will be returned.
+
+Query All Current CM Open Conditional Orders (USER_DATA)
+Response:
+
+[
+  {
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"NEW",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD",
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "timeInForce": "GTC",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3"                // callback rate, only return with TRAILING_STOP_MARKET order
+  }
+]
+GET /papi/v1/cm/conditional/openOrders (HMAC SHA256)
+
+Get all open conditional orders on a symbol. Careful when accessing this with no symbol.
+
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * If the symbol is not sent, orders for all symbols will be returned in an array.
+
+Query CM Conditional Order History (USER_DATA)
+Response:
+
+{
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"TRIGGERED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD",
+    "orderId": 12123343534,    //Normal orderID after trigger if appliable，only have when the strategy is triggered
+    "status": "NEW",   //Normal order status after trigger if appliable, only have when the strategy is triggered
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "triggerTime": 1566818724750,
+    "timeInForce": "GTC",
+    "type": "MARKET",     //Normal order type after trigger if appliable
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3"                // callback rate, only return with TRAILING_STOP_MARKET order
+    "workingType":"CONTRACT_PRICE",
+    "priceProtect": false
+}
+GET /papi/v1/cm/conditional/orderHistory (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+strategyId	LONG	NO
+newClientStrategyId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * Either strategyId or newClientStrategyId must be sent. * NEW orders will not be found. * These orders will not be found: * order status is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 7 days < current time
+
+Query All CM Conditional Orders (USER_DATA)
+Response:
+
+[
+  {
+    "newClientStrategyId": "abc",
+    "strategyId":123445,
+    "strategyStatus":"TRIGGERED",
+    "strategyType": "TRAILING_STOP_MARKET",
+    "origQty": "0.40",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "symbol": "BTCUSD",
+    "orderId": 12123343534,    //Normal orderID after trigger if appliable, only have when the strategy is triggered
+    "status": "NEW",     //Normal order status after trigger if appliable, only have when the strategy is triggered
+    "bookTime": 1566818724710,              // order time
+    "updateTime": 1566818724722,
+    "triggerTime": 1566818724750,
+    "timeInForce": "GTC",
+    "type": "MARKET",    //Normal order type after trigger if appliable
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3"                // callback rate, only return with TRAILING_STOP_MARKET order
+  }
+]
+GET /papi/v1/cm/conditional/allOrders
+
+Weight:  1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+strategyId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1000.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes: * These orders will not be found: * order strategyStatus is CANCELED or EXPIRED, AND * order has NO filled trade, AND * created time + 7 days < current time * The query time period must be less than 7 days( default as the recent 7 days).
+
+Query Margin Account Order (USER_DATA)
+Response:
+
+{
+   "clientOrderId": "ZwfQzuDIGpceVhKW5DvCmO",
+   "cummulativeQuoteQty": "0.00000000",
+   "executedQty": "0.00000000",
+   "icebergQty": "0.00000000",
+   "isWorking": true,
+   "orderId": 213205622,
+   "origQty": "0.30000000",
+   "price": "0.00493630",
+   "side": "SELL",
+   "status": "NEW",
+   "stopPrice": "0.00000000",
+   "symbol": "BNBBTC",
+   "time": 1562133008725,
+   "timeInForce": "GTC",
+   "type": "LIMIT",
+   "updateTime": 1562133008725，
+   "accountId": 152950866,
+   "selfTradePreventionMode": "EXPIRE_TAKER",
+   "preventedMatchId": null,
+   "preventedQuantity": null
+}
+GET /papi/v1/margin/order
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent.
+For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+Query Current Margin Open Order (USER_DATA)
+Response:
+
+[
+   {
+       "clientOrderId": "qhcZw71gAkCCTv0t0k8LUK",
+       "cummulativeQuoteQty": "0.00000000",
+       "executedQty": "0.00000000",
+       "icebergQty": "0.00000000",
+       "isWorking": true,
+       "orderId": 211842552,
+       "origQty": "0.30000000",
+       "price": "0.00475010",
+       "side": "SELL",
+       "status": "NEW",
+       "stopPrice": "0.00000000",
+       "symbol": "BNBBTC",
+       "time": 1562040170089,
+       "timeInForce": "GTC",
+       "type": "LIMIT",
+       "updateTime": 1562040170089，
+       "accountId": 152950866,
+       "selfTradePreventionMode": "EXPIRE_TAKER",
+       "preventedMatchId": null,
+       "preventedQuantity": null
+    }
+]
+GET /papi/v1/margin/openOrders (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Notes: * If the symbol is not sent, orders for all symbols will be returned in an array. * When all symbols are returned, the number of requests counted against the rate limiter is equal to the number of symbols currently trading on the exchange.
+
+Query All Margin Account Orders (USER_DATA)
+Response:
+
+[
+      {
+          "clientOrderId": "D2KDy4DIeS56PvkM13f8cP",
+          "cummulativeQuoteQty": "0.00000000",
+          "executedQty": "0.00000000",
+          "icebergQty": "0.00000000",
+          "isWorking": false,
+          "orderId": 41295,
+          "origQty": "5.31000000",
+          "price": "0.22500000",
+          "side": "SELL",
+          "status": "CANCELED",
+          "stopPrice": "0.18000000",
+          "symbol": "BNBBTC",
+          "time": 1565769338806,
+          "timeInForce": "GTC",
+          "type": "TAKE_PROFIT_LIMIT",
+          "updateTime": 1565769342148，
+          "accountId": 152950866,
+          "selfTradePreventionMode": "EXPIRE_TAKER",
+          "preventedMatchId": null,
+          "preventedQuantity": null
+      }
+]
+GET /papi/v1/margin/allOrders (HMAC SHA256)
+
+Weight: 100
+
+Request Limit: 60times/min per IP
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 500.
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
+Query Margin Account's OCO (USER_DATA)
+Response:
+
+{
+  "orderListId": 27,
+  "contingencyType": "OCO",
+  "listStatusType": "EXEC_STARTED",
+  "listOrderStatus": "EXECUTING",
+  "listClientOrderId": "h2USkA5YQpaXHPIrkd96xE",
+  "transactionTime": 1565245656253,
+  "symbol": "LTCBTC",
+  "orders": [
+    {
+      "symbol": "LTCBTC",
+      "orderId": 4,
+      "clientOrderId": "qD1gy3kc3Gx0rihm9Y3xwS"
+    },
+    {
+      "symbol": "LTCBTC",
+      "orderId": 5,
+      "clientOrderId": "ARzZ9I00CPM8i3NhmU9Ega"
+    }
+  ]
+}
+GET /papi/v1/margin/orderList (HMAC SHA256)
+
+Retrieves a specific OCO based on provided optional parameters
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+orderListId	LONG	NO	Either orderListId or origClientOrderId must be provided
+origClientOrderId	STRING	NO	Either orderListId or origClientOrderId must be provided
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Query Margin Account's all OCO (USER_DATA)
+Response:
+
+
+[
+  {
+    "orderListId": 29,
+    "contingencyType": "OCO",
+    "listStatusType": "EXEC_STARTED",
+    "listOrderStatus": "EXECUTING",
+    "listClientOrderId": "amEEAXryFzFwYF1FeRpUoZ",
+    "transactionTime": 1565245913483,
+    "symbol": "LTCBTC",
+    "orders": [
+      {
+        "symbol": "LTCBTC",
+        "orderId": 4,
+        "clientOrderId": "oD7aesZqjEGlZrbtRpy5zB"
+      },
+      {
+        "symbol": "LTCBTC",
+        "orderId": 5,
+        "clientOrderId": "Jr1h6xirOxgeJOUuYQS7V3"
+      }
+    ]
+  },
+  {
+    "orderListId": 28,
+    "contingencyType": "OCO",
+    "listStatusType": "EXEC_STARTED",
+    "listOrderStatus": "EXECUTING",
+    "listClientOrderId": "hG7hFNxJV6cZy3Ze4AUT4d",
+    "transactionTime": 1565245913407,
+    "symbol": "LTCBTC",
+    "orders": [
+      {
+        "symbol": "LTCBTC",
+        "orderId": 2,
+        "clientOrderId": "j6lFOfbmFMRjTYA7rRJ0LP"
+      },
+      {
+        "symbol": "LTCBTC",
+        "orderId": 3,
+        "clientOrderId": "z0KCjOdditiLS5ekAFtK81"
+      }
+    ]
+  }
+]
+GET /papi/v1/margin/allOrderList (HMAC SHA256)
+
+Query all OCO for a specific margin account based on provided optional parameters
+
+Weight: 100
+
+Parameters:
+
+Name	Type	Mandatory	Description
+fromId	LONG	NO	If supplied, neither startTime or endTime can be provided
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default Value: 500; Max Value: 1000
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Query Margin Account's Open OCO (USER_DATA)
+Response:
+
+[
+  {
+    "orderListId": 31,
+    "contingencyType": "OCO",
+    "listStatusType": "EXEC_STARTED",
+    "listOrderStatus": "EXECUTING",
+    "listClientOrderId": "wuB13fmulKj3YjdqWEcsnp",
+    "transactionTime": 1565246080644,
+    "symbol": "LTCBTC",
+    "orders": [
+      {
+        "symbol": "LTCBTC",
+        "orderId": 4,
+        "clientOrderId": "r3EH2N76dHfLoSZWIUw1bT"
+      },
+      {
+        "symbol": "LTCBTC",
+        "orderId": 5,
+        "clientOrderId": "Cv1SnyPD3qhqpbjpYEHbd2"
+      }
+    ]
+  }
+]
+GET /papi/v1/margin/openOrderList (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Margin Account Trade List (USER_DATA)
+Response:
+
+[
+    {
+        "commission": "0.00006000",
+        "commissionAsset": "BTC",
+        "id": 34,
+        "isBestMatch": true,
+        "isBuyer": false,
+        "isMaker": false,
+        "orderId": 39324,
+        "price": "0.02000000",
+        "qty": "3.00000000",
+        "symbol": "BNBBTC",
+        "time": 1561973357171
+    }
+]
+GET /papi/v1/margin/myTrades (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+fromId	LONG	NO	TradeId to fetch from. Default gets most recent trades.
+limit	INT	NO	Default 500; max 1000.
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+If fromId is set, it will get trades >= that fromId. Otherwise most recent trades are returned.
+Query UM Modify Order History (TRADE)
+Response:
+
+[
+    {
+        "amendmentId": 5363,    // Order modification ID
+        "symbol": "BTCUSDT",
+        "pair": "BTCUSDT",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184560899,  // Order modification time
+        "amendment": {
+            "price": {
+                "before": "30004",
+                "after": "30003.2"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 3  // Order modification count, representing the number of times the order has been modified
+        }
+    },
+    {
+        "amendmentId": 5361,
+        "symbol": "BTCUSDT",
+        "pair": "BTCUSDT",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184533946,
+        "amendment": {
+            "price": {
+                "before": "30005",
+                "after": "30004"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 2
+        }
+    },
+    {
+        "amendmentId": 5325,
+        "symbol": "BTCUSDT",
+        "pair": "BTCUSDT",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629182711787,
+        "amendment": {
+            "price": {
+                "before": "30002",
+                "after": "30005"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 1
+        }
+    }
+]
+GET /papi/v1/um/orderAmendment (HMAC SHA256)
+
+Get order modification history
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+startTime	LONG	NO	Timestamp in ms to get modification history from INCLUSIVE
+endTime	LONG	NO	Timestamp in ms to get modification history until INCLUSIVE
+limit	INT	NO	Default 500, max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes:
+
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Query CM Modify Order History (TRADE)
+Response:
+
+
+[
+    {
+        "amendmentId": 5363,    // Order modification ID
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184560899,  // Order modification time
+        "amendment": {
+            "price": {
+                "before": "30004",
+                "after": "30003.2"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 3  // Order modification count, representing the number of times the order has been modified
+        }
+    },
+    {
+        "amendmentId": 5361,
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184533946,
+        "amendment": {
+            "price": {
+                "before": "30005",
+                "after": "30004"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 2
+        }
+    },
+    {
+        "amendmentId": 5325,
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629182711787,
+        "amendment": {
+            "price": {
+                "before": "30002",
+                "after": "30005"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 1
+        }
+    }
+]
+GET /papi/v1/cm/orderAmendment (HMAC SHA256)
+
+Get order modification history
+
+Weight(order): 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+startTime	LONG	NO	Timestamp in ms to get modification history from INCLUSIVE
+endTime	LONG	NO	Timestamp in ms to get modification history until INCLUSIVE
+limit	INT	NO	Default 50, max 100
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes:
+
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Account
+Account Balance(USER_DATA)
+Response:
+
+
+[
+    {
+        "asset": "USDT",    // asset name
+        "totalWalletBalance": "122607.35137903", // wallet balance =  cross margin free + cross margin locked + UM wallet balance + CM wallet balance
+        "crossMarginAsset": "92.27530794", // crossMarginAsset = crossMarginFree + crossMarginLocked
+        "crossMarginBorrowed": "10.00000000", // principal of cross margin
+        "crossMarginFree": "100.00000000", // free asset of cross margin
+        "crossMarginInterest": "0.72469206", // interest of cross margin
+        "crossMarginLocked": "3.00000000", //lock asset of cross margin
+        "umWalletBalance": "0.00000000",  // wallet balance of um
+        "umUnrealizedPNL": "23.72469206",     // unrealized profit of um
+        "cmWalletBalance": "23.72469206",       // wallet balance of cm
+        "cmUnrealizedPNL": "",    // unrealized profit of cm
+        "updateTime": 1617939110373，
+        "negativeBalance": "0"
+    }
+]
+
+**OR (when symbol sent)**
+{
+    "asset": "USDT",    // asset name
+    "totalWalletBalance": "122607.35137903", // wallet balance =  cross margin free + cross margin locked + UM wallet balance + CM wallet balance
+    "crossMarginBorrowed": "10.00000000", // principal of cross margin
+    "crossMarginFree": "100.00000000", // free asset of cross margin
+    "crossMarginInterest": "0.72469206", // interest of cross margin
+    "crossMarginLocked": "3.00000000", //lock asset of cross margin
+    "umWalletBalance": "0.00000000",  // wallet balance of um
+    "umUnrealizedPNL": "23.72469206",     // unrealized profit of um
+    "cmWalletBalance": "23.72469206",       // wallet balance of cm
+    "cmUnrealizedPNL": "",    // unrealized profit of cm
+    "updateTime": 1617939110373，
+    "negativeBalance": "0"
+}
+GET /papi/v1/balance (HMAC SHA256)
+
+query account balance
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Account Information(USER_DATA)
+Response:
+
+{
+        "uniMMR": "5167.92171923",        // Portfolio margin account maintenance margin rate
+        "accountEquity": "122607.35137903",   // Account equity, in USD value
+        "actualEquity": "73.47428058",   //Account equity calculated without discount on collateral rate, in USD value
+        "accountInitialMargin": "23.72469206",
+        "accountMaintMargin": "23.72469206", // Portfolio margin account maintenance margin, unit：USD
+        "accountStatus": "NORMAL"   // Portfolio margin account status:"NORMAL", "MARGIN_CALL", "SUPPLY_MARGIN", "REDUCE_ONLY", "ACTIVE_LIQUIDATION", "FORCE_LIQUIDATION", "BANKRUPTED"
+        "virtualMaxWithdrawAmount": "1627523.32459208"   // Portfolio margin maximum amount for transfer out in USD
+        "totalAvailableBalance":"",
+        "totalMarginOpenLoss":"", // in USD margin open order
+        "updateTime": 1657707212154 // last update time
+}
+GET /papi/v1/account (HMAC SHA256)
+
+Query account information
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Margin Max Borrow(USER_DATA)
+Response:
+
+{
+  "amount": 125 // account's currently max borrowable amount with sufficient system availability
+  "borrowLimit": 60 // max borrowable amount limited by the account level
+}
+GET /papi/v1/margin/maxBorrowable (HMAC SHA256)
+
+Weight: 5
+
+Query margin max borrow
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Query Margin Max Withdraw(USER_DATA)
+Response:
+
+{
+  "amount": "60"
+}
+GET /papi/v1/margin/maxWithdraw (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Query UM Position Information(USER_DATA)
+Response:
+
+* For One-way position mode(only return with position):
+ [
+    {
+        "entryPrice": "0.00000",
+        "leverage": "10",
+        "markPrice": "6679.50671178",
+        "maxNotionalValue": "20000000",
+        "positionAmt": "0.000",
+        "notional": "0",
+        "symbol": "BTCUSDT",
+        "unRealizedProfit": "0.00000000",
+        "liquidationPrice": "6170.20509059",
+        "positionSide": "BOTH",
+        "updateTime": 1625474304765
+    }
+]
+
+* For Hedge position mode(only return with position):
+[
+    {
+        "symbol": "BTCUSDT",
+        "positionAmt": "0.001",
+        "entryPrice": "22185.2",
+        "markPrice": "21123.05052574",
+        "unRealizedProfit": "-1.06214947",
+        "liquidationPrice": "6170.20509059",
+        "leverage": "4",
+        "maxNotionalValue": "100000000",
+        "positionSide": "LONG",
+        "notional": "21.12305052",
+        "updateTime": 1655217461579
+    },
+    {
+        "symbol": "BTCUSDT",
+        "positionAmt": "0.001",
+        "entryPrice": "0.0",
+        "markPrice": "21123.05052574",
+        "unRealizedProfit": "0.00000000",
+        "liquidationPrice": "6170.20509059",
+        "leverage": "4",
+        "maxNotionalValue": "100000000",
+        "positionSide": "SHORT",
+        "notional": "0",
+        "updateTime": 0
+    }
+]
+GET /papi/v1/um/positionRisk
+
+Get current UM position information.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Note Please use with user data stream ACCOUNT_UPDATE to meet your timeliness and accuracy needs.
+
+for One-way Mode user, the response will only show the "BOTH" positions
+for Hedge Mode user, the response will show "LONG", and "SHORT" positions.
+Query CM Position Information(USER_DATA)
+Response:
+
+* For One-way position mode:
+ [
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "1",
+        "entryPrice": "11707.70000003",
+        "markPrice": "11788.66626667",
+        "liquidationPrice": "6170.20509059",
+        "unRealizedProfit": "0.00005866",
+        "leverage": "125",
+        "positionSide": "LONG",
+        "updateTime": 1627026881327,
+        "maxQty": "50",
+        "notionalValue": "0.00084827"，
+        "breakEvenPrice": "0.00000"
+    }
+]
+
+* For Hedge position mode(only return with position):
+[
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "1",
+        "entryPrice": "11707.70000003",
+        "markPrice": "11788.66626667",
+        "unRealizedProfit": "0.00005866",
+        "liquidationPrice": "6170.20509059",
+        "leverage": "125",
+        "positionSide": "LONG",
+        "updateTime": 1627026881327,
+        "maxQty": "50",
+        "notionalValue": "0.00084827"，
+        "breakEvenPrice": "0.00000"
+    },
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "1",
+        "entryPrice": "11707.70000003",
+        "markPrice": "11788.66626667",
+        "unRealizedProfit": "0.00005866",
+        "liquidationPrice": "6170.20509059",
+        "leverage": "125",
+        "positionSide": "LONG",
+        "updateTime": 1627026881327,
+        "maxQty": "50",
+        "notionalValue": "0.00084827"，
+        "breakEvenPrice": "0.00000"
+    }
+]
+GET /papi/v1/cm/positionRisk (HMAC SHA256)
+
+Get current CM position information.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+marginAsset	STRING	NO
+pair	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If neither marginAsset nor pair is sent, positions of all symbols with TRADING status will be returned.
+for One-way Mode user, the response will only show the "BOTH" positions
+for Hedge Mode user, the response will show "LONG", and "SHORT" positions.
+Note Please use with user data stream ACCOUNT_UPDATE to meet your timeliness and accuracy needs.
+
+Change UM Initial Leverage (TRADE)
+Response:
+
+{
+    "leverage": 21,
+    "maxNotionalValue": "1000000",
+    "symbol": "BTCUSDT"
+}
+POST /papi/v1/um/leverage (HMAC SHA256)
+
+Change user's initial leverage of specific symbol in UM.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+leverage	INT	YES	target initial leverage: int from 1 to 125
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Change CM Initial Leverage (TRADE)
+Response:
+
+{
+    "leverage": 21,
+    "maxQty": "1000",
+    "symbol": "BTCUSD_200925"
+}
+Change user's initial leverage of specific symbol in CM.
+
+POST /papi/v1/cm/leverage (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+leverage	INT	YES	target initial leverage: int from 1 to 125
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Change UM Position Mode(TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "success"
+}
+POST /papi/v1/um/positionSide/dual (HMAC SHA256)
+
+Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+dualSidePosition	STRING	YES	"true": Hedge Mode; "false": One-way Mode
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Change CM Position Mode(TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "success"
+}
+POST /papi/v1/cm/positionSide/dual (HMAC SHA256)
+
+Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+dualSidePosition	STRING	YES	"true": Hedge Mode; "false": One-way Mode
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get UM Current Position Mode(USER_DATA)
+Response:
+
+{
+    "dualSidePosition": true // "true": Hedge Mode; "false": One-way Mode
+}
+GET /papi/v1/um/positionSide/dual (HMAC SHA256)
+
+Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM
+
+Weight: 30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get CM Current Position Mode(USER_DATA)
+Response:
+
+{
+    "dualSidePosition": true // "true": Hedge Mode; "false": One-way Mode
+}
+GET /papi/v1/cm/positionSide/dual (HMAC SHA256)
+
+Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM
+
+Weight: 30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+UM Account Trade List (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSDT",
+        "id": 67880589,
+        "orderId": 270093109,
+        "side": "SELL",
+        "price": "28511.00",
+        "qty": "0.010",
+        "realizedPnl": "2.58500000",
+        "marginAsset": "USDT",
+        "quoteQty": "285.11000",
+        "commission": "-0.11404400",
+        "commissionAsset": "USDT",
+        "time": 1680688557875,
+        "buyer": false,
+        "maker": false,
+        "positionSide": "BOTH"
+    }
+]
+GET /papi/v1/um/userTrades (HMAC SHA256)
+
+Get trades for a specific account and UM symbol.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	INT	NO
+startTime	LONG	NO
+endTime	LONG	NO
+fromId	LONG	NO	Trade id to fetch from. Default gets most recent trades.
+limit	INT	NO	Default 500; max 1000.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If startTime and endTime are both not sent, then the last '24 hours' data will be returned.
+The time between startTime and endTime cannot be longer than 24 hours.
+The parameter fromId cannot be sent with startTime or endTime.
+CM Account Trade List (USER_DATA)
+Response:
+
+[
+    {
+        'symbol': 'BTCUSD_200626',
+        'id': 6,
+        'orderId': 28,
+        'pair': 'BTCUSD',
+        'side': 'SELL',
+        'price': '8800',
+        'qty': '1',
+        'realizedPnl': '0',
+        'marginAsset': 'BTC',
+        'baseQty': '0.01136364',
+        'commission': '0.00000454',
+        'commissionAsset': 'BTC',
+        'time': 1590743483586,
+        'positionSide': 'BOTH',
+        'buyer': false,
+        'maker': false
+    }
+]
+GET /papi/v1/cm/userTrades
+
+Get trades for a specific account and CM symbol.
+
+Weight: 20 with symbol 40 with pair
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+startTime	LONG	NO
+endTime	LONG	NO
+fromId	LONG	NO	Trade id to fetch from. Default gets most recent trades.
+limit	INT	NO	Default 50; max 1000.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either symbol or pair must be sent
+symbol and pair cannot be sent together
+pair and fromId cannot be sent together
+If a pair is sent, tickers for all symbols of the pair will be returned
+The parameter fromId cannot be sent with startTime or endTime
+If startTime and endTime are both not sent, then the last '24 hours' data will be returned.
+The time between startTime and endTime cannot be longer than 24 hours.
+UM Notional and Leverage Brackets (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "ETHUSDT",
+        "notionalCoef": "4.0",
+        "brackets": [
+            {
+                "bracket": 1,   // Notional bracket
+                "initialLeverage": 75,  // Max initial leverage for this bracket
+                "notionalCap": 10000,  // Cap notional of this bracket
+                "notionalFloor": 0,  // Notional threshold of this bracket
+                "maintMarginRatio": 0.0065, // Maintenance ratio for this bracket
+                "cum":0 // Auxiliary number for quick calculation
+            },
+        ]
+    }
+]
+GET /papi/v1/um/leverageBracket
+
+Query UM notional and leverage brackets
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+CM Notional and Leverage Brackets (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_PERP",
+        "notionalCoef": "4.0",
+        "brackets": [
+            {
+                "bracket": 1,   // bracket level
+                "initialLeverage": 125,  // the maximum leverage
+                "qtyCap": 50,  // upper edge of base asset quantity
+                "qtyFloor": 0,  // lower edge of base asset quantity
+                "maintMarginRatio": 0.004, // maintenance margin rate
+                "cum": 0.0 // Auxiliary number for quick calculation
+            },
+        ]
+    }
+]
+GET /papi/v1/cm/leverageBracket
+
+Query CM notional and leverage brackets
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Query User's Margin Force Orders (USER_DATA)
+Response:
+
+{
+    "rows": [
+        {
+            "avgPrice": "0.00388359",
+            "executedQty": "31.39000000",
+            "orderId": 180015097,
+            "price": "0.00388110",
+            "qty": "31.39000000",
+            "side": "SELL",
+            "symbol": "BNBBTC",
+            "timeInForce": "GTC",
+            "updatedTime": 1558941374745
+        }
+    ],
+    "total": 1
+}
+GET /papi/v1/margin/forceOrders (HMAC SHA256)
+
+Query user's margin force orders
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+startTime	LONG	NO
+endTime	LONG	NO
+current	LONG	NO	Currently querying page. Start from 1. Default:1
+size	LONG	NO	Default:10 Max:100
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Query User's UM Force Orders (USER_DATA)
+Response:
+
+[
+  {
+    "orderId": 6071832819,
+    "symbol": "BTCUSDT",
+    "status": "FILLED",
+    "clientOrderId": "autoclose-1596107620040000020",
+    "price": "10871.09",
+    "avgPrice": "10913.21000",
+    "origQty": "0.001",
+    "executedQty": "0.001",
+    "cumQuote": "10.91321",
+    "timeInForce": "IOC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "side": "SELL",
+    "positionSide": "BOTH",
+    "origType": "LIMIT",
+    "time": 1596107620044,
+    "updateTime": 1596107620087
+  }
+]
+GET /papi/v1/um/forceOrders (HMAC SHA256)
+
+Query User's UM Force Orders
+
+Weight:
+
+20 with symbol, 50 without symbol
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+autoCloseType	ENUM	NO	LIQUIDATION for liquidation orders, ADL for ADL orders.
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 50; max 100.
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+If autoCloseType is not sent, orders with both of the types will be returned
+If startTime is not sent, data within 7 days before endTime can be queried
+Query User's CM Force Orders (USER_DATA)
+Response:
+
+[
+  {
+    "orderId": 165123080,
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "status": "FILLED",
+    "clientOrderId": "autoclose-1596542005017000006",
+    "price": "11326.9",
+    "avgPrice": "11326.9",
+    "origQty": "1",
+    "executedQty": "1",
+    "cumBase": "0.00882854",
+    "timeInForce": "IOC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "side": "SELL",
+    "positionSide": "BOTH",
+    "origType": "LIMIT",
+    "time": 1596542005019,
+    "updateTime": 1596542005050
+  }
+]
+GET /papi/v1/cm/forceOrders (HMAC SHA256)
+
+Query User's CM Force Orders
+
+Weight:
+
+20 with symbol, 50 without symbol
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+autoCloseType	ENUM	NO	"LIQUIDATION" for liquidation orders, "ADL" for ADL orders.
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 50; max 100.
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+If "autoCloseType" is not sent, orders with both of the types will be returned
+If "startTime" is not sent, data within 7 days before "endTime" can be queried
+Portfolio Margin UM Trading Quantitative Rules Indicators (USER_DATA)
+Response:
+
+{
+    "indicators": { // indicator: quantitative rules indicators, value: user's indicators value, triggerValue: trigger indicator value threshold of quantitative rules.
+        "BTCUSDT": [
+            {
+                "isLocked": true,
+                "plannedRecoverTime": 1545741270000,
+                "indicator": "UFR",  // Unfilled Ratio (UFR)
+                "value": 0.05,  // Current value
+                "triggerValue": 0.995  // Trigger value
+            },
+            {
+                "isLocked": true,
+                "plannedRecoverTime": 1545741270000,
+                "indicator": "IFER",  // IOC/FOK Expiration Ratio (IFER)
+                "value": 0.99,  // Current value
+                "triggerValue": 0.99  // Trigger value
+            },
+            {
+                "isLocked": true,
+                "plannedRecoverTime": 1545741270000,
+                "indicator": "GCR",  // GTC Cancellation Ratio (GCR)
+                "value": 0.99,  // Current value
+                "triggerValue": 0.99  // Trigger value
+            },
+            {
+                "isLocked": true,
+                "plannedRecoverTime": 1545741270000,
+                "indicator": "DR",  // Dust Ratio (DR)
+                "value": 0.99,  // Current value
+                "triggerValue": 0.99  // Trigger value
+            }
+        ]
+    },
+    "updateTime": 1545741270000
+}
+Or (account violation triggered)
+
+{
+    "indicators":{
+        "ACCOUNT":[
+            {
+                "indicator":"TMV",  //  Too many violations under multiple symbols trigger account violation
+                "value":10,
+                "triggerValue":1,
+                "plannedRecoverTime":1644919865000,
+                "isLocked":true
+            }
+        ]
+    },
+    "updateTime":1644913304748
+}
+GET /papi/v1/um/apiTradingStatus
+
+Weight: 1 for a single symbol 10 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get User Commission Rate for UM (USER_DATA)
+Response:
+
+{
+    "symbol": "BTCUSDT",
+    "makerCommissionRate": "0.0002",  // 0.02%
+    "takerCommissionRate": "0.0004"   // 0.04%
+}
+GET /papi/v1/um/commissionRate (HMAC SHA256)
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get User Commission Rate for CM (USER_DATA)
+Response:
+
+{
+    "symbol": "BTCUSD_PERP",
+    "makerCommissionRate": "0.00015",  // 0.015%
+    "takerCommissionRate": "0.00040"   // 0.040%
+}
+GET /papi/v1/cm/commissionRate (HMAC SHA256)
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Query Margin Loan Record(USER_DATA)
+Response:
+
+{
+  "rows": [
+    {
+        "txId": 12807067523,
+        "asset": "BNB",
+        "principal": "0.84624403",
+        "timestamp": 1555056425000,
+        "status": "CONFIRMED"   //one of PENDING (pending execution), CONFIRMED (successfully loaned), FAILED (execution failed, nothing happened to your account);
+    }
+  ],
+  "total": 1
+}
+GET /papi/v1/margin/marginLoan
+
+Query margin loan record
+
+Weight: 10
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+txId	LONG	NO	the tranId in POST/papi/v1/marginLoan
+startTime	LONG	NO
+endTime	LONG	NO
+current	LONG	NO	Currently querying page. Start from 1. Default:1
+size	LONG	NO	Default:10 Max:100
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+txId or startTime must be sent. txId takes precedence.
+Response in descending order
+If an asset is sent, data within 30 days before endTime; If an asset is not sent, data within 7 days before endTime
+If neither startTime nor endTime is sent, the recent 7-day data will be returned.
+startTime set as endTime - 7days by default, endTime set as current time by default
+Query Margin repay Record(USER_DATA)
+Response: javascript { "rows": [ { "amount": "14.00000000", //Total amount repaid "asset": "BNB", "interest": "0.01866667", //Interest repaid "principal": "13.98133333", //Principal repaid "status": "CONFIRMED", //one of PENDING (pending execution), CONFIRMED (successfully execution), FAILED (execution failed, nothing happened to your account) "timestamp": 1563438204000, "txId": 2970933056 } ], "total": 1 }
+
+GET /papi/v1/margin/repayLoan
+
+Query margin repay record.
+
+Weight: 10
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+txId	LONG	NO	the tranId in POST/papi/v1/repayLoan
+startTime	LONG	NO
+endTime	LONG	NO
+current	LONG	NO	Currently querying page. Start from 1. Default:1
+size	LONG	NO	Default:10 Max:100
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+txId or startTime must be sent. txId takes precedence.
+Response in descending order
+If an asset is sent, data within 30 days before endTime; If an asset is not sent, data within 7 days before endTime
+If neither startTime nor endTime is sent, the recent 7-day data will be returned.
+startTime set as endTime - 7days by default, endTime set as current time by default
+Get Margin Borrow/Loan Interest History (USER_DATA)
+Response:
+
+{
+  "rows": [
+    {
+      "txId": 1352286576452864727,
+      "interestAccuredTime": 1672160400000,
+      "asset": "USDT",
+      "rawAsset": “USDT”,
+      "principal": "45.3313",
+      "interest": "0.00024995",
+      "interestRate": "0.00013233",
+      "type": "ON_BORROW"
+    }
+  ],
+  "total": 1
+}
+GET/papi/v1/margin/marginInterestHistory (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	NO
+startTime	LONG	NO
+endTime	LONG	NO
+current	LONG	NO	Currently querying page. Start from 1. Default:1
+size	LONG	NO	Default:10 Max:100
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+Response in descending order
+The max interval between startTime and endTime is 30 days.
+If startTime and endTime not sent, return records of the last 7 days by default
+Set archived to true to query data from 6 months ago
+type in response has 4 enums:
+PERIODIC interest charged per hour
+ON_BORROW first interest charged on borrow
+PERIODIC_CONVERTED interest charged per hour converted into BNB
+ON_BORROW_CONVERTED first interest charged on borrow converted into BNB
+Query Portfolio Margin Negative Balance Interest History(USER_DATA)
+Response:
+
+
+[
+    {
+        "asset": "USDT",
+        "interest": "24.4440",               //interest amount
+        "interestAccuredTime": 1670227200000,
+        "interestRate": "0.0001164",         //daily interest rate
+        "principal": "210000"
+    }
+]
+GET /papi/v1/portfolio/interest-history
+
+Query interest history of negative balance for portfolio margin.
+
+Weight: 50
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	NO
+startTime	LONG	NO
+endTime	LONG	NO
+size	LONG	NO	Default:10 Max:100
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Fund Auto-collection (TRADE)
+Response:
+
+{
+    "msg": "success"
+}
+POST /papi/v1/auto-collection
+
+Fund collection for Portfolio Margin
+
+Weight: 750
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+The BNB would not be collected from UM-PM account to the Portfolio Margin account.
+You can only use this function 500 times per hour in a rolling manner.
+Fund Collection by Asset (TRADE)
+Response:
+
+{
+    "msg": "success"
+}
+POST /papi/v1/asset-collection
+
+Transfers specific asset from Futures Account to Margin account
+
+Weight(IP):
+
+30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+The BNB transfer is not be supported
+BNB transfer (TRADE)
+Response:
+
+{
+    "tranId": 100000001       //transaction id
+}
+POST /papi/v1/bnb-transfer
+
+Weight: 750
+
+Parameters:
+
+Name	Type	Mandatory	Description
+amount	DECIMAL	YES
+transferSide	STRING	YES	"TO_UM","FROM_UM"
+recvWindow	LONG	NO	The value cannot be greater than 60000
+timestamp	LONG	YES
+The endpoint can only be called 10 times per 10 minutes in a rolling manner
+Get UM Income History (USER_DATA)
+Response:
+
+
+[
+    {
+        "symbol": "",                   // trade symbol, if existing
+        "incomeType": "TRANSFER",   // income type
+        "income": "-0.37500000",  // income amount
+        "asset": "USDT",                // income asset
+        "info":"TRANSFER",          // extra information
+        "time": 1570608000000,
+        "tranId":"9689322392",      // transaction id
+        "tradeId":""                    // trade id, if existing
+    },
+    {
+        "symbol": "BTCUSDT",
+        "incomeType": "COMMISSION",
+        "income": "-0.01000000",
+        "asset": "USDT",
+        "info":"COMMISSION",
+        "time": 1570636800000,
+        "tranId":"9689322392",
+        "tradeId":"2059192"
+    }
+]
+GET /papi/v1/um/income (HMAC SHA256)
+
+Weight: 30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+incomeType	STRING	NO	TRANSFER, WELCOME_BONUS, REALIZED_PNL, FUNDING_FEE, COMMISSION, INSURANCE_CLEAR, REFERRAL_KICKBACK, COMMISSION_REBATE, API_REBATE, CONTEST_REWARD, CROSS_COLLATERAL_TRANSFER, OPTIONS_PREMIUM_FEE, OPTIONS_SETTLE_PROFIT, INTERNAL_TRANSFER, AUTO_EXCHANGE, DELIVERED_SETTELMENT, COIN_SWAP_DEPOSIT, COIN_SWAP_WITHDRAW, POSITION_LIMIT_INCREASE_FEE
+startTime	LONG	NO	Timestamp in ms to get funding from INCLUSIVE.
+endTime	LONG	NO	Timestamp in ms to get funding until INCLUSIVE.
+limit	INT	NO	Default 100; max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If neither startTime nor endTime is sent, the recent 7-day data will be returned.
+If incomeType is not sent, all kinds of flow will be returned
+"trandId" is unique in the same incomeType for a user
+Income history only contains data for the last three months
+Get CM Income History(USER_DATA)
+Response:
+
+
+[
+    {
+        "symbol": "",               // trade symbol, if existing
+        "incomeType": "TRANSFER",   // income type
+        "income": "-0.37500000",    // income amount
+        "asset": "BTC",             // income asset
+        "info":"WITHDRAW",          // extra information
+        "time": 1570608000000,
+        "tranId":"9689322392",      // transaction id
+        "tradeId":""                // trade id, if existing
+    },
+    {
+        "symbol": "BTCUSD_200925",
+        "incomeType": "COMMISSION",
+        "income": "-0.01000000",
+        "asset": "BTC",
+        "info":"",
+        "time": 1570636800000,
+        "tranId":"9689322392",
+        "tradeId":"2059192"
+    }
+]
+GET /papi/v1/cm/income (HMAC SHA256)
+
+Weight: 30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+incomeType	STRING	NO	"TRANSFER","WELCOME_BONUS", "FUNDING_FEE", "REALIZED_PNL", "COMMISSION", "INSURANCE_CLEAR", and "DELIVERED_SETTELMENT"
+startTime	LONG	NO	Timestamp in ms to get funding from INCLUSIVE.
+endTime	LONG	NO	Timestamp in ms to get funding until INCLUSIVE.
+limit	INT	NO	Default 100; max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If incomeType is not sent, all kinds of flow will be returned
+"trandId" is unique in the same "incomeType" for a user
+The interval between startTime and endTime can not exceed 200 days:
+If startTime and endTime are not sent, the last 200 days will be returned
+Get UM Account Detail (USER_DATA)
+Response:
+
+{
+    "tradeGroupId": -1，
+    "assets": [
+        {
+            "asset": "USDT",            // asset name
+            "crossWalletBalance": "23.72469206",      // wallet balance
+            "crossUnPnl": "0.00000000",    // unrealized profit
+            "maintMargin": "0.00000000",        // maintenance margin required
+            "initialMargin": "0.00000000",    // total initial margin required with current mark price
+            "positionInitialMargin": "0.00000000",    //initial margin required for positions with current mark price
+            "openOrderInitialMargin": "0.00000000",   // initial margin required for open orders with current mark price
+            "updateTime": 1625474304765 // last update time
+        }
+    ],
+    "positions": [  // positions of all symbols in the market are returned
+        // only "BOTH" positions will be returned with One-way mode
+        // only "LONG" and "SHORT" positions will be returned with Hedge mode
+        {
+            "symbol": "BTCUSDT",    // symbol name
+            "initialMargin": "0",   // initial margin required with current mark price
+            "maintMargin": "0",     // maintenance margin required
+            "unrealizedProfit": "0.00000000",  // unrealized profit
+            "positionInitialMargin": "0",      // initial margin required for positions with current mark price
+            "openOrderInitialMargin": "0",     // initial margin required for open orders with current mark price
+            "leverage": "100",      // current initial leverage
+            "entryPrice": "0.00000",    // average entry price
+            "maxNotional": "250000",    // maximum available notional with current leverage
+            "bidNotional": "0",  // bids notional, ignore
+            "askNotional": "0",  // ask notional, ignore
+            "positionSide": "BOTH",     // position side
+            "positionAmt": "0",         // position amount
+            "updateTime": 0，           // last update time
+            "breakEvenPrice": "0.0"
+        }
+    ]
+}
+GET /papi/v1/um/account (HMAC SHA256)
+
+Get current UM account asset and position information.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get CM Account Detail (USER_DATA)
+Response:
+
+{
+    "assets": [
+        {
+            "asset": "BTC",  // asset name
+            "crossWalletBalance": "0.00241969",  // total wallet balance
+            "crossUnPnl": "0.00000000",  // unrealized profit or loss
+            "maintMargin": "0.00000000",    // maintenance margin
+            "initialMargin": "0.00000000",  // total intial margin required with the latest mark price
+            "positionInitialMargin": "0.00000000",  // positions" margin required with the latest mark price
+            "openOrderInitialMargin": "0.00000000",  // open orders" intial margin required with the latest mark price
+            "updateTime": 1625474304765 // last update time
+         }
+     ],
+     "positions": [
+         {
+            "symbol": "BTCUSD_201225",
+            "positionAmt":"0",  // position amount
+            "initialMargin": "0",
+            "maintMargin": "0",
+            "unrealizedProfit": "0.00000000",
+            "positionInitialMargin": "0",
+            "openOrderInitialMargin": "0",
+            "leverage": "125",
+            "positionSide": "BOTH", // BOTH means that it is the position of One-way Mode
+            "entryPrice": "0.0",
+            "maxQty": "50",  // maximum quantity of base asset
+            "updateTime": 0，
+            "breakEvenPrice": "0.0"
+        }
+     ]
+ }
+GET /papi/v1/cm/account (HMAC SHA256)
+
+Get current CM account asset and position information.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Change Auto-repay-futures Status (TRADE)
+Response:
+
+{
+    "msg": "success"
+}
+POST /papi/v1/repay-futures-switch (HMAC SHA256)
+
+Change Auto-repay-futures Status
+
+Weight(IP):
+
+750
+
+Parameters:
+
+Name	Type	Mandatory	Description
+autoRepay	STRING	YES	Default: true; false for turn off the auto-repay futures negative balance function
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get Auto-repay-futures Status (USER_DATA)
+Response:
+
+{
+    "autoRepay": true  //  "true" for turn on the auto-repay futures; "false" for turn off the auto-repay futures
+}
+GET /papi/v1/repay-futures-switch (HMAC SHA256)
+
+Query Auto-repay-futures Status
+
+Weight(IP):
+
+30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Repay futures Negative Balance (USER_DATA)
+Response:
+
+{
+    "msg": "success"
+}
+POST /papi/v1/repay-futures-negative-balance (HMAC SHA256)
+
+Repay futures Negative Balance
+
+Weight(IP):
+
+750
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+UM Position ADL Quantile Estimation (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "ETHUSDT",
+        "adlQuantile":
+            {
+                // if the positions of the symbol are crossed margined in Hedge Mode, "LONG" and "SHORT" will be returned a same quantile value, and "HEDGE" will be returned instead of "BOTH".
+                "LONG": 3,
+                "SHORT": 3,
+                "HEDGE": 0   // only a sign, ignore the value
+            }
+        },
+    {
+        "symbol": "BTCUSDT",
+        "adlQuantile":
+            {
+                // for positions of the symbol are in One-way Mode or isolated margined in Hedge Mode
+                "LONG": 1,  // adl quantile for "LONG" position in hedge mode
+                "SHORT": 2,     // adl qauntile for "SHORT" position in hedge mode
+                "BOTH": 0       // adl qunatile for position in one-way mode
+            }
+    }
+ ]
+GET /papi/v1/um/adlQuantile
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Values update every 30s.
+
+Values 0, 1, 2, 3, 4 shows the queue position and possibility of ADL from low to high.
+
+For positions of the symbol are in One-way Mode or isolated margined in Hedge Mode, "LONG", "SHORT", and "BOTH" will be returned to show the positions' adl quantiles of different position sides.
+
+If the positions of the symbol are crossed margined in Hedge Mode:
+
+"HEDGE" as a sign will be returned instead of "BOTH";
+A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
+CM Position ADL Quantile Estimation (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_200925",
+        "adlQuantile":
+            {
+                // if the positions of the symbol are crossed margined in Hedge Mode, "LONG" and "SHORT" will be returned a same quantile value, and "HEDGE" will be returned instead of "BOTH".
+                "LONG": 3,
+                "SHORT": 3,
+                "HEDGE": 0   // only a sign, ignore the value
+            }
+        },
+    {
+        "symbol": "BTCUSD_201225",
+        "adlQuantile":
+            {
+                // for positions of the symbol are in One-way Mode
+                "LONG": 1,  // adl quantile for "LONG" position in hedge mode
+                "SHORT": 2,     // adl qauntile for "SHORT" position in hedge mode
+                "BOTH": 0       // adl qunatile for position in one-way mode
+            }
+    }
+]
+GET /papi/v1/cm/adlQuantile
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Values update every 30s.
+
+Values 0, 1, 2, 3, 4 shows the queue position and possibility of ADL from low to high.
+
+For positions of the symbol are in One-way Mode or isolated margined in Hedge Mode, "LONG", "SHORT", and "BOTH" will be returned to show the positions' adl quantiles of different position sides.
+
+If the positions of the symbol are crossed margined in Hedge Mode:
+
+"HEDGE" as a sign will be returned instead of "BOTH";
+A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
+User Data Streams
+The base API endpoint is: https://papi.binance.com
+A User Data Stream listenKey is valid for 60 minutes after creation.
+Doing a PUT on a listenKey will extend its validity for 60 minutes.
+Doing a DELETE on a listenKey will close the stream and invalidate the listenKey.
+Doing a POST on an account with an active listenKey will return the currently active listenKey and extend its validity for 60 minutes.
+Connection method for Websocket：
+Base Url: wss://fstream.binance.com/pm
+User Data Streams are accessed at /ws/<listenKey>
+Example: wss://fstream.binance.com/pm/ws/pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1
+A single connection is only valid for 24 hours; expect to be disconnected at the 24 hour mark.
+Start User Data Stream (USER_STREAM)
+Response:
+
+{
+  "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
+}
+POST /papi/v1/listenKey
+
+Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active listenKey, that listenKey will be returned and its validity will be extended for 60 minutes.
+
+Weight: 1
+
+Keepalive User Data Stream (USER_STREAM)
+Response:
+
+{}
+PUT /papi/v1/listenKey
+
+Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Close User Data Stream (USER_STREAM)
+Response:
+
+{}
+DELETE /papi/v1/listenKey
+
+Close out a user data stream.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Event: User Data Stream Expired
+Payload:
+
+{
+    'e': 'listenKeyExpired',      // event type
+    'E': 1576653824250              // event time
+}
+When the listenKey used for the user data stream turns expired, this event will be pushed.
+
+Notice:
+
+This event is not related to the websocket disconnection.
+This event will be received only when a valid listenKey in connection got expired.
+No more user data event will be updated after this event received until a new valid listenKey used.
+Event: Futures Balance and Position Update
+Payload:
+
+{
+  "e": "ACCOUNT_UPDATE",                // Event Type
+  "fs": "UM",                           // Event business unit. 'UM' for USDS-M futures and 'CM' for COIN-M futures
+  "E": 1564745798939,                   // Event Time
+  "T": 1564745798938 ,                  // Transaction
+  "i":"",                           // Account Alias, ignore for UM
+  "a":                                  // Update Data
+    {
+      "m":"ORDER",                      // Event reason type
+      "B":[                             // Balances
+        {
+          "a":"USDT",                   // Asset
+          "wb":"122624.12345678",       // Wallet Balance
+          "cw":"100.12345678",          // Cross Wallet Balance
+          "bc":"50.12345678"            // Balance Change except PnL and Commission
+        },
+        {
+          "a":"BUSD",
+          "wb":"1.00000000",
+          "cw":"0.00000000",
+          "bc":"-49.12345678"
+        }
+      ],
+      "P":[
+        {
+          "s":"BTCUSDT",            // Symbol
+          "pa":"0",                 // Position Amount
+          "ep":"0.00000",            // Entry Price
+          "cr":"200",               // (Pre-fee) Accumulated Realized
+          "up":"0",                     // Unrealized PnL
+          "ps":"BOTH",                   // Position Side
+          "bep":"0.00000"            // breakeven price
+        }，
+        {
+            "s":"BTCUSDT",
+            "pa":"20",
+            "ep":"6563.66500",
+            "cr":"0",
+            "up":"2850.21200",
+            "ps":"LONG",
+            "bep":"0.00000"            // breakeven price
+         }
+      ]
+    }
+}
+Update Speed: 50ms
+Update under the following conditions:
+Account deposit or withdrawal
+A transfer occurs between trading accounts (e.g. transfer from spot to option accounts)
+Position changes
+Greek update
+Event: Futures Order update
+Payload:
+
+{
+
+  "e":"ORDER_TRADE_UPDATE",     // Event Type
+  "fs": "UM",                   // Event business unit. 'UM' for USDS-M futures and 'CM' for COIN-M futures
+  "E":1568879465651,            // Event Time
+  "T":1568879465650,            // Transaction Time
+  "i":"",                   // Account Alias,ignore for UM
+  "o":{
+    "s":"BTCUSDT",              // Symbol
+    "c":"TEST",                 // Client Order Id
+      // special client order id:
+      // starts with "autoclose-": liquidation order
+      // "adl_autoclose": ADL auto close order
+      // "settlement_autoclose-": settlement order for delisting or delivery
+    "S":"SELL",                 // Side
+    "o":"MARKET", // Order Type
+    "f":"GTC",                  // Time in Force
+    "q":"0.001",                // Original Quantity
+    "p":"0",                    // Original Price
+    "ap":"0",                   // Average Price
+    "sp":"7103.04",                     // Ignore
+    "x":"NEW",                  // Execution Type
+    "X":"NEW",                  // Order Status
+    "i":8886774,                // Order Id
+    "l":"0",                    // Order Last Filled Quantity
+    "z":"0",                    // Order Filled Accumulated Quantity
+    "L":"0",                    // Last Filled Price
+    "N":"USDT",             // Commission Asset, will not push if no commission
+    "n":"0",                // Commission, will not push if no commission
+    "T":1568879465650,          // Order Trade Time
+    "t":0,                      // Trade Id
+    "b":"0",                    // Bids Notional
+    "a":"9.91",                 // Ask Notional
+    "m":false,                  // Is this trade the maker side?
+    "R":false,                  // Is this reduce only
+    "ps":"LONG",                // Position Side
+    "rp":"0",                   // Realized Profit of the trade
+    "st":"C_TAKE_PROFIT",       // Strategy type, only pushed with conditional order triggered
+    "si":12893,                  // StrategyId,only pushed with conditional order triggered
+    "V":"EXPIRE_TAKER",         // STP mode
+    "gtd":0
+  }
+}
+When new order created, order status changed will push such event. event type is ORDER_TRADE_UPDATE.
+
+Side
+
+BUY
+SELL
+Order Type
+
+MARKET
+LIMIT
+LIQUIDATION
+Execution Type
+
+NEW
+CANCELED
+CALCULATED - Liquidation Execution
+EXPIRED
+TRADE
+Order Status
+
+NEW
+PARTIALLY_FILLED
+FILLED
+CANCELED
+EXPIRED
+Time in force
+
+GTC
+IOC
+FOK
+GTX
+Liquidation and ADL:
+
+If user gets liquidated due to insufficient margin balance:
+c shows as "autoclose-XXX"，X shows as "NEW"
+If user has enough margin balance but gets ADL:
+c shows as “adl_autoclose”，X shows as “NEW”
+Event: Conditional Order Trade Update
+Payload:
+
+{
+    "e": "CONDITIONAL_ORDER_TRADE_UPDATE", // Event Type
+    "T": 1669262908216,                    // Transaction Time
+    "E": 1669262908218,                    // Event Time
+    "fs": "UM",                            // Event business unit
+    "so": {
+            "s": "BTCUSDT",                // Symbol
+            "c":"TEST",                    // Strategy Client Order Id
+            "si": 176057039,               // Strategy ID
+            "S":"SELL",                    // Side
+            "st": "TRAILING_STOP_MARKET",  // Strategy Type
+            "f":"GTC",                     // Time in Force
+            "q":"0.001",                   //Quantity
+            "p":"0",                       //Price
+            "sp":"7103.04",                // Stop Price. Please ignore with TRAILING_STOP_MARKET order
+            "os":"NEW",                    // Strategy Order Status
+            "T":1568879465650,             // Order book Time
+            "ut": 1669262908216,           // Order update Time
+            "R":false,                     // Is this reduce only
+            "wt":"MARK_PRICE",             // Stop Price Working Type
+            "ps":"LONG",                   // Position Side
+            "cp":false,                    // If Close-All, pushed with conditional order
+            "AP":"7476.89",                // Activation Price, only pushed with TRAILING_STOP_MARKET order
+            "cr":"5.0",                    // Callback Rate, only puhed with TRAILING_STOP_MARKET order
+            "i":8886774,                   // Order Id
+            "V":"EXPIRE_TAKER",         // STP mode
+            "gtd":0
+        }
+}
+When new order created, order status changed will push such event. event type is CONDITIONAL_ORDER_TRADE_UPDATE.
+
+Side
+
+BUY
+SELL
+Conditional Order Type
+
+STOP
+TAKE_PROFIT
+STOP_MARKET
+TAKE_PROFIT_MARKET
+TRAILING_STOP_MARKET
+Execution Type
+
+NEW
+CANCELED
+CALCULATED - Liquidation Execution
+EXPIRED
+TRADE
+Order Status
+
+NEW
+CANCELED
+EXPIRED
+TRIGGERING //Order meet the trigger condition
+TRIGGERED //Order pass the trigger condition check
+FINISHED
+Time in force
+
+GTC
+IOC
+FOK
+GTX
+Event: riskLevelChange
+Payload:
+
+{
+    "e":"riskLevelChange",      // Event Type
+    "E":1587727187525,      // Event Time
+    "u":"1.99999999",      // uniMMR level
+    "s":"MARGIN_CALL",        //MARGIN_CALL, SUPPLY_MARGIN, REDUCE_ONLY, FORCE_LIQUIDATION
+    "eq":"30.23416728",      // account equity in USD value
+    "ae":"30.23416728",      // actual equity without collateral rate in USD value
+    "m":"15.11708371"      // total maintenance margin in USD value
+}
+When the user's position risk ratio is too high, this stream will be pushed.
+This message is only used as risk guidance information and is not recommended for investment strategies.
+RISK_LEVEL_CHANGEincludes following types：MARGIN_CALL, SUPPLY_MARGIN, REDUCE_ONLY, FORCE_LIQUIDATION
+In the case of a highly volatile market, there may be the possibility that the user's position has been liquidated at the same time when this stream is pushed out.
+Event: Futures Account Configuration Update (Leverage Update)
+Payload:
+
+{
+    "e":"ACCOUNT_CONFIG_UPDATE",       // Event Type
+    "fs": "UM",                       // Event business unit
+    "E":1611646737479,                 // Event Time
+    "T":1611646737476,                 // Transaction Time
+    "ac":{
+    "s":"BTCUSD_PERP",                     // symbol
+    "l":25                             // leverage
+
+    }
+}
+When the account configuration is changed, the event type will be pushed as ACCOUNT_CONFIG_UPDATE
+
+When the leverage of a trade pair changes, the payload will contain the object ac to represent the account configuration of the trade pair, where s represents the specific trade pair and l represents the leverage.
+
+Event: OpenOrderLoss Update
+Payload:
+
+{
+    "e": "openOrderLoss",      //Event Type
+    "E": 1678710578788,        // Event Time
+    "O": [{                    // Update Data
+        "a": "BUSD",
+        "o": "-0.1232313"       // Amount
+    }, {
+        "a": "BNB",
+        "o": "-12.1232313"
+    }]
+}
+Event: Liability Update
+Payload:
+
+{
+  "e": "liabilityChange",         //Event Type
+  "E": 1573200697110,           //Event Time
+  "a": "BTC",                   //Asset
+  "t": “BORROW”                  //Type
+  "tx": 1352286576452864727,     //Transaction ID
+  "p": "1.03453430",             //Principal
+  "i": "0",             //Interest
+  "l": "1.03476851"              //Total Liability
+}
+Event: Margin Account Update
+Payload:
+
+{
+  "e": "outboundAccountPosition", //Event type
+  "E": 1564034571105,             //Event Time
+  "u": 1564034571073,             //Time of last account update
+  "U": 1027053479517,             //Event update ID
+  "B": [                          //Balances Array
+    {
+      "a": "ETH",                 //Asset
+      "f": "10000.000000",        //Free
+      "l": "0.000000"             //Locked
+    }
+  ]
+}
+outboundAccountPosition is sent any time an account balance has changed and contains the assets that were possibly changed by the event that generated the balance change.
+
+Event: Margin Balance Update
+Payload:
+
+{
+  "e": "balanceUpdate",         //Event Type
+  "E": 1573200697110,           //Event Time
+  "a": "BTC",                   //Asset
+  "d": "100.00000000",          //Balance Delta
+  "U": 1027053479517            //Event update ID
+  "T": 1573200697068            //Clear Time
+}
+Event: Margin Order Update
+Payload:
+
+{
+  "e": "executionReport",        // Event type
+  "E": 1499405658658,            // Event time
+  "s": "ETHBTC",                 // Symbol
+  "c": "mUvoqJxFIILMdfAW5iGSOW", // Client order ID
+  "S": "BUY",                    // Side
+  "o": "LIMIT",                  // Order type
+  "f": "GTC",                    // Time in force
+  "q": "1.00000000",             // Order quantity
+  "p": "0.10264410",             // Order price
+  "P": "0.00000000",             // Stop price
+  "d": 4,                        // Trailing Delta; This is only visible if the order was a trailing stop order.
+  "F": "0.00000000",             // Iceberg quantity
+  "g": -1,                       // OrderListId
+  "C": "",                       // Original client order ID; This is the ID of the order being canceled
+  "x": "NEW",                    // Current execution type
+  "X": "NEW",                    // Current order status
+  "r": "NONE",                   // Order reject reason; will be an error code.
+  "i": 4293153,                  // Order ID
+  "l": "0.00000000",             // Last executed quantity
+  "z": "0.00000000",             // Cumulative filled quantity
+  "L": "0.00000000",             // Last executed price
+  "n": "0",                      // Commission amount
+  "N": null,                     // Commission asset
+  "T": 1499405658657,            // Transaction time
+  "t": -1,                       // Trade ID
+  "v": 3,                        // Prevented Match Id; This is only visible if the order expire due to STP trigger.
+  "I": 8641984,                  // Ignore
+  "w": true,                     // Is the order on the book?
+  "m": false,                    // Is this trade the maker side?
+  "M": false,                    // Ignore
+  "O": 1499405658657,            // Order creation time
+  "Z": "0.00000000",             // Cumulative quote asset transacted quantity
+  "Y": "0.00000000",             // Last quote asset transacted quantity (i.e. lastPrice * lastQty)
+  "Q": "0.00000000",             // Quote Order Quantity
+  "D": 1668680518494,            // Trailing Time; This is only visible if the trailing stop order has been activated.
+  "j": 1,                        // Strategy ID; This is only visible if the strategyId parameter was provided upon order placement
+  "J": 1000000,                  // Strategy Type; This is only visible if the strategyType parameter was provided upon order placement
+  "W": 1499405658657,            // Working Time; This is only visible if the order has been placed on the book.
+  "V": "NONE",                   // selfTradePreventionMode
+  "u":1,                         // TradeGroupId; This is only visible if the account is part of a trade group and the order expired due to STP trigger.
+  "U":37,                        // CounterOrderId; This is only visible if the order expired due to STP trigger.
+  "A":"3.000000",                // Prevented Quantity; This is only visible if the order expired due to STP trigger.
+  "B":"3.000000",                 // Last Prevented Quantity; This is only visible if the order expired due to STP trigger.
+  "x": "NEW",                    // Current execution type
+  "X": "NEW",                    // Current order status
+  "V": "NONE",                   // selfTradePreventionMode
+}
+Margin orders are updated with the executionReport event.
+
+Execution types:
+
+NEW - The order has been accepted into the engine.
+CANCELED - The order has been canceled by the user.
+REJECTED - The order has been rejected and was not processed (This message appears only with Cancel Replace Orders wherein the new order placement is rejected but the request to cancel request succeeds.)
+TRADE - Part of the order or all of the order's quantity has filled.
+EXPIRED - The order was canceled according to the order type's rules (e.g. LIMIT FOK orders with no fill, LIMIT IOC or MARKET orders that partially fill) or by the exchange, (e.g. orders canceled during liquidation, orders canceled during maintenance).
+TRADE_PREVENTION - The order has expired due to STP trigger. Check the Public API Definitions for more relevant enum definitions.
+Error Codes
+Here is the error JSON payload:
+
+{
+  "code":-1121,
+  "msg":"Invalid symbol."
+}
+Errors consist of two parts: an error code and a message.
+Codes are universal,but messages can vary.
+
+10xx - General Server or Network issues
+-1000 UNKNOWN
+An unknown error occured while processing the request.
+-1001 DISCONNECTED
+Internal error; unable to process your request. Please try again.
+-1002 UNAUTHORIZED
+You are not authorized to execute this request.
+-1003 TOO_MANY_REQUESTS
+Too many requests queued.
+Too many requests; please use the websocket for live updates.
+Too many requests; current limit is %s requests per minute. Please use the websocket for live updates to avoid polling the API.
+Way too many requests; IP banned until %s. Please use the websocket for live updates to avoid bans.
+-1004 DUPLICATE_IP
+This IP is already on the white list
+-1005 NO_SUCH_IP
+No such IP has been white listed
+-1006 UNEXPECTED_RESP
+An unexpected response was received from the message bus. Execution status unknown.
+-1007 TIMEOUT
+Timeout waiting for response from backend server. Send status unknown; execution status unknown.
+-1010 ERROR_MSG_RECEIVED
+ERROR_MSG_RECEIVED.
+-1011 NON_WHITE_LIST
+This IP cannot access this route.
+-1013 INVALID_MESSAGE
+INVALID_MESSAGE.
+-1014 UNKNOWN_ORDER_COMPOSITION
+Unsupported order combination.
+-1015 TOO_MANY_ORDERS
+Too many new orders.
+Too many new orders; current limit is %s orders per %s.
+-1016 SERVICE_SHUTTING_DOWN
+This service is no longer available.
+-1020 UNSUPPORTED_OPERATION
+This operation is not supported.
+-1021 INVALID_TIMESTAMP
+Timestamp for this request is outside of the recvWindow.
+Timestamp for this request was 1000ms ahead of the server's time.
+-1022 INVALID_SIGNATURE
+Signature for this request is not valid.
+-1023 START_TIME_GREATER_THAN_END_TIME
+Start time is greater than end time.
+11xx - Request issues
+-1100 ILLEGAL_CHARS
+Illegal characters found in a parameter.
+Illegal characters found in parameter '%s'; legal range is '%s'.
+-1101 TOO_MANY_PARAMETERS
+Too many parameters sent for this endpoint.
+Too many parameters; expected '%s' and received '%s'.
+Duplicate values for a parameter detected.
+-1102 MANDATORY_PARAM_EMPTY_OR_MALFORMED
+A mandatory parameter was not sent, was empty/null, or malformed.
+Mandatory parameter '%s' was not sent, was empty/null, or malformed.
+Param '%s' or '%s' must be sent, but both were empty/null!
+-1103 UNKNOWN_PARAM
+An unknown parameter was sent.
+-1104 UNREAD_PARAMETERS
+Not all sent parameters were read.
+Not all sent parameters were read; read '%s' parameter(s) but was sent '%s'.
+-1105 PARAM_EMPTY
+A parameter was empty.
+Parameter '%s' was empty.
+-1106 PARAM_NOT_REQUIRED
+A parameter was sent when not required.
+Parameter '%s' sent when not required.
+-1108 BAD_ASSET
+Invalid asset.
+-1109 BAD_ACCOUNT
+Invalid account.
+-1110 BAD_INSTRUMENT_TYPE
+Invalid symbolType.
+-1111 BAD_PRECISION
+Precision is over the maximum defined for this asset.
+-1112 NO_DEPTH
+No orders on book for symbol.
+-1113 WITHDRAW_NOT_NEGATIVE
+Withdrawal amount must be negative.
+-1114 TIF_NOT_REQUIRED
+TimeInForce parameter sent when not required.
+-1115 INVALID_TIF
+Invalid timeInForce.
+-1116 INVALID_ORDER_TYPE
+Invalid orderType.
+-1117 INVALID_SIDE
+Invalid side.
+-1118 EMPTY_NEW_CL_ORD_ID
+New client order ID was empty.
+-1119 EMPTY_ORG_CL_ORD_ID
+Original client order ID was empty.
+-1120 BAD_INTERVAL
+Invalid interval.
+-1121 BAD_SYMBOL
+Invalid symbol.
+-1125 INVALID_LISTEN_KEY
+This listenKey does not exist. Please use POST /papi/v1/listenKey to recreate listenKey
+-1127 MORE_THAN_XX_HOURS
+Lookup interval is too big.
+More than %s hours between startTime and endTime.
+-1128 OPTIONAL_PARAMS_BAD_COMBO
+Combination of optional parameters invalid.
+-1130 INVALID_PARAMETER
+Invalid data sent for a parameter.
+Data sent for parameter '%s' is not valid.
+-1136 INVALID_NEW_ORDER_RESP_TYPE
+Invalid newOrderRespType.
+20xx - Processing Issues
+-2010 NEW_ORDER_REJECTED
+NEW_ORDER_REJECTED
+-2011 CANCEL_REJECTED
+CANCEL_REJECTED
+-2013 NO_SUCH_ORDER
+Order does not exist.
+-2014 BAD_API_KEY_FMT
+API-key format invalid.
+-2015 REJECTED_MBX_KEY
+Invalid API-key, IP, or permissions for action.
+-2016 NO_TRADING_WINDOW
+No trading window could be found for the symbol. Try ticker/24hrs instead.
+-2018 BALANCE_NOT_SUFFICIENT
+Balance is insufficient.
+-2019 MARGIN_NOT_SUFFICIEN
+Margin is insufficient.
+-2020 UNABLE_TO_FILL
+Unable to fill.
+-2021 ORDER_WOULD_IMMEDIATELY_TRIGGER
+Order would immediately trigger.
+-2022 REDUCE_ONLY_REJECT
+ReduceOnly Order is rejected.
+-2023 USER_IN_LIQUIDATION
+User in liquidation mode now.
+-2024 POSITION_NOT_SUFFICIENT
+Position is not sufficient.
+-2025 MAX_OPEN_ORDER_EXCEEDED
+Reach max open order limit.
+-2026 REDUCE_ONLY_ORDER_TYPE_NOT_SUPPORTED
+This OrderType is not supported when reduceOnly.
+-2027 MAX_LEVERAGE_RATIO
+Exceeded the maximum allowable position at current leverage.
+-2028 MIN_LEVERAGE_RATIO
+Leverage is smaller than permitted: insufficient margin balance.
+40xx - Filters and other Issues
+-4000 INVALID_ORDER_STATUS
+Invalid order status.
+-4001 PRICE_LESS_THAN_ZERO
+Price less than 0.
+-4002 PRICE_GREATER_THAN_MAX_PRICE
+Price greater than max price.
+-4003 QTY_LESS_THAN_ZERO
+Quantity less than zero.
+-4004 QTY_LESS_THAN_MIN_QTY
+Quantity less than min quantity.
+-4005 QTY_GREATER_THAN_MAX_QTY
+Quantity greater than max quantity.
+-4006 STOP_PRICE_LESS_THAN_ZERO
+Stop price less than zero.
+-4007 STOP_PRICE_GREATER_THAN_MAX_PRICE
+Stop price greater than max price.
+-4008 TICK_SIZE_LESS_THAN_ZERO
+Tick size less than zero.
+-4009 MAX_PRICE_LESS_THAN_MIN_PRICE
+Max price less than min price.
+-4010 MAX_QTY_LESS_THAN_MIN_QTY
+Max qty less than min qty.
+-4011 STEP_SIZE_LESS_THAN_ZERO
+Step size less than zero.
+-4012 MAX_NUM_ORDERS_LESS_THAN_ZERO
+Max mum orders less than zero.
+-4013 PRICE_LESS_THAN_MIN_PRICE
+Price less than min price.
+-4014 PRICE_NOT_INCREASED_BY_TICK_SIZE
+Price not increased by tick size.
+-4015 INVALID_CL_ORD_ID_LEN
+Client order id is not valid.
+Client order id length should not be more than 36 chars
+-4016 PRICE_HIGHTER_THAN_MULTIPLIER_UP
+Price is higher than mark price multiplier cap.
+-4017 MULTIPLIER_UP_LESS_THAN_ZERO
+Multiplier up less than zero.
+-4018 MULTIPLIER_DOWN_LESS_THAN_ZERO
+Multiplier down less than zero.
+-4019 COMPOSITE_SCALE_OVERFLOW
+Composite scale too large.
+-4020 TARGET_STRATEGY_INVALID
+Target strategy invalid for orderType '%s',reduceOnly '%b'.
+-4021 INVALID_DEPTH_LIMIT
+Invalid depth limit.
+'%s' is not valid depth limit.
+-4022 WRONG_MARKET_STATUS
+market status sent is not valid.
+-4023 QTY_NOT_INCREASED_BY_STEP_SIZE
+Qty not increased by step size.
+-4024 PRICE_LOWER_THAN_MULTIPLIER_DOWN
+Price is lower than mark price multiplier floor.
+-4025 MULTIPLIER_DECIMAL_LESS_THAN_ZERO
+Multiplier decimal less than zero.
+-4026 COMMISSION_INVALID
+Commission invalid.
+%s less than zero.
+%s absolute value greater than %s
+-4027 INVALID_ACCOUNT_TYPE
+Invalid account type.
+-4028 INVALID_LEVERAGE
+Invalid leverage
+Leverage %s is not valid
+Leverage %s already exist with %s
+-4029 INVALID_TICK_SIZE_PRECISION
+Tick size precision is invalid.
+-4030 INVALID_STEP_SIZE_PRECISION
+Step size precision is invalid.
+-4031 INVALID_WORKING_TYPE
+Invalid parameter working type
+Invalid parameter working type: %s
+-4032 EXCEED_MAX_CANCEL_ORDER_SIZE
+Exceed maximum cancel order size.
+Invalid parameter working type: %s
+-4033 INSURANCE_ACCOUNT_NOT_FOUND
+Insurance account not found.
+-4044 INVALID_BALANCE_TYPE
+Balance Type is invalid.
+-4045 MAX_STOP_ORDER_EXCEEDED
+Reach max stop order limit.
+-4046 NO_NEED_TO_CHANGE_MARGIN_TYPE
+No need to change margin type.
+-4047 THERE_EXISTS_OPEN_ORDERS
+Margin type cannot be changed if there exists open orders.
+-4048 THERE_EXISTS_QUANTITY
+Margin type cannot be changed if there exists position.
+-4049 ADD_ISOLATED_MARGIN_REJECT
+Add margin only support for isolated position.
+-4050 CROSS_BALANCE_INSUFFICIENT
+Cross balance insufficient.
+-4051 ISOLATED_BALANCE_INSUFFICIENT
+Isolated balance insufficient.
+-4052 NO_NEED_TO_CHANGE_AUTO_ADD_MARGIN
+No need to change auto add margin.
+-4053 AUTO_ADD_CROSSED_MARGIN_REJECT
+Auto add margin only support for isolated position.
+-4054 ADD_ISOLATED_MARGIN_NO_POSITION_REJECT
+Cannot add position margin: position is 0.
+-4055 AMOUNT_MUST_BE_POSITIVE
+Amount must be positive.
+-4056 INVALID_API_KEY_TYPE
+Invalid api key type.
+-4057 INVALID_RSA_PUBLIC_KEY
+Invalid api public key
+-4058 MAX_PRICE_TOO_LARGE
+maxPrice and priceDecimal too large,please check.
+-4059 NO_NEED_TO_CHANGE_POSITION_SIDE
+No need to change position side.
+-4060 INVALID_POSITION_SIDE
+Invalid position side.
+-4061 POSITION_SIDE_NOT_MATCH
+Order's position side does not match user's setting.
+-4062 REDUCE_ONLY_CONFLICT
+Invalid or improper reduceOnly value.
+-4063 INVALID_OPTIONS_REQUEST_TYPE
+Invalid options request type
+-4064 INVALID_OPTIONS_TIME_FRAME
+Invalid options time frame
+-4065 INVALID_OPTIONS_AMOUNT
+Invalid options amount
+-4066 INVALID_OPTIONS_EVENT_TYPE
+Invalid options event type
+-4067 POSITION_SIDE_CHANGE_EXISTS_OPEN_ORDERS
+Position side cannot be changed if there exists open orders.
+-4068 POSITION_SIDE_CHANGE_EXISTS_QUANTITY
+Position side cannot be changed if there exists position.
+-4069 INVALID_OPTIONS_PREMIUM_FEE
+Invalid options premium fee
+-4070 INVALID_CL_OPTIONS_ID_LEN
+Client options id is not valid.
+Client options id length should be less than 32 chars
+-4071 INVALID_OPTIONS_DIRECTION
+Invalid options direction
+-4072 OPTIONS_PREMIUM_NOT_UPDATE
+premium fee is not updated, reject order
+-4073 OPTIONS_PREMIUM_INPUT_LESS_THAN_ZERO
+input premium fee is less than 0, reject order
+-4074 OPTIONS_AMOUNT_BIGGER_THAN_UPPER
+Order amount is bigger than upper boundary or less than 0, reject order
+-4075 OPTIONS_PREMIUM_OUTPUT_ZERO
+output premium fee is less than 0, reject order
+-4076 OPTIONS_PREMIUM_TOO_DIFF
+original fee is too much higher than last fee
+-4077 OPTIONS_PREMIUM_REACH_LIMIT
+place order amount has reached to limit, reject order
+-4078 OPTIONS_COMMON_ERROR
+options internal error
+-4079 INVALID_OPTIONS_ID
+invalid options id
+invalid options id: %s
+duplicate options id %d for user %d
+-4080 OPTIONS_USER_NOT_FOUND
+user not found
+user not found with id: %s
+-4081 OPTIONS_NOT_FOUND
+options not found
+options not found with id: %s
+-4082 INVALID_BATCH_PLACE_ORDER_SIZE
+Invalid number of batch place orders.
+Invalid number of batch place orders: %s
+-4083 PLACE_BATCH_ORDERS_FAIL
+Fail to place batch orders.
+-4084 UPCOMING_METHOD
+Method is not allowed currently. Upcoming soon.
+-4085 INVALID_NOTIONAL_LIMIT_COEF
+Invalid notional limit coefficient
+-4086 INVALID_PRICE_SPREAD_THRESHOLD
+Invalid price spread threshold
+-4087 REDUCE_ONLY_ORDER_PERMISSION
+User can only place reduce only order
+-4088 NO_PLACE_ORDER_PERMISSION
+User can not place order currently
+-4104 INVALID_CONTRACT_TYPE
+Invalid contract type
+-4114 INVALID_CLIENT_TRAN_ID_LEN
+clientTranId is not valid
+Client tran id length should be less than 64 chars
+-4115 DUPLICATED_CLIENT_TRAN_ID
+clientTranId is duplicated
+Client tran id should be unique within 7 days
+-4118 REDUCE_ONLY_MARGIN_CHECK_FAILED
+ReduceOnly Order Failed. Please check your existing position and open orders
+-4131 MARKET_ORDER_REJECT
+The counterparty's best price does not meet the PERCENT_PRICE filter limit
+-4135 INVALID_ACTIVATION_PRICE
+Invalid activation price
+-4137 QUANTITY_EXISTS_WITH_CLOSE_POSITION
+Quantity must be zero with closePosition equals true
+-4138 REDUCE_ONLY_MUST_BE_TRUE
+Reduce only must be true with closePosition equals true
+-4139 ORDER_TYPE_CANNOT_BE_MKT
+Order type can not be market if it's unable to cancel
+-4140 INVALID_OPENING_POSITION_STATUS
+Invalid symbol status for opening position
+-4141 SYMBOL_ALREADY_CLOSED
+Symbol is closed
+-4142 STRATEGY_INVALID_TRIGGER_PRICE
+REJECT: take profit or stop order will be triggered immediately
+-4144 INVALID_PAIR
+Invalid pair
+-4161 ISOLATED_LEVERAGE_REJECT_WITH_POSITION
+Leverage reduction is not supported in Isolated Margin Mode with open positions
+-4164 MIN_NOTIONAL
+Order's notional must be no smaller than 5.0 (unless you choose reduce only)
+Order's notional must be no smaller than %s (unless you choose reduce only)
+-4165 INVALID_TIME_INTERVAL
+Invalid time interval
+Maximum time interval is %s days
+-4183 PRICE_HIGHTER_THAN_STOP_MULTIPLIER_UP
+Price is higher than stop price multiplier cap.
+Limit price can't be higher than %s.
+-4184 PRICE_LOWER_THAN_STOP_MULTIPLIER_DOWN
+Price is lower than stop price multiplier floor.
+Limit price can't be lower than %s.
+50xx - Order Execution Issues
+-5021 FOK_ORDER_REJECT
+Due to the order could not be filled immediately, the FOK order has been rejected.
+-5022 GTX_ORDER_REJECT
+Due to the order could not be executed as maker, the Post Only order will be rejected.
