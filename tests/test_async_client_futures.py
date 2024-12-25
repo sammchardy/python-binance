@@ -66,24 +66,28 @@ async def test_futures_funding_rate(futuresClientAsync):
     await futuresClientAsync.futures_funding_rate()
 
 
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 async def test_futures_top_longshort_account_ratio(futuresClientAsync):
     await futuresClientAsync.futures_top_longshort_account_ratio(
         symbol="BTCUSDT", period="5m"
     )
 
 
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 async def test_futures_top_longshort_position_ratio(futuresClientAsync):
     await futuresClientAsync.futures_top_longshort_position_ratio(
         symbol="BTCUSDT", period="5m"
     )
 
 
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 async def test_futures_global_longshort_ratio(futuresClientAsync):
     await futuresClientAsync.futures_global_longshort_ratio(
         symbol="BTCUSDT", period="5m"
     )
 
 
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 async def test_futures_taker_longshort_ratio(futuresClientAsync):
     await futuresClientAsync.futures_taker_longshort_ratio(
         symbol="BTCUSDT", period="5m"
@@ -130,6 +134,7 @@ async def test_futures_index_info(futuresClientAsync):
     await futuresClientAsync.futures_index_info()
 
 
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 async def test_futures_open_interest_hist(futuresClientAsync):
     await futuresClientAsync.futures_open_interest_hist(symbol="BTCUSDT", period="5m")
 
