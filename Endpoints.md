@@ -880,3 +880,2158 @@
 > :warning: Not yet implemented  
 ### [COIN-M Futures testnet](https://binance-docs.github.io/apidocs/delivery_testnet/en/)
 > :warning: Not yet implemented  
+	- **POST /api/v3/sor/order**
+    ```python
+    client.v3_post_sor_order(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/commission**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_commission(**params)
+    ```
+
+	- **POST /sapi/v1/loan/customize/margin_call**
+    ```python
+    client.margin_v1_post_loan_customize_margin_call(**params)
+    ```
+
+	- **POST /papi/v1/um/feeBurn**
+    ```python
+    client.papi_v1_post_um_fee_burn(**params)
+    ```
+
+	- **POST /sapi/v1/dci/product/auto_compound/edit-status**
+    ```python
+    client.margin_v1_post_dci_product_auto_compound_edit_status(**params)
+    ```
+
+	- **DELETE /sapi/v1/margin/openOrders**
+    ```python
+    client.margin_v1_delete_margin_open_orders(**params)
+    ```
+
+	- **GET /sapi/v1/staking/productList**
+    ```python
+    client.margin_v1_get_staking_product_list(**params)
+    ```
+
+	- **POST /sapi/v1/bnbBurn**
+    ```python
+    client.margin_v1_post_bnb_burn(**params)
+    ```
+
+	- **DELETE /api/v3/openOrders**
+    ```python
+    client.v3_delete_open_orders(**params)
+    ```
+
+	- **POST /sapi/v1/asset/convert-transfer/queryByPage**
+    ```python
+    client.margin_v1_post_asset_convert_transfer_query_by_page(**params)
+    ```
+
+	- **GET /sapi/v1/margin/rateLimit/order**
+    ```python
+    client.margin_v1_get_margin_rate_limit_order(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/repay/history**
+    ```python
+    client.margin_v1_get_loan_flexible_repay_history(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/rateHistory**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_rate_history(**params)
+    ```
+
+	- **DELETE /sapi/v1/account/apiRestrictions/ipRestriction/ipList**
+    ```python
+    client.margin_v1_delete_account_api_restrictions_ip_restriction_ip_list(**params)
+    ```
+
+	- **GET /sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage**
+    ```python
+    client.margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page(**params)
+    ```
+
+	- **GET /dapi/v1/forceOrders**
+    ```python
+    client.futures_coin_v1_get_force_orders(**params)
+    ```
+
+	- **POST /sapi/v1/localentity/withdraw/apply**
+    ```python
+    client.margin_v1_post_localentity_withdraw_apply(**params)
+    ```
+
+	- **GET /dapi/v1/pmExchangeInfo**
+    ```python
+    client.futures_coin_v1_get_pm_exchange_info(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/virtualSubAccount**
+    ```python
+    client.margin_v1_post_sub_account_virtual_sub_account(**params)
+    ```
+
+	- **GET /papi/v1/um/positionRisk**
+    ```python
+    client.papi_v1_get_um_position_risk(**params)
+    ```
+
+	- **GET /sapi/v1/dci/product/positions**
+    ```python
+    client.margin_v1_get_dci_product_positions(**params)
+    ```
+
+	- **GET /sapi/v1/mining/statistics/user/list**
+    ```python
+    client.margin_v1_get_mining_statistics_user_list(**params)
+    ```
+
+	- **GET /sapi/v1/fiat/orders**
+    ```python
+    client.margin_v1_get_fiat_orders(**params)
+    ```
+
+	- **GET /sapi/v1/margin/dribblet**
+    ```python
+    client.margin_v1_get_margin_dribblet(**params)
+    ```
+
+	- **DELETE /dapi/v1/order**
+    ```python
+    client.futures_coin_v1_delete_order(**params)
+    ```
+
+	- **POST /sapi/v1/lending/auto-invest/plan/add**
+    ```python
+    client.margin_v1_post_lending_auto_invest_plan_add(**params)
+    ```
+
+	- **POST /wapi/v3/withdraw.html**
+    ```python
+    client.v3_post_withdraw_html(**params)
+    ```
+
+	- **POST /sapi/v1/account/apiRestrictions/ipRestriction**
+    ```python
+    client.margin_v1_post_account_api_restrictions_ip_restriction(**params)
+    ```
+
+	- **POST /sapi/v1/capital/contract/convertible-coins**
+    ```python
+    client.margin_v1_post_capital_contract_convertible_coins(**params)
+    ```
+
+	- **POST /sapi/v1/loan/borrow**
+    ```python
+    client.margin_v1_post_loan_borrow(**params)
+    ```
+
+	- **DELETE /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList**
+    ```python
+    client.margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/collateral/data**
+    ```python
+    client.margin_v1_get_loan_flexible_collateral_data(**params)
+    ```
+
+	- **GET /sapi/v1/eth-staking/eth/history/wbethRewardsHistory**
+    ```python
+    client.margin_v1_get_eth_staking_eth_history_wbeth_rewards_history(**params)
+    ```
+
+	- **POST /sapi/v2/loan/flexible/repay**
+    ```python
+    client.margin_v2_post_loan_flexible_repay(**params)
+    ```
+
+	- **GET /sapi/v1/convert/exchangeInfo**
+    ```python
+    client.margin_v1_get_convert_exchange_info(**params)
+    ```
+
+	- **GET /dapi/v1/continuousKlines**
+    ```python
+    client.futures_coin_v1_get_continuous_klines(**params)
+    ```
+
+	- **GET /api/v3/acccount**
+    ```python
+    client.v3_get_acccount(**params)
+    ```
+
+	- **POST /sapi/v1/margin/isolated/account**
+    ```python
+    client.margin_v1_post_margin_isolated_account(**params)
+    ```
+
+	- **POST /sapi/v1/lending/auto-invest/one-off**
+    ```python
+    client.margin_v1_post_lending_auto_invest_one_off(**params)
+    ```
+
+	- **POST /sapi/v2/loan/flexible/borrow**
+    ```python
+    client.margin_v2_post_loan_flexible_borrow(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/one-off/status**
+    ```python
+    client.margin_v1_get_lending_auto_invest_one_off_status(**params)
+    ```
+
+	- **GET /fapi/v1/indexPriceKlines**
+    ```python
+    client.futures_v1_get_index_price_klines(**params)
+    ```
+
+	- **GET /papi/v1/repay-futures-switch**
+    ```python
+    client.papi_v1_get_repay_futures_switch(**params)
+    ```
+
+	- **DELETE /sapi/v1/margin/isolated/account**
+    ```python
+    client.margin_v1_delete_margin_isolated_account(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/plan/list**
+    ```python
+    client.margin_v1_get_lending_auto_invest_plan_list(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/asset**
+    ```python
+    client.margin_v1_get_managed_subaccount_asset(**params)
+    ```
+
+	- **GET /sapi/v2/portfolio/account**
+    ```python
+    client.margin_v2_get_portfolio_account(**params)
+    ```
+
+	- **GET /sapi/v1/capital/deposit/subAddress**
+    ```python
+    client.margin_v1_get_capital_deposit_sub_address(**params)
+    ```
+
+	- **POST /sapi/v1/margin/borrow-repay**
+    ```python
+    client.margin_v1_post_margin_borrow_repay(**params)
+    ```
+
+	- **GET /papi/v1/um/trade/asyn**
+    ```python
+    client.papi_v1_get_um_trade_asyn(**params)
+    ```
+
+	- **GET /fapi/v1/convert/exchangeInfo**
+    ```python
+    client.futures_v1_get_convert_exchange_info(**params)
+    ```
+
+	- **GET /papi/v1/um/income/asyn/id**
+    ```python
+    client.papi_v1_get_um_income_asyn_id(**params)
+    ```
+
+	- **GET /fapi/v1/order/asyn/id**
+    ```python
+    client.futures_v1_get_order_asyn_id(**params)
+    ```
+
+	- **DELETE /eapi/v1/block/order/create**
+    ```python
+    client.options_v1_delete_block_order_create(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/repay/history**
+    ```python
+    client.margin_v2_get_loan_flexible_repay_history(**params)
+    ```
+
+	- **GET /sapi/v1/margin/dust**
+    ```python
+    client.margin_v1_get_margin_dust(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccount/depositHist**
+    ```python
+    client.margin_v1_get_broker_sub_account_deposit_hist(**params)
+    ```
+
+	- **GET /sapi/v1/mining/payment/uid**
+    ```python
+    client.margin_v1_get_mining_payment_uid(**params)
+    ```
+
+	- **GET /papi/v1/margin/openOrders**
+    ```python
+    client.papi_v1_get_margin_open_orders(**params)
+    ```
+
+	- **GET /sapi/v1/margin/exchange-small-liability-history**
+    ```python
+    client.margin_v1_get_margin_exchange_small_liability_history(**params)
+    ```
+
+	- **GET /fapi/v1/convert/orderStatus**
+    ```python
+    client.futures_v1_get_convert_order_status(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v1_post_sub_account_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **GET /dapi/v1/markPriceKlines**
+    ```python
+    client.futures_coin_v1_get_mark_price_klines(**params)
+    ```
+
+	- **DELETE /eapi/v1/allOpenOrdersByUnderlying**
+    ```python
+    client.options_v1_delete_all_open_orders_by_underlying(**params)
+    ```
+
+	- **POST /sapi/v1/eth-staking/eth/redeem**
+    ```python
+    client.margin_v1_post_eth_staking_eth_redeem(**params)
+    ```
+
+	- **GET /sapi/v1/copyTrading/futures/userStatus**
+    ```python
+    client.margin_v1_get_copy_trading_futures_user_status(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/permission/universalTransfer**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_permission_universal_transfer(**params)
+    ```
+
+	- **GET /papi/v1/um/order**
+    ```python
+    client.papi_v1_get_um_order(**params)
+    ```
+
+	- **POST /sapi/v1/algo/spot/newOrderTwap**
+    ```python
+    client.margin_v1_post_algo_spot_new_order_twap(**params)
+    ```
+
+	- **DELETE /sapi/v1/margin/orderList**
+    ```python
+    client.margin_v1_delete_margin_order_list(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/history/list**
+    ```python
+    client.margin_v1_get_lending_auto_invest_history_list(**params)
+    ```
+
+	- **POST /sapi/v1/asset/dust-btc**
+    ```python
+    client.margin_v1_post_asset_dust_btc(**params)
+    ```
+
+	- **GET /sapi/v1/mining/hash-transfer/config/details**
+    ```python
+    client.margin_v1_get_mining_hash_transfer_config_details(**params)
+    ```
+
+	- **GET /eapi/v1/marginAccount**
+    ```python
+    client.options_v1_get_margin_account(**params)
+    ```
+
+	- **GET /sapi/v1/algo/spot/subOrders**
+    ```python
+    client.margin_v1_get_algo_spot_sub_orders(**params)
+    ```
+
+	- **GET /fapi/v1/rateLimit/order**
+    ```python
+    client.futures_v1_get_rate_limit_order(**params)
+    ```
+
+	- **GET /papi/v1/cm/account**
+    ```python
+    client.papi_v1_get_cm_account(**params)
+    ```
+
+	- **POST /sapi/v1/loan/flexible/repay**
+    ```python
+    client.margin_v1_post_loan_flexible_repay(**params)
+    ```
+
+	- **GET /eapi/v1/income/asyn**
+    ```python
+    client.options_v1_get_income_asyn(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/futures/accountSummary**
+    ```python
+    client.margin_v1_get_sub_account_futures_account_summary(**params)
+    ```
+
+	- **GET /sapi/v1/margin/isolated/accountLimit**
+    ```python
+    client.margin_v1_get_margin_isolated_account_limit(**params)
+    ```
+
+	- **POST /sapi/v1/eth-staking/wbeth/wrap**
+    ```python
+    client.margin_v1_post_eth_staking_wbeth_wrap(**params)
+    ```
+
+	- **GET /sapi/v1/simple-earn/locked/position**
+    ```python
+    client.margin_v1_get_simple_earn_locked_position(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/commission/coinFutures**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_commission_coin_futures(**params)
+    ```
+
+	- **GET /papi/v2/um/account**
+    ```python
+    client.papi_v2_get_um_account(**params)
+    ```
+
+	- **GET /sapi/v1/broker/transfer**
+    ```python
+    client.margin_v1_get_broker_transfer(**params)
+    ```
+
+	- **POST /papi/v1/margin/repay-debt**
+    ```python
+    client.papi_v1_post_margin_repay_debt(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/transfer/subToSub**
+    ```python
+    client.margin_v1_post_sub_account_transfer_sub_to_sub(**params)
+    ```
+
+	- **POST /sapi/v1/capital/deposit/credit-apply**
+    ```python
+    client.margin_v1_post_capital_deposit_credit_apply(**params)
+    ```
+
+	- **GET /sapi/v1/capital/contract/convertible-coins**
+    ```python
+    client.margin_v1_get_capital_contract_convertible_coins(**params)
+    ```
+
+	- **POST /sapi/v1/simple-earn/locked/subscribe**
+    ```python
+    client.margin_v1_post_simple_earn_locked_subscribe(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/rebalance/history**
+    ```python
+    client.margin_v1_get_lending_auto_invest_rebalance_history(**params)
+    ```
+
+	- **GET /papi/v1/um/userTrades**
+    ```python
+    client.papi_v1_get_um_user_trades(**params)
+    ```
+
+	- **GET /eapi/v1/exchangeInfo**
+    ```python
+    client.options_v1_get_exchange_info(**params)
+    ```
+
+	- **GET /sapi/v1/pay/transactions**
+    ```python
+    client.margin_v1_get_pay_transactions(**params)
+    ```
+
+	- **GET /sapi/v1/capital/deposit/address/list**
+    ```python
+    client.margin_v1_get_capital_deposit_address_list(**params)
+    ```
+
+	- **GET /papi/v1/um/openOrders**
+    ```python
+    client.papi_v1_get_um_open_orders(**params)
+    ```
+
+	- **GET /sapi/v1/dci/product/list**
+    ```python
+    client.margin_v1_get_dci_product_list(**params)
+    ```
+
+	- **POST /sapi/v1/dci/product/subscribe**
+    ```python
+    client.margin_v1_post_dci_product_subscribe(**params)
+    ```
+
+	- **GET /sapi/v1/simple-earn/flexible/history/subscriptionRecord**
+    ```python
+    client.margin_v1_get_simple_earn_flexible_history_subscription_record(**params)
+    ```
+
+	- **GET /sapi/v1/portfolio/balance**
+    ```python
+    client.margin_v1_get_portfolio_balance(**params)
+    ```
+
+	- **GET /sapi/v1/loan/collateral/data**
+    ```python
+    client.margin_v1_get_loan_collateral_data(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/redeem/history**
+    ```python
+    client.margin_v1_get_lending_auto_invest_redeem_history(**params)
+    ```
+
+	- **GET /fapi/v1/orderAmendment**
+    ```python
+    client.futures_v1_get_order_amendment(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/unclaimedRewards**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_unclaimed_rewards(**params)
+    ```
+
+	- **GET /papi/v1/um/symbolConfig**
+    ```python
+    client.papi_v1_get_um_symbol_config(**params)
+    ```
+
+	- **DELETE /sapi/v1/algo/spot/order**
+    ```python
+    client.margin_v1_delete_algo_spot_order(**params)
+    ```
+
+	- **GET /fapi/v1/commissionRate**
+    ```python
+    client.futures_v1_get_commission_rate(**params)
+    ```
+
+	- **POST /sapi/v1/margin/exchange-small-liability**
+    ```python
+    client.margin_v1_post_margin_exchange_small_liability(**params)
+    ```
+
+	- **GET /sapi/v1/eth-staking/account**
+    ```python
+    client.margin_v1_get_eth_staking_account(**params)
+    ```
+
+	- **GET /papi/v1/um/conditional/openOrders**
+    ```python
+    client.papi_v1_get_um_conditional_open_orders(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/futures/transfer**
+    ```python
+    client.margin_v1_post_sub_account_futures_transfer(**params)
+    ```
+
+	- **GET /sapi/v1/loan/income**
+    ```python
+    client.margin_v1_get_loan_income(**params)
+    ```
+
+	- **GET /sapi/v1/localentity/deposit/history**
+    ```python
+    client.margin_v1_get_localentity_deposit_history(**params)
+    ```
+
+	- **POST /sapi/v1/eth-staking/wbeth/unwrap**
+    ```python
+    client.margin_v1_post_eth_staking_wbeth_unwrap(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccount/bnbBurn/spot**
+    ```python
+    client.margin_v1_post_broker_sub_account_bnb_burn_spot(**params)
+    ```
+
+	- **GET /eapi/v1/account**
+    ```python
+    client.options_v1_get_account(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/query-trans-log**
+    ```python
+    client.margin_v1_get_managed_subaccount_query_trans_log(**params)
+    ```
+
+	- **PUT /eapi/v1/block/order/create**
+    ```python
+    client.options_v1_put_block_order_create(**params)
+    ```
+
+	- **POST /sapi/v1/asset/get-funding-asset**
+    ```python
+    client.margin_v1_post_asset_get_funding_asset(**params)
+    ```
+
+	- **GET /sapi/v1/broker/rebate/recentRecord**
+    ```python
+    client.margin_v1_get_broker_rebate_recent_record(**params)
+    ```
+
+	- **POST /sapi/v1/convert/acceptQuote**
+    ```python
+    client.margin_v1_post_convert_accept_quote(**params)
+    ```
+
+	- **GET /sapi/v1/mining/statistics/user/status**
+    ```python
+    client.margin_v1_get_mining_statistics_user_status(**params)
+    ```
+
+	- **POST /sapi/v1/loan/vip/repay**
+    ```python
+    client.margin_v1_post_loan_vip_repay(**params)
+    ```
+
+	- **POST /fapi/v1/feeBurn**
+    ```python
+    client.futures_v1_post_fee_burn(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/borrow/history**
+    ```python
+    client.margin_v2_get_loan_flexible_borrow_history(**params)
+    ```
+
+	- **POST /sapi/v1/lending/auto-invest/redeem**
+    ```python
+    client.margin_v1_post_lending_auto_invest_redeem(**params)
+    ```
+
+	- **GET /dapi/v1/income/asyn**
+    ```python
+    client.futures_coin_v1_get_income_asyn(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/info**
+    ```python
+    client.margin_v1_get_managed_subaccount_info(**params)
+    ```
+
+	- **POST /sapi/v1/convert/limit/placeOrder**
+    ```python
+    client.margin_v1_post_convert_limit_place_order(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **POST /sapi/v1/sol-staking/sol/redeem**
+    ```python
+    client.margin_v1_post_sol_staking_sol_redeem(**params)
+    ```
+
+	- **GET /eapi/v1/countdownCancelAll**
+    ```python
+    client.options_v1_get_countdown_cancel_all(**params)
+    ```
+
+	- **GET /dapi/v1/order/asyn/id**
+    ```python
+    client.futures_coin_v1_get_order_asyn_id(**params)
+    ```
+
+	- **GET /fapi/v1/constituents**
+    ```python
+    client.futures_v1_get_constituents(**params)
+    ```
+
+	- **GET /dapi/v1/ticker/bookTicker**
+    ```python
+    client.futures_coin_v1_get_ticker_book_ticker(**params)
+    ```
+
+	- **GET /fapi/v1/trade/asyn**
+    ```python
+    client.futures_v1_get_trade_asyn(**params)
+    ```
+
+	- **GET /fapi/v1/account**
+    ```python
+    client.futures_v1_get_account(**params)
+    ```
+
+	- **GET /fapi/v2/ticker/price**
+    ```python
+    client.futures_v2_get_ticker_price(**params)
+    ```
+
+	- **GET /dapi/v1/trade/asyn**
+    ```python
+    client.futures_coin_v1_get_trade_asyn(**params)
+    ```
+
+	- **GET /papi/v1/um/conditional/orderHistory**
+    ```python
+    client.papi_v1_get_um_conditional_order_history(**params)
+    ```
+
+	- **GET /eapi/v1/income/asyn/id**
+    ```python
+    client.options_v1_get_income_asyn_id(**params)
+    ```
+
+	- **GET /wapi/v3/sub-account/transfer/history.html**
+    ```python
+    client.v3_get_sub_account_transfer_history_html(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/quota**
+    ```python
+    client.margin_v1_get_sol_staking_sol_quota(**params)
+    ```
+
+	- **POST /sapi/v1/eth-staking/eth/stake**
+    ```python
+    client.margin_v1_post_eth_staking_eth_stake(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/target-asset/roi/list**
+    ```python
+    client.margin_v1_get_lending_auto_invest_target_asset_roi_list(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/target-asset/list**
+    ```python
+    client.margin_v1_get_lending_auto_invest_target_asset_list(**params)
+    ```
+
+	- **PUT /fapi/v1/batchOrder**
+    ```python
+    client.futures_v1_put_batch_order(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/futures/internalTransfer**
+    ```python
+    client.margin_v1_get_sub_account_futures_internal_transfer(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/deposit/address**
+    ```python
+    client.margin_v1_get_managed_subaccount_deposit_address(**params)
+    ```
+
+	- **GET /eapi/v1/openInterest**
+    ```python
+    client.options_v1_get_open_interest(**params)
+    ```
+
+	- **POST /sapi/v1/account/apiRestrictions/ipRestriction/ipList**
+    ```python
+    client.margin_v1_post_account_api_restrictions_ip_restriction_ip_list(**params)
+    ```
+
+	- **POST /sapi/v1/broker/transfer/futures**
+    ```python
+    client.margin_v1_post_broker_transfer_futures(**params)
+    ```
+
+	- **POST /sapi/v1/sol-staking/sol/claim**
+    ```python
+    client.margin_v1_post_sol_staking_sol_claim(**params)
+    ```
+
+	- **GET /api/v3/ticker/tradingDay**
+    ```python
+    client.v3_get_ticker_trading_day(**params)
+    ```
+
+	- **GET /eapi/v1/block/user-trades**
+    ```python
+    client.options_v1_get_block_user_trades(**params)
+    ```
+
+	- **GET /fapi/v1/multiAssetsMargin**
+    ```python
+    client.futures_v1_get_multi_assets_margin(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/all/asset**
+    ```python
+    client.margin_v1_get_lending_auto_invest_all_asset(**params)
+    ```
+
+	- **POST /dapi/v1/order**
+    ```python
+    client.futures_coin_v1_post_order(**params)
+    ```
+
+	- **GET /sapi/v1/loan/vip/request/interestRate**
+    ```python
+    client.margin_v1_get_loan_vip_request_interest_rate(**params)
+    ```
+
+	- **GET /sapi/v1/staking/personalLeftQuota**
+    ```python
+    client.margin_v1_get_staking_personal_left_quota(**params)
+    ```
+
+	- **GET /fapi/v3/balance**
+    ```python
+    client.futures_v3_get_balance(**params)
+    ```
+
+	- **GET /sapi/v1/simple-earn/flexible/history/redemptionRecord**
+    ```python
+    client.margin_v1_get_simple_earn_flexible_history_redemption_record(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList**
+    ```python
+    client.margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list(**params)
+    ```
+
+	- **GET /sapi/v1/margin/tradeCoeff**
+    ```python
+    client.margin_v1_get_margin_trade_coeff(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccountApi/commission/coinFutures**
+    ```python
+    client.margin_v1_get_broker_sub_account_api_commission_coin_futures(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/bnsolRewardsHistory**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_bnsol_rewards_history(**params)
+    ```
+
+	- **POST /sapi/v1/asset/transfer**
+    ```python
+    client.margin_v1_post_asset_transfer(**params)
+    ```
+
+	- **GET /dapi/v1/fundingRate**
+    ```python
+    client.futures_coin_v1_get_funding_rate(**params)
+    ```
+
+	- **POST /sapi/v1/staking/setAutoStaking**
+    ```python
+    client.margin_v1_post_staking_set_auto_staking(**params)
+    ```
+
+	- **POST /sapi/v1/loan/flexible/borrow**
+    ```python
+    client.margin_v1_post_loan_flexible_borrow(**params)
+    ```
+
+	- **POST /sapi/v1/margin/max-leverage**
+    ```python
+    client.margin_v1_post_margin_max_leverage(**params)
+    ```
+
+	- **POST /api/v3/sor/order/test**
+    ```python
+    client.v3_post_sor_order_test(**params)
+    ```
+
+	- **POST /sapi/v1/portfolio/repay-futures-switch**
+    ```python
+    client.margin_v1_post_portfolio_repay_futures_switch(**params)
+    ```
+
+	- **GET /sapi/v1/broker/universalTransfer**
+    ```python
+    client.margin_v1_get_broker_universal_transfer(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/permission/vanillaOptions**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_permission_vanilla_options(**params)
+    ```
+
+	- **GET /papi/v1/margin/myTrades**
+    ```python
+    client.papi_v1_get_margin_my_trades(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccount/futuresSummary**
+    ```python
+    client.margin_v1_get_broker_sub_account_futures_summary(**params)
+    ```
+
+	- **GET /dapi/v2/leverageBracket**
+    ```python
+    client.futures_coin_v2_get_leverage_bracket(**params)
+    ```
+
+	- **GET /eapi/v1/depth**
+    ```python
+    client.options_v1_get_depth(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccount/marginSummary**
+    ```python
+    client.margin_v1_get_broker_sub_account_margin_summary(**params)
+    ```
+
+	- **POST /sapi/v1/portfolio/mint**
+    ```python
+    client.margin_v1_post_portfolio_mint(**params)
+    ```
+
+	- **POST /sapi/v1/giftcard/createCode**
+    ```python
+    client.margin_v1_post_giftcard_create_code(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/accountSnapshot**
+    ```python
+    client.margin_v1_get_managed_subaccount_account_snapshot(**params)
+    ```
+
+	- **POST /sapi/v1/sol-staking/sol/stake**
+    ```python
+    client.margin_v1_post_sol_staking_sol_stake(**params)
+    ```
+
+	- **POST /sapi/v1/managed-subaccount/deposit**
+    ```python
+    client.margin_v1_post_managed_subaccount_deposit(**params)
+    ```
+
+	- **GET /sapi/v1/loan/repay/collateral/rate**
+    ```python
+    client.margin_v1_get_loan_repay_collateral_rate(**params)
+    ```
+
+	- **GET /sapi/v1/mining/payment/other**
+    ```python
+    client.margin_v1_get_mining_payment_other(**params)
+    ```
+
+	- **GET /papi/v1/um/account**
+    ```python
+    client.papi_v1_get_um_account(**params)
+    ```
+
+	- **POST /sapi/v1/loan/adjust/ltv**
+    ```python
+    client.margin_v1_post_loan_adjust_ltv(**params)
+    ```
+
+	- **POST /sapi/v1/algo/futures/newOrderVp**
+    ```python
+    client.margin_v1_post_algo_futures_new_order_vp(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/queryTransLogForInvestor**
+    ```python
+    client.margin_v1_get_managed_subaccount_query_trans_log_for_investor(**params)
+    ```
+
+	- **GET /dapi/v1/trades**
+    ```python
+    client.futures_coin_v1_get_trades(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/spotSummary**
+    ```python
+    client.margin_v1_get_sub_account_spot_summary(**params)
+    ```
+
+	- **POST /sapi/v1/loan/vip/renew**
+    ```python
+    client.margin_v1_post_loan_vip_renew(**params)
+    ```
+
+	- **GET /sapi/v1/mining/payment/list**
+    ```python
+    client.margin_v1_get_mining_payment_list(**params)
+    ```
+
+	- **POST /eapi/v1/block/order/execute**
+    ```python
+    client.options_v1_post_block_order_execute(**params)
+    ```
+
+	- **POST /eapi/v1/block/order/create**
+    ```python
+    client.options_v1_post_block_order_create(**params)
+    ```
+
+	- **GET /sapi/v1/giftcard/verify**
+    ```python
+    client.margin_v1_get_giftcard_verify(**params)
+    ```
+
+	- **GET /fapi/v3/account**
+    ```python
+    client.futures_v3_get_account(**params)
+    ```
+
+	- **GET /sapi/v1/margin/crossMarginCollateralRatio**
+    ```python
+    client.margin_v1_get_margin_cross_margin_collateral_ratio(**params)
+    ```
+
+	- **POST /sapi/v1/staking/redeem**
+    ```python
+    client.margin_v1_post_staking_redeem(**params)
+    ```
+
+	- **GET /papi/v1/margin/allOrderList**
+    ```python
+    client.papi_v1_get_margin_all_order_list(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/transfer/subUserHistory**
+    ```python
+    client.margin_v1_get_sub_account_transfer_sub_user_history(**params)
+    ```
+
+	- **PUT /sapi/v1/localentity/deposit/provide-info**
+    ```python
+    client.margin_v1_put_localentity_deposit_provide_info(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/commission/futures**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_commission_futures(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/ltv/adjustment/history**
+    ```python
+    client.margin_v2_get_loan_flexible_ltv_adjustment_history(**params)
+    ```
+
+	- **GET /papi/v1/um/conditional/allOrders**
+    ```python
+    client.papi_v1_get_um_conditional_all_orders(**params)
+    ```
+
+	- **GET /papi/v1/um/accountConfig**
+    ```python
+    client.papi_v1_get_um_account_config(**params)
+    ```
+
+	- **GET /sapi/v1/loan/vip/loanable/data**
+    ```python
+    client.margin_v1_get_loan_vip_loanable_data(**params)
+    ```
+
+	- **POST /sapi/v1/managed-subaccount/withdraw**
+    ```python
+    client.margin_v1_post_managed_subaccount_withdraw(**params)
+    ```
+
+	- **GET /sapi/v1/loan/borrow/history**
+    ```python
+    client.margin_v1_get_loan_borrow_history(**params)
+    ```
+
+	- **GET /eapi/v1/historyOrders**
+    ```python
+    client.options_v1_get_history_orders(**params)
+    ```
+
+	- **GET /sapi/v1/dci/product/accounts**
+    ```python
+    client.margin_v1_get_dci_product_accounts(**params)
+    ```
+
+	- **GET /papi/v1/cm/leverageBracket**
+    ```python
+    client.papi_v1_get_cm_leverage_bracket(**params)
+    ```
+
+	- **POST /sapi/v1/algo/futures/newOrderTwap**
+    ```python
+    client.margin_v1_post_algo_futures_new_order_twap(**params)
+    ```
+
+	- **POST /fapi/v1/order/test**
+    ```python
+    client.futures_v1_post_order_test(**params)
+    ```
+
+	- **GET /sapi/v1/broker/rebate/historicalRecord**
+    ```python
+    client.margin_v1_get_broker_rebate_historical_record(**params)
+    ```
+
+	- **POST /sapi/v1/mining/hash-transfer/config**
+    ```python
+    client.margin_v1_post_mining_hash_transfer_config(**params)
+    ```
+
+	- **POST /api/v3/orderList/oto**
+    ```python
+    client.v3_post_order_list_oto(**params)
+    ```
+
+	- **GET /sapi/v1/margin/delist-schedule**
+    ```python
+    client.margin_v1_get_margin_delist_schedule(**params)
+    ```
+
+	- **GET /fapi/v3/positionRisk**
+    ```python
+    client.futures_v3_get_position_risk(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/fetch-future-asset**
+    ```python
+    client.margin_v1_get_managed_subaccount_fetch_future_asset(**params)
+    ```
+
+	- **POST /api/v3/orderList/oco**
+    ```python
+    client.v3_post_order_list_oco(**params)
+    ```
+
+	- **GET /papi/v1/um/feeBurn**
+    ```python
+    client.papi_v1_get_um_fee_burn(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/margin/account**
+    ```python
+    client.margin_v1_get_sub_account_margin_account(**params)
+    ```
+
+	- **GET /sapi/v1/bnbBurn**
+    ```python
+    client.margin_v1_get_bnb_burn(**params)
+    ```
+
+	- **POST /sapi/v1/lending/auto-invest/plan/edit-status**
+    ```python
+    client.margin_v1_post_lending_auto_invest_plan_edit_status(**params)
+    ```
+
+	- **GET /dapi/v1/adlQuantile**
+    ```python
+    client.futures_coin_v1_get_adl_quantile(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/repay/rate**
+    ```python
+    client.margin_v2_get_loan_flexible_repay_rate(**params)
+    ```
+
+	- **PUT /fapi/v1/batchOrders**
+    ```python
+    client.futures_v1_put_batch_orders(**params)
+    ```
+
+	- **POST /sapi/v1/staking/purchase**
+    ```python
+    client.margin_v1_post_staking_purchase(**params)
+    ```
+
+	- **GET /dapi/v1/exchangeInfo**
+    ```python
+    client.futures_coin_v1_get_exchange_info(**params)
+    ```
+
+	- **GET /sapi/v1/account/apiRestrictions/ipRestriction**
+    ```python
+    client.margin_v1_get_account_api_restrictions_ip_restriction(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/queryTransLogForTradeParent**
+    ```python
+    client.margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent(**params)
+    ```
+
+	- **GET /sapi/v1/margin/openOrderList**
+    ```python
+    client.margin_v1_get_margin_open_order_list(**params)
+    ```
+
+	- **GET /sapi/v1/loan/loanable/data**
+    ```python
+    client.margin_v1_get_loan_loanable_data(**params)
+    ```
+
+	- **PUT /papi/v1/cm/order**
+    ```python
+    client.papi_v1_put_cm_order(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccount/blvt**
+    ```python
+    client.margin_v1_post_broker_sub_account_blvt(**params)
+    ```
+
+	- **GET /sapi/v1/simple-earn/locked/history/subscriptionRecord**
+    ```python
+    client.margin_v1_get_simple_earn_locked_history_subscription_record(**params)
+    ```
+
+	- **GET /sapi/v1/mining/pub/coinList**
+    ```python
+    client.margin_v1_get_mining_pub_coin_list(**params)
+    ```
+
+	- **GET /papi/v1/um/orderAmendment**
+    ```python
+    client.papi_v1_get_um_order_amendment(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/transaction-statistics**
+    ```python
+    client.margin_v1_get_sub_account_transaction_statistics(**params)
+    ```
+
+	- **POST /api/v3/cancelReplace**
+    ```python
+    client.v3_post_cancel_replace(**params)
+    ```
+
+	- **PUT /papi/v1/um/order**
+    ```python
+    client.papi_v1_put_um_order(**params)
+    ```
+
+	- **GET /sapi/v1/asset/custody/transfer-history**
+    ```python
+    client.margin_v1_get_asset_custody_transfer_history(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/source-asset/list**
+    ```python
+    client.margin_v1_get_lending_auto_invest_source_asset_list(**params)
+    ```
+
+	- **GET /dapi/v1/positionRisk**
+    ```python
+    client.futures_coin_v1_get_position_risk(**params)
+    ```
+
+	- **POST /sapi/v1/loan/repay**
+    ```python
+    client.margin_v1_post_loan_repay(**params)
+    ```
+
+	- **GET /sapi/v1/algo/spot/openOrders**
+    ```python
+    client.margin_v1_get_algo_spot_open_orders(**params)
+    ```
+
+	- **GET /papi/v1/cm/orderAmendment**
+    ```python
+    client.papi_v1_get_cm_order_amendment(**params)
+    ```
+
+	- **GET /sapi/v1/margin/borrow-repay**
+    ```python
+    client.margin_v1_get_margin_borrow_repay(**params)
+    ```
+
+	- **GET /eapi/v1/userTrades**
+    ```python
+    client.options_v1_get_user_trades(**params)
+    ```
+
+	- **GET /sapi/v1/convert/orderStatus**
+    ```python
+    client.margin_v1_get_convert_order_status(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccount/bnbBurn/status**
+    ```python
+    client.margin_v1_get_broker_sub_account_bnb_burn_status(**params)
+    ```
+
+	- **POST /papi/v1/asset-collection**
+    ```python
+    client.papi_v1_post_asset_collection(**params)
+    ```
+
+	- **GET /fapi/v1/balance**
+    ```python
+    client.futures_v1_get_balance(**params)
+    ```
+
+	- **GET /dapi/v1/orderAmendment**
+    ```python
+    client.futures_coin_v1_get_order_amendment(**params)
+    ```
+
+	- **POST /fapi/v1/convert/getQuote**
+    ```python
+    client.futures_v1_post_convert_get_quote(**params)
+    ```
+
+	- **POST /sapi/v1/convert/limit/cancelOrder**
+    ```python
+    client.margin_v1_post_convert_limit_cancel_order(**params)
+    ```
+
+	- **GET /sapi/v1/loan/repay/history**
+    ```python
+    client.margin_v1_get_loan_repay_history(**params)
+    ```
+
+	- **GET /sapi/v2/sub-account/futures/account**
+    ```python
+    client.margin_v2_get_sub_account_futures_account(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/account**
+    ```python
+    client.margin_v1_get_sol_staking_account(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/index/user-summary**
+    ```python
+    client.margin_v1_get_lending_auto_invest_index_user_summary(**params)
+    ```
+
+	- **GET /sapi/v1/mining/hash-transfer/profit/details**
+    ```python
+    client.margin_v1_get_mining_hash_transfer_profit_details(**params)
+    ```
+
+	- **GET /sapi/v1/loan/vip/ongoing/orders**
+    ```python
+    client.margin_v1_get_loan_vip_ongoing_orders(**params)
+    ```
+
+	- **GET /sapi/v2/sub-account/futures/accountSummary**
+    ```python
+    client.margin_v2_get_sub_account_futures_account_summary(**params)
+    ```
+
+	- **GET /papi/v1/um/allOrders**
+    ```python
+    client.papi_v1_get_um_all_orders(**params)
+    ```
+
+	- **GET /papi/v1/margin/allOrders**
+    ```python
+    client.papi_v1_get_margin_all_orders(**params)
+    ```
+
+	- **GET /sapi/v1/loan/vip/collateral/account**
+    ```python
+    client.margin_v1_get_loan_vip_collateral_account(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/futures/enable**
+    ```python
+    client.margin_v1_post_sub_account_futures_enable(**params)
+    ```
+
+	- **POST /papi/v1/repay-futures-switch**
+    ```python
+    client.papi_v1_post_repay_futures_switch(**params)
+    ```
+
+	- **POST /eapi/v1/countdownCancelAllHeartBeat**
+    ```python
+    client.options_v1_post_countdown_cancel_all_heart_beat(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v1_get_sub_account_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **GET /sapi/v1/staking/position**
+    ```python
+    client.margin_v1_get_staking_position(**params)
+    ```
+
+	- **GET /sapi/v2/portfolio/collateralRate**
+    ```python
+    client.margin_v2_get_portfolio_collateral_rate(**params)
+    ```
+
+	- **POST /sapi/v1/margin/order/oco**
+    ```python
+    client.margin_v1_post_margin_order_oco(**params)
+    ```
+
+	- **PUT /fapi/v1/order**
+    ```python
+    client.futures_v1_put_order(**params)
+    ```
+
+	- **GET /sapi/v1/copyTrading/futures/leadSymbol**
+    ```python
+    client.margin_v1_get_copy_trading_futures_lead_symbol(**params)
+    ```
+
+	- **POST /sapi/v1/simple-earn/locked/setRedeemOption**
+    ```python
+    client.margin_v1_post_simple_earn_locked_set_redeem_option(**params)
+    ```
+
+	- **GET /sapi/v1/margin/orderList**
+    ```python
+    client.margin_v1_get_margin_order_list(**params)
+    ```
+
+	- **GET /dapi/v1/premiumIndex**
+    ```python
+    client.futures_coin_v1_get_premium_index(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/boostRewardsHistory**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_boost_rewards_history(**params)
+    ```
+
+	- **GET /fapi/v1/positionRisk**
+    ```python
+    client.futures_v1_get_position_risk(**params)
+    ```
+
+	- **GET /dapi/v1/klines**
+    ```python
+    client.futures_coin_v1_get_klines(**params)
+    ```
+
+	- **GET /dapi/v1/indexPriceKlines**
+    ```python
+    client.futures_coin_v1_get_index_price_klines(**params)
+    ```
+
+	- **GET /sapi/v1/mining/worker/detail**
+    ```python
+    client.margin_v1_get_mining_worker_detail(**params)
+    ```
+
+	- **GET /dapi/v1/allForceOrders**
+    ```python
+    client.futures_coin_v1_get_all_force_orders(**params)
+    ```
+
+	- **GET /api/v3/uiKlines**
+    ```python
+    client.v3_get_ui_klines(**params)
+    ```
+
+	- **GET /fapi/v1/pmExchangeInfo**
+    ```python
+    client.futures_v1_get_pm_exchange_info(**params)
+    ```
+
+	- **POST /sapi/v1/margin/dust**
+    ```python
+    client.margin_v1_post_margin_dust(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/margin/enable**
+    ```python
+    client.margin_v1_post_sub_account_margin_enable(**params)
+    ```
+
+	- **GET /sapi/v1/eth-staking/eth/history/stakingHistory**
+    ```python
+    client.margin_v1_get_eth_staking_eth_history_staking_history(**params)
+    ```
+
+	- **GET /sapi/v1/loan/vip/repay/history**
+    ```python
+    client.margin_v1_get_loan_vip_repay_history(**params)
+    ```
+
+	- **GET /eapi/v1/exerciseHistory**
+    ```python
+    client.options_v1_get_exercise_history(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/index/info**
+    ```python
+    client.margin_v1_get_lending_auto_invest_index_info(**params)
+    ```
+
+	- **GET /wapi/v3/depositHistory.html**
+    ```python
+    client.v3_get_deposit_history_html(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/ongoing/orders**
+    ```python
+    client.margin_v1_get_loan_flexible_ongoing_orders(**params)
+    ```
+
+	- **GET /sapi/v1/lending/auto-invest/plan/id**
+    ```python
+    client.margin_v1_get_lending_auto_invest_plan_id(**params)
+    ```
+
+	- **GET /fapi/v1/trade/asyn/id**
+    ```python
+    client.futures_v1_get_trade_asyn_id(**params)
+    ```
+
+	- **PUT /fapi/v1/listenKey**
+    ```python
+    client.futures_v1_put_listen_key(**params)
+    ```
+
+	- **GET /sapi/v1/convert/assetInfo**
+    ```python
+    client.margin_v1_get_convert_asset_info(**params)
+    ```
+
+	- **GET /sapi/v4/sub-account/assets**
+    ```python
+    client.margin_v4_get_sub_account_assets(**params)
+    ```
+
+	- **GET /dapi/v1/userTrades**
+    ```python
+    client.futures_coin_v1_get_user_trades(**params)
+    ```
+
+	- **GET /sapi/v1/loan/ltv/adjustment/history**
+    ```python
+    client.margin_v1_get_loan_ltv_adjustment_history(**params)
+    ```
+
+	- **GET /dapi/v1/openOrders**
+    ```python
+    client.futures_coin_v1_get_open_orders(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/universalTransfer**
+    ```python
+    client.margin_v1_post_sub_account_universal_transfer(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/ltv/adjustment/history**
+    ```python
+    client.margin_v1_get_loan_flexible_ltv_adjustment_history(**params)
+    ```
+
+	- **GET /sapi/v1/simple-earn/locked/history/redemptionRecord**
+    ```python
+    client.margin_v1_get_simple_earn_locked_history_redemption_record(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/margin/transfer**
+    ```python
+    client.margin_v1_post_sub_account_margin_transfer(**params)
+    ```
+
+	- **GET /sapi/v1/capital/deposit/subHisrec**
+    ```python
+    client.margin_v1_get_capital_deposit_sub_hisrec(**params)
+    ```
+
+	- **POST /papi/v1/um/order**
+    ```python
+    client.papi_v1_post_um_order(**params)
+    ```
+
+	- **GET /papi/v1/margin/orderList**
+    ```python
+    client.papi_v1_get_margin_order_list(**params)
+    ```
+
+	- **GET /sapi/v3/sub-account/assets**
+    ```python
+    client.margin_v3_get_sub_account_assets(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccountApi/ipRestriction/ipList**
+    ```python
+    client.margin_v1_post_broker_sub_account_api_ip_restriction_ip_list(**params)
+    ```
+
+	- **GET /api/v3/rateLimit/order**
+    ```python
+    client.v3_get_rate_limit_order(**params)
+    ```
+
+	- **GET /fapi/v1/fundingInfo**
+    ```python
+    client.futures_v1_get_funding_info(**params)
+    ```
+
+	- **GET /sapi/v1/margin/interestRateHistory**
+    ```python
+    client.margin_v1_get_margin_interest_rate_history(**params)
+    ```
+
+	- **GET /papi/v1/um/order/asyn**
+    ```python
+    client.papi_v1_get_um_order_asyn(**params)
+    ```
+
+	- **DELETE /papi/v1/um/order**
+    ```python
+    client.papi_v1_delete_um_order(**params)
+    ```
+
+	- **GET /sapi/v3/broker/subAccount/futuresSummary**
+    ```python
+    client.margin_v3_get_broker_sub_account_futures_summary(**params)
+    ```
+
+	- **POST /sapi/v1/simple-earn/flexible/redeem**
+    ```python
+    client.margin_v1_post_simple_earn_flexible_redeem(**params)
+    ```
+
+	- **GET /dapi/v1/trade/asyn/id**
+    ```python
+    client.futures_coin_v1_get_trade_asyn_id(**params)
+    ```
+
+	- **DELETE /sapi/v1/broker/subAccountApi/ipRestriction/ipList**
+    ```python
+    client.margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list(**params)
+    ```
+
+	- **POST /fapi/v1/convert/acceptQuote**
+    ```python
+    client.futures_v1_post_convert_accept_quote(**params)
+    ```
+
+	- **GET /sapi/v1/localentity/withdraw/history**
+    ```python
+    client.margin_v1_get_localentity_withdraw_history(**params)
+    ```
+
+	- **GET /sapi/v1/mining/pub/algoList**
+    ```python
+    client.margin_v1_get_mining_pub_algo_list(**params)
+    ```
+
+	- **POST /papi/v1/ping**
+    ```python
+    client.papi_v1_post_ping(**params)
+    ```
+
+	- **POST /sapi/v1/mining/hash-transfer/config/cancel**
+    ```python
+    client.margin_v1_post_mining_hash_transfer_config_cancel(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/margin/accountSummary**
+    ```python
+    client.margin_v1_get_sub_account_margin_account_summary(**params)
+    ```
+
+	- **PUT /dapi/v1/batchOrders**
+    ```python
+    client.futures_coin_v1_put_batch_orders(**params)
+    ```
+
+	- **GET /dapi/v1/account**
+    ```python
+    client.futures_coin_v1_get_account(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/futures/positionRisk**
+    ```python
+    client.margin_v1_get_sub_account_futures_position_risk(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/loanable/data**
+    ```python
+    client.margin_v2_get_loan_flexible_loanable_data(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccount/spotSummary**
+    ```python
+    client.margin_v1_get_broker_sub_account_spot_summary(**params)
+    ```
+
+	- **GET /sapi/v1/giftcard/buyCode/token-limit**
+    ```python
+    client.margin_v1_get_giftcard_buy_code_token_limit(**params)
+    ```
+
+	- **POST /sapi/v1/loan/flexible/adjust/ltv**
+    ```python
+    client.margin_v1_post_loan_flexible_adjust_ltv(**params)
+    ```
+
+	- **POST /sapi/v1/broker/subAccount/bnbBurn/marginInterest**
+    ```python
+    client.margin_v1_post_broker_sub_account_bnb_burn_margin_interest(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/collateral/data**
+    ```python
+    client.margin_v2_get_loan_flexible_collateral_data(**params)
+    ```
+
+	- **GET /sapi/v1/loan/ongoing/orders**
+    ```python
+    client.margin_v1_get_loan_ongoing_orders(**params)
+    ```
+
+	- **GET /fapi/v1/feeBurn**
+    ```python
+    client.futures_v1_get_fee_burn(**params)
+    ```
+
+	- **GET /papi/v1/um/adlQuantile**
+    ```python
+    client.papi_v1_get_um_adl_quantile(**params)
+    ```
+
+	- **POST /api/v3/orderList/otoco**
+    ```python
+    client.v3_post_order_list_otoco(**params)
+    ```
+
+	- **POST /sapi/v1/convert/getQuote**
+    ```python
+    client.margin_v1_post_convert_get_quote(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v1_get_broker_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/redemptionHistory**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_redemption_history(**params)
+    ```
+
+	- **GET /sapi/v1/mining/hash-transfer/config/details/list**
+    ```python
+    client.margin_v1_get_mining_hash_transfer_config_details_list(**params)
+    ```
+
+	- **GET /sapi/v1/asset/wallet/balance**
+    ```python
+    client.margin_v1_get_asset_wallet_balance(**params)
+    ```
+
+	- **GET /fapi/v1/symbolConfig**
+    ```python
+    client.futures_v1_get_symbol_config(**params)
+    ```
+
+	- **GET /dapi/v1/pmAccountInfo**
+    ```python
+    client.futures_coin_v1_get_pm_account_info(**params)
+    ```
+
+	- **GET /sapi/v2/loan/flexible/ongoing/orders**
+    ```python
+    client.margin_v2_get_loan_flexible_ongoing_orders(**params)
+    ```
+
+	- **POST /sapi/v2/sub-account/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v2_post_sub_account_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **GET /sapi/v1/c2c/orderMatch/listUserOrderHistory**
+    ```python
+    client.margin_v1_get_c2c_order_match_list_user_order_history(**params)
+    ```
+
+	- **POST /sapi/v1/giftcard/redeemCode**
+    ```python
+    client.margin_v1_post_giftcard_redeem_code(**params)
+    ```
+
+	- **GET /sapi/v1/broker/transfer/futures**
+    ```python
+    client.margin_v1_get_broker_transfer_futures(**params)
+    ```
+
+	- **GET /dapi/v1/constituents**
+    ```python
+    client.futures_coin_v1_get_constituents(**params)
+    ```
+
+	- **GET /fapi/v1/accountConfig**
+    ```python
+    client.futures_v1_get_account_config(**params)
+    ```
+
+	- **GET /fapi/v1/income/asyn/id**
+    ```python
+    client.futures_v1_get_income_asyn_id(**params)
+    ```
+
+	- **GET /sapi/v1/account/info**
+    ```python
+    client.margin_v1_get_account_info(**params)
+    ```
+
+	- **GET /api/v3/myPreventedMatches**
+    ```python
+    client.v3_get_my_prevented_matches(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/borrow/history**
+    ```python
+    client.margin_v1_get_loan_flexible_borrow_history(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/blvt/enable**
+    ```python
+    client.margin_v1_post_sub_account_blvt_enable(**params)
+    ```
+
+	- **POST /eapi/v1/transfer**
+    ```python
+    client.options_v1_post_transfer(**params)
+    ```
+
+	- **GET /fapi/v1/pmAccountInfo**
+    ```python
+    client.futures_v1_get_pm_account_info(**params)
+    ```
+
+	- **POST /sapi/v1/simple-earn/flexible/subscribe**
+    ```python
+    client.margin_v1_post_simple_earn_flexible_subscribe(**params)
+    ```
+
+	- **GET /sapi/v1/margin/leverageBracket**
+    ```python
+    client.margin_v1_get_margin_leverage_bracket(**params)
+    ```
+
+	- **GET /sapi/v2/sub-account/futures/positionRisk**
+    ```python
+    client.margin_v2_get_sub_account_futures_position_risk(**params)
+    ```
+
+	- **GET /dapi/v1/allOrders**
+    ```python
+    client.futures_coin_v1_get_all_orders(**params)
+    ```
+
+	- **POST /sapi/v2/eth-staking/eth/stake**
+    ```python
+    client.margin_v2_post_eth_staking_eth_stake(**params)
+    ```
+
+	- **GET /sapi/v1/margin/allOrderList**
+    ```python
+    client.margin_v1_get_margin_all_order_list(**params)
+    ```
+
+	- **GET /sapi/v1/loan/flexible/loanable/data**
+    ```python
+    client.margin_v1_get_loan_flexible_loanable_data(**params)
+    ```
+
+	- **POST /papi/v1/um/conditional/order**
+    ```python
+    client.papi_v1_post_um_conditional_order(**params)
+    ```
+
+	- **GET /dapi/v1/commissionRate**
+    ```python
+    client.futures_coin_v1_get_commission_rate(**params)
+    ```
+
+	- **GET /sapi/v1/asset/transfer**
+    ```python
+    client.margin_v1_get_asset_transfer(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/transfer/subToMaster**
+    ```python
+    client.margin_v1_post_sub_account_transfer_sub_to_master(**params)
+    ```
+
+	- **POST /sapi/v1/giftcard/buyCode**
+    ```python
+    client.margin_v1_post_giftcard_buy_code(**params)
+    ```
+
+	- **GET /api/v3/myAllocations**
+    ```python
+    client.v3_get_my_allocations(**params)
+    ```
+
+	- **GET /eapi/v1/block/order/orders**
+    ```python
+    client.options_v1_get_block_order_orders(**params)
+    ```
+
+	- **GET /sapi/v1/broker/rebate/futures/recentRecord**
+    ```python
+    client.margin_v1_get_broker_rebate_futures_recent_record(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/universalTransfer**
+    ```python
+    client.margin_v1_get_sub_account_universal_transfer(**params)
+    ```
+
+	- **POST /papi/v1/repay-futures-negative-balance**
+    ```python
+    client.papi_v1_post_repay_futures_negative_balance(**params)
+    ```
+
+	- **POST /sapi/v3/asset/getUserAsset**
+    ```python
+    client.margin_v3_post_asset_get_user_asset(**params)
+    ```
+
+	- **DELETE /papi/v1/um/conditional/order**
+    ```python
+    client.papi_v1_delete_um_conditional_order(**params)
+    ```
+
+	- **POST /sapi/v2/loan/flexible/adjust/ltv**
+    ```python
+    client.margin_v2_post_loan_flexible_adjust_ltv(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/futures/internalTransfer**
+    ```python
+    client.margin_v1_post_sub_account_futures_internal_transfer(**params)
+    ```
+
+	- **GET /papi/v1/um/order/asyn/id**
+    ```python
+    client.papi_v1_get_um_order_asyn_id(**params)
+    ```
+
+	- **GET /fapi/v1/assetIndex**
+    ```python
+    client.futures_v1_get_asset_index(**params)
+    ```
+
+	- **GET /sapi/v1/managed-subaccount/marginAsset**
+    ```python
+    client.margin_v1_get_managed_subaccount_margin_asset(**params)
+    ```
+
+	- **POST /fapi/v1/multiAssetsMargin**
+    ```python
+    client.futures_v1_post_multi_assets_margin(**params)
+    ```
+
+	- **POST /sapi/v1/sub-account/eoptions/enable**
+    ```python
+    client.margin_v1_post_sub_account_eoptions_enable(**params)
+    ```
+
+	- **POST /sapi/v1/portfolio/redeem**
+    ```python
+    client.margin_v1_post_portfolio_redeem(**params)
+    ```
+
+	- **POST /sapi/v1/loan/flexible/repay/history**
+    ```python
+    client.margin_v1_post_loan_flexible_repay_history(**params)
+    ```
+
+	- **GET /eapi/v1/block/order/execute**
+    ```python
+    client.options_v1_get_block_order_execute(**params)
+    ```
+
+	- **POST /dapi/v1/batchOrders**
+    ```python
+    client.futures_coin_v1_post_batch_orders(**params)
+    ```
+
+	- **PUT /dapi/v1/order**
+    ```python
+    client.futures_coin_v1_put_order(**params)
+    ```
+
+	- **GET /dapi/v1/aggTrades**
+    ```python
+    client.futures_coin_v1_get_agg_trades(**params)
+    ```
+
+	- **GET /fapi/v1/markPriceKlines**
+    ```python
+    client.futures_v1_get_mark_price_klines(**params)
+    ```
+
+	- **GET /sapi/v1/staking/stakingRecord**
+    ```python
+    client.margin_v1_get_staking_staking_record(**params)
+    ```
+
+	- **GET /papi/v1/cm/positionRisk**
+    ```python
+    client.papi_v1_get_cm_position_risk(**params)
+    ```
+
+	- **GET /sapi/v1/spot/delist-schedule**
+    ```python
+    client.margin_v1_get_spot_delist_schedule(**params)
+    ```
+
+	- **POST /sapi/v1/broker/universalTransfer**
+    ```python
+    client.margin_v1_post_broker_universal_transfer(**params)
+    ```
+
+	- **DELETE /dapi/v1/batchOrders**
+    ```python
+    client.futures_coin_v1_delete_batch_orders(**params)
+    ```
+
+	- **GET /sapi/v1/broker/subAccountApi/commission/futures**
+    ```python
+    client.margin_v1_get_broker_sub_account_api_commission_futures(**params)
+    ```
+
+	- **GET /wapi/v3/withdrawHistory.html**
+    ```python
+    client.v3_get_withdraw_history_html(**params)
+    ```
+
+	- **GET /sapi/v1/sub-account/status**
+    ```python
+    client.margin_v1_get_sub_account_status(**params)
+    ```
+
+	- **GET /dapi/v1/income/asyn/id**
+    ```python
+    client.futures_coin_v1_get_income_asyn_id(**params)
+    ```
+
+	- **GET /papi/v1/cm/income**
+    ```python
+    client.papi_v1_get_cm_income(**params)
+    ```
+
+	- **GET /papi/v1/um/leverageBracket**
+    ```python
+    client.papi_v1_get_um_leverage_bracket(**params)
+    ```
+
+	- **GET /papi/v1/margin/openOrderList**
+    ```python
+    client.papi_v1_get_margin_open_order_list(**params)
+    ```
+
+	- **GET /papi/v1/cm/adlQuantile**
+    ```python
+    client.papi_v1_get_cm_adl_quantile(**params)
+    ```
+
+	- **GET /sapi/v1/giftcard/cryptography/rsa-public-key**
+    ```python
+    client.margin_v1_get_giftcard_cryptography_rsa_public_key(**params)
+    ```
+
+	- **GET /sapi/v1/convert/tradeFlow**
+    ```python
+    client.margin_v1_get_convert_trade_flow(**params)
+    ```
+
+	- **GET /eapi/v1/order**
+    ```python
+    client.options_v1_get_order(**params)
+    ```
+
+	- **GET /sapi/v1/convert/limit/queryOpenOrders**
+    ```python
+    client.margin_v1_get_convert_limit_query_open_orders(**params)
+    ```
+
+	- **GET /dapi/v1/fundingInfo**
+    ```python
+    client.futures_coin_v1_get_funding_info(**params)
+    ```
+
+	- **GET /sapi/v1/eth-staking/eth/history/redemptionHistory**
+    ```python
+    client.margin_v1_get_eth_staking_eth_history_redemption_history(**params)
+    ```
+
+	- **POST /api/v3/order/cancelReplace**
+    ```python
+    client.v3_post_order_cancel_replace(**params)
+    ```
+
+	- **GET /sapi/v1/margin/available-inventory**
+    ```python
+    client.margin_v1_get_margin_available_inventory(**params)
+    ```
+
+	- **POST /sapi/v2/broker/subAccountApi/ipRestriction**
+    ```python
+    client.margin_v2_post_broker_sub_account_api_ip_restriction(**params)
+    ```
+
+	- **GET /sapi/v1/mining/worker/list**
+    ```python
+    client.margin_v1_get_mining_worker_list(**params)
+    ```
+
+	- **GET /eapi/v1/blockTrades**
+    ```python
+    client.options_v1_get_block_trades(**params)
+    ```
+
+	- **GET /sapi/v1/fiat/payments**
+    ```python
+    client.margin_v1_get_fiat_payments(**params)
+    ```
+
+	- **POST /sapi/v1/loan/vip/borrow**
+    ```python
+    client.margin_v1_post_loan_vip_borrow(**params)
+    ```
+
+	- **GET /dapi/v1/historicalTrades**
+    ```python
+    client.futures_coin_v1_get_historical_trades(**params)
+    ```
+
+	- **GET /sapi/v2/broker/subAccount/futuresSummary**
+    ```python
+    client.margin_v2_get_broker_sub_account_futures_summary(**params)
+    ```
+
+	- **GET /sapi/v1/sol-staking/sol/history/stakingHistory**
+    ```python
+    client.margin_v1_get_sol_staking_sol_history_staking_history(**params)
+    ```
+
+	- **GET /sapi/v2/eth-staking/account**
+    ```python
+    client.margin_v2_get_eth_staking_account(**params)
+    ```
+
+	- **GET /papi/v1/um/trade/asyn/id**
+    ```python
+    client.papi_v1_get_um_trade_asyn_id(**params)
+    ```
+
+	- **GET /api/v3/account/commission**
+    ```python
+    client.v3_get_account_commission(**params)
+    ```
+
+	- **GET /sapi/v1/algo/spot/historicalOrders**
+    ```python
+    client.margin_v1_get_algo_spot_historical_orders(**params)
+    ```
+
+	- **GET /fapi/v1/continuousKlines**
+    ```python
+    client.futures_v1_get_continuous_klines(**params)
+    ```
+
