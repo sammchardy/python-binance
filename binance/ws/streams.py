@@ -75,6 +75,9 @@ class BinanceSocketManager:
         socket_type: BinanceSocketType = BinanceSocketType.SPOT,
     ) -> ReconnectingWebsocket:
         conn_id = f"{socket_type}_{path}"
+        time_unit = getattr(self._client, "TIME_UNIT", None)
+        if time_unit:
+            path = f"{path}?timeUnit={time_unit}"
         if conn_id not in self._conns:
             self._conns[conn_id] = ReconnectingWebsocket(
                 path=path,
@@ -1100,7 +1103,14 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ):
         super().__init__(
-            api_key, api_secret, requests_params, tld, testnet, session_params, https_proxy, loop
+            api_key,
+            api_secret,
+            requests_params,
+            tld,
+            testnet,
+            session_params,
+            https_proxy,
+            loop,
         )
         self._bsm: Optional[BinanceSocketManager] = None
 

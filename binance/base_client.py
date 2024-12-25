@@ -160,6 +160,7 @@ class BaseClient:
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
+        time_unit: Optional[str] = None,
     ):
         """Binance API Client constructor
 
@@ -175,6 +176,8 @@ class BaseClient:
         :type private_key: optional - str or Path
         :param private_key_pass: Password of private key
         :type private_key_pass: optional - str
+        :param time_unit: Time unit to use for requests. Supported values: "MILLISECOND", "MICROSECOND"
+        :type time_unit: optional - str
 
         """
 
@@ -191,6 +194,7 @@ class BaseClient:
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
+        self.TIME_UNIT = time_unit
         self._is_rsa = False
         self.PRIVATE_KEY: Any = self._init_private_key(private_key, private_key_pass)
         self.session = self._init_session()
@@ -199,6 +203,8 @@ class BaseClient:
         self.testnet = testnet
         self.timestamp_offset = 0
         ws_api_url = self.WS_API_TESTNET_URL if testnet else self.WS_API_URL.format(tld)
+        if self.TIME_UNIT:
+            ws_api_url += f"?timeUnit={self.TIME_UNIT}"
         self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
         ws_future_url = (
             self.WS_FUTURES_TESTNET_URL if testnet else self.WS_FUTURES_URL.format(tld)
@@ -215,6 +221,9 @@ class BaseClient:
         if self.API_KEY:
             assert self.API_KEY
             headers["X-MBX-APIKEY"] = self.API_KEY
+        if self.TIME_UNIT:
+            assert self.TIME_UNIT
+            headers["X-MBX-TIME-UNIT"] = self.TIME_UNIT
         return headers
 
     def _init_session(self):

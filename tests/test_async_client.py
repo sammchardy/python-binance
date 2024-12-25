@@ -1,5 +1,8 @@
 import pytest
 
+from binance.async_client import AsyncClient
+from .conftest import proxy, api_key, api_secret, testnet
+
 pytestmark = [pytest.mark.asyncio]
 
 
@@ -225,4 +228,24 @@ async def test_margin_interest_rate_history(clientAsync):
 async def test_margin_max_borrowable(clientAsync):
     await clientAsync.margin_max_borrowable(
         asset="BTC",
+    )
+
+
+async def test_time_unit_microseconds():
+    micro_client = AsyncClient(
+        api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MICROSECOND"
+    )
+    micro_trades = await micro_client.get_recent_trades(symbol="BTCUSDT")
+    assert len(str(micro_trades[0]["time"])) >= 16, (
+        "Time should be in microseconds (16+ digits)"
+    )
+
+
+async def test_time_unit_milloseconds():
+    milli_client = AsyncClient(
+        api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MILLISECOND"
+    )
+    milli_trades = await milli_client.get_recent_trades(symbol="BTCUSDT")
+    assert len(str(milli_trades[0]["time"])) == 13, (
+        "Time should be in milliseconds (13 digits)"
     )

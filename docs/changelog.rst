@@ -1,6 +1,24 @@
 Changelog
 =========
 
+v1.0.26 - 2024-12-23
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Websockets docs
+- support for microseconds time unit
+- futures data link endpoints
+- return type to _get_account_socket  thanks to @zhen1007
+- futures_index_price_constituents endpoint
+
+
+**Fixed**
+
+- FuturesDepthCacheManager and OptionsDepthCacheManager to __init__
+- EDDSA random error
+
+
 v1.0.25 - 2024-12-05
 ^^^^^^^^^^^^^^^^^^^^
 

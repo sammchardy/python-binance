@@ -9,3 +9,4 @@ python_binance.egg-info/
 *.egg-info/
 .idea/
 venv*/
+.vscode

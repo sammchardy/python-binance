@@ -32,6 +32,7 @@ class Client(BaseClient):
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         ping: Optional[bool] = True,
+        time_unit: Optional[str] = None,
     ):
         super().__init__(
             api_key,
@@ -42,6 +43,7 @@ class Client(BaseClient):
             testnet,
             private_key,
             private_key_pass,
+            time_unit=time_unit,
         )
 
         # init DNS and SSL cert
@@ -10887,107 +10889,2090 @@ class Client(BaseClient):
         return self._ws_api_request_sync("order.status", True, params)
 
     def ws_cancel_order(self, **params):
+        """Cancel an active order.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#cancel-order-trade
+
+        :param symbol: required - Trading symbol, e.g. 'BTCUSDT'
+        :type symbol: str
+        :param orderId: optional - The unique order id
+        :type orderId: int
+        :param origClientOrderId: optional - The original client order id
+        :type origClientOrderId: str
+        :param newClientOrderId: optional - Used to uniquely identify this cancel. Automatically generated if not sent
+        :type newClientOrderId: str
+        :param cancelRestrictions: optional - ONLY_NEW - Cancel will succeed if the order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED.
+        :type cancelRestrictions: str
+        :param recvWindow: optional - The number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        Either orderId or origClientOrderId must be sent.
+
+        Weight: 1
+
+        Returns:
+        .. code-block:: python
+            {
+                "id": "5633b6a2-90a9-4192-83e7-925c90b6a2fd",
+                "method": "order.cancel",
+                "params": {
+                    "symbol": "BTCUSDT",
+                    "origClientOrderId": "4d96324ff9d44481926157",
+                    "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+                    "signature": "33d5b721f278ae17a52f004a82a6f68a70c68e7dd6776ed0be77a455ab855282",
+                    "timestamp": 1660801715830
+                }
+            }
+        """
         return self._ws_api_request_sync("order.cancel", True, params)
 
-    cancel_order.__doc__ = cancel_order.__doc__
-
     def ws_cancel_and_replace_order(self, **params):
+        """Cancels an existing order and places a new order on the same symbol.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#cancel-and-replace-order-trade
+
+        :param symbol: required - Trading symbol, e.g. 'BTCUSDT'
+        :type symbol: str
+        :param cancelReplaceMode: required - The mode of cancel-replace: STOP_ON_FAILURE - If the cancel request fails, new order placement will not be attempted. ALLOW_FAILURE - New order placement will be attempted even if cancel request fails
+        :type cancelReplaceMode: str
+        :param cancelOrderId: optional - The order ID to cancel
+        :type cancelOrderId: int
+        :param cancelOrigClientOrderId: optional - The original client order ID to cancel
+        :type cancelOrigClientOrderId: str
+        :param cancelNewClientOrderId: optional - Used to uniquely identify this cancel. Automatically generated if not sent
+        :type cancelNewClientOrderId: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param type: required - Order type, e.g. LIMIT, MARKET
+        :type type: str
+        :param timeInForce: optional - GTC, IOC, FOK
+        :type timeInForce: str
+        :param price: optional - Order price
+        :type price: str
+        :param quantity: optional - Order quantity
+        :type quantity: str
+        :param quoteOrderQty: optional - Quote quantity
+        :type quoteOrderQty: str
+        :param newClientOrderId: optional - Used to uniquely identify this new order
+        :type newClientOrderId: str
+        :param newOrderRespType: optional - ACK, RESULT, or FULL
+        :type newOrderRespType: str
+        :param stopPrice: optional - Used with STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, and TAKE_PROFIT_LIMIT orders
+        :type stopPrice: str
+        :param trailingDelta: optional - Used with TAKE_PROFIT, TAKE_PROFIT_LIMIT, STOP_LOSS, STOP_LOSS_LIMIT orders
+        :type trailingDelta: int
+        :param icebergQty: optional - Used with iceberg orders
+        :type icebergQty: str
+        :param strategyId: optional - Arbitrary numeric value identifying the order within an order strategy
+        :type strategyId: int
+        :param strategyType: optional - Arbitrary numeric value identifying the order strategy
+        :type strategyType: int
+        :param selfTradePreventionMode: optional - The allowed enums is dependent on what is configured on the symbol
+        :type selfTradePreventionMode: str
+        :param cancelRestrictions: optional - ONLY_NEW - Cancel will succeed if order status is NEW. ONLY_PARTIALLY_FILLED - Cancel will succeed if order status is PARTIALLY_FILLED
+        :type cancelRestrictions: str
+        :param recvWindow: optional - The number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        Either cancelOrderId or cancelOrigClientOrderId must be provided.
+        Price is required for LIMIT orders.
+        Either quantity or quoteOrderQty must be provided.
+
+        Weight: 1
+
+        Returns:
+        .. code-block:: python
+           {
+                "id": "99de6b92-0eda-4154-9c8d-a51d93c6f92e",
+                "status": 200,
+                "result": {
+                    "cancelResult": "SUCCESS",
+                    "newOrderResult": "SUCCESS",
+                    "cancelResponse": {
+                        "symbol": "BTCUSDT",
+                        "origClientOrderId": "4d96324ff9d44481926157",
+                        "orderId": 12569099453,
+                        "orderListId": -1,
+                        "clientOrderId": "91fe37ce9e69c90d6358c0",
+                        "price": "23416.10000000",
+                        "origQty": "0.00847000",
+                        "executedQty": "0.00001000",
+                        "cummulativeQuoteQty": "0.23416100",
+                        "status": "CANCELED",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT",
+                        "side": "SELL",
+                        "selfTradePreventionMode": "NONE"
+                    },
+                    "newOrderResponse": {
+                        "symbol": "BTCUSDT",
+                        "orderId": 12569099454,
+                        "orderListId": -1,
+                        "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",
+                        "transactTime": 1660801715639
+                    }
+                }
+            }
+        """
         return self._ws_api_request_sync("order.cancelReplace", True, params)
 
     def ws_get_open_orders(self, **params):
+        """Get all open orders on a symbol or all symbols.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#current-open-orders-user_data
+
+        :param symbol: optional - Symbol to get open orders for
+        :type symbol: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response
+
+        Response format:
+        [
+            {
+                "symbol": "BTCUSDT",
+                "orderId": 12569099453,
+                "orderListId": -1,
+                "clientOrderId": "4d96324ff9d44481926157",
+                "price": "23416.10000000",
+                "origQty": "0.00847000",
+                "executedQty": "0.00720000",
+                "cummulativeQuoteQty": "168.59532000",
+                "status": "PARTIALLY_FILLED",
+                "timeInForce": "GTC",
+                "type": "LIMIT",
+                "side": "SELL",
+                "stopPrice": "0.00000000",
+                "icebergQty": "0.00000000",
+                "time": 1660801715639,
+                "updateTime": 1660801717945,
+                "isWorking": true,
+                "workingTime": 1660801715639,
+                "origQuoteOrderQty": "0.00000000",
+                "selfTradePreventionMode": "NONE"
+            }
+        ]
+
+        Weight: Adjusted based on parameters:
+        - With symbol: 6
+        - Without symbol: 12
+        """
         return self._ws_api_request_sync("openOrders.status", True, params)
 
     def ws_cancel_all_open_orders(self, **params):
+        """Cancel all open orders on a symbol or all symbols.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#cancel-open-orders-trade
+
+        :param symbol: optional - Symbol to cancel orders for
+        :type symbol: str
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket message
+
+        Response format:
+        [
+            {
+                "symbol": "BTCUSDT",
+                "origClientOrderId": "4d96324ff9d44481926157",
+                "orderId": 12569099453,
+                "orderListId": -1,
+                "clientOrderId": "91fe37ce9e69c90d6358c0",
+                "price": "23416.10000000",
+                "origQty": "0.00847000",
+                "executedQty": "0.00847000",
+                "cummulativeQuoteQty": "198.33521500",
+                "status": "CANCELED",
+                "timeInForce": "GTC",
+                "type": "LIMIT",
+                "side": "SELL",
+                "stopPrice": "0.00000000",
+                "trailingDelta": 0,
+                "trailingTime": -1,
+                "icebergQty": "0.00000000",
+                "strategyId": 37463720,
+                "strategyType": 1000000,
+                "selfTradePreventionMode": "NONE"
+            }
+        ]
+
+        Weight: 1
+        """
         return self._ws_api_request_sync("openOrders.cancelAll", True, params)
 
     def ws_create_oco_order(self, **params):
+        """Create a new OCO (One-Cancels-the-Other) order.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#place-new-order-list---oco-trade
+
+        :param symbol: required - Trading symbol
+        :type symbol: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param quantity: required - Order quantity
+        :type quantity: decimal
+        :param price: required - Order price for limit leg
+        :type price: decimal
+        :param stopPrice: required - Stop trigger price for stop leg
+        :type stopPrice: decimal
+        :param stopLimitPrice: optional - Stop limit price for stop leg
+        :type stopLimitPrice: decimal
+        :param stopLimitTimeInForce: optional - Time in force for stop leg
+        :type stopLimitTimeInForce: str
+        :param listClientOrderId: optional - Unique ID for the entire orderList
+        :type listClientOrderId: str
+        :param limitClientOrderId: optional - Unique ID for the limit order
+        :type limitClientOrderId: str
+        :param stopClientOrderId: optional - Unique ID for the stop order
+        :type stopClientOrderId: str
+        :param limitStrategyId: optional - Arbitrary numeric value identifying the limit order within an order strategy
+        :type limitStrategyId: int
+        :param limitStrategyType: optional - Arbitrary numeric value identifying the limit order strategy
+        :type limitStrategyType: int
+        :param stopStrategyId: optional - Arbitrary numeric value identifying the stop order within an order strategy
+        :type stopStrategyId: int
+        :param stopStrategyType: optional - Arbitrary numeric value identifying the stop order strategy
+        :type stopStrategyType: int
+        :param limitIcebergQty: optional - Iceberg quantity for the limit leg
+        :type limitIcebergQty: decimal
+        :param stopIcebergQty: optional - Iceberg quantity for the stop leg
+        :type stopIcebergQty: decimal
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket message
+
+        Response format:
+        .. code-block:: python
+            {
+                "id": "56374a46-3261-486b-a211-99ed972eb648",
+                "status": 200,
+                "result":
+                {
+                    "orderListId": 2,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "cKPMnDCbcLQILtDYM4f4fX",
+                    "transactionTime": 1711062760648,
+                    "symbol": "LTCBNB",
+                    "orders":
+                    [
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 2,
+                        "clientOrderId": "0m6I4wfxvTUrOBSMUl0OPU"
+                    },
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 3,
+                        "clientOrderId": "Z2IMlR79XNY5LU0tOxrWyW"
+                    }
+                    ],
+                    "orderReports":
+                    [
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 2,
+                        "orderListId": 2,
+                        "clientOrderId": "0m6I4wfxvTUrOBSMUl0OPU",
+                        "transactTime": 1711062760648,
+                        "price": "1.50000000",
+                        "origQty": "1.000000",
+                        "executedQty": "0.000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS_LIMIT",
+                        "side": "BUY",
+                        "stopPrice": "1.50000001",
+                        "workingTime": -1,
+                        "selfTradePreventionMode": "NONE"
+                    },
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 3,
+                        "orderListId": 2,
+                        "clientOrderId": "Z2IMlR79XNY5LU0tOxrWyW",
+                        "transactTime": 1711062760648,
+                        "price": "1.49999999",
+                        "origQty": "1.000000",
+                        "executedQty": "0.000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "BUY",
+                        "workingTime": 1711062760648,
+                        "selfTradePreventionMode": "NONE"
+                    }
+                    ]
+                },
+                "rateLimits":
+                [
+                    {
+                    "rateLimitType": "ORDERS",
+                    "interval": "SECOND",
+                    "intervalNum": 10,
+                    "limit": 50,
+                    "count": 2
+                    },
+                    {
+                    "rateLimitType": "ORDERS",
+                    "interval": "DAY",
+                    "intervalNum": 1,
+                    "limit": 160000,
+                    "count": 2
+                    },
+                    {
+                    "rateLimitType": "REQUEST_WEIGHT",
+                    "interval": "MINUTE",
+                    "intervalNum": 1,
+                    "limit": 6000,
+                    "count": 1
+                    }
+                ]
+            }
+
+        Weight: 2
+        """
         return self._ws_api_request_sync("orderList.place.oco", True, params)
 
     def ws_create_oto_order(self, **params):
+        """Create a new OTO (One-Triggers-Other) order list.
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#place-new-order-list---oto-trade
+
+        An OTO order list consists of two orders:
+        1. Primary order that must be filled first
+        2. Secondary order that is placed only after the primary order is filled
+
+        :param symbol: required - Trading symbol
+        :type symbol: str
+        :param orders: required - Array of order objects containing:
+            [
+                {  # Primary order
+                    "type": required - Order type (e.g. LIMIT, MARKET),
+                    "side": required - BUY or SELL,
+                    "price": required for LIMIT orders,
+                    "quantity": required - Order quantity,
+                    "timeInForce": required for LIMIT orders,
+                    "icebergQty": optional,
+                    "strategyId": optional,
+                    "strategyType": optional,
+                    "selfTradePreventionMode": optional
+                },
+                {  # Secondary order - same parameters as primary
+                    ...
+                }
+            ]
+        :type orders: list
+        :param listClientOrderId: optional - Unique ID for the entire order list
+        :type listClientOrderId: str
+        :param limitClientOrderId: optional - Client order ID for the LIMIT leg
+        :type limitClientOrderId: str
+        :param limitStrategyId: optional - Strategy ID for the LIMIT leg
+        :type limitStrategyId: int
+        :param limitStrategyType: optional - Strategy type for the LIMIT leg
+        :type limitStrategyType: int
+        :param stopClientOrderId: optional - Client order ID for the STOP_LOSS/STOP_LOSS_LIMIT leg
+        :type stopClientOrderId: str
+        :param stopStrategyId: optional - Strategy ID for the STOP_LOSS/STOP_LOSS_LIMIT leg
+        :type stopStrategyId: int
+        :param stopStrategyType: optional - Strategy type for the STOP_LOSS/STOP_LOSS_LIMIT leg
+        :type stopStrategyType: int
+        :param newOrderRespType: optional - Set the response JSON
+        :type newOrderRespType: str
+
+        Response example:
+        .. code-block:: python
+            {
+                "id": "c5899911-d3f4-47ae-8835-97da553d27d0",
+                "status": 200,
+                "result": {
+                    "orderListId": 1,
+                    "contingencyType": "OTO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "C3wyRVh3aqKyI2RpBZYmFz",
+                    "transactionTime": 1669632210676,
+                    "symbol": "BTCUSDT",
+                    "orders": [
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569099453,
+                            "clientOrderId": "bX5wROblo6YeDwa9iTLeyY"
+                        },
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569099454,
+                            "clientOrderId": "Tnu2IP0J5Y4mxw3IxZYeFi"
+                        }
+                    ],
+                    "orderReports": [
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569099453,
+                            "orderListId": 1,
+                            "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",
+                            "transactTime": 1669632210676,
+                            "price": "23416.10000000",
+                            "origQty": "0.00847000",
+                            "executedQty": "0.00847000",
+                            "cummulativeQuoteQty": "198.33521500",
+                            "status": "FILLED",
+                            "timeInForce": "GTC",
+                            "type": "LIMIT",
+                            "side": "SELL",
+                            "stopPrice": "0.00000000",
+                            "workingTime": 1669632210676,
+                            "selfTradePreventionMode": "NONE"
+                        },
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569099454,
+                            "orderListId": 1,
+                            "clientOrderId": "Tnu2IP0J5Y4mxw3IxZYeFi",
+                            "transactTime": 1669632210676,
+                            "price": "0.00000000",
+                            "origQty": "0.00847000",
+                            "executedQty": "0.00000000",
+                            "cummulativeQuoteQty": "0.00000000",
+                            "status": "NEW",
+                            "timeInForce": "GTC",
+                            "type": "MARKET",
+                            "side": "BUY",
+                            "stopPrice": "0.00000000",
+                            "workingTime": -1,
+                            "selfTradePreventionMode": "NONE"
+                        }
+                    ]
+                },
+                "rateLimits": [
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "SECOND",
+                        "intervalNum": 10,
+                        "limit": 50,
+                        "count": 1
+                    },
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "DAY",
+                        "intervalNum": 1,
+                        "limit": 160000,
+                        "count": 1
+                    },
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+        Weight: 1
+        """
         return self._ws_api_request_sync("orderList.place.oto", True, params)
 
     def ws_create_otoco_order(self, **params):
+        """
+
+        Returns: Websocket message
+        .. code-block:: python
+            {
+                "id": "1712544408508",
+                "status": 200,
+                "result": {
+                    "orderListId": 629,
+                    "contingencyType": "OTO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "GaeJHjZPasPItFj4x7Mqm6",
+                    "transactionTime": 1712544408537,
+                    "symbol": "1712544378871",
+                    "orders": [
+                    {
+                        "symbol": "1712544378871",
+                        "orderId": 23,
+                        "clientOrderId": "OVQOpKwfmPCfaBTD0n7e7H"
+                    },
+                    {
+                        "symbol": "1712544378871",
+                        "orderId": 24,
+                        "clientOrderId": "YcCPKCDMQIjNvLtNswt82X"
+                    },
+                    {
+                        "symbol": "1712544378871",
+                        "orderId": 25,
+                        "clientOrderId": "ilpIoShcFZ1ZGgSASKxMPt"
+                    }
+                    ],
+                    "orderReports": [
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 23,
+                        "orderListId": 629,
+                        "clientOrderId": "OVQOpKwfmPCfaBTD0n7e7H",
+                        "transactTime": 1712544408537,
+                        "price": "1.500000",
+                        "origQty": "1.000000",
+                        "executedQty": "0.000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT",
+                        "side": "BUY",
+                        "workingTime": 1712544408537,
+                        "selfTradePreventionMode": "NONE"
+                    },
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 24,
+                        "orderListId": 629,
+                        "clientOrderId": "YcCPKCDMQIjNvLtNswt82X",
+                        "transactTime": 1712544408537,
+                        "price": "0.000000",
+                        "origQty": "5.000000",
+                        "executedQty": "0.000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "PENDING_NEW",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS",
+                        "side": "SELL",
+                        "stopPrice": "0.500000",
+                        "workingTime": -1,
+                        "selfTradePreventionMode": "NONE"
+                    },
+                    {
+                        "symbol": "LTCBNB",
+                        "orderId": 25,
+                        "orderListId": 629,
+                        "clientOrderId": "ilpIoShcFZ1ZGgSASKxMPt",
+                        "transactTime": 1712544408537,
+                        "price": "5.000000",
+                        "origQty": "5.000000",
+                        "executedQty": "0.000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.000000",
+                        "status": "PENDING_NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "SELL",
+                        "workingTime": -1,
+                        "selfTradePreventionMode": "NONE"
+                    }
+                    ]
+                },
+                "rateLimits": [
+                    {
+                    "rateLimitType": "ORDERS",
+                    "interval": "MINUTE",
+                    "intervalNum": 1,
+                    "limit": 10000000,
+                    "count": 18
+                    },
+                    {
+                    "rateLimitType": "REQUEST_WEIGHT",
+                    "interval": "MINUTE",
+                    "intervalNum": 1,
+                    "limit": 1000,
+                    "count": 65
+                    }
+                ]
+        }
+
+        Weight: 1
+        """
         return self._ws_api_request_sync("orderList.place.otoco", True, params)
 
     def ws_get_oco_order(self, **params):
+        """Query information about a specific OCO order list.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#query-order-list-user_data
+
+        :param orderListId: int - The identifier for the OCO order list (optional)
+        :param origClientOrderId: str - The client-specified OCO order list ID (optional)
+
+        :returns: API response containing OCO order list information including:
+        .. code-block:: python
+            {
+                "id": "b53fd5ff-82c7-4a04-bd64-5f9dc42c2100",
+                "status": 200,
+                "result": {
+                    "orderListId": 1274512,
+                    "contingencyType": "OCO",
+                    "listStatusType": "EXEC_STARTED",
+                    "listOrderStatus": "EXECUTING",
+                    "listClientOrderId": "08985fedd9ea2cf6b28996",
+                    "transactionTime": 1660801713793,
+                    "symbol": "BTCUSDT",
+                    "orders": [
+                    {
+                        "symbol": "BTCUSDT",
+                        "orderId": 12569138901,
+                        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+                    },
+                    {
+                        "symbol": "BTCUSDT",
+                        "orderId": 12569138902,
+                        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+                    }
+                    ]
+                },
+                "rateLimits": [
+                    {
+                    "rateLimitType": "REQUEST_WEIGHT",
+                    "interval": "MINUTE",
+                    "intervalNum": 1,
+                    "limit": 6000,
+                    "count": 4
+                    }
+                ]
+            }
+
+        Notes:
+            - Either orderListId or origClientOrderId must be provided
+            - Weight: 4
+            - Data Source: Database
+
+        """
         return self._ws_api_request_sync("orderList.status", True, params)
 
     def ws_cancel_oco_order(self, **params):
+        """Cancel an OCO (One-Cancels-the-Other) order list.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#cancel-order-list-trade
+
+        :param symbol: required - Trading symbol
+        :type symbol: str
+        :param orderListId: optional - The ID of the OCO order list to cancel
+        :type orderListId: int
+        :param listClientOrderId: optional - The client-specified ID of the OCO order list
+        :type listClientOrderId: str
+        :param newClientOrderId: optional - Client ID to identify the cancel request
+        :type newClientOrderId: str
+        :param apiKey: required - Your API key
+        :type apiKey: str
+        :param recvWindow: optional - Number of milliseconds the request is valid for
+        :type recvWindow: int
+        :param signature: required - HMAC SHA256 signature
+        :type signature: str
+        :param timestamp: required - Current timestamp in milliseconds
+        :type timestamp: int
+
+        **Notes**:
+            - Either orderListId or listClientOrderId must be provided
+            - newClientOrderId will be auto-generated if not provided
+
+        Response example:
+        .. code-block:: python
+            {
+                "id": "c5899911-d3f4-47ae-8835-97da553d27d0",
+                "status": 200,
+                "result": {
+                    "orderListId": 1274512,
+                    "contingencyType": "OCO",
+                    "listStatusType": "ALL_DONE",
+                    "listOrderStatus": "ALL_DONE",
+                    "listClientOrderId": "6023531d7edaad348f5aff",
+                    "transactionTime": 1660801720215,
+                    "symbol": "BTCUSDT",
+                    "orders": [
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569138901,
+                            "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+                        },
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569138902,
+                            "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+                        }
+                    ],
+                    "orderReports": [
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569138901,
+                            "orderListId": 1274512,
+                            "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU",
+                            "transactTime": 1660801720215,
+                            "price": "23416.10000000",
+                            "origQty": "0.00847000",
+                            "executedQty": "0.00000000",
+                            "cummulativeQuoteQty": "0.00000000",
+                            "status": "CANCELED",
+                            "timeInForce": "GTC",
+                            "type": "STOP_LOSS_LIMIT",
+                            "side": "SELL",
+                            "stopPrice": "23416.10000000",
+                            "selfTradePreventionMode": "NONE"
+                        },
+                        {
+                            "symbol": "BTCUSDT",
+                            "orderId": 12569138902,
+                            "orderListId": 1274512,
+                            "clientOrderId": "jLnZpj5enfMXTuhKB1d0us",
+                            "transactTime": 1660801720215,
+                            "price": "23416.10000000",
+                            "origQty": "0.00847000",
+                            "executedQty": "0.00000000",
+                            "cummulativeQuoteQty": "0.00000000",
+                            "status": "CANCELED",
+                            "timeInForce": "GTC",
+                            "type": "LIMIT_MAKER",
+                            "side": "SELL",
+                            "selfTradePreventionMode": "NONE"
+                        }
+                    ]
+                },
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+        """
         return self._ws_api_request_sync("orderList.cancel", True, params)
 
     def ws_get_oco_open_orders(self, **params):
+        """Query current open OCO (One-Cancels-the-Other) order lists.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#current-open-order-lists-user_data
+
+        :param recvWindow: optional - Number of milliseconds after timestamp the request is valid for. Default 5000, max 60000
+        :type recvWindow: int
+        :param apiKey: required - Your API key
+        :type apiKey: str
+        :param signature: required - HMAC SHA256 signature
+        :type signature: str
+        :param timestamp: required - Current timestamp in milliseconds
+        :type timestamp: int
+
+        :returns: API response in JSON format with open OCO orders
+
+            {
+                "id": "c5899911-d3f5-47b3-9b67-4c1342f2a7e1",
+                "status": 200,
+                "result": [
+                    {
+                        "orderListId": 1274512,
+                        "contingencyType": "OCO",
+                        "listStatusType": "EXEC_STARTED",
+                        "listOrderStatus": "EXECUTING",
+                        "listClientOrderId": "08985fedd9ea2cf6b28996",
+                        "transactionTime": 1660801713793,
+                        "symbol": "BTCUSDT",
+                        "orders": [
+                            {
+                                "symbol": "BTCUSDT",
+                                "orderId": 12569138901,
+                                "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+                            },
+                            {
+                                "symbol": "BTCUSDT",
+                                "orderId": 12569138902,
+                                "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+                            }
+                        ]
+                    }
+                ],
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 10
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Weight: 10
+        Data Source: Memory
+        """
         return self._ws_api_request_sync("openOrderLists.status", True, params)
 
     def ws_create_sor_order(self, **params):
+        """Place a new order using Smart Order Routing (SOR).
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#place-new-order-using-sor-trade
+
+        :param symbol: required - Trading symbol, e.g. BTCUSDT
+        :type symbol: str
+        :param side: required - Order side: BUY or SELL
+        :type side: str
+        :param type: required - Order type: LIMIT or MARKET
+        :type type: str
+        :param quantity: required - Order quantity
+        :type quantity: float
+        :param timeInForce: required for LIMIT orders - Time in force: GTC, IOC, FOK
+        :type timeInForce: str
+        :param price: required for LIMIT orders - Order price
+        :type price: float
+        :param newClientOrderId: optional - Unique order ID. Automatically generated if not sent
+        :type newClientOrderId: str
+        :param newOrderRespType: optional - Response format: ACK, RESULT, FULL. MARKET and LIMIT orders use FULL by default
+        :type newOrderRespType: str
+        :param strategyId: optional - Arbitrary numeric value identifying the order within an order strategy
+        :type strategyId: int
+        :param strategyType: optional - Arbitrary numeric value identifying the order strategy. Values < 1000000 are reserved
+        :type strategyType: int
+        :param selfTradePreventionMode: optional - Supported values depend on exchange configuration: EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE
+        :type selfTradePreventionMode: str
+        :param recvWindow: optional - Number of milliseconds after timestamp the request is valid for. Default 5000, max 60000
+        :type recvWindow: int
+
+        :returns: Websocket message
+
+        .. code-block:: python
+            {
+                "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
+                "status": 200,
+                "result": [
+                    {
+                        "symbol": "BTCUSDT",
+                        "orderId": 2,
+                        "orderListId": -1,
+                        "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",
+                        "transactTime": 1689149087774,
+                        "price": "31000.00000000",
+                        "origQty": "0.50000000",
+                        "executedQty": "0.50000000",
+                        "cummulativeQuoteQty": "14000.00000000",
+                        "status": "FILLED",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT",
+                        "side": "BUY",
+                        "workingTime": 1689149087774,
+                        "fills": [
+                            {
+                                "matchType": "ONE_PARTY_TRADE_REPORT",
+                                "price": "28000.00000000",
+                                "qty": "0.50000000",
+                                "commission": "0.00000000",
+                                "commissionAsset": "BTC",
+                                "tradeId": -1,
+                                "allocId": 0
+                            }
+                        ],
+                        "workingFloor": "SOR",
+                        "selfTradePreventionMode": "NONE",
+                        "usedSor": true
+                    }
+                ],
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+        Notes:
+            - SOR only supports LIMIT and MARKET orders
+            - quoteOrderQty is not supported
+            - Weight: 1
+            - Data Source: Matching Engine
+        """
         return self._ws_api_request_sync("sor.order.place", True, params)
 
     def ws_create_test_sor_order(self, **params):
+        """Test new order creation using Smart Order Routing (SOR).
+        Creates and validates a new order but does not send it into the matching engine.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#test-new-order-using-sor-trade
+
+        :param symbol: required - Trading symbol, e.g. BTCUSDT
+        :type symbol: str
+        :param side: required - Order side: BUY or SELL
+        :type side: str
+        :param type: required - Order type: LIMIT or MARKET
+        :type type: str
+        :param quantity: required - Order quantity
+        :type quantity: float
+        :param timeInForce: required for LIMIT orders - Time in force: GTC, IOC, FOK
+        :type timeInForce: str
+        :param price: required for LIMIT orders - Order price
+        :type price: float
+        :param newClientOrderId: optional - Unique order ID. Generated automatically if not sent
+        :type newClientOrderId: str
+        :param strategyId: optional - Arbitrary numeric value identifying the order within an order strategy
+        :type strategyId: int
+        :param strategyType: optional - Arbitrary numeric value identifying the order strategy. Values < 1000000 are reserved
+        :type strategyType: int
+        :param selfTradePreventionMode: optional - EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, NONE
+        :type selfTradePreventionMode: str
+        :param computeCommissionRates: optional - Calculate commission rates. Default: False
+        :type computeCommissionRates: bool
+
+        :returns: Websocket message
+
+        Without computeCommissionRates:
+
+        .. code-block:: python
+
+            {
+                "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
+                "status": 200,
+                "result": {},
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+        With computeCommissionRates:
+
+        .. code-block:: python
+
+            {
+                "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
+                "status": 200,
+                "result": {
+                    "standardCommissionForOrder": {
+                        "maker": "0.00000112",
+                        "taker": "0.00000114"
+                    },
+                    "taxCommissionForOrder": {
+                        "maker": "0.00000112",
+                        "taker": "0.00000114"
+                    },
+                    "discount": {
+                        "enabledForAccount": true,
+                        "enabledForSymbol": true,
+                        "discountAsset": "BNB",
+                        "discount": "0.25"
+                    }
+                },
+                "rateLimits": [...]
+            }
+
+        Notes:
+            - SOR only supports LIMIT and MARKET orders
+            - quoteOrderQty is not supported
+            - Weight: 1 (without computeCommissionRates), 20 (with computeCommissionRates)
+            - Data Source: Memory
+        """
         return self._ws_api_request_sync("sor.order.test", True, params)
 
     def ws_get_account(self, **params):
+        """Get current account information.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-information-user_data
+
+        :param omitZeroBalances: optional - When set to true, emits only the non-zero balances of an account. Default: false
+        :type omitZeroBalances: bool
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket message
+
+        .. code-block:: python
+
+            {
+                "makerCommission": 15,
+                "takerCommission": 15,
+                "buyerCommission": 0,
+                "sellerCommission": 0,
+                "canTrade": true,
+                "canWithdraw": true,
+                "canDeposit": true,
+                "commissionRates": {
+                    "maker": "0.00150000",
+                    "taker": "0.00150000",
+                    "buyer": "0.00000000",
+                    "seller": "0.00000000"
+                },
+                "brokered": false,
+                "requireSelfTradePrevention": false,
+                "preventSor": false,
+                "updateTime": 1660801833000,
+                "accountType": "SPOT",
+                "balances": [
+                    {
+                        "asset": "BNB",
+                        "free": "0.00000000",
+                        "locked": "0.00000000"
+                    },
+                    {
+                        "asset": "BTC",
+                        "free": "1.34471120",
+                        "locked": "0.08600000"
+                    }
+                ],
+                "permissions": [
+                    "SPOT"
+                ],
+                "uid": 354937868
+            }
+
+        Notes:
+            - Weight: 20
+            - Data Source: Memory => Database
+        """
         return self._ws_api_request_sync("account.status", True, params)
 
     def ws_get_account_rate_limits_orders(self, **params):
+        """Query your current unfilled order count for all intervals.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-unfilled-order-count-user_data
+
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket response
+
+        .. code-block:: python
+
+            {
+                "result": [
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "SECOND",
+                        "intervalNum": 10,
+                        "limit": 50,
+                        "count": 0
+                    },
+                    {
+                        "rateLimitType": "ORDERS",
+                        "interval": "DAY",
+                        "intervalNum": 1,
+                        "limit": 160000,
+                        "count": 0
+                    }
+                ],
+                "id": "d3783d8d-f8d1-4d2c-b8a0-b7596af5a664"
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - Weight: 40
+            - Data Source: Memory
+        """
         return self._ws_api_request_sync("account.rateLimits.orders", True, params)
 
     def ws_get_all_orders(self, **params):
+        """Query information about all your orders – active, canceled, filled – filtered by time range.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-order-history-user_data
+
+        :param symbol: STRING - Required
+        :type symbol: str
+        :param orderId: optional - Order ID to begin at
+        :type orderId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional - Default 500; max 1000
+        :type limit: int
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket response
+
+        .. code-block:: python
+
+            {
+                "id": "734235c2-13d2-4574-be68-723e818c08f3",
+                "status": 200,
+                "result": [
+                    {
+                        "symbol": "BTCUSDT",
+                        "orderId": 12569099453,
+                        "orderListId": -1,
+                        "clientOrderId": "4d96324ff9d44481926157",
+                        "price": "23416.10000000",
+                        "origQty": "0.00847000",
+                        "executedQty": "0.00847000",
+                        "cummulativeQuoteQty": "198.33521500",
+                        "status": "FILLED",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT",
+                        "side": "SELL",
+                        "stopPrice": "0.00000000",
+                        "icebergQty": "0.00000000",
+                        "time": 1660801715639,
+                        "updateTime": 1660801717945,
+                        "isWorking": true,
+                        "workingTime": 1660801715639,
+                        "origQuoteOrderQty": "0.00000000",
+                        "selfTradePreventionMode": "NONE",
+                        "preventedMatchId": 0,            // Only appears if order expired due to STP
+                        "preventedQuantity": "1.200000"   // Only appears if order expired due to STP
+                    }
+                ]
+            }
+
+        Notes:
+            - Weight: 20
+            - Data Source: Database
+            - If startTime and/or endTime are specified, orderId is ignored
+            - Orders are filtered by time of the last execution status update
+            - If orderId is specified, return orders with order ID >= orderId
+            - If no condition is specified, the most recent orders are returned
+            - For some historical orders the cummulativeQuoteQty response field may be negative
+            - The time between startTime and endTime can't be longer than 24 hours
+        """
         return self._ws_api_request_sync("allOrders", True, params)
 
     def ws_get_my_trades(self, **params):
+        """Query information about your trades, filtered by time range.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-trade-history-user_data
+
+        :param symbol: STRING - Required
+        :type symbol: str
+        :param orderId: optional - Get trades for a specific order
+        :type orderId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param fromId: optional - Trade ID to fetch from
+        :type fromId: int
+        :param limit: optional - Default 500; max 1000
+        :type limit: int
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket response
+
+            .. code-block:: python
+
+                [
+                    {
+                        "symbol": "BTCUSDT",
+                        "id": 1650422481,
+                        "orderId": 12569099453,
+                        "orderListId": -1,
+                        "price": "23416.10000000",
+                        "qty": "0.00635000",
+                        "quoteQty": "148.69223500",
+                        "commission": "0.00000000",
+                        "commissionAsset": "BNB",
+                        "time": 1660801715793,
+                        "isBuyer": false,
+                        "isMaker": true,
+                        "isBestMatch": true
+                    }
+                ]
+
+        Notes:
+            - Weight: 20
+            - Data Source: Memory => Database
+            - If fromId is specified, return trades with trade ID >= fromId
+            - If startTime and/or endTime are specified, trades are filtered by execution time (time)
+            - fromId cannot be used together with startTime and endTime
+            - If orderId is specified, only trades related to that order are returned
+            - startTime and endTime cannot be used together with orderId
+            - If no condition is specified, the most recent trades are returned
+            - The time between startTime and endTime can't be longer than 24 hours
+        """
         return self._ws_api_request_sync("myTrades", True, params)
 
     def ws_get_prevented_matches(self, **params):
+        """Displays the list of orders that were expired due to STP (Self-Trade Prevention).
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-prevented-matches-user_data
+
+        :param symbol: STRING - Required
+        :type symbol: str
+        :param preventedMatchId: optional - Get specific prevented match by ID
+        :type preventedMatchId: int
+        :param orderId: optional - Get prevented matches for specific order
+        :type orderId: int
+        :param fromPreventedMatchId: optional - Get prevented matches from this ID
+        :type fromPreventedMatchId: int
+        :param limit: optional - Default 500; max 1000
+        :type limit: int
+        :param recvWindow: optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: Websocket response
+
+        .. code-block:: python
+            {
+                "symbol": "BTCUSDT",            # Trading pair
+                "preventedMatchId": 1,          # Unique ID for prevented match
+                "takerOrderId": 5,              # Order ID of the taker order
+                "makerSymbol": "BTCUSDT",       # Symbol of maker order
+                "makerOrderId": 3,              # Order ID of maker order
+                "tradeGroupId": 1,              # Trade group ID
+                "selfTradePreventionMode": "EXPIRE_MAKER", # STP mode used
+                "price": "1.100000",            # Price level where match was prevented
+                "makerPreventedQuantity": "1.300000", # Quantity that was prevented
+                "transactTime": 1669101687094   # Time of prevention
+            }
+
+        Supported parameter combinations:
+            - symbol + preventedMatchId
+            - symbol + orderId
+            - symbol + orderId + fromPreventedMatchId (limit defaults to 500)
+            - symbol + orderId + fromPreventedMatchId + limit
+
+        Weight:
+            - 2 if symbol is invalid
+            - 2 when querying by preventedMatchId
+            - 20 when querying by orderId
+
+        Data Source: Database
+        """
         return self._ws_api_request_sync("myPreventedMatches", True, params)
 
     def ws_get_allocations(self, **params):
+        """Get information about orders that were expired due to STP (Self-Trade Prevention).
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-prevented-matches-user_data
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param preventedMatchId: LONG - Optional - Get specific prevented match by ID
+        :type preventedMatchId: int
+        :param orderId: LONG - Optional - Get prevented matches for specific order
+        :type orderId: int
+        :param fromPreventedMatchId: LONG - Optional - Get prevented matches from this ID
+        :type fromPreventedMatchId: int
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+        :param recvWindow: LONG - Optional - The value cannot be greater than 60000
+        :type recvWindow: int
+        :param timestamp: LONG - Required
+        :type timestamp: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "symbol": "BTCUSDT",
+                "preventedMatchId": 1,
+                "takerOrderId": 5,
+                "makerSymbol": "BTCUSDT",
+                "makerOrderId": 3,
+                "tradeGroupId": 1,
+                "selfTradePreventionMode": "EXPIRE_MAKER",
+                "price": "1.100000",
+                "makerPreventedQuantity": "1.300000",
+                "transactTime": 1669101687094
+            }
+
+        Supported parameter combinations:
+            - symbol + preventedMatchId
+            - symbol + orderId
+            - symbol + orderId + fromPreventedMatchId (limit defaults to 500)
+            - symbol + orderId + fromPreventedMatchId + limit
+
+        Weight:
+            - 2 if symbol is invalid
+            - 2 when querying by preventedMatchId
+            - 20 when querying by orderId
+
+        Data Source: Database
+        """
         return self._ws_api_request_sync("myAllocations", True, params)
 
     def ws_get_commission_rates(self, **params):
+        """Get current account commission rates for a symbol.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#account-commission-rates-user_data
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param recvWindow: LONG - Optional - The value cannot be greater than 60000
+        :type recvWindow: int
+
+        :returns: API response dict with commission rates:
+
+            {
+                "symbol": "BTCUSDT",
+                "standardCommission": {           # Standard commission rates on trades
+                    "maker": "0.00000010",
+                    "taker": "0.00000020",
+                    "buyer": "0.00000030",
+                    "seller": "0.00000040"
+                },
+                "taxCommission": {               # Tax commission rates on trades
+                    "maker": "0.00000112",
+                    "taker": "0.00000114",
+                    "buyer": "0.00000118",
+                    "seller": "0.00000116"
+                },
+                "discount": {                    # Discount on standard commissions when paying in BNB
+                    "enabledForAccount": true,
+                    "enabledForSymbol": true,
+                    "discountAsset": "BNB",
+                    "discount": "0.75000000"     # Standard commission reduction rate when paying in BNB
+                }
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Weight: 20
+
+        Data Source: Database
+        """
         return self._ws_api_request_sync("account.commission", True, params)
 
     def ws_get_order_book(self, **params):
+        """Get current order book for a symbol.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#order-book
+
+        Note that this request returns limited market depth. If you need to continuously monitor
+        order book updates, consider using WebSocket Streams:
+        - <symbol>@depth<levels>
+        - <symbol>@depth
+
+        You can use `depth` request together with `<symbol>@depth` streams to maintain a local order book.
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param limit: INT - Optional - Default 100; max 5000
+        :type limit: int
+
+        :returns: Websocket message
+
+            {
+                "lastUpdateId": 2731179239,
+                "bids": [                // Bid levels sorted from highest to lowest price
+                    [
+                        "0.01379900",   // Price level
+                        "3.43200000"    // Quantity
+                    ],
+                    ...
+                ],
+                "asks": [                // Ask levels sorted from lowest to highest price
+                    [
+                        "0.01380000",   // Price level
+                        "5.91700000"    // Quantity
+                    ],
+                    ...
+                ]
+            }
+
+        Weight: Adjusted based on limit:
+            - 1-100: 5
+            - 101-500: 25
+            - 501-1000: 50
+            - 1001-5000: 250
+
+        Data Source: Memory
+        """
         return self._ws_api_request_sync("depth", False, params)
 
     def ws_get_recent_trades(self, **params):
+        """Get recent trades for a symbol.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#recent-trades
+
+        If you need access to real-time trading activity, please consider using WebSocket Streams:
+        - <symbol>@trade
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+
+        :returns: API response
+
+        .. code-block:: python
+            {
+                "id": "409a20bd-253d-41db-a6dd-687862a5882f",
+                "status": 200,
+                "result": [
+                    {
+                        "id": 194686783,              # Trade ID
+                        "price": "0.01361000",        # Price
+                        "qty": "0.01400000",          # Quantity
+                        "quoteQty": "0.00019054",     # Quote quantity
+                        "time": 1660009530807,        # Trade time
+                        "isBuyerMaker": true,         # Was the buyer the maker?
+                        "isBestMatch": true           # Was this the best price match?
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Weight: 25
+        Data Source: Memory
+        """
         return self._ws_api_request_sync("trades.recent", False, params)
 
     def ws_get_historical_trades(self, **params):
+        """Get historical trades.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#historical-trades
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param fromId: INT - Optional - Trade ID to begin at
+        :type fromId: int
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+
+        :returns: Websocket message
+
+        .. code-block:: python
+
+            {
+                "id": "cffc9c7d-4efc-4ce0-b587-6b87448f052a",
+                "result": [
+                    {
+                        "id": 0,                      # Trade ID
+                        "price": "0.00005000",        # Price
+                        "qty": "40.00000000",         # Quantity
+                        "quoteQty": "0.00200000",     # Quote quantity
+                        "time": 1500004800376,        # Trade time
+                        "isBuyerMaker": true,         # Was the buyer the maker?
+                        "isBestMatch": true           # Was this the best price match?
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - If fromId is not specified, the most recent trades are returned
+
+        Weight: 25
+        Data Source: Database
+        """
         return self._ws_api_request_sync("trades.historical", False, params)
 
     def ws_get_aggregate_trades(self, **params):
+        """Get aggregate trades.
+
+        An aggregate trade represents one or more individual trades that fill at the same time,
+        from the same taker order, with the same price.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#aggregate-trades
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param fromId: INT - Optional - Aggregate trade ID to begin at
+        :type fromId: int
+        :param startTime: INT - Optional - Start time in milliseconds
+        :type startTime: int
+        :param endTime: INT - Optional - End time in milliseconds
+        :type endTime: int
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "id": "...",
+                "status": 200,
+                "result": [
+                    {
+                        "a": 50000000,        # Aggregate trade ID
+                        "p": "0.00274100",    # Price
+                        "q": "57.19000000",   # Quantity
+                        "f": 59120167,        # First trade ID
+                        "l": 59120170,        # Last trade ID
+                        "T": 1565877971222,   # Timestamp
+                        "m": true,            # Was the buyer the maker?
+                        "M": true             # Was the trade the best price match?
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - If fromId is specified, return aggtrades with aggregate trade ID >= fromId.
+            Use fromId and limit to page through all aggtrades.
+            - If startTime and/or endTime are specified, aggtrades are filtered by execution time (T).
+            fromId cannot be used together with startTime and endTime.
+            - If no condition is specified, the most recent aggregate trades are returned.
+            - For real-time updates, consider using WebSocket Streams: <symbol>@aggTrade
+            - For historical data, consider using data.binance.vision
+
+        Weight: 2
+        Data Source: Database
+        """
         return self._ws_api_request_sync("trades.aggregate", False, params)
 
     def ws_get_klines(self, **params):
+        """Get klines (candlestick bars).
+
+        Klines are uniquely identified by their open & close time.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#klines
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param interval: ENUM - Required - Kline interval
+        :type interval: str
+        :param startTime: INT - Optional - Start time in milliseconds
+        :type startTime: int
+        :param endTime: INT - Optional - End time in milliseconds
+        :type endTime: int
+        :param timeZone: STRING - Optional - Default: 0 (UTC)
+        :type timeZone: str
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+
+        Supported kline intervals:
+            - seconds: 1s
+            - minutes: 1m, 3m, 5m, 15m, 30m
+            - hours: 1h, 2h, 4h, 6h, 8h, 12h
+            - days: 1d, 3d
+            - weeks: 1w
+            - months: 1M
+
+        Notes:
+            - If startTime/endTime not specified, returns most recent klines
+            - Supported timeZone values:
+                - Hours and minutes (e.g. "-1:00", "05:45")
+                - Only hours (e.g. "0", "8", "4")
+                - Accepted range is strictly [-12:00 to +14:00] inclusive
+            - If timeZone provided, kline intervals interpreted in that timezone instead of UTC
+            - startTime and endTime always interpreted in UTC, regardless of timeZone
+            - For real-time updates, consider using WebSocket Streams: <symbol>@kline_<interval>
+            - For historical data, consider using data.binance.vision
+
+        Weight: 2
+        Data Source: Database
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "id": "1dbbeb56-8eea-466a-8f6e-86bdcfa2fc0b",
+                "status": 200,
+                "result": [
+                    [
+                        1655971200000,      # Kline open time
+                        "0.01086000",       # Open price
+                        "0.01086600",       # High price
+                        "0.01083600",       # Low price
+                        "0.01083800",       # Close price
+                        "2290.53800000",    # Volume
+                        1655974799999,      # Kline close time
+                        "24.85074442",      # Quote asset volume
+                        2283,               # Number of trades
+                        "1171.64000000",    # Taker buy base asset volume
+                        "12.71225884",      # Taker buy quote asset volume
+                        "0"                 # Unused field, ignore
+                    ]
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
         return self._ws_api_request_sync("klines", False, params)
 
     def ws_get_uiKlines(self, **params):
+        """Get klines (candlestick bars) optimized for presentation.
+
+        This request is similar to klines, having the same parameters and response.
+        uiKlines return modified kline data, optimized for presentation of candlestick charts.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#ui-klines
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+        :param interval: ENUM - Required - Kline interval
+        :type interval: str
+        :param startTime: INT - Optional - Start time in milliseconds
+        :type startTime: int
+        :param endTime: INT - Optional - End time in milliseconds
+        :type endTime: int
+        :param timeZone: STRING - Optional - Default: 0 (UTC)
+        :type timeZone: str
+        :param limit: INT - Optional - Default 500; max 1000
+        :type limit: int
+
+        Supported kline intervals:
+            - seconds: 1s
+            - minutes: 1m, 3m, 5m, 15m, 30m
+            - hours: 1h, 2h, 4h, 6h, 8h, 12h
+            - days: 1d, 3d
+            - weeks: 1w
+            - months: 1M
+
+        Notes:
+            - If startTime/endTime not specified, returns most recent klines
+            - Supported timeZone values:
+                - Hours and minutes (e.g. "-1:00", "05:45")
+                - Only hours (e.g. "0", "8", "4")
+                - Accepted range is strictly [-12:00 to +14:00] inclusive
+            - If timeZone provided, kline intervals are interpreted in that timezone instead of UTC
+            - startTime and endTime are always interpreted in UTC, regardless of timeZone
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "id": "b137468a-fb20-4c06-bd6b-625148eec958",
+                "result": [
+                    [
+                        1655971200000,      # Kline open time
+                        "0.01086000",       # Open price
+                        "0.01086600",       # High price
+                        "0.01083600",       # Low price
+                        "0.01083800",       # Close price
+                        "2290.53800000",    # Volume
+                        1655974799999,      # Kline close time
+                        "24.85074442",      # Quote asset volume
+                        2283,               # Number of trades
+                        "1171.64000000",    # Taker buy base asset volume
+                        "12.71225884",      # Taker buy quote asset volume
+                        "0"                 # Unused field, ignore
+                    ]
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
         return self._ws_api_request_sync("uiKlines", False, params)
 
     def ws_get_avg_price(self, **params):
+        """Get current average price for a symbol.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#current-average-price
+
+        :param symbol: STRING - Required - Trading symbol
+        :type symbol: str
+
+        :returns: Websocket message
+
+        .. code-block:: python
+            {
+                "mins": 5,                    # Average price interval (in minutes)
+                "price": "9.35751834",        # Average price
+                "closeTime": 1694061154503    # Last trade time
+            }
+
+        Weight: 2
+        """
         return self._ws_api_request_sync("avgPrice", False, params)
 
     def ws_get_ticker(self, **params):
+        """Get 24-hour rolling window price change statistics.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#24hr-ticker-price-change-statistics
+
+        :param symbol: STRING - Optional - Query ticker for a single symbol
+        :type symbol: str
+        :param symbols: ARRAY of STRING - Optional - Query ticker for multiple symbols
+        :type symbols: list
+        :param type: ENUM - Optional - Ticker type: FULL (default) or MINI
+        :type type: str
+
+        Note:
+            - symbol and symbols cannot be used together
+            - If no symbol is specified, returns information about all symbols currently trading on the exchange
+
+        Weight:
+            Adjusted based on the number of requested symbols:
+            - 1-20 symbols: 2
+            - 21-100 symbols: 40
+            - 101 or more symbols: 80
+            - all symbols: 80
+
+        :returns: Websocket message
+
+        For a single symbol with type=FULL:
+        .. code-block:: python
+            {
+                "symbol": "BNBBTC",
+                "priceChange": "0.00013900",         # Absolute price change
+                "priceChangePercent": "1.020",       # Relative price change in percent
+                "weightedAvgPrice": "0.01382453",    # Quote volume divided by volume
+                "prevClosePrice": "0.01362800",      # Previous day's close price
+                "lastPrice": "0.01376700",           # Latest price
+                "lastQty": "1.78800000",            # Latest quantity
+                "bidPrice": "0.01376700",           # Best bid price
+                "bidQty": "4.64600000",            # Best bid quantity
+                "askPrice": "0.01376800",           # Best ask price
+                "askQty": "14.31400000",           # Best ask quantity
+                "openPrice": "0.01362800",          # Open price 24 hours ago
+                "highPrice": "0.01414900",          # Highest price in the last 24 hours
+                "lowPrice": "0.01346600",           # Lowest price in the last 24 hours
+                "volume": "69412.40500000",         # Trading volume in base asset
+                "quoteVolume": "959.59411487",      # Trading volume in quote asset
+                "openTime": 1660014164909,          # Open time for 24hr rolling window
+                "closeTime": 1660100564909,         # Close time for 24hr rolling window
+                "firstId": 194696115,               # First trade ID
+                "lastId": 194968287,                # Last trade ID
+                "count": 272173                     # Number of trades
+            }
+
+        For a single symbol with type=MINI:
+        .. code-block:: python
+            {
+                "symbol": "BNBBTC",
+                "openPrice": "0.01362800",
+                "highPrice": "0.01414900",
+                "lowPrice": "0.01346600",
+                "lastPrice": "0.01376700",
+                "volume": "69412.40500000",
+                "quoteVolume": "959.59411487",
+                "openTime": 1660014164909,
+                "closeTime": 1660100564909,
+                "firstId": 194696115,
+                "lastId": 194968287,
+                "count": 272173
+            }
+
+        """
         return self._ws_api_request_sync("ticker.24hr", False, params)
 
     def ws_get_trading_day_ticker(self, **params):
+        """Price change statistics for a trading day.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#trading-day-ticker
+
+        :param symbol: STRING - Optional - Query ticker of a single symbol
+        :type symbol: str
+        :param symbols: ARRAY of STRING - Optional - Query ticker for multiple symbols
+        :type symbols: list
+        :param timeZone: STRING - Optional - Default: 0 (UTC)
+            Supported values:
+            - Hours and minutes (e.g. "-1:00", "05:45")
+            - Only hours (e.g. "0", "8", "4")
+            - Accepted range is strictly [-12:00 to +14:00] inclusive
+        :type timeZone: str
+        :param type: ENUM - Optional - FULL (default) or MINI
+        :type type: str
+
+        :returns: Websocket message
+
+        Response FULL type example:
+        {
+            "symbol": "BTCUSDT",
+            "priceChange": "-83.13000000",           # Absolute price change
+            "priceChangePercent": "-0.317",          # Relative price change in percent
+            "weightedAvgPrice": "26234.58803036",    # quoteVolume / volume
+            "openPrice": "26304.80000000",
+            "highPrice": "26397.46000000",
+            "lowPrice": "26088.34000000",
+            "lastPrice": "26221.67000000",
+            "volume": "18495.35066000",              # Volume in base asset
+            "quoteVolume": "485217905.04210480",
+            "openTime": 1695686400000,
+            "closeTime": 1695772799999,
+            "firstId": 3220151555,
+            "lastId": 3220849281,
+            "count": 697727
+        }
+
+        Response MINI type example:
+        {
+            "symbol": "BTCUSDT",
+            "openPrice": "26304.80000000",
+            "highPrice": "26397.46000000",
+            "lowPrice": "26088.34000000",
+            "lastPrice": "26221.67000000",
+            "volume": "18495.35066000",              # Volume in base asset
+            "quoteVolume": "485217905.04210480",     # Volume in quote asset
+            "openTime": 1695686400000,
+            "closeTime": 1695772799999,
+            "firstId": 3220151555,                   # Trade ID of the first trade in the interval
+            "lastId": 3220849281,                    # Trade ID of the last trade in the interval
+            "count": 697727                          # Number of trades in the interval
+        }
+
+        Weight:
+            - 4 for each requested symbol
+            - Weight caps at 200 once number of symbols > 50
+        """
         return self._ws_api_request_sync("ticker.tradingDay", False, params)
 
     def ws_get_symbol_ticker_window(self, **params):
+        """Get rolling window price change statistics.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#rolling-window-price-change-statistics
+
+        :param symbol: STRING - Optional - Query ticker of a single symbol
+        :type symbol: str
+        :param symbols: ARRAY of STRING - Optional - Query ticker for multiple symbols
+        :type symbols: list
+        :param windowSize: STRING - Required - Supported windowSize values:
+            - 1h, 2h, 4h, 6h, 12h
+            - 1d, 2d, 3d, 4d, 5d, 6d, 7d, 14d, 30d
+        :type windowSize: str
+        :param type: ENUM - Optional - FULL (default) or MINI
+        :type type: str
+
+        :returns: Websocket message
+
+        With symbol parameter:
+        .. code-block:: python
+            {
+                "symbol": "BTCUSDT",
+                "priceChange": "-83.13000000",         # Absolute price change
+                "priceChangePercent": "-0.317",        # Relative price change in percent
+                "weightedAvgPrice": "26234.58803036",  # quoteVolume / volume
+                "openPrice": "26304.80000000",
+                "highPrice": "26397.46000000",
+                "lowPrice": "26088.34000000",
+                "lastPrice": "26221.67000000",
+                "volume": "18495.35066000",            # Volume in base asset
+                "quoteVolume": "485217905.04210480",   # Volume in quote asset
+                "openTime": 1695686400000,
+                "closeTime": 1695772799999,
+                "firstId": 3220151555,                 # Trade ID of first trade in the interval
+                "lastId": 3220849281,                  # Trade ID of last trade in the interval
+                "count": 697727                        # Number of trades in the interval
+            }
+
+        With symbols parameter:
+        .. code-block:: python
+            [
+                {
+                    # Same fields as above
+                },
+                {
+                    # Same fields as above for next symbol
+                }
+            ]
+
+        For MINI type response:
+        .. code-block:: python
+            {
+                "symbol": "BTCUSDT",
+                "openPrice": "26304.80000000",
+                "highPrice": "26397.46000000",
+                "lowPrice": "26088.34000000",
+                "lastPrice": "26221.67000000",
+                "volume": "18495.35066000",
+                "quoteVolume": "485217905.04210480",
+                "openTime": 1695686400000,
+                "closeTime": 1695772799999,
+                "firstId": 3220151555,
+                "lastId": 3220849281,
+                "count": 697727
+            }
+
+        Weight:
+            - 4 for each requested symbol
+            - Weight caps at 200 once number of symbols > 50
+        """
         return self._ws_api_request_sync("ticker", False, params)
 
     def ws_get_symbol_ticker(self, **params):
+        """Get latest price for a symbol or symbols.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#symbol-price-ticker
+
+        :param symbol: STRING - Optional - Query ticker of a single symbol
+        :type symbol: str
+        :param symbols: ARRAY of STRING - Optional - Query ticker for multiple symbols
+        :type symbols: list
+
+        :returns: Websocket message
+
+        With symbol parameter:
+            {
+                "symbol": "BNBBTC",
+                "price": "0.01361000"
+            }
+
+            With symbols parameter:
+            [
+                {
+                    "symbol": "BNBBTC",
+                    "price": "0.01361000"
+                },
+                {
+                    "symbol": "BTCUSDT",
+                    "price": "23440.91000000"
+                }
+            ]
+
+        Weight:
+            - 1 for a single symbol
+            - 2 for up to 20 symbols
+            - 40 for 21 to 100 symbols
+            - 40 for all symbols
+        """
         return self._ws_api_request_sync("ticker.price", False, params)
 
     def ws_get_orderbook_ticker(self, **params):
+        """Get the best price/quantity on the order book for a symbol or symbols.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#symbol-order-book-ticker
+
+        :param symbol: STRING - Optional - Query ticker of a single symbol
+        :type symbol: str
+        :param symbols: ARRAY of STRING - Optional - Query ticker for multiple symbols
+        :type symbols: list
+
+        :returns: Websocket response
+
+            With symbol parameter:
+            {
+                "symbol": "BNBBTC",
+                "bidPrice": "0.01358000",
+                "bidQty": "0.95200000",
+                "askPrice": "0.01358100",
+                "askQty": "11.91700000"
+            }
+
+            With symbols parameter:
+            [
+                {
+                    "symbol": "BNBBTC",
+                    "bidPrice": "0.01358000",
+                    "bidQty": "0.95200000",
+                    "askPrice": "0.01358100",
+                    "askQty": "11.91700000"
+                },
+                {
+                    "symbol": "BTCUSDT",
+                    "bidPrice": "23440.90000000",
+                    "bidQty": "0.00200000",
+                    "askPrice": "23440.91000000",
+                    "askQty": "0.00200000"
+                }
+            ]
+
+        Weight:
+            - 2 for a single symbol
+            - 4 for up to 100 symbols
+            - 40 for 101 or more symbols
+        """
         return self._ws_api_request_sync("ticker.book", False, params)
 
     def ws_ping(self, **params):
+        """Test connectivity to the WebSocket API.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#test-connectivity
+
+        :returns: API response
+
+            {
+                "id": "922bcc6e-9de8-440d-9e84-7c80933a8d0d",
+                "status": 200,
+                "result": {},
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+
+        Weight: 1
+        """
         return self._ws_api_request_sync("ping", False, params)
 
     def ws_get_time(self, **params):
+        """Test connectivity to the WebSocket API and get the current server time.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#check-server-time
+
+        :returns: API response with server time
+
+            {
+                "id": "187d3cb2-942d-484c-8271-4e2141bbadb1",
+                "status": 200,
+                "result": {
+                    "serverTime": 1656400526260
+                },
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000,
+                        "count": 1
+                    }
+                ]
+            }
+
+        Weight: 1
+        Data Source: Memory
+        """
         return self._ws_api_request_sync("time", False, params)
 
     def ws_get_exchange_info(self, **params):
+        """Query current exchange trading rules, rate limits, and symbol information.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/testnet/web-socket-api/public-api-requests#exchange-information
+
+        :param symbol: str - Filter by single symbol (optional)
+        :param symbols: list - Filter by multiple symbols (optional)
+        :param permissions: list or str - Filter symbols by permissions (optional)
+
+        :returns: API response containing exchange information including:
+            - Rate limits
+            - Exchange filters
+            - Symbol information including:
+                - Status
+                - Base/quote assets
+                - Order types allowed
+                - Filters (price, lot size, etc)
+                - Trading permissions
+                - Self-trade prevention modes
+
+            Example response:
+            {
+                "timezone": "UTC",
+                "serverTime": 1655969291181,
+                "rateLimits": [
+                    {
+                        "rateLimitType": "REQUEST_WEIGHT",
+                        "interval": "MINUTE",
+                        "intervalNum": 1,
+                        "limit": 6000
+                    },
+                    ...
+                ],
+                "exchangeFilters": [],
+                "symbols": [
+                    {
+                        "symbol": "BTCUSDT",
+                        "status": "TRADING",
+                        "baseAsset": "BTC",
+                        "baseAssetPrecision": 8,
+                        ...
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - Only one of symbol, symbols, permissions parameters can be specified
+            - Without parameters, displays all symbols with ["SPOT", "MARGIN", "LEVERAGED"] permissions
+            - To list all active symbols, explicitly request all permissions
+            - Permissions accepts either a list or single permission name (e.g. "SPOT")
+
+        Weight: 20
+        Data Source: Memory
+        """
         return self._ws_api_request_sync("exchangeInfo", False, params)
 
     ####################################################
@@ -11484,3411 +13469,49 @@ class Client(BaseClient):
             "get", "margin/maxBorrowable", signed=True, data=params
         )
 
-    def v3_post_sor_order(self, **params):
-        """
-        Placeholder function for POST /api/v3/sor/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "sor/order", signed=True, data=params, version=3)
-        
-    def margin_v1_post_broker_sub_account_api_commission(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/commission.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/commission", signed=True, data=params, version=1)
-        
-    def futures_v1_get_all_force_orders(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/allForceOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "allForceOrders", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_customize_margin_call(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/customize/margin_call.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/customize/margin_call", signed=True, data=params, version=1)
-        
-    def margin_v1_post_dci_product_auto_compound_edit_status(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/dci/product/auto_compound/edit-status.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "dci/product/auto_compound/edit-status", signed=True, data=params, version=1)
-        
-    def margin_v1_post_asset_convert_transfer_query_by_page(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/asset/convert-transfer/queryByPage.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "asset/convert-transfer/queryByPage", signed=True, data=params, version=1)
-        
-    def margin_v1_get_margin_rate_limit_order(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/rateLimit/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/rateLimit/order", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_flexible_repay_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/repay/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/repay/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_sol_history_rate_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/rateHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/rateHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_delete_account_api_restrictions_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for DELETE /sapi/v1/account/apiRestrictions/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("delete", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "asset/ledger-transfer/cloud-mining/queryByPage", signed=True, data=params, version=1)
-        
-    def margin_v1_post_localentity_withdraw_apply(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/localentity/withdraw/apply.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "localentity/withdraw/apply", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_pm_exchange_info(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/pmExchangeInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "pmExchangeInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sub_account_virtual_sub_account(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sub-account/virtualSubAccount.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/virtualSubAccount", signed=True, data=params, version=1)
-        
-    def margin_v1_get_dci_product_positions(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/dci/product/positions.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "dci/product/positions", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_statistics_user_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/statistics/user/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/statistics/user/list", signed=True, data=params, version=1)
-        
-    def margin_v1_post_lending_auto_invest_plan_add(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/auto-invest/plan/add.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/auto-invest/plan/add", signed=True, data=params, version=1)
-        
-    def v3_post_withdraw_html(self, **params):
-        """
-        Placeholder function for POST /wapi/v3/withdraw.html.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_website("post", "withdraw.html", signed=True, data=params, version=3)
-        
-    def margin_v1_post_account_api_restrictions_ip_restriction(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/account/apiRestrictions/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
-    def margin_v1_post_capital_contract_convertible_coins(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/capital/contract/convertible-coins.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_borrow(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/borrow.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/borrow", signed=True, data=params, version=1)
-        
-    def margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for DELETE /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("delete", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_flexible_collateral_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/collateral/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/collateral/data", signed=True, data=params, version=1)
-        
-    def margin_v1_get_eth_staking_eth_history_wbeth_rewards_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/eth-staking/eth/history/wbethRewardsHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "eth-staking/eth/history/wbethRewardsHistory", signed=True, data=params, version=1)
-        
-    def margin_v2_post_loan_flexible_repay(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/loan/flexible/repay.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/repay", signed=True, data=params, version=2)
-        
-    def margin_v1_get_convert_exchange_info(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/convert/exchangeInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "convert/exchangeInfo", signed=True, data=params, version=1)
-        
-    def v3_get_acccount(self, **params):
-        """
-        Placeholder function for GET /api/v3/acccount.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "acccount", signed=True, data=params, version=3)
-        
-    def margin_v1_post_account_disable_fast_withdraw_switch(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/account/disableFastWithdrawSwitch.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "account/disableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
-    def margin_v1_post_lending_auto_invest_one_off(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/auto-invest/one-off.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/auto-invest/one-off", signed=True, data=params, version=1)
-        
-    def margin_v2_post_loan_flexible_borrow(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/loan/flexible/borrow.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/borrow", signed=True, data=params, version=2)
-        
-    def margin_v1_get_lending_auto_invest_one_off_status(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/one-off/status.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/one-off/status", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_plan_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/plan/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/plan/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_asset(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/asset.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/asset", signed=True, data=params, version=1)
-        
-    def margin_v2_get_portfolio_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/portfolio/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "portfolio/account", signed=True, data=params, version=2)
-        
-    def futures_v1_get_convert_exchange_info(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/convert/exchangeInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "convert/exchangeInfo", signed=True, data=params, version=1)
-        
-    def v3_get_order_list(self, **params):
-        """
-        Placeholder function for GET /api/v3/orderList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "orderList", signed=True, data=params, version=3)
-        
-    def futures_v1_get_order_asyn_id(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/order/asyn/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "order/asyn/id", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_repay_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/repay/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/repay/history", signed=True, data=params, version=2)
-        
-    def margin_v1_get_broker_sub_account_deposit_hist(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/depositHist.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/depositHist", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_payment_uid(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/payment/uid.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/payment/uid", signed=True, data=params, version=1)
-        
-    def futures_v1_get_convert_order_status(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/convert/orderStatus.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sub_account_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sub-account/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
-    def options_v1_delete_all_open_orders_by_underlying(self, **params):
-        """
-        Placeholder function for DELETE /eapi/v1/allOpenOrdersByUnderlying.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("delete", "allOpenOrdersByUnderlying", signed=True, data=params)
-        
-    def margin_v1_post_lending_daily_purchase(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/daily/purchase.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/daily/purchase", signed=True, data=params, version=1)
-        
-    def margin_v1_post_eth_staking_eth_redeem(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/eth-staking/eth/redeem.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "eth-staking/eth/redeem", signed=True, data=params, version=1)
-        
-    def margin_v1_get_copy_trading_futures_user_status(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/copyTrading/futures/userStatus.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "copyTrading/futures/userStatus", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_permission_universal_transfer(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/permission/universalTransfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/permission/universalTransfer", signed=True, data=params, version=1)
-        
-    def margin_v1_post_algo_spot_new_order_twap(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/algo/spot/newOrderTwap.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "algo/spot/newOrderTwap", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_history_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/history/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/history/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_hash_transfer_config_details(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/hash-transfer/config/details.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/hash-transfer/config/details", signed=True, data=params, version=1)
-        
-    def options_v1_get_margin_account(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/marginAccount.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "marginAccount", signed=True, data=params)
-        
-    def margin_v1_get_algo_spot_sub_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/algo/spot/subOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "algo/spot/subOrders", signed=True, data=params, version=1)
-        
-    def futures_v1_get_rate_limit_order(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/rateLimit/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "rateLimit/order", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_flexible_repay(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/flexible/repay.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/repay", signed=True, data=params, version=1)
-        
-    def options_v1_get_income_asyn(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/income/asyn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "income/asyn", signed=True, data=params)
-        
-    def margin_v1_post_lending_customized_fixed_purchase(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/customizedFixed/purchase.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/customizedFixed/purchase", signed=True, data=params, version=1)
-        
-    def margin_v1_post_eth_staking_wbeth_wrap(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/eth-staking/wbeth/wrap.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "eth-staking/wbeth/wrap", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_commission_coin_futures(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/coinFutures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_transfer(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/transfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/transfer", signed=True, data=params, version=1)
-        
-    def margin_v1_post_capital_deposit_credit_apply(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/capital/deposit/credit-apply.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "capital/deposit/credit-apply", signed=True, data=params, version=1)
-        
-    def margin_v1_get_capital_contract_convertible_coins(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/capital/contract/convertible-coins.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_rebalance_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/rebalance/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/rebalance/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_capital_deposit_address_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/capital/deposit/address/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "capital/deposit/address/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_dci_product_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/dci/product/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "dci/product/list", signed=True, data=params, version=1)
-        
-    def margin_v1_post_dci_product_subscribe(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/dci/product/subscribe.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "dci/product/subscribe", signed=True, data=params, version=1)
-        
-    def margin_v1_get_simple_earn_flexible_history_subscription_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/simple-earn/flexible/history/subscriptionRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "simple-earn/flexible/history/subscriptionRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_portfolio_balance(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/portfolio/balance.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "portfolio/balance", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_collateral_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/collateral/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/collateral/data", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_redeem_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/redeem/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/redeem/history", signed=True, data=params, version=1)
-        
-    def futures_v1_get_order_amendment(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/orderAmendment.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_sol_history_unclaimed_rewards(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/unclaimedRewards.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/unclaimedRewards", signed=True, data=params, version=1)
-        
-    def margin_v1_delete_algo_spot_order(self, **params):
-        """
-        Placeholder function for DELETE /sapi/v1/algo/spot/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("delete", "algo/spot/order", signed=True, data=params, version=1)
-        
-    def margin_v1_get_eth_staking_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/eth-staking/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "eth-staking/account", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_income(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/income.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/income", signed=True, data=params, version=1)
-        
-    def margin_v1_get_localentity_deposit_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/localentity/deposit/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "localentity/deposit/history", signed=True, data=params, version=1)
-        
-    def margin_v1_post_eth_staking_wbeth_unwrap(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/eth-staking/wbeth/unwrap.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "eth-staking/wbeth/unwrap", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_bnb_burn_spot(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/spot.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccount/bnbBurn/spot", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_query_trans_log(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/query-trans-log.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/query-trans-log", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_rebate_recent_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/rebate/recentRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/rebate/recentRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_statistics_user_status(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/statistics/user/status.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/statistics/user/status", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_vip_repay(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/vip/repay.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/vip/repay", signed=True, data=params, version=1)
-        
-    def futures_v1_post_fee_burn(self, **params):
-        """
-        Placeholder function for POST /fapi/v1/feeBurn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("post", "feeBurn", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_borrow_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/borrow/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/borrow/history", signed=True, data=params, version=2)
-        
-    def margin_v1_post_lending_auto_invest_redeem(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/auto-invest/redeem.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/auto-invest/redeem", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_income_asyn(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/income/asyn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "income/asyn", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_info(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/info.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/info", signed=True, data=params, version=1)
-        
-    def margin_v1_post_convert_limit_place_order(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/convert/limit/placeOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "convert/limit/placeOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sol_staking_sol_redeem(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sol-staking/sol/redeem.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sol-staking/sol/redeem", signed=True, data=params, version=1)
-        
-    def options_v1_get_countdown_cancel_all(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/countdownCancelAll.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "countdownCancelAll", signed=True, data=params)
-        
-    def futures_v1_get_trade_asyn(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/trade/asyn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "trade/asyn", signed=True, data=params, version=1)
-        
-    def options_v1_get_income_asyn_id(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/income/asyn/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "income/asyn/id", signed=True, data=params)
-        
-    def v3_get_sub_account_transfer_history_html(self, **params):
-        """
-        Placeholder function for GET /wapi/v3/sub-account/transfer/history.html.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_website("get", "sub-account/transfer/history.html", signed=True, data=params, version=3)
-        
-    def margin_v1_get_sol_staking_sol_quota(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/quota.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/quota", signed=True, data=params, version=1)
-        
-    def margin_v1_post_eth_staking_eth_stake(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/eth-staking/eth/stake.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "eth-staking/eth/stake", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_target_asset_roi_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/target-asset/roi/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/target-asset/roi/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_target_asset_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/target-asset/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/target-asset/list", signed=True, data=params, version=1)
-        
-    def futures_v1_put_batch_order(self, **params):
-        """
-        Placeholder function for PUT /fapi/v1/batchOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("put", "batchOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_deposit_address(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/deposit/address.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/deposit/address", signed=True, data=params, version=1)
-        
-    def options_v1_get_open_interest(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/openInterest.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "openInterest", signed=True, data=params)
-        
-    def margin_v1_post_account_api_restrictions_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/account/apiRestrictions/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_transfer_futures(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/transfer/futures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/transfer/futures", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sol_staking_sol_claim(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sol-staking/sol/claim.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sol-staking/sol/claim", signed=True, data=params, version=1)
-        
-    def v3_get_ticker_trading_day(self, **params):
-        """
-        Placeholder function for GET /api/v3/ticker/tradingDay.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "ticker/tradingDay", signed=True, data=params, version=3)
-        
-    def margin_v1_get_lending_auto_invest_all_asset(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/all/asset.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/all/asset", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_vip_request_interest_rate(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/vip/request/interestRate.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/vip/request/interestRate", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_union_purchase_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/union/purchaseRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/union/purchaseRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_simple_earn_flexible_history_redemption_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/simple-earn/flexible/history/redemptionRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "simple-earn/flexible/history/redemptionRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def margin_v1_get_margin_trade_coeff(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/tradeCoeff.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/tradeCoeff", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_api_commission_coin_futures(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/coinFutures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_sol_history_bnsol_rewards_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/bnsolRewardsHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/bnsolRewardsHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_api(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccountApi.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccountApi", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_flexible_borrow(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/flexible/borrow.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/borrow", signed=True, data=params, version=1)
-        
-    def v3_post_sor_order_test(self, **params):
-        """
-        Placeholder function for POST /api/v3/sor/order/test.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "sor/order/test", signed=True, data=params, version=3)
-        
-    def margin_v1_post_portfolio_repay_futures_switch(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/portfolio/repay-futures-switch.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "portfolio/repay-futures-switch", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_universal_transfer(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/universalTransfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/universalTransfer", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_permission_vanilla_options(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/permission/vanillaOptions.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/permission/vanillaOptions", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_futures_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/futuresSummary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_margin_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/marginSummary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/marginSummary", signed=True, data=params, version=1)
-        
-    def margin_v1_post_portfolio_mint(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/portfolio/mint.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "portfolio/mint", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_account_snapshot(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/accountSnapshot.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/accountSnapshot", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sol_staking_sol_stake(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sol-staking/sol/stake.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sol-staking/sol/stake", signed=True, data=params, version=1)
-        
-    def margin_v1_post_managed_subaccount_deposit(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/managed-subaccount/deposit.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "managed-subaccount/deposit", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_repay_collateral_rate(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/repay/collateral/rate.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/repay/collateral/rate", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_payment_other(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/payment/other.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/payment/other", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_adjust_ltv(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/adjust/ltv.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/adjust/ltv", signed=True, data=params, version=1)
-        
-    def margin_v1_post_algo_futures_new_order_vp(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/algo/futures/newOrderVp.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "algo/futures/newOrderVp", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_query_trans_log_for_investor(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForInvestor.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/queryTransLogForInvestor", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_vip_renew(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/vip/renew.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/vip/renew", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_daily_product_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/daily/product/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/daily/product/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_payment_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/payment/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/payment/list", signed=True, data=params, version=1)
-        
-    def futures_v1_get_order_asyn(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/order/asyn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "order/asyn", signed=True, data=params, version=1)
-        
-    def margin_v1_put_localentity_deposit_provide_info(self, **params):
-        """
-        Placeholder function for PUT /sapi/v1/localentity/deposit/provide-info.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("put", "localentity/deposit/provide-info", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_commission_futures(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/futures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_ltv_adjustment_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/ltv/adjustment/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/ltv/adjustment/history", signed=True, data=params, version=2)
-        
-    def margin_v1_get_loan_vip_loanable_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/vip/loanable/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/vip/loanable/data", signed=True, data=params, version=1)
-        
-    def margin_v1_post_managed_subaccount_withdraw(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/managed-subaccount/withdraw.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "managed-subaccount/withdraw", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_borrow_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/borrow/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/borrow/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_dci_product_accounts(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/dci/product/accounts.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "dci/product/accounts", signed=True, data=params, version=1)
-        
-    def futures_v1_post_batch_order(self, **params):
-        """
-        Placeholder function for POST /fapi/v1/batchOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("post", "batchOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_post_algo_futures_new_order_twap(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/algo/futures/newOrderTwap.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "algo/futures/newOrderTwap", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_permission(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/permission.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/permission", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_rebate_historical_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/rebate/historicalRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/rebate/historicalRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_post_mining_hash_transfer_config(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/mining/hash-transfer/config.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "mining/hash-transfer/config", signed=True, data=params, version=1)
-        
-    def v3_post_order_list_oto(self, **params):
-        """
-        Placeholder function for POST /api/v3/orderList/oto.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "orderList/oto", signed=True, data=params, version=3)
-        
-    def margin_v1_post_lending_daily_redeem(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/daily/redeem.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/daily/redeem", signed=True, data=params, version=1)
-        
-    def margin_v1_get_margin_delist_schedule(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/delist-schedule.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/delist-schedule", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_fetch_future_asset(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/fetch-future-asset.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/fetch-future-asset", signed=True, data=params, version=1)
-        
-    def futures_v1_delete_batch_order(self, **params):
-        """
-        Placeholder function for DELETE /fapi/v1/batchOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("delete", "batchOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_post_lending_auto_invest_plan_edit_status(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/lending/auto-invest/plan/edit-status.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "lending/auto-invest/plan/edit-status", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_adl_quantile(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/adlQuantile.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "adlQuantile", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_repay_rate(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/repay/rate.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/repay/rate", signed=True, data=params, version=2)
-        
-    def futures_v1_put_batch_orders(self, **params):
-        """
-        Placeholder function for PUT /fapi/v1/batchOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("put", "batchOrders", signed=True, data=params, version=1)
-        
-    def margin_v1_get_account_api_restrictions_ip_restriction(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/account/apiRestrictions/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForTradeParent.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/queryTransLogForTradeParent", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_loanable_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/loanable/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/loanable/data", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_blvt(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccount/blvt.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccount/blvt", signed=True, data=params, version=1)
-        
-    def margin_v1_get_simple_earn_locked_history_subscription_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/simple-earn/locked/history/subscriptionRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "simple-earn/locked/history/subscriptionRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_pub_coin_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/pub/coinList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/pub/coinList", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sub_account_transaction_statistics(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sub-account/transaction-statistics.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sub-account/transaction-statistics", signed=True, data=params, version=1)
-        
-    def v3_post_cancel_replace(self, **params):
-        """
-        Placeholder function for POST /api/v3/cancelReplace.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "cancelReplace", signed=True, data=params, version=3)
-        
-    def margin_v1_get_asset_custody_transfer_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/asset/custody/transfer-history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "asset/custody/transfer-history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_union_redemption_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/union/redemptionRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/union/redemptionRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_source_asset_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/source-asset/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/source-asset/list", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_repay(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/repay.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/repay", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_deposit(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/deposit.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/deposit", signed=True, data=params, version=1)
-        
-    def margin_v1_get_algo_spot_open_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/algo/spot/openOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "algo/spot/openOrders", signed=True, data=params, version=1)
-        
-    def margin_v1_get_convert_order_status(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/convert/orderStatus.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_bnb_burn_status(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/bnbBurn/status.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/bnbBurn/status", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_order_amendment(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/orderAmendment.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
-    def futures_v1_post_convert_get_quote(self, **params):
-        """
-        Placeholder function for POST /fapi/v1/convert/getQuote.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("post", "convert/getQuote", signed=True, data=params, version=1)
-        
-    def margin_v1_post_convert_limit_cancel_order(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/convert/limit/cancelOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "convert/limit/cancelOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_repay_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/repay/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/repay/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/account", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_index_user_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/index/user-summary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/index/user-summary", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_hash_transfer_profit_details(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/hash-transfer/profit/details.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/hash-transfer/profit/details", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_vip_ongoing_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/vip/ongoing/orders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/vip/ongoing/orders", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_vip_collateral_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/vip/collateral/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/vip/collateral/account", signed=True, data=params, version=1)
-        
-    def options_v1_post_countdown_cancel_all_heart_beat(self, **params):
-        """
-        Placeholder function for POST /eapi/v1/countdownCancelAllHeartBeat.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("post", "countdownCancelAllHeartBeat", signed=True, data=params)
-        
-    def margin_v1_get_sub_account_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sub-account/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
-    def margin_v2_get_portfolio_collateral_rate(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/portfolio/collateralRate.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "portfolio/collateralRate", signed=True, data=params, version=2)
-        
-    def margin_v1_get_copy_trading_futures_lead_symbol(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/copyTrading/futures/leadSymbol.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "copyTrading/futures/leadSymbol", signed=True, data=params, version=1)
-        
-    def margin_v1_post_simple_earn_locked_set_redeem_option(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/simple-earn/locked/setRedeemOption.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "simple-earn/locked/setRedeemOption", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_sol_history_boost_rewards_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/boostRewardsHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/boostRewardsHistory", signed=True, data=params, version=1)
-        
-    def futures_v1_get_open_order(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/openOrder.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "openOrder", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_worker_detail(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/worker/detail.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/worker/detail", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_all_force_orders(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/allForceOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "allForceOrders", signed=True, data=params, version=1)
-        
-    def v3_get_ui_klines(self, **params):
-        """
-        Placeholder function for GET /api/v3/uiKlines.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "uiKlines", signed=True, data=params, version=3)
-        
-    def futures_v1_get_pm_exchange_info(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/pmExchangeInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "pmExchangeInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_get_eth_staking_eth_history_staking_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/eth-staking/eth/history/stakingHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "eth-staking/eth/history/stakingHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_vip_repay_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/vip/repay/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/vip/repay/history", signed=True, data=params, version=1)
-        
-    def v3_delete_order_list(self, **params):
-        """
-        Placeholder function for DELETE /api/v3/orderList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("delete", "orderList", signed=True, data=params, version=3)
-        
-    def options_v1_get_exercise_history(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/exerciseHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "exerciseHistory", signed=True, data=params)
-        
-    def margin_v1_get_lending_auto_invest_index_info(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/index/info.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/index/info", signed=True, data=params, version=1)
-        
-    def v3_get_deposit_history_html(self, **params):
-        """
-        Placeholder function for GET /wapi/v3/depositHistory.html.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_website("get", "depositHistory.html", signed=True, data=params, version=3)
-        
-    def margin_v1_get_loan_flexible_ongoing_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/ongoing/orders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/ongoing/orders", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_auto_invest_plan_id(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/auto-invest/plan/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/auto-invest/plan/id", signed=True, data=params, version=1)
-        
-    def futures_v1_get_trade_asyn_id(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/trade/asyn/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "trade/asyn/id", signed=True, data=params, version=1)
-        
-    def margin_v1_get_convert_asset_info(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/convert/assetInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "convert/assetInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_ltv_adjustment_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/ltv/adjustment/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/ltv/adjustment/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_flexible_ltv_adjustment_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/ltv/adjustment/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/ltv/adjustment/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_simple_earn_locked_history_redemption_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/simple-earn/locked/history/redemptionRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "simple-earn/locked/history/redemptionRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_api_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccountApi/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def futures_v1_get_funding_info(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/fundingInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "fundingInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_union_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/union/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/union/account", signed=True, data=params, version=1)
-        
-    def futures_v1_get_lvt_klines(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/lvtKlines.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "lvtKlines", signed=True, data=params, version=1)
-        
-    def margin_v3_get_broker_sub_account_futures_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v3/broker/subAccount/futuresSummary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=3)
-        
-    def margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list(self, **params):
-        """
-        Placeholder function for DELETE /sapi/v1/broker/subAccountApi/ipRestriction/ipList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("delete", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
-    def futures_v1_post_convert_accept_quote(self, **params):
-        """
-        Placeholder function for POST /fapi/v1/convert/acceptQuote.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("post", "convert/acceptQuote", signed=True, data=params, version=1)
-        
-    def margin_v1_get_localentity_withdraw_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/localentity/withdraw/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "localentity/withdraw/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_pub_algo_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/pub/algoList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/pub/algoList", signed=True, data=params, version=1)
-        
-    def papi_v1_post_ping(self, **params):
-        """
-        Placeholder function for POST /papi/v1/ping.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_papi_api("post", "ping", signed=True, data=params, version=1)
-        
-    def margin_v1_post_mining_hash_transfer_config_cancel(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/mining/hash-transfer/config/cancel.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "mining/hash-transfer/config/cancel", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_transfer(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/transfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/transfer", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_put_batch_orders(self, **params):
-        """
-        Placeholder function for PUT /dapi/v1/batchOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("put", "batchOrders", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_loanable_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/loanable/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/loanable/data", signed=True, data=params, version=2)
-        
-    def margin_v1_get_broker_sub_account_spot_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccount/spotSummary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/spotSummary", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_flexible_adjust_ltv(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/flexible/adjust/ltv.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/adjust/ltv", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_sub_account_bnb_burn_margin_interest(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/marginInterest.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccount/bnbBurn/marginInterest", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_collateral_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/collateral/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/collateral/data", signed=True, data=params, version=2)
-        
-    def margin_v1_get_loan_ongoing_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/ongoing/orders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/ongoing/orders", signed=True, data=params, version=1)
-        
-    def futures_v1_get_fee_burn(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/feeBurn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "feeBurn", signed=True, data=params, version=1)
-        
-    def v3_post_order_list_otoco(self, **params):
-        """
-        Placeholder function for POST /api/v3/orderList/otoco.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "orderList/otoco", signed=True, data=params, version=3)
-        
-    def v3_get_all_order_list(self, **params):
-        """
-        Placeholder function for GET /api/v3/allOrderList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "allOrderList", signed=True, data=params, version=3)
-        
-    def margin_v1_get_broker_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
-    def margin_v1_get_sol_staking_sol_history_redemption_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/redemptionHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/redemptionHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_get_mining_hash_transfer_config_details_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/hash-transfer/config/details/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/hash-transfer/config/details/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_asset_wallet_balance(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/asset/wallet/balance.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "asset/wallet/balance", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_pm_account_info(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/pmAccountInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
-    def margin_v2_get_loan_flexible_ongoing_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/loan/flexible/ongoing/orders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/ongoing/orders", signed=True, data=params, version=2)
-        
-    def margin_v2_post_sub_account_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/sub-account/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
-    def margin_v1_get_lending_union_interest_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/union/interestHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/union/interestHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_transfer_futures(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/transfer/futures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/transfer/futures", signed=True, data=params, version=1)
-        
-    def futures_v1_get_income_asyn_id(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/income/asyn/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
-    def margin_v1_get_account_info(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/account/info.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "account/info", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_flexible_borrow_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/borrow/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/borrow/history", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sub_account_blvt_enable(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sub-account/blvt/enable.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/blvt/enable", signed=True, data=params, version=1)
-        
-    def futures_v1_get_pm_account_info(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/pmAccountInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_get_margin_leverage_bracket(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/leverageBracket.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/leverageBracket", signed=True, data=params, version=1)
-        
-    def margin_v2_post_eth_staking_eth_stake(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/eth-staking/eth/stake.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "eth-staking/eth/stake", signed=True, data=params, version=2)
-        
-    def margin_v1_get_margin_all_order_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/allOrderList.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/allOrderList", signed=True, data=params, version=1)
-        
-    def margin_v1_get_loan_flexible_loanable_data(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/loan/flexible/loanable/data.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "loan/flexible/loanable/data", signed=True, data=params, version=1)
-        
-    def options_v1_post_countdown_cancel_all(self, **params):
-        """
-        Placeholder function for POST /eapi/v1/countdownCancelAll.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("post", "countdownCancelAll", signed=True, data=params)
-        
-    def futures_coin_v1_get_commission_rate(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/commissionRate.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "commissionRate", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_rebate_futures_recent_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/rebate/futures/recentRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/rebate/futures/recentRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_daily_user_left_quota(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/daily/userLeftQuota.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/daily/userLeftQuota", signed=True, data=params, version=1)
-        
-    def margin_v2_post_loan_flexible_adjust_ltv(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/loan/flexible/adjust/ltv.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/adjust/ltv", signed=True, data=params, version=2)
-        
-    def margin_v1_post_broker_sub_account(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/subAccount.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccount", signed=True, data=params, version=1)
-        
-    def futures_v1_get_asset_index(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/assetIndex.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "assetIndex", signed=True, data=params, version=1)
-        
-    def margin_v1_get_managed_subaccount_margin_asset(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/managed-subaccount/marginAsset.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "managed-subaccount/marginAsset", signed=True, data=params, version=1)
-        
-    def margin_v1_post_sub_account_eoptions_enable(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/sub-account/eoptions/enable.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "sub-account/eoptions/enable", signed=True, data=params, version=1)
-        
-    def margin_v1_post_portfolio_redeem(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/portfolio/redeem.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "portfolio/redeem", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_flexible_repay_history(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/flexible/repay/history.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/flexible/repay/history", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_daily_user_redemption_quota(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/daily/userRedemptionQuota.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/daily/userRedemptionQuota", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_put_order(self, **params):
-        """
-        Placeholder function for PUT /dapi/v1/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
-        
-    def margin_v1_post_account_enable_fast_withdraw_switch(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/account/enableFastWithdrawSwitch.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "account/enableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
-    def margin_v1_get_staking_staking_record(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/staking/stakingRecord.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "staking/stakingRecord", signed=True, data=params, version=1)
-        
-    def margin_v1_get_spot_delist_schedule(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/spot/delist-schedule.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "spot/delist-schedule", signed=True, data=params, version=1)
-        
-    def margin_v1_post_broker_universal_transfer(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/broker/universalTransfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/universalTransfer", signed=True, data=params, version=1)
-        
-    def margin_v1_delete_broker_sub_account_api(self, **params):
-        """
-        Placeholder function for DELETE /sapi/v1/broker/subAccountApi.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("delete", "broker/subAccountApi", signed=True, data=params, version=1)
-        
-    def margin_v1_get_broker_sub_account_api_commission_futures(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/futures.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
-    def v3_get_withdraw_history_html(self, **params):
-        """
-        Placeholder function for GET /wapi/v3/withdrawHistory.html.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_website("get", "withdrawHistory.html", signed=True, data=params, version=3)
-        
-    def futures_coin_v1_get_income_asyn_id(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/income/asyn/id.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
-    def margin_v1_get_lending_daily_token_position(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/daily/token/position.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/daily/token/position", signed=True, data=params, version=1)
-        
-    def v3_post_order_oco(self, **params):
-        """
-        Placeholder function for POST /api/v3/order/oco.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("post", "order/oco", signed=True, data=params, version=3)
-        
-    def margin_v1_get_lending_project_position_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/lending/project/position/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "lending/project/position/list", signed=True, data=params, version=1)
-        
-    def margin_v1_get_convert_limit_query_open_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/convert/limit/queryOpenOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "convert/limit/queryOpenOrders", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_get_funding_info(self, **params):
-        """
-        Placeholder function for GET /dapi/v1/fundingInfo.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("get", "fundingInfo", signed=True, data=params, version=1)
-        
-    def margin_v1_get_eth_staking_eth_history_redemption_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/eth-staking/eth/history/redemptionHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "eth-staking/eth/history/redemptionHistory", signed=True, data=params, version=1)
-        
-    def margin_v1_get_margin_available_inventory(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/margin/available-inventory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "margin/available-inventory", signed=True, data=params, version=1)
-        
-    def margin_v2_post_broker_sub_account_api_ip_restriction(self, **params):
-        """
-        Placeholder function for POST /sapi/v2/broker/subAccountApi/ipRestriction.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
-    def margin_v1_get_mining_worker_list(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/mining/worker/list.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "mining/worker/list", signed=True, data=params, version=1)
-        
-    def options_v1_get_block_trades(self, **params):
-        """
-        Placeholder function for GET /eapi/v1/blockTrades.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_options_api("get", "blockTrades", signed=True, data=params)
-        
-    def futures_v1_get_income_asyn(self, **params):
-        """
-        Placeholder function for GET /fapi/v1/income/asyn.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_api("get", "income/asyn", signed=True, data=params, version=1)
-        
-    def margin_v1_post_loan_vip_borrow(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/loan/vip/borrow.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "loan/vip/borrow", signed=True, data=params, version=1)
-        
-    def margin_v2_get_broker_sub_account_futures_summary(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/broker/subAccount/futuresSummary.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=2)
-        
-    def margin_v1_get_sol_staking_sol_history_staking_history(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/sol-staking/sol/history/stakingHistory.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "sol-staking/sol/history/stakingHistory", signed=True, data=params, version=1)
-        
-    def margin_v2_get_eth_staking_account(self, **params):
-        """
-        Placeholder function for GET /sapi/v2/eth-staking/account.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "eth-staking/account", signed=True, data=params, version=2)
-        
-    def v3_get_account_commission(self, **params):
-        """
-        Placeholder function for GET /api/v3/account/commission.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_api("get", "account/commission", signed=True, data=params, version=3)
-        
-    def margin_v1_get_algo_spot_historical_orders(self, **params):
-        """
-        Placeholder function for GET /sapi/v1/algo/spot/historicalOrders.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("get", "algo/spot/historicalOrders", signed=True, data=params, version=1)
-        
-    def margin_v1_post_asset_convert_transfer(self, **params):
-        """
-        Placeholder function for POST /sapi/v1/asset/convert-transfer.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_margin_api("post", "asset/convert-transfer", signed=True, data=params, version=1)
-        
+####################################################
+# Futures Data
+####################################################
+
+    def futures_historical_data_link(self, **params):
+        """Get Future TickLevel Orderbook Historical Data Download Link.
+
+        https://developers.binance.com/docs/derivatives/futures-data/market-data
+
+        :param symbol: STRING - Required - Symbol name, e.g. BTCUSDT or BTCUSD_PERP
+        :type symbol: str
+        :param dataType: ENUM - Required - Data type:
+            - T_DEPTH for ticklevel orderbook data
+            - S_DEPTH for orderbook snapshot data
+        :type dataType: str
+        :param startTime: LONG - Required - Start time in milliseconds
+        :type startTime: int
+        :param endTime: LONG - Required - End time in milliseconds
+        :type endTime: int
+        :param recvWindow: LONG - Optional - Number of milliseconds after timestamp the request is valid for
+        :type recvWindow: int
+        :param timestamp: LONG - Required - Current timestamp in milliseconds
+        :type timestamp: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "data": [
+                    {
+                        "day": "2023-06-30",
+                        "url": "https://bin-prod-user-rebate-bucket.s3.ap-northeast-1.amazonaws.com/future-data-symbol-update/2023-06-30/BTCUSDT_T_DEPTH_2023-06-30.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230925T025710Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIAVL364M5ZNFZ74IPP%2F20230925%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Signature=5fffcb390d10f34d71615726f81f99e42d80a11532edeac77b858c51a88cbf59"
+                    }
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        Notes:
+            - The span between startTime and endTime can't be more than 7 days
+            - The download link will be valid for 1 day
+            - Only VIP users can query this endpoint
+            - Weight: 200
+        """
+        return self._request_margin_api("get", "futures/data/histDataLink", signed=True, data=params)
