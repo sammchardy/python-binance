@@ -298,16 +298,9 @@ def generate_function_code(method, endpoint, type="sync", file_name="./binance/c
     elif type == "async":
         code_snippet = f"""
     async def {func_name}(self, **params):
-        \"\"\"
-        Placeholder function for {method.upper()} {endpoint}.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        \"\"\"
         return await self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed=True, data=params{version_arg})
+
+    {func_name}.__doc__ = Client.{func_name}.__doc__
         """
     
     with open(file_name, 'a', encoding='utf-8') as f:
