@@ -92,7 +92,7 @@ def fetch_endpoints():
     
     return valid_endpoints
 
-def get_request_function_and_path(endpoint: str):
+def get_request_function_and_path(endpoint: str) -> tuple[str | None, str | None, int | None]:
     """
     Given an endpoint (e.g. '/sapi/v1/userInfo'), determine which _request_*_api
     function is appropriate in the client, remove the recognized prefix plus any
@@ -109,6 +109,7 @@ def get_request_function_and_path(endpoint: str):
     # Sort prefixes by length descending to match the longest prefix first
     sorted_prefixes = sorted(PREFIX_MAP.keys(), key=len, reverse=True)
     request_func = None
+    stripped = None
 
     # Identify which prefix is present, if any
     matched_prefix = None
@@ -119,10 +120,9 @@ def get_request_function_and_path(endpoint: str):
             break
 
     # If no recognized prefix, return null
-    if not request_func:
+    if not request_func or matched_prefix is None:
         return None, None, None
 
-    # Extract the portion after removing the matched prefix
     stripped = endpoint[len(matched_prefix):]
 
     # Attempt to parse out the version, e.g. '/v1/', '/v2/'
@@ -133,26 +133,25 @@ def get_request_function_and_path(endpoint: str):
         version = int(version_match.group(1))
 
     # Remove version segments like /v1/, /v2/
-    stripped = re.sub(r'/v\d+/', '/', stripped)
-
-    # Strip leading/trailing slashes
-    stripped = stripped.strip('/')
+    if stripped:
+        stripped = re.sub(r'/v\d+/', '/', stripped)
+        # Strip leading/trailing slashes
+        stripped = stripped.strip('/')
 
     return request_func, stripped, version
 
-def check_in_client_py(method, endpoint, file_name):
+def check_method_in_file(method, endpoint, file_name):
     """
     Return True if a function for this endpoint likely exists in client.py.
-    Uses get_request_function_and_path to find the correct request function,
-    path, and version for the internal call.
     """
     if not os.path.isfile(file_name):
         print(f'{file_name} does not exist')
         return False
 
     func_name, stripped_path, version = get_request_function_and_path(endpoint)
+    
     # If no known request function is found, we consider it not found.
-    if not func_name:
+    if not func_name or not stripped_path:
         print(f'No known request function for endpoint: {endpoint}')
         return False
 
@@ -163,27 +162,47 @@ def check_in_client_py(method, endpoint, file_name):
     stripped_path = re.sub(r'^v\d+/', '', stripped_path)
     stripped_path = re.sub(r'/v\d+/', '/', stripped_path)
 
-    # Construct a regex pattern to match across multiple lines/spaces
-    # e.g. _request_margin_api("get","exchangeInfo"...
-    pattern_main = re.compile(
-        rf'{re.escape(func_name)}\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"',
-        re.DOTALL
-    )
-
-    # Also check for potential helper method usage (like _get, _post) if func_name == "_request_api"
-    pattern_alt = None
+    patterns = []
+    
     if func_name == "_request_api":
-        alt_method = f"_{method.lower()}"
-        pattern_alt = re.compile(
-            rf'{re.escape(alt_method)}\(\s*"{re.escape(stripped_path)}"',
-            re.DOTALL
+        if version == 3:
+            # v3 endpoints use PRIVATE_API_VERSION or "v3"
+            patterns.extend([
+                # Direct request with PRIVATE_API_VERSION
+                rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"[\s\S]*?version\s*=\s*self\.PRIVATE_API_VERSION[\s\S]*?\)',
+                # Direct request with "v3"
+                rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"[\s\S]*?version\s*=\s*["\']v3["\'][\s\S]*?\)',
+                # Helper method with PRIVATE_API_VERSION
+                rf'_{method.lower()}\s*\(\s*"{re.escape(stripped_path)}"(?:\s*,\s*(?:True|False))?[\s\S]*?version\s*=\s*self\.PRIVATE_API_VERSION[\s\S]*?\)',
+                # Helper method with "v3"
+                rf'_{method.lower()}\s*\(\s*"{re.escape(stripped_path)}"(?:\s*,\s*(?:True|False))?[\s\S]*?version\s*=\s*["\']v3["\'][\s\S]*?\)'
+            ])
+        elif version == 1:
+            # v1 endpoints can use either no version arg, PUBLIC_API_VERSION, or "v1"
+            patterns.extend([
+                # Direct request with no version
+                rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"[\s\S]*?\)',
+                # Direct request with PUBLIC_API_VERSION
+                rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"[\s\S]*?version\s*=\s*self\.PUBLIC_API_VERSION[\s\S]*?\)',
+                # Direct request with "v1"
+                rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"[\s\S]*?version\s*=\s*["\']v1["\'][\s\S]*?\)',
+                # Helper method with no version
+                rf'_{method.lower()}\s*\(\s*"{re.escape(stripped_path)}"(?:\s*,\s*(?:True|False))?[\s\S]*?\)',
+                # Helper method with PUBLIC_API_VERSION
+                rf'_{method.lower()}\s*\(\s*"{re.escape(stripped_path)}"(?:\s*,\s*(?:True|False))?[\s\S]*?version\s*=\s*self\.PUBLIC_API_VERSION[\s\S]*?\)',
+                # Helper method with "v1"
+                rf'_{method.lower()}\s*\(\s*"{re.escape(stripped_path)}"(?:\s*,\s*(?:True|False))?[\s\S]*?version\s*=\s*["\']v1["\'][\s\S]*?\)'
+            ])
+    else:
+        # Non-API requests (margin, futures, etc.)
+        patterns.append(
+            rf'{re.escape(func_name)}\s*\(\s*"{re.escape(method.lower())}"\s*,\s*"{re.escape(stripped_path)}"'
         )
 
-    if pattern_main.search(content):
-        return True
-
-    if pattern_alt and pattern_alt.search(content):
-        return True
+    # Check all patterns
+    for pattern in patterns:
+        if re.search(pattern, content, re.DOTALL):
+            return True
 
     return False
 
@@ -275,6 +294,8 @@ def generate_function_code(method, endpoint, type="sync", file_name="./binance/c
     if request_function in NO_VERSION_FUNCTIONS or version is None:
         # No version arg is needed
         version_arg = ""
+    elif request_function == "_request_api":
+            version_arg = f", version=\"v{version}\""
     else:
         # If a version was found, pass version= the integer, else default to 1
         version_arg_val = version if version else 1
@@ -299,9 +320,13 @@ def generate_function_code(method, endpoint, type="sync", file_name="./binance/c
         code_snippet = f"""
     async def {func_name}(self, **params):
         return await self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed=True, data=params{version_arg})
-
-    {func_name}.__doc__ = Client.{func_name}.__doc__
         """
+        with open('./binance/client.py', 'r', encoding='utf-8') as f:
+            content = f.read()
+        if f"def {func_name}("in content:
+            code_snippet += f"""
+    {func_name}.__doc__ = Client.{func_name}.__doc__
+            """
     
     with open(file_name, 'a', encoding='utf-8') as f:
         f.write(code_snippet)
@@ -349,7 +374,7 @@ def main():
     # Filter out endpoints already in client.py
     new_endpoints = []
     for method, endpoint in endpoints:
-        if not check_in_client_py(method, endpoint, './binance/client.py'):
+        if not check_method_in_file(method, endpoint, './binance/client.py'):
             new_endpoints.append((method, endpoint))
 
     print(f"{len(new_endpoints)} endpoints were added out of {len(endpoints)} scrapped in client.py")
@@ -362,7 +387,7 @@ def main():
     # Generate async functions
     new_endpoints_async = []
     for method, endpoint in endpoints:
-        if not check_in_client_py(method, endpoint, './binance/async_client.py'):
+        if not check_method_in_file(method, endpoint, './binance/async_client.py'):
             new_endpoints_async.append((method, endpoint))
 
     for method, endpoint in new_endpoints_async:
