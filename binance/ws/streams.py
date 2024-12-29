@@ -105,7 +105,7 @@ class BinanceSocketManager:
                 url=self._get_stream_url(stream_url),
                 keepalive_type=path,
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=lambda p: self._exit_socket(conn_id),
                 is_binary=is_binary,
                 user_timeout=self._user_timeout,
                 https_proxy=self._client.https_proxy,
