@@ -95,16 +95,15 @@ class ReconnectingWebsocket:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         self._log.debug(f"Closing Websocket {self._url}{self._prefix}{self._path}")
+        if self._handle_read_loop:
+            await self._kill_read_loop()
         if self._exit_coro:
             await self._exit_coro(self._path)
-        self.ws_state = WSListenerState.EXITING
         if self.ws:
             await self.ws.close()
         if self._conn and hasattr(self._conn, "protocol"):
             await self._conn.__aexit__(exc_type, exc_val, exc_tb)
         self.ws = None
-        if self._handle_read_loop:
-            await self._kill_read_loop()
 
     async def connect(self):
         self._log.debug("Establishing new WebSocket connection")
