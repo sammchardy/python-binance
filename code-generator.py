@@ -43,6 +43,31 @@ DEPRECATED_PREFIXES = [
     '/wapi',
 ]
 
+DEPRECATED_ENDPOINTS = [
+    ('GET', '/fapi/v1/ticker/price'),
+    ('GET', '/fapi/v1/pmExchangeInfo'),
+    ('POST', '/api/v3/order/oco'),
+    ('POST', '/sapi/v1/eth-staking/eth/stake'),
+    ('GET', '/sapi/v1/eth-staking/account'),
+    ('GET', '/sapi/v1/portfolio/interest-rate'),
+    ('GET', '/api/v1/order'),
+    ('GET', '/api/v1/openOrders'),
+    ('POST', '/api/v1/order'),
+    ('DELETE', '/api/v1/order'),
+    ('GET', '/api/v1/allOrders'),
+    ('GET', '/api/v1/account'),
+    ('GET', '/api/v1/myTrades'),
+    ('POST', '/sapi/v1/loan/flexible/borrow'),
+    ('GET', '/sapi/v1/loan/flexible/ongoing/orders'),
+    ('GET', '/sapi/v1/loan/flexible/borrow/history'),
+    ('POST', '/sapi/v1/loan/flexible/repay'),
+    ('GET', '/sapi/v1/loan/flexible/repay/history'),
+    ('POST', '/sapi/v1/loan/flexible/adjust/ltv'),
+    ('GET', '/sapi/v1/loan/flexible/ltv/adjustment/history'),
+    ('GET', '/sapi/v1/loan/flexible/loanable/data'),
+    ('GET', '/sapi/v1/loan/flexible/collateral/data')
+]
+
 # Some request methods do not require a version argument
 NO_VERSION_FUNCTIONS = [
     '_request_options_api',
@@ -73,8 +98,12 @@ def fetch_endpoints():
                 # Ensure endpoint starts with /
                 if not endpoint.startswith('/'):
                     endpoint = '/' + endpoint
-                if any(endpoint.startswith(prefix) for prefix in DEPRECATED_PREFIXES):
+                
+                # Check both deprecated prefixes and specific endpoints
+                if any(endpoint.startswith(prefix) for prefix in DEPRECATED_PREFIXES) or (method, endpoint) in DEPRECATED_ENDPOINTS:
                     deprecated_endpoints.add((method, endpoint))
+                    continue  # Skip adding to main endpoints set
+                
                 # Use a tuple of (method, endpoint) for uniqueness
                 endpoints.add((method, endpoint))
     print(f'Found {len(deprecated_endpoints)} deprecated endpoints in the docs.')
