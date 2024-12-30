@@ -9424,6 +9424,58 @@ class Client(BaseClient):
         """
         return self._request_papi_api("get", "balance", signed=True, data=params)
 
+    def papi_stream_get_listen_key(self):
+        """Start a new user data stream for Portfolio Margin account.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Start-User-Data-Stream
+
+        :returns: API response
+
+            {
+                "listenKey": "pM_XXXXXXX"
+            }
+
+        The stream will close after 60 minutes unless a keepalive is sent.
+        If the account has an active listenKey, that listenKey will be returned and its validity will be extended for 60 minutes.
+
+        Weight: 1
+
+        """
+        res = self._request_papi_api("post", "listenKey", signed=False, data={})
+        return res["listenKey"]
+
+    def papi_stream_keepalive(self, listenKey):
+        """Keepalive a user data stream to prevent a time out.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Keepalive-User-Data-Stream
+
+        :returns: API response
+
+            {}
+
+        User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
+
+        Weight: 1
+
+        """
+        params = {"listenKey": listenKey}
+        return self._request_papi_api("put", "listenKey", signed=False, data=params)
+
+    def papi_stream_close(self, listenKey):
+        """Close out a user data stream.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams/Close-User-Data-Stream
+
+        :returns: API response
+
+            {}
+
+        Weight: 1
+
+        """
+        params = {"listenKey": listenKey}
+        return self._request_papi_api("delete", "listenKey", signed=False, data=params)
+
     def papi_get_account(self, **params):
         """Query account information.
 
@@ -13469,9 +13521,9 @@ class Client(BaseClient):
             "get", "margin/maxBorrowable", signed=True, data=params
         )
 
-####################################################
-# Futures Data
-####################################################
+    ####################################################
+    # Futures Data
+    ####################################################
 
     def futures_historical_data_link(self, **params):
         """Get Future TickLevel Orderbook Historical Data Download Link.
