@@ -1753,6 +1753,11 @@ class AsyncClient(BaseClient):
         return await self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
+        
+    async def futures_taker_longshort_ratio(self, **params):
+        return await self._request_futures_data_api(
+            "get", "takerlongshortRatio", data=params
+        )
 
     async def futures_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/24hr", data=params)

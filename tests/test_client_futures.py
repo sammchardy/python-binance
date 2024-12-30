@@ -78,19 +78,24 @@ def test_futures_funding_rate(futuresClient):
     futuresClient.futures_funding_rate()
 
 
-@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 def test_futures_top_longshort_account_ratio(futuresClient):
-    futuresClient.futures_top_longshort_account_ratio()
+    futuresClient.futures_top_longshort_account_ratio(symbol="BTCUSDT", period="5m")
 
 
-@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 def test_futures_top_longshort_position_ratio(futuresClient):
-    futuresClient.futures_top_longshort_position_ratio()
+    futuresClient.futures_top_longshort_position_ratio(symbol="BTCUSDT", period="5m")
 
 
-@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 def test_futures_global_longshort_ratio(futuresClient):
-    futuresClient.futures_global_longshort_ratio()
+    futuresClient.futures_global_longshort_ratio(symbol="BTCUSDT", period="5m")
+
+
+@pytest.mark.skip(reason="No Sandbox Environment to test")
+def test_futures_taker_longshort_ratio(futuresClient):
+    futuresClient.futures_taker_longshort_ratio(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_ticker(futuresClient):
@@ -104,8 +109,10 @@ def test_futures_symbol_ticker(futuresClient):
 def test_futures_orderbook_ticker(futuresClient):
     futuresClient.futures_orderbook_ticker()
 
+
 def test_futures_index_index_price_constituents(futuresClient):
     futuresClient.futures_index_price_constituents(symbol="BTCUSD")
+
 
 def test_futures_liquidation_orders(futuresClient):
     futuresClient.futures_liquidation_orders()
@@ -131,9 +138,9 @@ def test_futures_index_info(futuresClient):
     futuresClient.futures_index_info()
 
 
-@pytest.mark.skip(reason="Not implemented")
+@pytest.mark.skip(reason="No Sandbox Environment to test")
 def test_futures_open_interest_hist(futuresClient):
-    futuresClient.futures_open_interest_hist(symbol="BTCUSDT")
+    futuresClient.futures_open_interest_hist(symbol="BTCUSDT", period="5m")
 
 
 def test_futures_leverage_bracket(futuresClient):
@@ -447,8 +454,10 @@ def test_futures_coin_symbol_ticker(futuresClient):
 def test_futures_coin_orderbook_ticker(futuresClient):
     futuresClient.futures_coin_orderbook_ticker()
 
+
 def test_futures_coin_index_index_price_constituents(futuresClient):
     futuresClient.futures_coin_index_price_constituents(symbol="BTCUSD")
+
 
 @pytest.mark.skip(reason="Not implemented")
 def test_futures_coin_liquidation_orders(futuresClient):

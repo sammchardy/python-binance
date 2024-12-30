@@ -7270,6 +7270,15 @@ class Client(BaseClient):
         return self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
+        
+    def futures_taker_longshort_ratio(self, **params):
+        """Get taker buy to sell volume ratio of a specific symbol
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Taker-BuySell-Volume
+        """
+        return self._request_futures_data_api(
+            "get", "takerlongshortRatio", data=params
+        )
 
     def futures_ticker(self, **params):
         """24 hour rolling window price change statistics.
