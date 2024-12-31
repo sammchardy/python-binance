@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v1.0.27 - 2024-12-31
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Add futures_taker_long_short_ratio endpoint, thanks to @ngoclam9415
+- Add portfolio margin user data streams
+
+
+**Fixed**
+
+- Close read loop before closing websocket
+- Fix threaded_stream
+- Closing keepAliveWebsocker fix
+
 v1.0.26 - 2024-12-23
 ^^^^^^^^^^^^^^^^^^^^
 
