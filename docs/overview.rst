@@ -203,7 +203,7 @@ You can set custom requests parameters for all API calls when creating the clien
 
     client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
 
-You may also pass custom requests parameters through any API call to override default settings or the above settingsspecify new ones like the example below.
+You may also pass custom requests parameters through any API call to override default settings or the above settings specify new ones like the example below.
 
 .. code:: python
 
