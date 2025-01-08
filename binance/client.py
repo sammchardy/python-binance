@@ -9433,6 +9433,20 @@ class Client(BaseClient):
         """
         return self._request_papi_api("get", "balance", signed=True, data=params)
 
+    def papi_get_rate_limit(self, **params):
+        """Query User Rate Limit
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-User-Rate-Limit
+
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_papi_api("get", "rateLimit/order", signed=True, data=params)
+
     def papi_stream_get_listen_key(self):
         """Start a new user data stream for Portfolio Margin account.
 
