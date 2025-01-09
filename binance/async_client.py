@@ -2487,6 +2487,11 @@ class AsyncClient(BaseClient):
 
     async def papi_get_balance(self, **params):
         return await self._request_papi_api("get", "balance", signed=True, data=params)
+    papi_get_balance.__doc__ = Client.papi_get_balance.__doc__
+
+    async def papi_get_rate_limit(self, **params):
+        return await self._request_papi_api("get", "rateLimit/order", signed=True, data=params)
+    papi_get_rate_limit.__doc__ = Client.papi_get_rate_limit.__doc__
 
     async def papi_get_account(self, **params):
         return await self._request_papi_api("get", "account", signed=True, data=params)
