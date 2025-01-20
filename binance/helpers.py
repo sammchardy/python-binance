@@ -1,5 +1,5 @@
 import asyncio
-from decimal import Decimal
+from decimal import Decimal, ROUND_DOWN
 import json
 from typing import Union, Optional, Dict
 
@@ -60,7 +60,9 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
 
 
 def round_step_size(
-    quantity: Union[float, Decimal], step_size: Union[float, Decimal]
+    quantity: Union[float, Decimal],
+    step_size: Union[float, Decimal],
+    rounding=ROUND_DOWN,
 ) -> float:
     """Rounds a given quantity to a specific step size
 
@@ -70,7 +72,8 @@ def round_step_size(
     :return: decimal
     """
     quantity = Decimal(str(quantity))
-    return float(quantity - quantity % Decimal(str(step_size)))
+    step_size = Decimal(str(step_size))
+    return float(quantity.quantize(step_size, rounding=rounding))
 
 
 def convert_ts_str(ts_str):
