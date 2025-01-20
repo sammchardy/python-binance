@@ -1516,63 +1516,144 @@ class Client(BaseClient):
         return self.order_market(**params)
 
     def create_oco_order(self, **params):
-        """Send in a new OCO order
+        """Send in an one-cancels-the-other (OCO) pair, where activation of one order immediately cancels the other.
 
-        https://binance-docs.github.io/apidocs/spot/en/#new-order-list-oco-trade
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade
+
+        An OCO has 2 orders called the above order and below order.
+        One of the orders must be a LIMIT_MAKER/TAKE_PROFIT/TAKE_PROFIT_LIMIT order and the other must be STOP_LOSS or STOP_LOSS_LIMIT order.
+
+        Price restrictions:
+        If the OCO is on the SELL side:
+            LIMIT_MAKER/TAKE_PROFIT_LIMIT price > Last Traded Price > STOP_LOSS/STOP_LOSS_LIMIT stopPrice
+            TAKE_PROFIT stopPrice > Last Traded Price > STOP_LOSS/STOP_LOSS_LIMIT stopPrice
+        If the OCO is on the BUY side:
+            LIMIT_MAKER/TAKE_PROFIT_LIMIT price < Last Traded Price < stopPrice
+            TAKE_PROFIT stopPrice < Last Traded Price < STOP_LOSS/STOP_LOSS_LIMIT stopPrice
+
+        Weight: 1
 
         :param symbol: required
         :type symbol: str
-        :param listClientOrderId: A unique id for the list order. Automatically generated if not sent.
+        :param listClientOrderId: Arbitrary unique ID among open order lists. Automatically generated if not sent.
         :type listClientOrderId: str
-        :param side: required
+        :param side: required - BUY or SELL
         :type side: str
-        :param quantity: required
+        :param quantity: required - Quantity for both orders of the order list
         :type quantity: decimal
-        :param limitClientOrderId: A unique id for the limit order. Automatically generated if not sent.
-        :type limitClientOrderId: str
-        :param price: required
-        :type price: str
-        :param limitIcebergQty: Used to make the LIMIT_MAKER leg an iceberg order.
-        :type limitIcebergQty: decimal
-        :param stopClientOrderId: A unique id for the stop order. Automatically generated if not sent.
-        :type stopClientOrderId: str
-        :param stopPrice: required
-        :type stopPrice: str
-        :param stopLimitPrice: If provided, stopLimitTimeInForce is required.
-        :type stopLimitPrice: str
-        :param stopIcebergQty: Used with STOP_LOSS_LIMIT leg to make an iceberg order.
-        :type stopIcebergQty: decimal
-        :param stopLimitTimeInForce: Valid values are GTC/FOK/IOC.
-        :type stopLimitTimeInForce: str
-        :param newOrderRespType: Set the response JSON. ACK, RESULT, or FULL; default: RESULT.
+        :param aboveType: required - STOP_LOSS_LIMIT, STOP_LOSS, LIMIT_MAKER, TAKE_PROFIT, TAKE_PROFIT_LIMIT
+        :type aboveType: str
+        :param aboveClientOrderId: Arbitrary unique ID among open orders for the above order
+        :type aboveClientOrderId: str
+        :param aboveIcebergQty: Note that this can only be used if aboveTimeInForce is GTC
+        :type aboveIcebergQty: decimal
+        :param abovePrice: Can be used if aboveType is STOP_LOSS_LIMIT, LIMIT_MAKER, or TAKE_PROFIT_LIMIT
+        :type abovePrice: decimal
+        :param aboveStopPrice: Can be used if aboveType is STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, TAKE_PROFIT_LIMIT
+        :type aboveStopPrice: decimal
+        :param aboveTrailingDelta: See Trailing Stop order FAQ
+        :type aboveTrailingDelta: int
+        :param aboveTimeInForce: Required if aboveType is STOP_LOSS_LIMIT or TAKE_PROFIT_LIMIT
+        :type aboveTimeInForce: str
+        :param aboveStrategyId: Arbitrary numeric value identifying the above order within an order strategy
+        :type aboveStrategyId: int
+        :param aboveStrategyType: Arbitrary numeric value identifying the above order strategy (>= 1000000)
+        :type aboveStrategyType: int
+        :param belowType: required - STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT, TAKE_PROFIT_LIMIT
+        :type belowType: str
+        :param belowClientOrderId: Arbitrary unique ID among open orders for the below order
+        :type belowClientOrderId: str
+        :param belowIcebergQty: Note that this can only be used if belowTimeInForce is GTC
+        :type belowIcebergQty: decimal
+        :param belowPrice: Can be used if belowType is STOP_LOSS_LIMIT, LIMIT_MAKER, or TAKE_PROFIT_LIMIT
+        :type belowPrice: decimal
+        :param belowStopPrice: Can be used if belowType is STOP_LOSS, STOP_LOSS_LIMIT, TAKE_PROFIT or TAKE_PROFIT_LIMIT
+        :type belowStopPrice: decimal
+        :param belowTrailingDelta: See Trailing Stop order FAQ
+        :type belowTrailingDelta: int
+        :param belowTimeInForce: Required if belowType is STOP_LOSS_LIMIT or TAKE_PROFIT_LIMIT
+        :type belowTimeInForce: str
+        :param belowStrategyId: Arbitrary numeric value identifying the below order within an order strategy
+        :type belowStrategyId: int
+        :param belowStrategyType: Arbitrary numeric value identifying the below order strategy (>= 1000000)
+        :type belowStrategyType: int
+        :param newOrderRespType: Select response format: ACK, RESULT, FULL
         :type newOrderRespType: str
-        :param recvWindow: the number of milliseconds the request is valid for
+        :param selfTradePreventionMode: The allowed enums is dependent on what is configured on the symbol
+        :type selfTradePreventionMode: str
+        :param recvWindow: The value cannot be greater than 60000
         :type recvWindow: int
+        :param timestamp: required
+        :type timestamp: int
 
         :returns: API response
 
-        Response ACK:
-
-        .. code-block:: python
-
             {
+                "orderListId": 1,
+                "contingencyType": "OCO",
+                "listStatusType": "EXEC_STARTED",
+                "listOrderStatus": "EXECUTING",
+                "listClientOrderId": "lH1YDkuQKWiXVXHPSKYEIp",
+                "transactionTime": 1710485608839,
+                "symbol": "LTCBTC",
+                "orders": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 10,
+                        "clientOrderId": "44nZvqpemY7sVYgPYbvPih"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 11,
+                        "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK"
+                    }
+                ],
+                "orderReports": [
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 10,
+                        "orderListId": 1,
+                        "clientOrderId": "44nZvqpemY7sVYgPYbvPih",
+                        "transactTime": 1710485608839,
+                        "price": "1.00000000",
+                        "origQty": "5.00000000",
+                        "executedQty": "0.00000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "STOP_LOSS_LIMIT",
+                        "side": "SELL",
+                        "stopPrice": "1.00000000",
+                        "workingTime": -1,
+                        "icebergQty": "1.00000000",
+                        "selfTradePreventionMode": "NONE"
+                    },
+                    {
+                        "symbol": "LTCBTC",
+                        "orderId": 11,
+                        "orderListId": 1,
+                        "clientOrderId": "NuMp0nVYnciDiFmVqfpBqK",
+                        "transactTime": 1710485608839,
+                        "price": "3.00000000",
+                        "origQty": "5.00000000",
+                        "executedQty": "0.00000000",
+                        "origQuoteOrderQty": "0.000000",
+                        "cummulativeQuoteQty": "0.00000000",
+                        "status": "NEW",
+                        "timeInForce": "GTC",
+                        "type": "LIMIT_MAKER",
+                        "side": "SELL",
+                        "workingTime": 1710485608839,
+                        "selfTradePreventionMode": "NONE"
+                    }
+                ]
             }
 
-        Response RESULT:
-
-        .. code-block:: python
-
-            {
-            }
-
-        Response FULL:
-
-        .. code-block:: python
-
-            {
-            }
-
-        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException, BinanceOrderMinAmountException, BinanceOrderMinPriceException, BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException, BinanceOrderInactiveSymbolException
+        :raises: BinanceRequestException, BinanceAPIException, BinanceOrderException,
+                BinanceOrderMinAmountException, BinanceOrderMinPriceException,
+                BinanceOrderMinTotalException, BinanceOrderUnknownSymbolException,
+                BinanceOrderInactiveSymbolException
 
         """
         if "listClientOrderId" not in params:
