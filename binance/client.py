@@ -9941,7 +9941,7 @@ class Client(BaseClient):
         )
 
     def papi_get_portfolio_interest_history(self, **params):
-        """GQuery interest history of negative balance for portfolio margin.
+        """Query interest history of negative balance for portfolio margin.
 
         https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-Portfolio-Margin-Negative-Balance-Interest-History
 
@@ -9953,6 +9953,22 @@ class Client(BaseClient):
         """
         return self._request_papi_api(
             "get", "portfolio/interest-history", signed=True, data=params
+        )
+
+
+    def papi_get_portfolio_negative_balance_exchange_record(self, **params):
+        """Query user negative balance auto exchange record.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Query-User-Negative-Balance-Auto-Exchange-Record
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_papi_api(
+            "get", "portfolio/negative-balance-exchange-record", signed=True, data=params
         )
 
     def papi_fund_auto_collection(self, **params):

@@ -2601,6 +2601,13 @@ class AsyncClient(BaseClient):
             "get", "portfolio/interest-history", signed=True, data=params
         )
 
+
+    async def papi_get_portfolio_negative_balance_exchange_record(self, **params):
+        return await self._request_papi_api(
+            "get", "portfolio/negative-balance-exchange-record", signed=True, data=params
+        )
+    papi_get_portfolio_negative_balance_exchange_record.__doc__ = Client.papi_get_portfolio_negative_balance_exchange_record.__doc__
+
     async def papi_fund_auto_collection(self, **params):
         return await self._request_papi_api(
             "post", "auto-collection", signed=True, data=params
