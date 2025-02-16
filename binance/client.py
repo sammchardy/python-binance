@@ -96,6 +96,10 @@ class Client(BaseClient):
         """
         if not (200 <= response.status_code < 300):
             raise BinanceAPIException(response, response.status_code, response.text)
+        
+        if response.text == "":
+            return {}
+
         try:
             return response.json()
         except ValueError:

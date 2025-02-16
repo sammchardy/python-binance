@@ -161,6 +161,10 @@ class AsyncClient(BaseClient):
         """
         if not str(response.status).startswith("2"):
             raise BinanceAPIException(response, response.status, await response.text())
+        
+        if response.text == "":
+            return {}
+
         try:
             return await response.json()
         except ValueError:
