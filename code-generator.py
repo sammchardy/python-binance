@@ -3,6 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 import os
 
+from binance.client import Client
+from binance.exceptions import BinanceAPIException
+
 URLS = [
     'https://developers.binance.com/docs/binance-spot-api-docs',
     'https://developers.binance.com/docs/derivatives/change-log',
@@ -304,12 +307,49 @@ def convert_to_function_name(method: str, endpoint: str) -> str:
     # Default case (for _request_api)
     return f"{version_str}_{method.lower()}_{base_name}"
 
+def check_function(method, request_function, cleaned_endpoint, version_arg, params={}):
+    """
+    Check if the function is signed based on the endpoint. If not found or deprecated, return None.
+    For GET requests, call the endpoint and check if it returns an error indicating a signature is required.
+    """
+    if method != "GET":
+        return True
+    else:
+        try:
+            client = Client("", "")
+            client_function = getattr(client, request_function)
+            version = {"version": version_arg} if version_arg else {}
+            client_function(
+                method.lower(), 
+                cleaned_endpoint, 
+                signed=False, 
+                **version,
+                **params
+            )
+            return False
+        except BinanceAPIException as e:
+            if e.status_code == 400 and "symbol" in e.message:
+               return check_function(method, request_function, cleaned_endpoint, version_arg, {'data': {'symbol': 'BTCUSDT'}})
+            if 'signature' in e.message or 'API-key' in e.message:
+                return True
+            if 'The endpoint has been out of maintenance' in e.message or \
+                'This endpoint has been deprecated, please remove as soon as possible.' in e.message or \
+                e.status_code == 404:
+                    return None
+            else:
+                print(f"Error calling endpoint {request_function} - {cleaned_endpoint} - {version_arg} - {params}")
+                return None
+        except Exception as e:
+            print(f"Error calling endpoint {request_function} - {cleaned_endpoint} - {version_arg} - {params}")
+            return None
+
 def generate_function_code(method, endpoint, type="sync", file_name="./binance/client.py"):
     """
     Determines which _request_*_api function, path, and version to call based on the endpoint,
     generates a placeholder function to handle the specified method/endpoint.
     If the chosen request function is in NO_VERSION_FUNCTIONS, the code does not pass a 'version' argument.
     If no recognized prefix is found, returns an empty string.
+    If GET function will test if the endpoint is public or not
     """
     request_function, cleaned_endpoint, version = get_request_function_and_path(endpoint)
 
@@ -320,15 +360,25 @@ def generate_function_code(method, endpoint, type="sync", file_name="./binance/c
     func_name = convert_to_function_name(method, endpoint)
     
     # Build version argument if needed
+    version_string = ""
     if request_function in NO_VERSION_FUNCTIONS or version is None:
         # No version arg is needed
-        version_arg = ""
+        version_arg = None
     elif request_function == "_request_api":
-            version_arg = f", version=\"v{version}\""
+        version_arg = f"v{version}"
     else:
         # If a version was found, pass version= the integer, else default to 1
-        version_arg_val = version if version else 1
-        version_arg = f", version={version_arg_val}"
+        version_arg = version if version else 1
+
+    if version_arg is not None:
+        if isinstance(version_arg, str):
+            version_string = f', version="{version_arg}"'
+        else:
+            version_string = f", version={version_arg}"
+
+    is_signed = check_function(method, request_function, cleaned_endpoint, version_arg)
+    if is_signed is None:
+        return
 
     code_snippet = ""
     if type == "sync":
@@ -343,12 +393,12 @@ def generate_function_code(method, endpoint, type="sync", file_name="./binance/c
 
         :returns: API response
         \"\"\"
-        return self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed=True, data=params{version_arg})
+        return self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed={is_signed}, data=params{version_string})
         """
     elif type == "async":
         code_snippet = f"""
     async def {func_name}(self, **params):
-        return await self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed=True, data=params{version_arg})
+        return await self.{request_function}("{method.lower()}", "{cleaned_endpoint}", signed={is_signed}, data=params{version_string})
         """
         with open('./binance/client.py', 'r', encoding='utf-8') as f:
             content = f.read()
@@ -407,7 +457,6 @@ def main():
             new_endpoints.append((method, endpoint))
 
     print(f"{len(new_endpoints)} endpoints were added out of {len(endpoints)} scrapped in client.py")
-
 
     # Generate placeholder code for these endpoints
     for method, endpoint in new_endpoints:
