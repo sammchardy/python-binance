@@ -66,6 +66,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             listen_key = await self._client.futures_stream_get_listen_key()
         elif self._keepalive_type == "coin_futures":
             listen_key = await self._client.futures_coin_stream_get_listen_key()
+        elif self._keepalive_type == "portfolio_margin":
+            listen_key = await self._client.papi_stream_get_listen_key()
         else:  # isolated margin
             # Passing symbol for isolated margin
             listen_key = await self._client.isolated_margin_stream_get_listen_key(
@@ -90,6 +92,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                     await self._client.futures_stream_keepalive(self._listen_key)
                 elif self._keepalive_type == "coin_futures":
                     await self._client.futures_coin_stream_keepalive(self._listen_key)
+                elif self._keepalive_type == "portfolio_margin":
+                    await self._client.papi_stream_keepalive(self._listen_key)
                 else:  # isolated margin
                     # Passing symbol for isolated margin
                     await self._client.isolated_margin_stream_keepalive(

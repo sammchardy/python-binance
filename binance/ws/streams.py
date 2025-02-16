@@ -105,7 +105,7 @@ class BinanceSocketManager:
                 url=self._get_stream_url(stream_url),
                 keepalive_type=path,
                 prefix=prefix,
-                exit_coro=self._exit_socket,
+                exit_coro=lambda p: self._exit_socket(conn_id),
                 is_binary=is_binary,
                 user_timeout=self._user_timeout,
                 https_proxy=self._client.https_proxy,
@@ -1002,6 +1002,21 @@ class BinanceSocketManager:
         if self.testnet:
             stream_url = self.DSTREAM_TESTNET_URL
         return self._get_account_socket("coin_futures", stream_url=stream_url)
+
+    def portfolio_margin_socket(self):
+        """Start a websocket for portfolio margin user data
+
+            https://developers.binance.com/docs/derivatives/portfolio-margin/user-data-streams
+
+        :returns: connection key string if successful, False otherwise
+
+        Message Format - see Binance API docs for all types
+        """
+        stream_url = self.FSTREAM_URL
+        if self.testnet:
+            stream_url = self.FSTREAM_TESTNET_URL
+        stream_url += "pm/"
+        return self._get_account_socket("portfolio_margin", stream_url=stream_url)
 
     def isolated_margin_socket(self, symbol: str):
         """Start a websocket for isolated margin data

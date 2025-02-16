@@ -1753,6 +1753,11 @@ class AsyncClient(BaseClient):
         return await self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
+        
+    async def futures_taker_longshort_ratio(self, **params):
+        return await self._request_futures_data_api(
+            "get", "takerlongshortRatio", data=params
+        )
 
     async def futures_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/24hr", data=params)
@@ -2458,8 +2463,35 @@ class AsyncClient(BaseClient):
     ====================================================================================================================
     """
 
+    async def papi_stream_get_listen_key(self):
+        res = await self._request_papi_api("post", "listenKey", signed=False, data={})
+        return res["listenKey"]
+
+    papi_stream_get_listen_key.__doc__ = Client.papi_stream_get_listen_key.__doc__
+
+    async def papi_stream_keepalive(self, listenKey):
+        params = {"listenKey": listenKey}
+        return await self._request_papi_api(
+            "put", "listenKey", signed=False, data=params
+        )
+
+    papi_stream_keepalive.__doc__ = Client.papi_stream_keepalive.__doc__
+
+    async def papi_stream_close(self, listenKey):
+        params = {"listenKey": listenKey}
+        return await self._request_papi_api(
+            "delete", "listenKey", signed=False, data=params
+        )
+
+    papi_stream_close.__doc__ = Client.papi_stream_close.__doc__
+
     async def papi_get_balance(self, **params):
         return await self._request_papi_api("get", "balance", signed=True, data=params)
+    papi_get_balance.__doc__ = Client.papi_get_balance.__doc__
+
+    async def papi_get_rate_limit(self, **params):
+        return await self._request_papi_api("get", "rateLimit/order", signed=True, data=params)
+    papi_get_rate_limit.__doc__ = Client.papi_get_rate_limit.__doc__
 
     async def papi_get_account(self, **params):
         return await self._request_papi_api("get", "account", signed=True, data=params)
@@ -2568,6 +2600,13 @@ class AsyncClient(BaseClient):
         return await self._request_papi_api(
             "get", "portfolio/interest-history", signed=True, data=params
         )
+
+
+    async def papi_get_portfolio_negative_balance_exchange_record(self, **params):
+        return await self._request_papi_api(
+            "get", "portfolio/negative-balance-exchange-record", signed=True, data=params
+        )
+    papi_get_portfolio_negative_balance_exchange_record.__doc__ = Client.papi_get_portfolio_negative_balance_exchange_record.__doc__
 
     async def papi_fund_auto_collection(self, **params):
         return await self._request_papi_api(
@@ -3986,9 +4025,9 @@ class AsyncClient(BaseClient):
 
     margin_max_borrowable.__doc__ = Client.margin_max_borrowable.__doc__
 
-####################################################
-# Futures Data
-####################################################
+    ####################################################
+    # Futures Data
+    ####################################################
 
     async def futures_historical_data_link(self, **params):
         return await self._request_margin_api("get", "futures/data/histDataLink", signed=True, data=params)
