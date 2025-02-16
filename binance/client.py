@@ -386,7 +386,10 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ticker/price", version=self.PRIVATE_API_VERSION)
+        response = self._get("ticker/price", version=self.PRIVATE_API_VERSION)
+        if isinstance(response, list) and all(isinstance(item, dict) for item in response):
+            return response
+        raise TypeError("Expected a list of dictionaries")
 
     def get_orderbook_tickers(self, **params) -> Dict:
         """Best price/qty on the order book for all symbols.

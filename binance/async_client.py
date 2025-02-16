@@ -310,9 +310,12 @@ class AsyncClient(BaseClient):
         params = {}
         if symbol:
             params["symbol"] = symbol
-        return await self._get(
+        response = await self._get(
             "ticker/price", version=self.PRIVATE_API_VERSION, data=params
         )
+        if isinstance(response, list) and all(isinstance(item, dict) for item in response):
+            return response
+        raise TypeError("Expected a list of dictionaries")
 
     get_all_tickers.__doc__ = Client.get_all_tickers.__doc__
 
