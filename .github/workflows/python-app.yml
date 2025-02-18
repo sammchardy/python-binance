@@ -16,6 +16,7 @@ permissions:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -33,6 +34,7 @@ jobs:
   build:
     needs: lint
     runs-on: ubuntu-22.04
+    timeout-minutes: 20
     env:
       PROXY: "http://51.83.140.52:16301"
       TEST_TESTNET: "true"
@@ -74,6 +76,7 @@ jobs:
     needs: build
     if: ${{ always() }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
     - name: Coveralls Finished
       uses: coverallsapp/github-action@v2
