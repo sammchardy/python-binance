@@ -650,6 +650,48 @@ class Client(BaseClient):
                 yield t
             last_id = trades[-1][self.AGG_ID]
 
+    def get_ui_klines(self, **params) -> Dict:
+        """Kline/candlestick bars for a symbol with UI enhancements. Klines are uniquely identified by their open time.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#uiklines
+
+        :param symbol: required
+        :type symbol: str
+        :param interval: required - The interval for the klines (e.g., 1m, 3m, 5m, etc.)
+        :type interval: str
+        :param limit: optional - Default 500; max 1000.
+        :type limit: int
+        :param startTime: optional - Start time in milliseconds
+        :type startTime: int
+        :param endTime: optional - End time in milliseconds
+        :type endTime: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            [
+                [
+                    1499040000000,      # Open time
+                    "0.01634790",       # Open
+                    "0.80000000",       # High
+                    "0.01575800",       # Low
+                    "0.01577100",       # Close
+                    "148976.11427815",  # Volume
+                    1499644799999,      # Close time
+                    "2434.19055334",    # Quote asset volume
+                    308,                # Number of trades
+                    "1756.87402397",    # Taker buy base asset volume
+                    "28.46694368",      # Taker buy quote asset volume
+                    "17928899.62484339" # Can be ignored
+                ]
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._get("uiKlines", data=params, version=self.PRIVATE_API_VERSION)
+    
     def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
