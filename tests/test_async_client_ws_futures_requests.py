@@ -1,5 +1,6 @@
 import asyncio
 import pytest
+import sys
 
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
 from .test_get_order_book import assert_ob
@@ -52,7 +53,10 @@ async def test_ws_futures_get_order_book_ticker(futuresClientAsync):
 
 
 @pytest.mark.asyncio()
-async def test_ws_futures_create_get_edit_cancel_order(futuresClientAsync):
+async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClientAsync):
+    if 'orjson' not in sys.modules:
+        raise ImportError("orjson is not available")
+    
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
     positions = await futuresClientAsync.ws_futures_v2_account_position(
         symbol="LTCUSDT"
@@ -82,6 +86,39 @@ async def test_ws_futures_create_get_edit_cancel_order(futuresClientAsync):
     order = await futuresClientAsync.ws_futures_cancel_order(
         orderid=order["orderId"], symbol=order["symbol"]
     )
+
+@pytest.mark.asyncio()
+async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresClientAsync):
+    with patch.dict('sys.modules', {'orjson': None}):
+        ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+        positions = await futuresClientAsync.ws_futures_v2_account_position(
+            symbol="LTCUSDT"
+        )
+        order = await futuresClientAsync.ws_futures_create_order(
+            symbol=ticker["symbol"],
+            side="BUY",
+            positionSide=positions[0]["positionSide"],
+            type="LIMIT",
+            timeInForce="GTC",
+            quantity=0.1,
+            price=str(float(ticker["bidPrice"]) - 2),
+        )
+        assert_contract_order(futuresClientAsync, order)
+        order = await futuresClientAsync.ws_futures_edit_order(
+            orderid=order["orderId"],
+            symbol=order["symbol"],
+            quantity=0.11,
+            side=order["side"],
+            price=order["price"],
+        )
+        assert_contract_order(futuresClientAsync, order)
+        order = await futuresClientAsync.ws_futures_get_order(
+            symbol="LTCUSDT", orderid=order["orderId"]
+        )
+        assert_contract_order(futuresClientAsync, order)
+        order = await futuresClientAsync.ws_futures_cancel_order(
+            orderid=order["orderId"], symbol=order["symbol"]
+        )
 
 
 @pytest.mark.asyncio()
