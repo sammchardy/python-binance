@@ -82,7 +82,7 @@ jobs:
       uses: coverallsapp/github-action@v2
       with:
         parallel-finished: true
-   benchmarks:
+  benchmarks:
     name: Run benchmarks
     runs-on: ubuntu-latest
     steps:
