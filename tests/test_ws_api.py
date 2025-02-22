@@ -15,6 +15,12 @@ async def test_ws_api_public_endpoint(clientAsync):
     order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
     assert_ob(order_book)
 
+@pytest.mark.asyncio
+@pytest.mark.benchmark(group="ws_api")
+async def test_benchmark_ws_api_get_order_book(clientAsync, benchmark):
+    """Test normal order book request"""
+    order_book = await benchmark(clientAsync.ws_get_order_book, symbol="BTCUSDT")
+    assert_ob(order_book)
 
 @pytest.mark.asyncio
 async def test_ws_api_private_endpoint(clientAsync):

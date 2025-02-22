@@ -67,6 +67,20 @@ jobs:
       run: pyright
     - name: Test with tox
       run: tox -e py
+    - name: Store benchmark result
+      uses: benchmark-action/github-action-benchmark@v1
+      with:
+        name: Python Benchmark with pytest-benchmark
+        tool: 'pytest'
+        output-file-path: tests/benchamark-${{ matrix.python }}.json
+        # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t/github-action-not-triggering-gh-pages-upon-push/16096
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        auto-push: true
+        # Show alert with commit comment on detecting possible performance regression
+        alert-threshold: '150%'
+        comment-on-alert: true
+        fail-on-alert: true
+        alert-comment-cc-users: '@pcriadoperez'
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:
