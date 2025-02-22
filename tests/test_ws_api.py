@@ -114,14 +114,16 @@ async def test_testnet_url():
 async def test_message_handling(clientAsync):
     """Test message handling with various message types"""
     # Test valid message
-    valid_msg = {"id": "123", "result": {"test": "data"}}
-    result = clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+    future = asyncio.Future()
+    clientAsync.ws_api._responses["123"] = future
+    valid_msg = {"id": "123", "status": 200, "result": {"test": "data"}}
+    clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+    result = await clientAsync.ws_api._responses["123"]
     assert result == valid_msg
 
     # Test message without ID
     no_id_msg = {"data": "test"}
-    result = clientAsync.ws_api._handle_message(json.dumps(no_id_msg))
-    assert result == no_id_msg
+    clientAsync.ws_api._handle_message(json.dumps(no_id_msg))
 
     # Test invalid JSON
     with pytest.raises(json.JSONDecodeError):
