@@ -120,12 +120,29 @@ async def test_message_handling(clientAsync):
     clientAsync.ws_api._handle_message(json.dumps(valid_msg))
     result = await clientAsync.ws_api._responses["123"]
     assert result == valid_msg
+    
+@pytest.mark.asyncio
+async def test_message_handling_raise_exception(clientAsync):
+    with pytest.raises(BinanceAPIException):
+        future = asyncio.Future()
+        clientAsync.ws_api._responses["123"] = future
+        valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
+        clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+        await future
+@pytest.mark.asyncio
+async def test_message_handling_raise_exception_without_id(clientAsync):
+    with pytest.raises(BinanceAPIException):
+        future = asyncio.Future()
+        clientAsync.ws_api._responses["123"] = future
+        valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
+        clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+        await future
+    
+@pytest.mark.asyncio
+async def test_message_handling_invalid_json(clientAsync):
+    with pytest.raises(json.JSONDecodeError):
+        clientAsync.ws_api._handle_message("invalid json")
 
-    # Test message without ID
-    no_id_msg = {"data": "test"}
-    clientAsync.ws_api._handle_message(json.dumps(no_id_msg))
-
-    # Test invalid JSON
     with pytest.raises(json.JSONDecodeError):
         clientAsync.ws_api._handle_message("invalid json")
 
