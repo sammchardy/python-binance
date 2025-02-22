@@ -1,4 +1,5 @@
 import json
+import sys
 import re
 import pytest
 import asyncio
@@ -198,7 +199,7 @@ async def test_ws_queue_overflow(clientAsync):
         # Restore original queue size
         clientAsync.ws_api.MAX_QUEUE_SIZE = original_size
 
-
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_api_with_stream(clientAsync):
     """Test combining WebSocket API requests with stream listening"""
