@@ -30,7 +30,7 @@ class BinanceSocketManager:
     FSTREAM_TESTNET_URL = "wss://stream.binancefuture.com/"
     DSTREAM_URL = "wss://dstream.binance.{}/"
     DSTREAM_TESTNET_URL = "wss://dstream.binancefuture.com/"
-    VSTREAM_URL = "wss://vstream.binance.{}/"
+    VSTREAM_URL = "wss://nbstream.binance.{}/eoptions/"
     VSTREAM_TESTNET_URL = "wss://testnetws.binanceops.{}/"
 
     WEBSOCKET_DEPTH_5 = "5"
@@ -136,7 +136,7 @@ class BinanceSocketManager:
             path,
             stream_url,
             prefix,
-            is_binary=True,
+            is_binary=False,
             socket_type=BinanceSocketType.OPTIONS,
         )
 
@@ -1043,7 +1043,7 @@ class BinanceSocketManager:
         :param symbol: required
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@ticker")
+        return self._get_options_socket(symbol + "@ticker")
 
     def options_ticker_by_expiration_socket(self, symbol: str, expiration_date: str):
         """Subscribe to a 24 hour ticker info stream
@@ -1053,7 +1053,7 @@ class BinanceSocketManager:
         :param expiration_date : required
         :type expiration_date: str
         """
-        return self._get_options_socket(symbol.lower() + "@ticker@" + expiration_date)
+        return self._get_options_socket(symbol + "@ticker@" + expiration_date)
 
     def options_recent_trades_socket(self, symbol: str):
         """Subscribe to a latest completed trades stream
@@ -1063,7 +1063,7 @@ class BinanceSocketManager:
         :param symbol: required
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@trade")
+        return self._get_options_socket(symbol + "@trade")
 
     def options_kline_socket(
         self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE
@@ -1077,7 +1077,7 @@ class BinanceSocketManager:
         :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
         :type interval: str
         """
-        return self._get_options_socket(symbol.lower() + "@kline_" + interval)
+        return self._get_options_socket(symbol + "@kline_" + interval)
 
     def options_depth_socket(self, symbol: str, depth: str = "10"):
         """Subscribe to a depth data stream
@@ -1089,7 +1089,7 @@ class BinanceSocketManager:
         :param depth: optional Number of depth entries to return, default 10.
         :type depth: str
         """
-        return self._get_options_socket(symbol.lower() + "@depth" + str(depth))
+        return self._get_options_socket(symbol + "@depth" + str(depth))
 
     async def _stop_socket(self, conn_key):
         """Stop a websocket given the connection key
