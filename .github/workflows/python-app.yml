@@ -66,6 +66,7 @@ jobs:
     - name: Type check with pyright
       run: pyright
     - name: Run benchmarks
+      if: ${{ matrix.python == '3.12' }}
       uses: CodSpeedHQ/action@v3
       with:
         token: ${{ secrets.CODSPEED_TOKEN }}
