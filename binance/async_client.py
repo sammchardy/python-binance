@@ -403,6 +403,11 @@ class AsyncClient(BaseClient):
 
     aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
 
+    async def get_ui_klines(self, **params) -> Dict:
+        return await self._get("uiKlines", data=params, version=self.PRIVATE_API_VERSION)
+
+    get_ui_klines.__doc__ = Client.get_ui_klines.__doc__
+
     async def get_klines(self, **params) -> Dict:
         return await self._get("klines", data=params, version=self.PRIVATE_API_VERSION)
 

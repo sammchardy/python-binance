@@ -76,9 +76,9 @@ class ReconnectingWebsocket:
         self._https_proxy = https_proxy
         self._ws_kwargs = kwargs
 
-    def json_dumps(self, msg):
+    def json_dumps(self, msg) -> str:
         if orjson:
-            return orjson.dumps(msg)
+            return orjson.dumps(msg).decode("utf-8")
         return json.dumps(msg)
 
     def json_loads(self, msg):
