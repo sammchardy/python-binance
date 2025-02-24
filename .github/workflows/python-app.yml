@@ -72,7 +72,7 @@ jobs:
       with:
         name: Python Benchmark with pytest-benchmark
         tool: 'pytest'
-        output-file-path: ./tests/benchamark-${{ matrix.python }}.json
+        output-file-path: ./tests/benchmark-${{ matrix.python }}.json
         # Use personal access token instead of GITHUB_TOKEN due to https://github.community/t/github-action-not-triggering-gh-pages-upon-push/16096
         github-token: ${{ secrets.GITHUB_TOKEN }}
         auto-push: true
