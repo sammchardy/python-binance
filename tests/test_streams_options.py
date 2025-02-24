@@ -1,8 +1,6 @@
 import sys
 import pytest
 from binance import BinanceSocketManager
-from binance.async_client import AsyncClient
-from .conftest import proxy, api_key, api_secret, testnet
 
 pytestmark = [
     pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+"),
