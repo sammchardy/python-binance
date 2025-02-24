@@ -655,23 +655,6 @@ class BinanceSocketManager:
             symbol.lower() + stream_name, futures_type=FuturesType.COIN_M
         )
 
-    def futures_depth_socket(
-        self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M
-    ):
-        """Subscribe to a futures depth data stream
-
-        https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
-
-        :param symbol: required
-        :type symbol: str
-        :param depth: optional Number of depth entries to return, default 10.
-        :type depth: str
-        :param futures_type: use USD-M or COIN-M futures default USD-M
-        """
-        return self._get_futures_socket(
-            symbol.lower() + "@depth" + str(depth), futures_type=futures_type
-        )
-
     def symbol_mark_price_socket(
         self,
         symbol: str,
@@ -1097,12 +1080,7 @@ class BinanceSocketManager:
         """
         return self._get_options_socket(symbol.upper() + "@depth" + str(depth))
 
-    def futures_depth_socket(
-        self,
-        symbol: str,
-        depth: str = "10",
-        futures_type=FuturesType.USD_M,
-    ):
+    def futures_depth_socket(self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M):
         """Subscribe to a futures depth data stream
 
         https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
