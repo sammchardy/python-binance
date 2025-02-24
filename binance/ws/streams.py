@@ -1117,6 +1117,88 @@ class BinanceSocketManager:
             symbol.lower() + "@depth" + str(depth), futures_type=futures_type
         )
 
+    def options_new_symbol_socket(self):
+        """Subscribe to a new symbol listing information stream.
+
+        Stream provides real-time notifications when new option symbols are listed.
+        Updates every 50ms.
+
+        Stream name: option_pair
+
+        API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/New-Symbol-Info
+
+        Response fields include:
+        - Event type and timestamps
+        - Underlying index (e.g., 'BTCUSDT')
+        - Quotation asset (e.g., 'USDT')
+        - Trading pair name (e.g., 'BTC-221116-21000-C')
+        - Conversion ratio and minimum trade volume
+        - Option type (CALL/PUT)
+        - Strike price and expiration time
+        """
+        return self._get_options_socket("option_pair")
+
+    def options_open_interest_socket(self, symbol: str, expiration_date: str):
+        """Subscribe to an options open interest stream.
+
+        Stream provides open interest information for specific underlying asset on specific expiration date.
+        Updates every 60 seconds.
+
+        Stream name format: <underlyingAsset>@openInterest@<expirationDate>
+
+        API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Open-Interest
+
+        Response fields include:
+        - Event type and timestamps
+        - Option symbol (e.g., 'ETH-221125-2700-C')
+        - Open interest in contracts
+        - Open interest in USDT
+
+        :param symbol: The underlying asset (e.g., "ETH")
+        :type symbol: str
+        :param expiration_date: The expiration date (e.g., "221125" for Nov 25, 2022)
+        :type expiration_date: str
+        """
+        return self._get_options_socket(symbol.upper() + "@openInterest@" + expiration_date)
+
+    def options_mark_price_socket(self, symbol: str):
+        """Subscribe to an options mark price stream.
+
+        Stream provides mark price information for all option symbols on specific underlying asset.
+        Updates every 1000ms.
+
+        Stream name format: <underlyingAsset>@markPrice
+
+        API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Mark-Price
+
+        Response fields include:
+        - Event type and timestamps
+        - Option symbol (e.g., 'ETH-220930-1500-C')
+        - Option mark price
+
+        :param symbol: The underlying asset (e.g., "ETH")
+        :type symbol: str
+        """
+        return self._get_options_socket(symbol.upper() + "@markPrice")
+
+    def options_index_price_socket(self, symbol: str):
+        """Subscribe to an options index price stream.
+
+        API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Index-Price-Streams
+
+        Stream provides index price information for underlying assets (e.g., ETHUSDT).
+        Updates every 1000ms.
+
+        Response fields include:
+        - Event type and timestamps
+        - Underlying symbol (e.g., 'ETHUSDT')
+        - Index price
+
+        :param symbol: The underlying symbol (e.g., "ETHUSDT")
+        :type symbol: str
+        """
+        return self._get_options_socket(symbol.upper() + "@index")
+
     async def _stop_socket(self, conn_key):
         """Stop a websocket given the connection key
 

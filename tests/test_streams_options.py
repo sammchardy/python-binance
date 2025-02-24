@@ -73,3 +73,30 @@ async def test_options_multiplex(clientAsync):
         msg = await ts.recv()
         assert 'stream' in msg
     await clientAsync.close_connection()
+
+async def test_options_open_interest(clientAsync):
+    """Test options open interest socket"""
+    bm = BinanceSocketManager(clientAsync)
+    socket = bm.options_open_interest_socket(UNDERLYING_SYMBOL, EXPIRATION_DATE)
+    async with socket as ts:
+        msg = await ts.recv()
+        assert len(msg) > 0
+    await clientAsync.close_connection()
+
+async def test_options_mark_price(clientAsync):
+    """Test options mark price socket"""
+    bm = BinanceSocketManager(clientAsync)
+    socket = bm.options_mark_price_socket(UNDERLYING_SYMBOL)
+    async with socket as ts:
+        msg = await ts.recv()
+        assert len(msg) > 0
+    await clientAsync.close_connection()
+
+async def test_options_index_price(clientAsync):
+    """Test options index price socket"""
+    bm = BinanceSocketManager(clientAsync)
+    socket = bm.options_index_price_socket('ETHUSDT')
+    async with socket as ts:
+        msg = await ts.recv()
+        assert msg['e'] == 'index'
+    await clientAsync.close_connection()
