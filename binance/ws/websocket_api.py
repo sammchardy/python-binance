@@ -21,25 +21,26 @@ class WebsocketAPI(ReconnectingWebsocket):
     def _handle_message(self, msg):
         """Override message handling to support request-response"""
         parsed_msg = super()._handle_message(msg)
+        self._log.debug(f"Received message: {parsed_msg}")
         if parsed_msg is None:
             return None
-        req_id, exception, throwError = None, None, False
+        req_id, exception = None, None
         if "id" in parsed_msg:
             req_id = parsed_msg["id"]
         if "status" in parsed_msg:
             if parsed_msg["status"] != 200:
-                throwError = True
                 exception = BinanceAPIException(
                     parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
                 )
         if req_id is not None and req_id in self._responses:
-            if throwError and exception is not None:
+            if exception is not None:
                 self._responses[req_id].set_exception(exception)
             else:
                 self._responses[req_id].set_result(parsed_msg)
-        elif throwError and exception is not None:
+        elif exception is not None:
             raise exception
-        return parsed_msg
+        else:
+            self._log.warning(f"WS api receieved unknown message: {parsed_msg}")
 
     async def _ensure_ws_connection(self) -> None:
         """Ensure WebSocket connection is established and ready
