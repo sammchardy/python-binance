@@ -65,6 +65,12 @@ jobs:
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
     - name: Type check with pyright
       run: pyright
+    - name: Run benchmarks
+      if: ${{ matrix.python == '3.12' }}
+      uses: CodSpeedHQ/action@v3
+      with:
+        token: ${{ secrets.CODSPEED_TOKEN }}
+        run: pytest tests/ --codspeed
     - name: Test with tox
       run: tox -e py
     - name: Coveralls Parallel
@@ -72,7 +78,7 @@ jobs:
       with:
         flag-name: run-${{ join(matrix.*, '-') }}
         parallel: true
-  finish:
+  coveralls:
     needs: build
     if: ${{ always() }}
     runs-on: ubuntu-latest
