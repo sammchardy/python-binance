@@ -36,9 +36,9 @@ def test_get_all_tickers(client):
 def test_get_orderbook_tickers(client):
     client.get_orderbook_tickers()
 
-
-def test_benchmark_get_order_book(client, benchmark):
-    benchmark(client.get_order_book(symbol="BTCUSDT"))
+@pytest.mark.benchmark
+def test_benchmark_get_order_book(client):
+    client.get_order_book(symbol="BTCUSDT")
 
 def test_get_order_book(client):
     client.get_order_book(symbol="BTCUSDT")
