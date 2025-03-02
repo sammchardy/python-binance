@@ -10,3 +10,4 @@ tox
 setuptools
 aioresponses
 pre-commit
+orjson
