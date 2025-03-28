@@ -1,6 +1,26 @@
 Changelog
 =========
 
+
+v1.0.28 - 2024-02-27
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Add `papi_get_rate_limit`
+- Add docs for `create_oco_order`
+- Add `uiKlines` support
+- Add options websocket market streams
+- Add dozens of missing endpoints
+
+
+**Fixed**
+
+- Ws API not allowing more than 100 requests
+- Return empty json instead of throwing error on empty response
+- Json_dumps when using orjson
+
+
 v1.0.27 - 2024-12-31
 ^^^^^^^^^^^^^^^^^^^^
 
