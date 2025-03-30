@@ -1,4 +1,7 @@
 from binance import ThreadedWebsocketManager
+from binance.client import Client
+import asyncio
+import time
 
 
 received_ohlcv = False
@@ -19,6 +22,13 @@ def handle_socket_message(msg):
         twm.stop()
 
 
+# Get real symbols from Binance API
+client = Client()
+exchange_info = client.get_exchange_info()
+symbols = [info['symbol'].lower() for info in exchange_info['symbols']]
+streams = [f"{symbol}@bookTicker" for symbol in symbols][0:800]  # Take first 800 symbols
+
+
 def test_threaded_socket_manager():
     global twm
     twm = ThreadedWebsocketManager(api_key="", api_secret="", testnet=True)
@@ -32,3 +42,111 @@ def test_threaded_socket_manager():
     twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
 
     twm.join()
+
+
+def test_many_symbols_small_queue():
+    # Test with small queue size that should trigger errors
+    twm = ThreadedWebsocketManager(max_queue_size=5)
+    
+    error_received = False
+    
+    def handle_message(msg):
+        nonlocal error_received
+        if msg.get("e") == "error":
+            error_received = True
+            print(f"WebSocket error: {msg.get('m', 'Unknown error')}")
+            return
+        print(msg)
+    
+    twm.start()
+    
+    # This should trigger error messages due to queue overflow
+    twm.start_futures_multiplex_socket(callback=handle_message, streams=streams)
+    time.sleep(10)  # Give some time for errors to occur
+    
+    assert error_received, "Should have received error messages due to small queue"
+    twm.stop()
+
+
+def test_many_symbols_adequate_queue():
+    # Test with larger queue size that should handle the load
+    twm = ThreadedWebsocketManager(max_queue_size=200)
+    
+    messages_received = 0
+    error_received = False
+    
+    def handle_message(msg):
+        nonlocal messages_received, error_received
+        if msg.get("e") == "error":
+            error_received = True
+            print(f"WebSocket error: {msg.get('m', 'Unknown error')}")
+            return
+            
+        messages_received += 1
+    
+    twm.start()
+    
+    twm.start_futures_multiplex_socket(callback=handle_message, streams=streams)
+    time.sleep(20)  # Run for 30 seconds
+    
+    assert messages_received > 0, "Should have received some messages"
+    assert not error_received, "Should not have received any errors"
+    twm.stop()
+
+
+def test_slow_async_callback_no_error():
+    twm = ThreadedWebsocketManager(max_queue_size=100)
+    
+    messages_processed = 0
+    error_received = False
+    
+    async def slow_async_callback(msg):
+        nonlocal messages_processed, error_received
+        if msg.get("e") == "error":
+            error_received = True
+            print(f"WebSocket error: {msg.get('m', 'Unknown error')}")
+            return
+            
+        await asyncio.sleep(2)  # Simulate slow async processing
+        messages_processed += 1
+    
+    twm.start()
+    
+    symbol = "BTCUSDT"
+    twm.start_kline_socket(callback=slow_async_callback, symbol=symbol)
+    
+    time.sleep(10)
+    
+    assert messages_processed > 0, "Should have processed some messages"
+    assert not error_received, "Should not have received any errors"
+    twm.stop()
+
+
+def test_slow_handler_overflow_error():
+    # Test with very slow handler that should trigger errors
+    twm = ThreadedWebsocketManager(max_queue_size=100)
+    
+    error_received = False
+    messages_processed = 0
+    
+    def very_slow_handler(msg):
+        nonlocal error_received, messages_processed
+        time.sleep(0.1)  # Very slow processing - 1 second per message
+        
+        if msg.get("e") == "error":
+            error_received = True
+            print(f"WebSocket error: {msg.get('m', 'Unknown error')}")
+            return
+            
+        messages_processed += 1
+        print(msg)
+    
+    twm.start()
+    
+    # This should trigger error messages due to queue overflow
+    twm.start_futures_multiplex_socket(callback=very_slow_handler, streams=streams)
+    time.sleep(10)  # Give some time for errors to occur
+    
+    assert error_received, "Should have received error messages due to slow handler"
+    assert messages_processed > 0, "Should have processed some messages before errors"
+    twm.stop()
