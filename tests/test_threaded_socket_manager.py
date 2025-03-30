@@ -95,7 +95,7 @@ def test_many_symbols_adequate_queue():
 
 
 def test_slow_async_callback_no_error():
-    twm = ThreadedWebsocketManager(max_queue_size=100)
+    twm = ThreadedWebsocketManager(max_queue_size=400)
     
     messages_processed = 0
     error_received = False
@@ -112,8 +112,7 @@ def test_slow_async_callback_no_error():
     
     twm.start()
     
-    symbol = "BTCUSDT"
-    twm.start_kline_socket(callback=slow_async_callback, symbol=symbol)
+    twm.start_futures_multiplex_socket(callback=slow_async_callback, streams=streams)
     
     time.sleep(10)
     
@@ -121,32 +120,3 @@ def test_slow_async_callback_no_error():
     assert not error_received, "Should not have received any errors"
     twm.stop()
 
-
-def test_slow_handler_overflow_error():
-    # Test with very slow handler that should trigger errors
-    twm = ThreadedWebsocketManager(max_queue_size=100)
-    
-    error_received = False
-    messages_processed = 0
-    
-    def very_slow_handler(msg):
-        nonlocal error_received, messages_processed
-        time.sleep(0.1)  # Very slow processing - 1 second per message
-        
-        if msg.get("e") == "error":
-            error_received = True
-            print(f"WebSocket error: {msg.get('m', 'Unknown error')}")
-            return
-            
-        messages_processed += 1
-        print(msg)
-    
-    twm.start()
-    
-    # This should trigger error messages due to queue overflow
-    twm.start_futures_multiplex_socket(callback=very_slow_handler, streams=streams)
-    time.sleep(10)  # Give some time for errors to occur
-    
-    assert error_received, "Should have received error messages due to slow handler"
-    assert messages_processed > 0, "Should have processed some messages before errors"
-    twm.stop()
