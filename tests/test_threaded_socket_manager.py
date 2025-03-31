@@ -2,6 +2,7 @@ from binance import ThreadedWebsocketManager
 from binance.client import Client
 import asyncio
 import time
+from .conftest import proxies, api_key, api_secret, proxy
 
 
 received_ohlcv = False
@@ -23,7 +24,7 @@ def handle_socket_message(msg):
 
 
 # Get real symbols from Binance API
-client = Client()
+client = Client(api_key, api_secret, {"proxies": proxies})
 exchange_info = client.get_exchange_info()
 symbols = [info['symbol'].lower() for info in exchange_info['symbols']]
 streams = [f"{symbol}@bookTicker" for symbol in symbols][0:800]  # Take first 800 symbols
@@ -31,7 +32,7 @@ streams = [f"{symbol}@bookTicker" for symbol in symbols][0:800]  # Take first 80
 
 def test_threaded_socket_manager():
     global twm
-    twm = ThreadedWebsocketManager(api_key="", api_secret="", testnet=True)
+    twm = ThreadedWebsocketManager(api_key, api_secret, {"proxies": proxies}, https_proxy=proxy)
 
     symbol = "BTCUSDT"
 
@@ -46,7 +47,7 @@ def test_threaded_socket_manager():
 
 def test_many_symbols_small_queue():
     # Test with small queue size that should trigger errors
-    twm = ThreadedWebsocketManager(max_queue_size=5)
+    twm = ThreadedWebsocketManager(api_key, api_secret, {"proxies": proxies}, https_proxy=proxy, max_queue_size=5)
     
     error_received = False
     
@@ -70,7 +71,7 @@ def test_many_symbols_small_queue():
 
 def test_many_symbols_adequate_queue():
     # Test with larger queue size that should handle the load
-    twm = ThreadedWebsocketManager(max_queue_size=200)
+    twm = ThreadedWebsocketManager(api_key, api_secret, {"proxies": proxies}, https_proxy=proxy, max_queue_size=200)
     
     messages_received = 0
     error_received = False
@@ -95,7 +96,7 @@ def test_many_symbols_adequate_queue():
 
 
 def test_slow_async_callback_no_error():
-    twm = ThreadedWebsocketManager(max_queue_size=400)
+    twm = ThreadedWebsocketManager(api_key, api_secret, {"proxies": proxies}, https_proxy=proxy, max_queue_size=400)
     
     messages_processed = 0
     error_received = False
