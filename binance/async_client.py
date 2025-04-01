@@ -64,7 +64,10 @@ class AsyncClient(BaseClient):
         testnet: bool = False,
         loop=None,
         session_params: Optional[Dict[str, Any]] = None,
+        private_key: Optional[Union[str, Path]] = None,
+        private_key_pass: Optional[str] = None,
         https_proxy: Optional[str] = None,
+        time_unit: Optional[str] = None,
     ):
         self = cls(
             api_key,
@@ -75,6 +78,10 @@ class AsyncClient(BaseClient):
             testnet,
             loop,
             session_params,
+            private_key,
+            private_key_pass,
+            https_proxy,
+            time_unit
         )
         self.https_proxy = https_proxy  # move this to the constructor
 
