@@ -3,7 +3,13 @@ from binance.client import Client
 import asyncio
 import time
 from .conftest import proxies, api_key, api_secret, proxy
+import pytest
+import sys
 
+pytestmark = pytest.mark.skipif(
+    sys.version_info <= (3, 7),
+    reason="These tests require Python 3.8+ for proper websocket proxy support"
+)
 
 received_ohlcv = False
 received_depth = False
