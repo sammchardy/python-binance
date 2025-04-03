@@ -1,5 +1,6 @@
 import pytest
 from binance.client import Client
+from binance.exceptions import BinanceAPIException, BinanceRequestException
 from .conftest import proxies, api_key, api_secret, testnet
 
 
@@ -215,3 +216,37 @@ def test_time_unit_milloseconds():
     assert len(str(milli_trades[0]["time"])) == 13, (
         "Time should be in milliseconds (13 digits)"
     )
+
+
+def test_handle_response(client):
+    # Test successful JSON response
+    mock_response = type('Response', (), {
+        'status_code': 200,
+        'text': '{"key": "value"}',
+        'json': lambda: {"key": "value"}
+    })
+    assert client._handle_response(mock_response) == {"key": "value"}
+
+    # Test empty response
+    mock_empty_response = type('Response', (), {
+        'status_code': 200,
+        'text': ''
+    })
+    assert client._handle_response(mock_empty_response) == {}
+
+    # Test invalid JSON response
+    mock_invalid_response = type('Response', (), {
+        'status_code': 200,
+        'text': 'invalid json',
+        'json': lambda: exec('raise ValueError()')
+    })
+    with pytest.raises(BinanceRequestException):
+        client._handle_response(mock_invalid_response)
+
+    # Test error status code
+    mock_error_response = type('Response', (), {
+        'status_code': 400,
+        'text': 'error message'
+    })
+    with pytest.raises(BinanceAPIException):
+        client._handle_response(mock_error_response)

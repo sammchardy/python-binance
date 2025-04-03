@@ -2,6 +2,10 @@ import pytest
 
 from binance.async_client import AsyncClient
 from .conftest import proxy, api_key, api_secret, testnet
+from binance.exceptions import BinanceAPIException, BinanceRequestException
+from aiohttp import ClientResponse, hdrs
+from aiohttp.helpers import TimerNoop
+from yarl import URL
 
 pytestmark = [pytest.mark.asyncio]
 
@@ -253,3 +257,41 @@ async def test_time_unit_milloseconds():
     assert len(str(milli_trades[0]["time"])) == 13, (
         "Time should be in milliseconds (13 digits)"
     )
+
+
+async def test_handle_response(clientAsync):
+    # Create base response object
+    mock_response = ClientResponse(
+        'GET', URL('http://test.com'),
+        request_info=None,
+        writer=None,
+        continue100=None,
+        timer=TimerNoop(),
+        traces=[],
+        loop=clientAsync.loop,
+        session=None,
+    )
+    # Initialize headers
+    mock_response._headers = {hdrs.CONTENT_TYPE: 'application/json'}
+
+    # Test successful JSON response
+    mock_response.status = 200
+    mock_response._body = b'{"key": "value"}'
+    assert await clientAsync._handle_response(mock_response) == {"key": "value"}
+
+    # Test empty response
+    mock_response.status = 200
+    mock_response._body = b''
+    assert await clientAsync._handle_response(mock_response) == {}
+
+    # Test invalid JSON response
+    mock_response.status = 200
+    mock_response._body = b'invalid json'
+    with pytest.raises(BinanceRequestException):
+        await clientAsync._handle_response(mock_response)
+
+    # Test error status code
+    mock_response.status = 400
+    mock_response._body = b'error message'
+    with pytest.raises(BinanceAPIException):
+        await clientAsync._handle_response(mock_response)
