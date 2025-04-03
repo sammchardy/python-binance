@@ -56,7 +56,7 @@ class ThreadedApiManager(threading.Thread):
                     if not msg:
                         continue  # Handle both async and sync callbacks
                     if asyncio.iscoroutinefunction(callback):
-                        await callback(msg)
+                        asyncio.create_task(callback(msg))
                     else:
                         callback(msg)
         del self._socket_running[path]
