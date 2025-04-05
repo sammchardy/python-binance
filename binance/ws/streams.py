@@ -1239,7 +1239,10 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         params: Dict[str, Any],
         path: Optional[str] = None,
     ) -> str:
+        start_time = time.time()
         while not self._bsm:
+            if time.time() - start_time > 5:
+                raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
         socket_path: str = path or socket._path  # noqa
