@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 import asyncio
 
 from websockets import WebSocketClientProtocol  # type: ignore
