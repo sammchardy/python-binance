@@ -7,7 +7,7 @@ import pytest
 import sys
 
 pytestmark = pytest.mark.skipif(
-    sys.version_info <= (3, 7),
+    sys.version_info <= (3, 8),
     reason="These tests require Python 3.8+ for proper websocket proxy support"
 )
 
