@@ -1,5 +1,7 @@
 import pytest
 import asyncio
+
+import websockets
 from binance.ws.threaded_stream import ThreadedApiManager
 from unittest.mock import Mock
 
