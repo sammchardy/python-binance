@@ -67,19 +67,18 @@ jobs:
       run: pyright
     - name: Test with tox
       run: tox -e py
-  # comment due to coveralls maintenance of April 6 2025: https://status.coveralls.io/
-  #   - name: Coveralls Parallel
-  #     uses: coverallsapp/github-action@v2
-  #     with:
-  #       flag-name: run-${{ join(matrix.*, '-') }}
-  #       parallel: true
-  # finish:
-  #   needs: build
-  #   if: ${{ always() }}
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   steps:
-  #   - name: Coveralls Finished
-  #     uses: coverallsapp/github-action@v2
-  #     with:
-  #       parallel-finished: true
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@v2
+      with:
+        flag-name: run-${{ join(matrix.*, '-') }}
+        parallel: true
+  finish:
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        parallel-finished: true
