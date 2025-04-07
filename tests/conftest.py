@@ -62,20 +62,32 @@ def futuresClient():
 
 
 @pytest.fixture(scope="function")
-def clientAsync():
-    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet)
+async def clientAsync():
+    client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet)
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 
 @pytest.fixture(scope="function")
-def futuresClientAsync():
-    return AsyncClient(
+async def futuresClientAsync():
+    client = AsyncClient(
         futures_api_key, futures_api_secret, https_proxy=proxy, testnet=testnet
     )
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 
 @pytest.fixture(scope="function")
-def liveClientAsync():
-    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
+async def liveClientAsync():
+    client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 @pytest.fixture(scope="function")
 def manager():
