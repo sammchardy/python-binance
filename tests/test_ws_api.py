@@ -114,38 +114,58 @@ async def test_testnet_url():
 @pytest.mark.asyncio
 async def test_message_handling(clientAsync):
     """Test message handling with various message types"""
-    # Test valid message
-    future = asyncio.Future()
-    clientAsync.ws_api._responses["123"] = future
-    valid_msg = {"id": "123", "status": 200, "result": {"test": "data"}}
-    clientAsync.ws_api._handle_message(json.dumps(valid_msg))
-    result = await clientAsync.ws_api._responses["123"]
-    assert result == valid_msg
-    
+    try:
+        # Test valid message
+        future = asyncio.Future()
+        clientAsync.ws_api._responses["123"] = future
+        valid_msg = {"id": "123", "status": 200, "result": {"test": "data"}}
+        clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+        result = await clientAsync.ws_api._responses["123"]
+        assert result == valid_msg
+    finally:
+        # Ensure cleanup
+        await clientAsync.close_connection()
+
+
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception(clientAsync):
-    with pytest.raises(BinanceAPIException):
-        future = asyncio.Future()
-        clientAsync.ws_api._responses["123"] = future
-        valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
-        clientAsync.ws_api._handle_message(json.dumps(valid_msg))
-        await future
+    try:
+        with pytest.raises(BinanceAPIException):
+            future = asyncio.Future()
+            clientAsync.ws_api._responses["123"] = future
+            valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
+            clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+            await future
+    finally:
+        # Ensure cleanup
+        await clientAsync.close_connection()
+
+
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception_without_id(clientAsync):
-    with pytest.raises(BinanceAPIException):
-        future = asyncio.Future()
-        clientAsync.ws_api._responses["123"] = future
-        valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
-        clientAsync.ws_api._handle_message(json.dumps(valid_msg))
-        await future
-    
+    try:
+        with pytest.raises(BinanceAPIException):
+            future = asyncio.Future()
+            clientAsync.ws_api._responses["123"] = future
+            valid_msg = {"id": "123", "status": 400, "error": {"code": "0", "msg": "error message"}}
+            clientAsync.ws_api._handle_message(json.dumps(valid_msg))
+            await future
+    finally:
+        # Ensure cleanup
+        await clientAsync.close_connection()
+
+
 @pytest.mark.asyncio
 async def test_message_handling_invalid_json(clientAsync):
-    with pytest.raises(json.JSONDecodeError):
-        clientAsync.ws_api._handle_message("invalid json")
+    try:
+        with pytest.raises(json.JSONDecodeError):
+            clientAsync.ws_api._handle_message("invalid json")
 
-    with pytest.raises(json.JSONDecodeError):
-        clientAsync.ws_api._handle_message("invalid json")
+        with pytest.raises(json.JSONDecodeError):
+            clientAsync.ws_api._handle_message("invalid json")
+    finally:
+        # Ensure cleanup
+        await clientAsync.close_connection()
 
 
 @pytest.mark.asyncio(scope="function")
@@ -198,6 +218,7 @@ async def test_ws_queue_overflow(clientAsync):
     finally:
         # Restore original queue size
         clientAsync.ws_api.MAX_QUEUE_SIZE = original_size
+
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
