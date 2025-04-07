@@ -177,8 +177,8 @@ async def test_cleanup_on_exit(clientAsync):
 async def test_ws_queue_overflow(clientAsync):
     """WebSocket API should not overflow queue"""
     # 
-    original_size = clientAsync.ws_api.MAX_QUEUE_SIZE
-    clientAsync.ws_api.MAX_QUEUE_SIZE = 1
+    original_size = clientAsync.ws_api.max_queue_size
+    clientAsync.ws_api.max_queue_size = 1
 
     try:
         # Request multiple order books concurrently
