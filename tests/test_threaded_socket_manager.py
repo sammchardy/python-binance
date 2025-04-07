@@ -32,7 +32,6 @@ def test_threaded_socket_manager():
 
     def handle_socket_message(msg):
         global received_ohlcv, received_depth
-        print(msg)
         if "e" in msg:
             if msg["e"] == "depthUpdate":
                 received_depth = True
