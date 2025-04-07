@@ -94,7 +94,7 @@ def test_many_symbols_small_queue():
 
 def test_many_symbols_adequate_queue():
     logger.debug("Starting test_many_symbols_adequate_queue with queue size 200")
-    twm = ThreadedWebsocketManager(api_key, api_secret, max_queue_size=200)
+    twm = ThreadedWebsocketManager(api_key, api_secret, https_proxy=proxy, testnet=True, max_queue_size=200)
     
     messages_received = 0
     error_received = False
