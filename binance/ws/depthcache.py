@@ -188,15 +188,8 @@ class BaseDepthCacheManager:
         await self._socket.__aexit__(*args, **kwargs)
 
     async def recv(self):
-        dc = None
-        while not dc:
-            try:
-                res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
-            except Exception as e:
-                self._log.warning(e)
-            else:
-                dc = await self._depth_event(res)
-        return dc
+        res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
+        return await self._depth_event(res)
 
     async def _init_cache(self):
         """Initialise the depth cache calling REST endpoint
