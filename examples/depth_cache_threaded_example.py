@@ -24,6 +24,7 @@ def main():
                 if type == 'BinanceWebsocketClosed':
                     # Automatically attempts to reconnect
                     return
+                logger.error(f"Error received - Closing depth cache: {depth_cache}")
                 dcm.stop()
                 return
                  
