@@ -105,7 +105,7 @@ def test_get_reconnect_wait():
 async def test_connect_max_reconnects_exceeded():
     """Test ws.connect exceeds maximum reconnect attempts."""
     ws = ReconnectingWebsocket(url="wss://test.url")
-    ws.MAX_RECONNECTS = 2  # Set max reconnects to a low number for testing
+    ws.MAX_RECONNECTS = 2  # type: ignore # Set max reconnects to a low number for testing
     ws._before_connect = AsyncMock()
     ws._after_connect = AsyncMock()
     ws._conn = AsyncMock()
