@@ -405,6 +405,8 @@ class BaseClient:
             payload["params"] = self._sign_ws_params(
                 params, self._generate_ws_api_signature
             )
+        if method == "userDataStream.subscribe":
+            del payload["params"]
         return await self.ws_api.request(id, payload)
 
     def _ws_api_request_sync(self, method: str, signed: bool, params: dict):

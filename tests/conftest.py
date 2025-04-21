@@ -21,8 +21,10 @@ api_secret = os.getenv("TEST_API_SECRET")
 futures_api_key = os.getenv("TEST_FUTURES_API_KEY")
 futures_api_secret = os.getenv("TEST_FUTURES_API_SECRET")
 testnet = os.getenv("TEST_TESTNET", "true").lower() == "true"
-api_key = "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
-api_secret = "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
+# api_key = "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
+# api_secret = "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
+api_key = "c5CTLgB3lqajkoN7OD28RG5sLOsVLeK4o0Ca9kT64mV6F8mKMwFeAB7uBJFRL8pG"
+api_secret = "-----BEGIN PRIVATE KEY-----\nMC4CAQAwBQYDK2VwBCIEIMwY1k3A4awroEHcfCdrn/Azan+ZgJqGhlNep3/Bud3e\n-----END PRIVATE KEY-----" 
 testnet = True
 futures_api_key = "227719da8d8499e8d3461587d19f259c0b39c2b462a77c9b748a6119abd74401"
 futures_api_secret = "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
@@ -46,7 +48,7 @@ def setup_logging():
 
 @pytest.fixture(scope="function")
 def client():
-    return Client(api_key, api_secret, {"proxies": proxies}, testnet=testnet)
+    return Client(api_key, api_secret, {"proxies": proxies}, testnet=testnet, private_key=api_secret)
 
 
 @pytest.fixture(scope="function")
@@ -63,7 +65,7 @@ def futuresClient():
 
 @pytest.fixture(scope="function")
 def clientAsync():
-    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet)
+    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet, private_key=api_secret)
 
 
 @pytest.fixture(scope="function")
