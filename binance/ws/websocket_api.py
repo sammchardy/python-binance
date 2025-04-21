@@ -40,7 +40,7 @@ class WebsocketAPI(ReconnectingWebsocket):
         elif exception is not None:
             raise exception
         else:
-            self._log.warning(f"WS api receieved unknown message: {parsed_msg}")
+            return parsed_msg
 
     async def _ensure_ws_connection(self) -> None:
         """Ensure WebSocket connection is established and ready

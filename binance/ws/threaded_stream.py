@@ -18,6 +18,7 @@ class ThreadedApiManager(threading.Thread):
         session_params: Optional[Dict[str, Any]] = None,
         https_proxy: Optional[str] = None,
         _loop: Optional[asyncio.AbstractEventLoop] = None,
+        private_key: Optional[str] = None,
     ):
         """Initialise the BinanceSocketManager"""
         super().__init__()
@@ -34,6 +35,7 @@ class ThreadedApiManager(threading.Thread):
             "testnet": testnet,
             "session_params": session_params,
             "https_proxy": https_proxy,
+            "private_key": private_key,
         }
 
     async def _before_socket_listener_start(self): ...

@@ -1,4 +1,5 @@
 import asyncio
+import threading
 import time
 from enum import Enum
 from typing import Optional, List, Dict, Callable, Any
@@ -13,7 +14,9 @@ from binance.async_client import AsyncClient
 from binance.enums import FuturesType
 from binance.enums import ContractType
 from binance.helpers import get_loop
+import logging
 
+logger = logging.getLogger(__name__)
 
 class BinanceSocketType(str, Enum):
     SPOT = "Spot"
@@ -907,6 +910,21 @@ class BinanceSocketManager:
         stream_url = self.STREAM_URL
         if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
+        client = self._client
+        if client.PRIVATE_KEY and not client._is_rsa:
+            async def setup_ws():
+                try:
+                    res = await client.ws_logon()
+                    logger.debug("Logged on: %s", res)
+                    res = await client.ws_user_data_stream_subscribe()
+                    logger.debug("Subscribed to user data stream: %s", res)
+                except Exception as e:
+                    logger.error("Error setting up user data stream: %s", e)
+            self._client.loop.call_soon_threadsafe(
+                asyncio.create_task, setup_ws()
+            )
+            # TODO: Fix to wait for setup_ws to complete
+            return client.ws_api
         return self._get_account_socket("user", stream_url=stream_url)
 
     def futures_user_socket(self):
@@ -1211,6 +1229,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         https_proxy: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
         max_queue_size: int = 100,
+        private_key: Optional[str] = None,
     ):
         super().__init__(
             api_key,
@@ -1221,6 +1240,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             session_params,
             https_proxy,
             loop,
+            private_key,
         )
         self._bsm: Optional[BinanceSocketManager] = None
         self._max_queue_size = max_queue_size

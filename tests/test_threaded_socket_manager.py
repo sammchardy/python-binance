@@ -189,3 +189,27 @@ def test_no_internet_connection():
             logger.debug("Cleaning up test_no_internet_connection")
             twm.stop()
             time.sleep(2)
+
+def test_threaded_user_socket_manager(client):
+    logger.debug("Starting test_threaded_socket_manager")
+    global twm
+    twm = ThreadedWebsocketManager(api_key, api_secret, https_proxy=proxy, testnet=True, private_key=api_secret)
+
+    
+    def handle_socket_message(msg):
+        logger.debug("Received message: %s", msg)
+        twm.stop()
+
+    try:
+        logger.debug("Starting ThreadedWebsocketManager")
+        twm.start()
+        twm.start_user_socket(callback=handle_socket_message)
+        time.sleep(20)
+        client.create_order(
+            symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
+        twm.join()
+    finally:
+        logger.debug("Cleaning up test_threaded_socket_manager")
+        twm.stop()
+        time.sleep(2)

@@ -10898,6 +10898,55 @@ class Client(BaseClient):
     ############################################################
     # WebSocket API methods
     ############################################################
+    def ws_logon(self, **params):
+        """Authenticate WebSocket connection using the provided API key.
+        https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/authentication-requests
+        
+        :returns: WS response
+        .. code-block:: python
+            {
+                "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
+                "authorizedSince": 1649729878532,
+                "connectedSince": 1649729873021,
+                "returnRateLimits": false,
+                "serverTime": 1649729878630,
+                "userDataStream": false
+            }
+        """
+        return self._ws_api_request_sync("session.logon", True, params)
+    
+    def ws_user_data_stream_subscribe(self, **params):
+        """Subscribe to the User Data Stream in the current WebSocket connection.
+        https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-data-stream-requests#subscribe-to-user-data-stream-user_stream
+        
+        Note:
+        - This method requires an authenticated WebSocket connection using Ed25519 keys. Please use ws_logon first.
+        - To check the subscription status, use ws_session_status, see the userDataStream flag.
+        - User Data Stream events are available in both JSON and SBE sessions.
+        
+        :returns: WS response
+        .. code-block:: python
+            {
+                "id": "d3df8a21-98ea-4fe0-8f4e-0fcea5d418b7",
+                "status": 200,
+                "result": {}
+            }
+        """
+        return self._ws_api_request_sync("userDataStream.subscribe", True, params)
+
+    def ws_user_data_stream_unsubscribe(self, **params):
+        """Stop listening to the User Data Stream in the current WebSocket connection.
+        https://developers.binance.com/docs/binance-spot-api-docs/websocket-api/user-data-stream-requests#unsubscribe-from-user-data-stream-user_stream
+        
+        :returns: WS response
+        .. code-block:: python
+            {
+                "id": "d3df8a21-98ea-4fe0-8f4e-0fcea5d418b7",
+                "status": 200,
+                "result": {}
+            }
+        """
+        return self._ws_api_request_sync("userDataStream.unsubscribe", False, params)
 
     def ws_create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
