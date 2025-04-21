@@ -59,13 +59,19 @@ class ThreadedApiManager(threading.Thread):
                 except asyncio.TimeoutError:
                     ...
                     continue
+                except Exception as e:
+                    self._log.error(f"Error receiving message: {e}")
+                    msg = {
+                        "e": "error",
+                        "type": e.__class__.__name__,
+                        "m": f"{e}",
+                    }
+                if not msg:
+                    continue  # Handle both async and sync callbacks
+                if asyncio.iscoroutinefunction(callback):
+                    asyncio.create_task(callback(msg))
                 else:
-                    if not msg:
-                        continue  # Handle both async and sync callbacks
-                    if asyncio.iscoroutinefunction(callback):
-                        asyncio.create_task(callback(msg))
-                    else:
-                        callback(msg)
+                    callback(msg)
         del self._socket_running[path]
 
     def run(self):
