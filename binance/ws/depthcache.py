@@ -185,6 +185,7 @@ class BaseDepthCacheManager:
         return self
 
     async def __aexit__(self, *args, **kwargs):
+        self._log.debug(f"Exiting depth cache manager for {self._symbol}")
         await self._socket.__aexit__(*args, **kwargs)
 
     async def recv(self):
@@ -192,8 +193,9 @@ class BaseDepthCacheManager:
         while not dc:
             try:
                 res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
+                self._log.debug(f"Received message: {res}")
             except Exception as e:
-                self._log.warning(e)
+                self._log.warning(f"Exception recieving message: {e.__class__.__name__} (e) ")
             else:
                 dc = await self._depth_event(res)
         return dc
@@ -203,7 +205,7 @@ class BaseDepthCacheManager:
 
         :return:
         """
-
+        self._log.debug(f"Initialising depth cache for {self._symbol}")
         # initialise or clear depth cache
         self._depth_cache = DepthCache(self._symbol, conv_type=self._conv_type)
 
@@ -228,16 +230,15 @@ class BaseDepthCacheManager:
         :return:
 
         """
+        self._log.debug(f"Received depth event: {msg}")
 
         if not msg:
             return None
 
         if "e" in msg and msg["e"] == "error":
-            # close the socket
-            await self.close()
-
-            # notify the user by returning a None value
-            return None
+            # notify user by return msg with error
+            self._log.error(f"Error in depth event restarting cache: {msg}")
+            return msg
 
         return await self._process_depth_message(msg)
 
