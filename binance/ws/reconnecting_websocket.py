@@ -202,7 +202,6 @@ class ReconnectingWebsocket:
                             self.ws.recv(), timeout=self.TIMEOUT
                         )
                         res = self._handle_message(res)
-                        print(self._queue.qsize())
                         self._log.debug(f"Received message: {res}")
                         if res:
                             if self._queue.qsize() < self.max_queue_size:
@@ -216,6 +215,11 @@ class ReconnectingWebsocket:
                     # _no_message_received_reconnect
                 except asyncio.CancelledError as e:
                     self._log.debug(f"_read_loop cancelled error {e}")
+                    await self._queue.put({
+                        "e": "error",
+                        "type": f"{e.__class__.__name__}",
+                        "m": f"{e}",
+                    })
                     break
                 except (
                     asyncio.IncompleteReadError,
@@ -236,7 +240,7 @@ class ReconnectingWebsocket:
                     Exception,
                 ) as e:
                     # reports errors and break the loop
-                    self._log.error(f"Unknown exception ({e})")
+                    self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
                     await self._queue.put({
                         "e": "error",
                         "type": e.__class__.__name__,
