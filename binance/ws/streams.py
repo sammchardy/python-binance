@@ -25,7 +25,7 @@ class BinanceSocketType(str, Enum):
 
 class BinanceSocketManager:
     STREAM_URL = "wss://stream.binance.{}:9443/"
-    STREAM_TESTNET_URL = "wss://stream.testnet.binance.vision/ws"
+    STREAM_TESTNET_URL = "wss://stream.testnet.binance.vision/"
     FSTREAM_URL = "wss://fstream.binance.{}/"
     FSTREAM_TESTNET_URL = "wss://stream.binancefuture.com/"
     DSTREAM_URL = "wss://dstream.binance.{}/"
