@@ -193,18 +193,18 @@ async def test_futures_place_batch_order_and_cancel(futuresClientAsync):
         batchOrders=[
             {
                 "positionSide": positions[0]["positionSide"],
-                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "price": str(round(float(ticker["lastPrice"]) + 2, 0)),
                 "quantity": "0.1",
-                "side": "BUY",
+                "side": "SELL",
                 "symbol": ticker["symbol"],
                 "timeInForce": "GTC",
                 "type": "LIMIT",
             },
             {
-                "side": "BUY",
+                "side": "SELL",
                 "type": "LIMIT",
                 "positionSide": positions[0]["positionSide"],
-                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "price": str(round(float(ticker["lastPrice"]) + 2, 0)),
                 "quantity": "0.1",
                 "symbol": ticker["symbol"],
                 "timeInForce": "GTC",
