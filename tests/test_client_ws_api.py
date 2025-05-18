@@ -64,6 +64,22 @@ def test_ws_get_exchange_info(client):
     client.ws_get_exchange_info(symbol="BTCUSDT")
 
 
+def test_ws_logon(client):
+    res = client.ws_logon()
+    apiKey = res.get("apiKey")
+    assert apiKey
+
+def test_ws_user_data_stream_subscribe(client):
+    """Test subscribing to user data stream"""
+    client.ws_logon()
+    client.ws_user_data_stream_subscribe()
+
+def test_ws_user_data_stream_unsubscribe(client):
+    """Test unsubscribing from user data stream"""
+    client.ws_logon()
+    client.ws_user_data_stream_subscribe()
+    client.ws_user_data_stream_unsubscribe()
+
 def test_ws_time_microseconds():
     micro_client = Client(
         api_key,

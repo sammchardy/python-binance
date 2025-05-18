@@ -1,13 +1,14 @@
+import logging
 import sys
 from binance import BinanceSocketManager
 import pytest
+import asyncio
 
 from binance.async_client import AsyncClient
 from .conftest import proxy, api_key, api_secret, testnet
 
+pytestmark = [pytest.mark.asyncio, pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")]
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_stopped_on_aexit(clientAsync):
     bm = BinanceSocketManager(clientAsync)
     ts1 = bm.trade_socket("BNBBTC")
@@ -18,8 +19,6 @@ async def test_socket_stopped_on_aexit(clientAsync):
     assert ts2 is not ts1, "socket should be removed from _conn on exit"
     await clientAsync.close_connection()
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_stopped_on_aexit_futures(futuresClientAsync):
     bm = BinanceSocketManager(futuresClientAsync)
     ts1 = bm.futures_user_socket()
@@ -28,9 +27,6 @@ async def test_socket_stopped_on_aexit_futures(futuresClientAsync):
     assert bm._conns == {}, "socket should be removed from _conn on exit"
     await futuresClientAsync.close_connection()
 
-
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_spot_market_time_unit_microseconds():
     clientAsync = AsyncClient(
         api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MICROSECOND"
@@ -42,9 +38,6 @@ async def test_socket_spot_market_time_unit_microseconds():
         assert len(str(trade["E"])) >= 16, "Time should be in microseconds (16+ digits)"
     await clientAsync.close_connection()
 
-
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_spot_market_time_unit_milliseconds():
     clientAsync = AsyncClient(
         api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MILLISECOND"
@@ -56,9 +49,6 @@ async def test_socket_spot_market_time_unit_milliseconds():
         assert len(str(trade["E"])) == 13, "Time should be in milliseconds (13 digits)"
     await clientAsync.close_connection()
 
-
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_spot_user_data_time_unit_microseconds():
     clientAsync = AsyncClient(
         api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MICROSECOND"
@@ -73,9 +63,6 @@ async def test_socket_spot_user_data_time_unit_microseconds():
         assert len(str(trade["E"])) >= 16, "Time should be in microseconds (16+ digits)"
     await clientAsync.close_connection()
 
-
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
-@pytest.mark.asyncio
 async def test_socket_spot_user_data_time_unit_milliseconds():
     clientAsync = AsyncClient(
         api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MILLISECOND"
@@ -88,4 +75,22 @@ async def test_socket_spot_user_data_time_unit_milliseconds():
         )
         trade = await ts1.recv()
         assert len(str(trade["E"])) == 13, "Time should be in milliseconds (13 digits)"
+    await clientAsync.close_connection()
+
+async def test_ws_api_socket_spot_user_data_time_unit_milliseconds():
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    clientAsync = AsyncClient(
+        api_key, api_secret, https_proxy=proxy, testnet=testnet, time_unit="MILLISECOND", private_key=api_secret
+    )
+    bm = BinanceSocketManager(clientAsync)
+    ts1 = bm.user_socket()
+    await asyncio.sleep(5) # TODO: Fix to wait for setup_ws to complete and remove
+    async with ts1:
+        await clientAsync.create_order(
+            symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
+        )
+        trade = await ts1.recv()
+        event = trade.get("event")
+        assert event.get("e") == 'executionReport'
     await clientAsync.close_connection()

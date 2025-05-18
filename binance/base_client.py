@@ -36,7 +36,7 @@ class BaseClient:
     OPTIONS_TESTNET_URL = "https://testnet.binanceops.{}/eapi"
     PAPI_URL = "https://papi.binance.{}/papi"
     WS_API_URL = "wss://ws-api.binance.{}/ws-api/v3"
-    WS_API_TESTNET_URL = "wss://testnet.binance.vision/ws-api/v3"
+    WS_API_TESTNET_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
     WS_FUTURES_URL = "wss://ws-fapi.binance.{}/ws-fapi/v1"
     WS_FUTURES_TESTNET_URL = "wss://testnet.binancefuture.com/ws-fapi/v1"
     PUBLIC_API_VERSION = "v1"
@@ -405,6 +405,8 @@ class BaseClient:
             payload["params"] = self._sign_ws_params(
                 params, self._generate_ws_api_signature
             )
+        if method == "userDataStream.subscribe":
+            del payload["params"]
         return await self.ws_api.request(id, payload)
 
     def _ws_api_request_sync(self, method: str, signed: bool, params: dict):
