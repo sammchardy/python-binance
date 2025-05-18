@@ -90,20 +90,16 @@ def manager():
         api_key="test_key", api_secret="test_secret", https_proxy=proxy, testnet=True
     )
 
-@pytest_asyncio.fixture(autouse=True, scope="function")
-async def event_loop():
+@pytest.fixture(autouse=True, scope="function")
+def event_loop():
     """Create new event loop for each test"""
     loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
     yield loop
     # Clean up pending tasks
     pending = asyncio.all_tasks(loop)
     for task in pending:
         task.cancel()
-    # Wait for all tasks to complete
-    await asyncio.gather(*pending, return_exceptions=True)
-    # Run the loop one more time to ensure all cleanup is done
-    await asyncio.sleep(0)
+    loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
     loop.close()
 
 
