@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 from binance.client import Client
 from binance.async_client import AsyncClient
 import os
@@ -63,21 +64,27 @@ def futuresClient():
     )
 
 
-@pytest.fixture(scope="function")
-def clientAsync():
-    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet, private_key=api_secret)
+@pytest_asyncio.fixture(scope="function")
+async def clientAsync():
+    client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet, private_key=api_secret)
+    yield client
+    await client.close_connection()
 
 
-@pytest.fixture(scope="function")
-def futuresClientAsync():
-    return AsyncClient(
+@pytest_asyncio.fixture(scope="function")
+async def futuresClientAsync():
+    client = AsyncClient(
         futures_api_key, futures_api_secret, https_proxy=proxy, testnet=testnet
     )
+    yield client
+    await client.close_connection()
 
 
-@pytest.fixture(scope="function")
-def liveClientAsync():
-    return AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
+@pytest_asyncio.fixture(scope="function")
+async def liveClientAsync():
+    client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
+    yield client
+    await client.close_connection()
 
 @pytest.fixture(scope="function")
 def manager():
