@@ -192,12 +192,12 @@ def test_futures_create_get_edit_cancel_order(futuresClient):
     positions = futuresClient.futures_position_information(symbol="LTCUSDT")
     order = futuresClient.futures_create_order(
         symbol=ticker["symbol"],
-        side="BUY",
+        side="SELL",
         positionSide=positions[0]["positionSide"],
         type="LIMIT",
         timeInForce="GTC",
         quantity=0.1,
-        price=str(round(float(ticker["lastPrice"]) - 1)),
+        price=str(round(float(ticker["lastPrice"]) + 2)),
     )
     assert_contract_order(futuresClient, order)
     order = futuresClient.futures_modify_order(
@@ -238,18 +238,18 @@ def test_futures_place_batch_order_and_cancel(futuresClient):
         batchOrders=[
             {
                 "symbol": ticker["symbol"],
-                "side": "BUY",
+                "side": "SELL",
                 "positionSide": positions[0]["positionSide"],
                 "type": "LIMIT",
                 "timeInForce": "GTC",
                 "quantity": "0.1",
-                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "price": str(round(float(ticker["lastPrice"]) + 2, 0)),
             },
             {
                 "symbol": ticker["symbol"],
                 "type": "LIMIT",
-                "side": "BUY",
-                "price": str(round(float(ticker["lastPrice"]) - 1, 0)),
+                "side": "SELL",
+                "price": str(round(float(ticker["lastPrice"]) + 2, 0)),
                 "positionSide": positions[0]["positionSide"],
                 "timeInForce": "GTC",
                 "quantity": "0.1",

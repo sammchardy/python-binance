@@ -47,7 +47,7 @@ async def test_initialization():
         "tld": "com",
         "testnet": True,
         "session_params": {"trust_env": True},
-        "https_proxy": None
+        "https_proxy": None,
     }
 
 
