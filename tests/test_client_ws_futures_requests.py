@@ -27,12 +27,12 @@ def test_ws_futures_create_get_edit_cancel_order(futuresClient):
     positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
     order = futuresClient.ws_futures_create_order(
         symbol=ticker["symbol"],
-        side="BUY",
+        side="SELL",
         positionSide=positions[0]["positionSide"],
         type="LIMIT",
         timeInForce="GTC",
         quantity=0.1,
-        price=str(round(float(ticker["bidPrice"]) - 2)),
+        price=str(round(float(ticker["bidPrice"]) + 2)),
     )
     assert_contract_order(futuresClient, order)
     order = futuresClient.ws_futures_edit_order(

@@ -153,6 +153,31 @@ Websocket Errors
 ----------------
 
 If the underlying websocket is disconnected and is unable to reconnect None is returned for the depth_cache parameter.
+If the underlying websocket is disconnected an error msg is passed to the callback and to recv() containing the error message.
+In the case the BinanceWebsocketClosed is returned, the websocket will attempt to reconnect 5 times before returning a BinanceUnableToConnect error.
+Example:
+
+.. code:: python
+
+            depth_cache = await dcm.recv()
+            if isinstance(depth_cache, dict) and depth_cache.get('e') == 'error':
+                logger.error(f"Received depth cache error in callback: {depth_cache}")
+                if type == 'BinanceWebsocketClosed':
+                    # ignore as attempts to reconnect
+                    continue
+                break
+
+.. code:: python
+            def handle_depth_cache(depth_cache):
+                if isinstance(depth_cache, dict) and depth_cache.get('e') == 'error':
+                    logger.error(f"Received depth cache error in callback: {depth_cache}")
+                    type = depth_cache.get('type')
+                    if type == 'BinanceWebsocketClosed':
+                        # Automatically attempts to reconnect
+                        return
+                    dcm.stop()
+                    return
+                # handle non error cases here
 
 Examples
 --------

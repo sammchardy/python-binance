@@ -25,7 +25,7 @@ class BinanceSocketType(str, Enum):
 
 class BinanceSocketManager:
     STREAM_URL = "wss://stream.binance.{}:9443/"
-    STREAM_TESTNET_URL = "wss://testnet.binance.vision/"
+    STREAM_TESTNET_URL = "wss://stream.testnet.binance.vision/"
     FSTREAM_URL = "wss://fstream.binance.{}/"
     FSTREAM_TESTNET_URL = "wss://stream.binancefuture.com/"
     DSTREAM_URL = "wss://dstream.binance.{}/"
@@ -36,12 +36,19 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_10 = "10"
     WEBSOCKET_DEPTH_20 = "20"
 
-    def __init__(self, client: AsyncClient, user_timeout=KEEPALIVE_TIMEOUT):
+    def __init__(
+        self, 
+        client: AsyncClient, 
+        user_timeout=KEEPALIVE_TIMEOUT,
+        max_queue_size: int = 100,
+    ):
         """Initialise the BinanceSocketManager
 
         :param client: Binance API client
         :type client: binance.AsyncClient
-
+        :param user_timeout: Timeout for user socket in seconds
+        :param max_queue_size: Max size of the websocket queue, defaults to 100
+        :type max_queue_size: int
         """
         self.STREAM_URL = self.STREAM_URL.format(client.tld)
         self.FSTREAM_URL = self.FSTREAM_URL.format(client.tld)
@@ -52,8 +59,8 @@ class BinanceSocketManager:
         self._loop = get_loop()
         self._client = client
         self._user_timeout = user_timeout
-
         self.testnet = self._client.testnet
+        self._max_queue_size = max_queue_size
         self.ws_kwargs = {}
 
     def _get_stream_url(self, stream_url: Optional[str] = None):
@@ -84,6 +91,7 @@ class BinanceSocketManager:
                 exit_coro=lambda p: self._exit_socket(f"{socket_type}_{p}"),
                 is_binary=is_binary,
                 https_proxy=self._client.https_proxy,
+                max_queue_size=self._max_queue_size,
                 **self.ws_kwargs,
             )
 
@@ -1202,6 +1210,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         session_params: Optional[Dict[str, Any]] = None,
         https_proxy: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
+        max_queue_size: int = 100,
     ):
         super().__init__(
             api_key,
@@ -1214,10 +1223,14 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             loop,
         )
         self._bsm: Optional[BinanceSocketManager] = None
+        self._max_queue_size = max_queue_size
 
     async def _before_socket_listener_start(self):
         assert self._client
-        self._bsm = BinanceSocketManager(client=self._client)
+        self._bsm = BinanceSocketManager(
+            client=self._client,
+            max_queue_size=self._max_queue_size
+        )
 
     def _start_async_socket(
         self,
@@ -1226,7 +1239,10 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         params: Dict[str, Any],
         path: Optional[str] = None,
     ) -> str:
+        start_time = time.time()
         while not self._bsm:
+            if time.time() - start_time > 5:
+                raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
         socket_path: str = path or socket._path  # noqa

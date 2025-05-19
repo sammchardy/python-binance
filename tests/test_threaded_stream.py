@@ -1,5 +1,7 @@
 import pytest
 import asyncio
+
+import websockets
 from binance.ws.threaded_stream import ThreadedApiManager
 from unittest.mock import Mock
 
@@ -45,7 +47,7 @@ async def test_initialization():
         "tld": "com",
         "testnet": True,
         "session_params": {"trust_env": True},
-        "https_proxy": None
+        "https_proxy": None,
     }
 
 
