@@ -283,7 +283,7 @@ class AsyncClient(BaseClient):
     get_products.__doc__ = Client.get_products.__doc__
 
     async def get_exchange_info(self) -> Dict:
-        return await self._get("exchangeInfo", version=self.PRIVATE_API_VERSION)
+        return await self._get("exchangeInfo")
 
     get_exchange_info.__doc__ = Client.get_exchange_info.__doc__
 
@@ -301,12 +301,12 @@ class AsyncClient(BaseClient):
     # General Endpoints
 
     async def ping(self) -> Dict:
-        return await self._get("ping", version=self.PRIVATE_API_VERSION)
+        return await self._get("ping")
 
     ping.__doc__ = Client.ping.__doc__
 
     async def get_server_time(self) -> Dict:
-        return await self._get("time", version=self.PRIVATE_API_VERSION)
+        return await self._get("time")
 
     get_server_time.__doc__ = Client.get_server_time.__doc__
 
@@ -319,7 +319,7 @@ class AsyncClient(BaseClient):
         if symbol:
             params["symbol"] = symbol
         response = await self._get(
-            "ticker/price", version=self.PRIVATE_API_VERSION, data=params
+            "ticker/price", data=params
         )
         if isinstance(response, list) and all(isinstance(item, dict) for item in response):
             return response
@@ -334,13 +334,13 @@ class AsyncClient(BaseClient):
         elif "symbols" in params:
             data["symbols"] = params["symbols"]
         return await self._get(
-            "ticker/bookTicker", data=data, version=self.PRIVATE_API_VERSION
+            "ticker/bookTicker", data=data
         )
 
     get_orderbook_tickers.__doc__ = Client.get_orderbook_tickers.__doc__
 
     async def get_order_book(self, **params) -> Dict:
-        return await self._get("depth", data=params, version=self.PRIVATE_API_VERSION)
+        return await self._get("depth", data=params)
 
     get_order_book.__doc__ = Client.get_order_book.__doc__
 
@@ -351,14 +351,14 @@ class AsyncClient(BaseClient):
 
     async def get_historical_trades(self, **params) -> Dict:
         return await self._get(
-            "historicalTrades", data=params, version=self.PRIVATE_API_VERSION
+            "historicalTrades", data=params
         )
 
     get_historical_trades.__doc__ = Client.get_historical_trades.__doc__
 
     async def get_aggregate_trades(self, **params) -> Dict:
         return await self._get(
-            "aggTrades", data=params, version=self.PRIVATE_API_VERSION
+            "aggTrades", data=params
         )
 
     get_aggregate_trades.__doc__ = Client.get_aggregate_trades.__doc__
@@ -419,12 +419,12 @@ class AsyncClient(BaseClient):
     aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
 
     async def get_ui_klines(self, **params) -> Dict:
-        return await self._get("uiKlines", data=params, version=self.PRIVATE_API_VERSION)
+        return await self._get("uiKlines", data=params)
 
     get_ui_klines.__doc__ = Client.get_ui_klines.__doc__
 
     async def get_klines(self, **params) -> Dict:
-        return await self._get("klines", data=params, version=self.PRIVATE_API_VERSION)
+        return await self._get("klines", data=params)
 
     get_klines.__doc__ = Client.get_klines.__doc__
 
@@ -655,33 +655,33 @@ class AsyncClient(BaseClient):
 
     async def get_avg_price(self, **params):
         return await self._get(
-            "avgPrice", data=params, version=self.PRIVATE_API_VERSION
+            "avgPrice", data=params
         )
 
     get_avg_price.__doc__ = Client.get_avg_price.__doc__
 
     async def get_ticker(self, **params):
         return await self._get(
-            "ticker/24hr", data=params, version=self.PRIVATE_API_VERSION
+            "ticker/24hr", data=params
         )
 
     get_ticker.__doc__ = Client.get_ticker.__doc__
 
     async def get_symbol_ticker(self, **params):
         return await self._get(
-            "ticker/price", data=params, version=self.PRIVATE_API_VERSION
+            "ticker/price", data=params
         )
 
     get_symbol_ticker.__doc__ = Client.get_symbol_ticker.__doc__
 
     async def get_symbol_ticker_window(self, **params):
-        return await self._get("ticker", data=params, version=self.PRIVATE_API_VERSION)
+        return await self._get("ticker", data=params)
 
     get_symbol_ticker_window.__doc__ = Client.get_symbol_ticker_window.__doc__
 
     async def get_orderbook_ticker(self, **params):
         return await self._get(
-            "ticker/bookTicker", data=params, version=self.PRIVATE_API_VERSION
+            "ticker/bookTicker", data=params
         )
 
     get_orderbook_ticker.__doc__ = Client.get_orderbook_ticker.__doc__
