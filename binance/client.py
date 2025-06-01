@@ -1075,7 +1075,7 @@ class Client(BaseClient):
                 "price": "9.35751834"
             }
         """
-        return self._get("avgPrice")
+        return self._get("avgPrice", data=params)
 
     def get_ticker(self, **params):
         """24 hour price change statistics.
@@ -1136,7 +1136,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ticker/24hr")
+        return self._get("ticker/24hr", data=params)
 
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
