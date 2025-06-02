@@ -75,11 +75,15 @@ class BinanceWebsocketUnableToConnect(Exception):
 
 class BinanceWebsocketQueueOverflow(Exception):
     """Raised when the websocket message queue exceeds its maximum size."""
+
     pass
+
 
 class BinanceWebsocketClosed(Exception):
     """Raised when websocket connection is closed."""
+
     pass
+
 
 class NotImplementedException(Exception):
     def __init__(self, value):
@@ -87,5 +91,4 @@ class NotImplementedException(Exception):
         super().__init__(message)
 
 
-class UnknownDateFormat(Exception):
-    ...
+class UnknownDateFormat(Exception): ...

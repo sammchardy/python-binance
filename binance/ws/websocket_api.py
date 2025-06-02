@@ -30,7 +30,9 @@ class WebsocketAPI(ReconnectingWebsocket):
         if "status" in parsed_msg:
             if parsed_msg["status"] != 200:
                 exception = BinanceAPIException(
-                    parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
+                    parsed_msg,
+                    parsed_msg["status"],
+                    self.json_dumps(parsed_msg["error"]),
                 )
         if req_id is not None and req_id in self._responses:
             if exception is not None:
