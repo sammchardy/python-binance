@@ -57,8 +57,10 @@ def test_get_aggregate_trades(client):
 def test_get_klines(client):
     client.get_klines(symbol="BTCUSDT", interval="1d")
 
+
 def test_get_ui_klines(client):
     client.get_ui_klines(symbol="BTCUSDT", interval="1d")
+
 
 def test_get_avg_price(client):
     client.get_avg_price(symbol="BTCUSDT")
@@ -220,33 +222,37 @@ def test_time_unit_milloseconds():
 
 def test_handle_response(client):
     # Test successful JSON response
-    mock_response = type('Response', (), {
-        'status_code': 200,
-        'text': '{"key": "value"}',
-        'json': lambda: {"key": "value"}
-    })
+    mock_response = type(
+        "Response",
+        (),
+        {
+            "status_code": 200,
+            "text": '{"key": "value"}',
+            "json": lambda: {"key": "value"},
+        },
+    )
     assert client._handle_response(mock_response) == {"key": "value"}
 
     # Test empty response
-    mock_empty_response = type('Response', (), {
-        'status_code': 200,
-        'text': ''
-    })
+    mock_empty_response = type("Response", (), {"status_code": 200, "text": ""})
     assert client._handle_response(mock_empty_response) == {}
 
     # Test invalid JSON response
-    mock_invalid_response = type('Response', (), {
-        'status_code': 200,
-        'text': 'invalid json',
-        'json': lambda: exec('raise ValueError()')
-    })
+    mock_invalid_response = type(
+        "Response",
+        (),
+        {
+            "status_code": 200,
+            "text": "invalid json",
+            "json": lambda: exec("raise ValueError()"),
+        },
+    )
     with pytest.raises(BinanceRequestException):
         client._handle_response(mock_invalid_response)
 
     # Test error status code
-    mock_error_response = type('Response', (), {
-        'status_code': 400,
-        'text': 'error message'
-    })
+    mock_error_response = type(
+        "Response", (), {"status_code": 400, "text": "error message"}
+    )
     with pytest.raises(BinanceAPIException):
         client._handle_response(mock_error_response)

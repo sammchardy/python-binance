@@ -26,6 +26,7 @@ except ImportError:
         async def __anext__(self):
             raise StopAsyncIteration
 
+
 @pytest.mark.asyncio
 async def test_initialization():
     """Test that manager initializes with correct parameters"""
@@ -63,6 +64,7 @@ async def test_start_and_stop_socket(manager):
 
     # Track number of recv calls
     recv_count = 0
+
     async def controlled_recv():
         nonlocal recv_count
         recv_count += 1

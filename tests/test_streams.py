@@ -18,6 +18,7 @@ async def test_socket_stopped_on_aexit(clientAsync):
     assert ts2 is not ts1, "socket should be removed from _conn on exit"
     await clientAsync.close_connection()
 
+
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_socket_stopped_on_aexit_futures(futuresClientAsync):

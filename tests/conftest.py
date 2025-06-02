@@ -84,11 +84,13 @@ async def liveClientAsync():
     yield client
     await client.close_connection()
 
+
 @pytest.fixture(scope="function")
 def manager():
     return ThreadedWebsocketManager(
         api_key="test_key", api_secret="test_secret", https_proxy=proxy, testnet=True
     )
+
 
 @pytest.fixture(autouse=True, scope="function")
 def event_loop():
