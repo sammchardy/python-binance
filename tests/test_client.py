@@ -1,13 +1,7 @@
 import pytest
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
-from .conftest import (
-    proxies,
-    api_key,
-    api_secret,
-    testnet,
-    call_method_and_assert_uri_contains,
-)
+from .conftest import proxies, api_key, api_secret, testnet, call_method_and_assert_uri_contains
 
 
 def test_client_initialization(client):
@@ -29,7 +23,8 @@ def test_get_symbol_info(client):
 
 
 def test_ping(client):
-    call_method_and_assert_uri_contains(client, "ping", "/v3/")
+    call_method_and_assert_uri_contains(client, 'ping', '/v3/')
+
 
 
 def test_get_server_time(client):
@@ -63,10 +58,8 @@ def test_get_aggregate_trades(client):
 def test_get_klines(client):
     client.get_klines(symbol="BTCUSDT", interval="1d")
 
-
 def test_get_ui_klines(client):
     client.get_ui_klines(symbol="BTCUSDT", interval="1d")
-
 
 def test_get_avg_price(client):
     client.get_avg_price(symbol="BTCUSDT")
@@ -81,9 +74,7 @@ def test_get_symbol_ticker(client):
 
 
 def test_get_orderbook_ticker(client):
-    call_method_and_assert_uri_contains(
-        client, "get_orderbook_ticker", "/v3/", symbol="BTCUSDT"
-    )
+    call_method_and_assert_uri_contains(client, 'get_orderbook_ticker', '/v3/', symbol="BTCUSDT")
 
 
 def test_get_account(client):
@@ -230,37 +221,33 @@ def test_time_unit_milloseconds():
 
 def test_handle_response(client):
     # Test successful JSON response
-    mock_response = type(
-        "Response",
-        (),
-        {
-            "status_code": 200,
-            "text": '{"key": "value"}',
-            "json": lambda: {"key": "value"},
-        },
-    )
+    mock_response = type('Response', (), {
+        'status_code': 200,
+        'text': '{"key": "value"}',
+        'json': lambda: {"key": "value"}
+    })
     assert client._handle_response(mock_response) == {"key": "value"}
 
     # Test empty response
-    mock_empty_response = type("Response", (), {"status_code": 200, "text": ""})
+    mock_empty_response = type('Response', (), {
+        'status_code': 200,
+        'text': ''
+    })
     assert client._handle_response(mock_empty_response) == {}
 
     # Test invalid JSON response
-    mock_invalid_response = type(
-        "Response",
-        (),
-        {
-            "status_code": 200,
-            "text": "invalid json",
-            "json": lambda: exec("raise ValueError()"),
-        },
-    )
+    mock_invalid_response = type('Response', (), {
+        'status_code': 200,
+        'text': 'invalid json',
+        'json': lambda: exec('raise ValueError()')
+    })
     with pytest.raises(BinanceRequestException):
         client._handle_response(mock_invalid_response)
 
     # Test error status code
-    mock_error_response = type(
-        "Response", (), {"status_code": 400, "text": "error message"}
-    )
+    mock_error_response = type('Response', (), {
+        'status_code': 400,
+        'text': 'error message'
+    })
     with pytest.raises(BinanceAPIException):
         client._handle_response(mock_error_response)
