@@ -23,10 +23,12 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
-    - name: Install Ruff
-      run: pip install ruff
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r test-requirements.txt
     - name: Lint code with Ruff
-      run: ruff check --output-format=github --target-version=py39 .
+      run: ruff check --output-format=github .
     - name: Check code formatting with Ruff
       run: ruff format --check .
       continue-on-error: true
