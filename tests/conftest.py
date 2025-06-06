@@ -162,3 +162,42 @@ def pytest_collection_modifyitems(config, items):
             item.add_marker(skip_portfolio)
         if "gift_card" in item.keywords and not config.getoption("--run-gift-card"):
             item.add_marker(skip_gift_card)
+
+
+def call_method_and_assert_uri_contains(
+    client, method_name, expected_string, *args, **kwargs
+):
+    """
+    Helper function to test that a client method calls the expected URI.
+
+    Args:
+        client: The client instance to test
+        method_name: Name of the method to call (as string)
+        expected_string: String that should be present in the URI
+        *args, **kwargs: Arguments to pass to the client method
+
+    Returns:
+        The result of the method call
+    """
+    from unittest.mock import patch
+
+    with patch.object(client, "_request", wraps=client._request) as mock_request:
+        # Get the method from the client and call it
+        method = getattr(client, method_name)
+        result = method(*args, **kwargs)
+
+        # Assert that _request was called
+        mock_request.assert_called_once()
+
+        # Get the arguments passed to _request
+        args_passed, kwargs_passed = mock_request.call_args
+
+        # The second argument is the URI
+        uri = args_passed[1]
+
+        # Assert that the URL contains the expected string
+        assert expected_string in uri, (
+            f"Expected '{expected_string}' in URL, but got: {uri}"
+        )
+
+        return result

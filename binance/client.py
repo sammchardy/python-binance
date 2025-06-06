@@ -278,7 +278,7 @@ class Client(BaseClient):
 
         """
 
-        return self._get("exchangeInfo", version=self.PRIVATE_API_VERSION)
+        return self._get("exchangeInfo")
 
     def get_symbol_info(self, symbol) -> Optional[Dict]:
         """Return information about a symbol
@@ -345,7 +345,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ping", version=self.PRIVATE_API_VERSION)
+        return self._get("ping")
 
     def get_server_time(self) -> Dict:
         """Test connectivity to the Rest API and get the current server time.
@@ -363,14 +363,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("time", version=self.PRIVATE_API_VERSION)
+        return self._get("time")
 
     # Market Data Endpoints
 
     def get_all_tickers(self) -> List[Dict[str, str]]:
         """Latest price for all symbols.
 
-        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker
 
         :returns: List of market tickers
 
@@ -390,7 +390,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        response = self._get("ticker/price", version=self.PRIVATE_API_VERSION)
+        response = self._get("ticker/price")
         if isinstance(response, list) and all(
             isinstance(item, dict) for item in response
         ):
@@ -400,7 +400,7 @@ class Client(BaseClient):
     def get_orderbook_tickers(self, **params) -> Dict:
         """Best price/qty on the order book for all symbols.
 
-        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker
 
         :param symbol: optional
         :type symbol: str
@@ -436,14 +436,12 @@ class Client(BaseClient):
             data["symbol"] = params["symbol"]
         elif "symbols" in params:
             data["symbols"] = params["symbols"]
-        return self._get(
-            "ticker/bookTicker", data=data, version=self.PRIVATE_API_VERSION
-        )
+        return self._get("ticker/bookTicker", data=data)
 
     def get_order_book(self, **params) -> Dict:
         """Get the Order Book for the market
 
-        https://binance-docs.github.io/apidocs/spot/en/#order-book
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#order-book
 
         :param symbol: required
         :type symbol: str
@@ -475,12 +473,12 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("depth", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("depth", data=params)
 
     def get_recent_trades(self, **params) -> Dict:
         """Get recent trades (up to last 500).
 
-        https://binance-docs.github.io/apidocs/spot/en/#recent-trades-list
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#recent-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -510,7 +508,7 @@ class Client(BaseClient):
     def get_historical_trades(self, **params) -> Dict:
         """Get older trades.
 
-        https://binance-docs.github.io/apidocs/spot/en/#old-trade-lookup
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#old-trade-lookup
 
         :param symbol: required
         :type symbol: str
@@ -537,15 +535,13 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get(
-            "historicalTrades", data=params, version=self.PRIVATE_API_VERSION
-        )
+        return self._get("historicalTrades", data=params)
 
     def get_aggregate_trades(self, **params) -> Dict:
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
 
-        https://binance-docs.github.io/apidocs/spot/en/#compressed-aggregate-trades-list
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
 
         :param symbol: required
         :type symbol: str
@@ -578,7 +574,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("aggTrades", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("aggTrades", data=params)
 
     def aggregate_trade_iter(self, symbol: str, start_str=None, last_id=None):
         """Iterate over aggregate trade data from (start_time or last_id) to
@@ -703,12 +699,12 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("uiKlines", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("uiKlines", data=params)
 
     def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#kline-candlestick-data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
 
         :param symbol: required
         :type symbol: str
@@ -745,7 +741,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("klines", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("klines", data=params)
 
     def _klines(
         self, klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT, **params
@@ -1065,7 +1061,7 @@ class Client(BaseClient):
     def get_avg_price(self, **params):
         """Current average price for a symbol.
 
-        https://binance-docs.github.io/apidocs/spot/en/#current-average-price
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#current-average-price
 
         :param symbol:
         :type symbol: str
@@ -1079,12 +1075,12 @@ class Client(BaseClient):
                 "price": "9.35751834"
             }
         """
-        return self._get("avgPrice", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("avgPrice", data=params)
 
     def get_ticker(self, **params):
         """24 hour price change statistics.
 
-        https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#24hr-ticker-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1140,7 +1136,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ticker/24hr", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("ticker/24hr", data=params)
 
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
@@ -1177,12 +1173,12 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ticker/price", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("ticker/price", data=params)
 
     def get_symbol_ticker_window(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/spot/en/#rolling-window-price-change-statistics
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#rolling-window-price-change-statistics
 
         :param symbol:
         :type symbol: str
@@ -1214,7 +1210,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get("ticker", data=params, version=self.PRIVATE_API_VERSION)
+        return self._get("ticker", data=params)
 
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
@@ -1260,9 +1256,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        return self._get(
-            "ticker/bookTicker", data=params, version=self.PRIVATE_API_VERSION
-        )
+        return self._get("ticker/bookTicker", data=params)
 
     # Account Endpoints
 
@@ -3134,9 +3128,7 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
-        res = self._post(
-            "userDataStream", False, data={}, version=self.PRIVATE_API_VERSION
-        )
+        res = self._post("userDataStream", False, data={})
         return res["listenKey"]
 
     def stream_keepalive(self, listenKey):
@@ -3157,9 +3149,7 @@ class Client(BaseClient):
 
         """
         params = {"listenKey": listenKey}
-        return self._put(
-            "userDataStream", False, data=params, version=self.PRIVATE_API_VERSION
-        )
+        return self._put("userDataStream", False, data=params)
 
     def stream_close(self, listenKey):
         """Close out a user data stream.
