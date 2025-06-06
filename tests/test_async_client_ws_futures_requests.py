@@ -54,9 +54,9 @@ async def test_ws_futures_get_order_book_ticker(futuresClientAsync):
 
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClientAsync):
-    if 'orjson' not in sys.modules:
+    if "orjson" not in sys.modules:
         raise ImportError("orjson is not available")
-    
+
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
     positions = await futuresClientAsync.ws_futures_v2_account_position(
         symbol="LTCUSDT"
@@ -87,10 +87,15 @@ async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClient
         orderid=order["orderId"], symbol=order["symbol"]
     )
 
+
 @pytest.mark.asyncio()
-async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresClientAsync):
-    with patch.dict('sys.modules', {'orjson': None}):
-        ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+async def test_ws_futures_create_get_edit_cancel_order_without_orjson(
+    futuresClientAsync,
+):
+    with patch.dict("sys.modules", {"orjson": None}):
+        ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(
+            symbol="LTCUSDT"
+        )
         positions = await futuresClientAsync.ws_futures_v2_account_position(
             symbol="LTCUSDT"
         )

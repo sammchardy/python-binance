@@ -40,7 +40,9 @@ class ThreadedApiManager(threading.Thread):
 
     async def socket_listener(self):
         try:
-            self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
+            self._client = await AsyncClient.create(
+                loop=self._loop, **self._client_params
+            )
             await self._before_socket_listener_start()
         except Exception as e:
             self._log.error(f"Failed to create client: {e}")
