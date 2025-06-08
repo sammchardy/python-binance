@@ -216,22 +216,60 @@ can do this.
 Websocket Errors
 ----------------
 
-If an error occurs, a message is sent to the callback to indicate this. The format is
+If an error occurs, a message is sent to the callback to indicate this. The format is:
 
 .. code:: python
 
     {
         'e': 'error',
-        'type': 'BinanceWebsocketUnableToConnect',
-        'm': 'Max reconnect retries reached'
+        'type': '<ErrorType>',
+        'm': '<Error message>'
     }
 
-    # check for it like so
+Where:
+- `'e'`: Always `'error'` for error messages.
+- `'type'`: The type of error encountered (see table below).
+- `'m'`: A human-readable error message.
+
+**Possible Error Types:**
+
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| Type                          | Description                                                  | Typical Action                |
++===============================+==============================================================+===============================+
+| BinanceWebsocketUnableToConnect| The websocket could not connect after maximum retries.        | Check network, restart socket |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| BinanceWebsocketClosed         | The websocket connection was closed. The system will attempt | Usually auto-reconnects       |
+|                               | to reconnect automatically.                                  |                               |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| BinanceWebsocketQueueOverflow  | The internal message queue exceeded its maximum size         | Process messages faster, or   |
+|                               | (default 100).                                               | increase queue size           |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| CancelledError                 | The websocket task was cancelled (e.g., on shutdown).        | Usually safe to ignore        |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| IncompleteReadError            | The websocket connection was interrupted during a read.      | Will attempt to reconnect     |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| gaierror                       | Network address-related error (e.g., DNS failure).           | Check network                 |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| ConnectionClosedError          | The websocket connection was closed unexpectedly.            | Will attempt to reconnect     |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+| *Other Exception Types*        | Any other unexpected error.                                  | Check error message           |
++-------------------------------+--------------------------------------------------------------+-------------------------------+
+
+**Example error handling in your callback:**
+
+.. code:: python
+
     def process_message(msg):
-        if msg['e'] == 'error':
-            # close and restart the socket
+        if msg.get('e') == 'error':
+            print(f"WebSocket error: {msg.get('type')} - {msg.get('m')}")
+            # Optionally close and restart the socket, or handle as needed
         else:
             # process message normally
+
+**Notes:**
+- Most connection-related errors will trigger automatic reconnection attempts up to 5 times.
+- If the queue overflows, consider increasing `max_queue_size` or processing messages more quickly.
+- For persistent errors, check your network connection and API credentials.
 
 Websocket Examples
 ----------------
