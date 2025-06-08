@@ -34,7 +34,7 @@ jobs:
   build:
     needs: lint
     runs-on: ubuntu-22.04
-    timeout-minutes: 20
+    timeout-minutes: 40
     env:
       PROXY: "http://51.83.140.52:16301"
       TEST_TESTNET: "true"
