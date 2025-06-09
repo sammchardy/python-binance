@@ -3258,7 +3258,7 @@ class Client(BaseClient):
     def get_margin_account(self, **params):
         """Query cross-margin account details
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-account-details-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Account-Details
 
         :returns: API response
 
@@ -3316,7 +3316,7 @@ class Client(BaseClient):
     def get_isolated_margin_account(self, **params):
         """Query isolated margin account details
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Account-Info
 
         :param symbols: optional up to 5 margin pairs as a comma separated string
         :type asset: str
@@ -3429,7 +3429,7 @@ class Client(BaseClient):
     def enable_isolated_margin_account(self, **params):
         """Enable isolated margin account for a specific symbol.
 
-        https://binance-docs.github.io/apidocs/spot/en/#enable-isolated-margin-account-trade
+        https://developers.binance.com/docs/margin_trading/account/Enable-Isolated-Margin-Account
 
         :param symbol:
         :type asset: str
@@ -3453,7 +3453,7 @@ class Client(BaseClient):
         """Disable isolated margin account for a specific symbol. Each trading pair can only
         be deactivated once every 24 hours.
 
-        https://binance-docs.github.io/apidocs/spot/en/#disable-isolated-margin-account-trade
+        https://developers.binance.com/docs/margin_trading/account/Disable-Isolated-Margin-Account
 
         :param symbol:
         :type asset: str
@@ -3475,7 +3475,7 @@ class Client(BaseClient):
     def get_enabled_isolated_margin_account_limit(self, **params):
         """Query enabled isolated margin account limit.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-enabled-isolated-margin-account-limit-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit
 
         :returns: API response
 
@@ -3625,7 +3625,7 @@ class Client(BaseClient):
 
     def get_cross_margin_collateral_ratio(self, **params):
         """
-        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-collateral-ratio-market_data
+        https://developers.binance.com/docs/margin_trading/market-data
 
         :param none
 
@@ -3677,7 +3677,7 @@ class Client(BaseClient):
     def get_small_liability_exchange_assets(self, **params):
         """Query the coins which can be small liability exchange
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-coin-list-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-Coin-List
 
         :returns: API response
 
@@ -3700,7 +3700,7 @@ class Client(BaseClient):
     def exchange_small_liability_assets(self, **params):
         """Cross Margin Small Liability Exchange
 
-        https://binance-docs.github.io/apidocs/spot/en/#small-liability-exchange-margin
+        https://developers.binance.com/docs/margin_trading/trade/Small-Liability-Exchange
 
         :param assetNames: The assets list of small liability exchange
         :type assetNames: array
@@ -3718,7 +3718,7 @@ class Client(BaseClient):
     def get_small_liability_exchange_history(self, **params):
         """Get Small liability Exchange History
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-history-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-History
 
         :param current: Currently querying page. Start from 1. Default:1
         :type current: int
@@ -3754,7 +3754,7 @@ class Client(BaseClient):
     def get_future_hourly_interest_rate(self, **params):
         """Get user the next hourly estimate interest
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-a-future-hourly-interest-rate-user_data
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay
 
         :param assets: List of assets, separated by commas, up to 20
         :type assets: str
@@ -3783,7 +3783,7 @@ class Client(BaseClient):
     def get_margin_capital_flow(self, **params):
         """Get cross or isolated margin capital flow
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-cross-or-isolated-margin-capital-flow-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Isolated-Margin-Capital-Flow
 
         :param asset: optional
         :type asset: str
@@ -3892,7 +3892,7 @@ class Client(BaseClient):
     def get_margin_all_assets(self, **params):
         """Get All Margin Assets (MARKET_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-margin-assets-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Margin-Assets
 
         .. code:: python
 
@@ -3929,7 +3929,7 @@ class Client(BaseClient):
     def get_margin_all_pairs(self, **params):
         """Get All Cross Margin Pairs (MARKET_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-cross-margin-pairs-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Cross-Margin-Pairs
 
         .. code:: python
 
@@ -4032,7 +4032,7 @@ class Client(BaseClient):
     def get_all_isolated_margin_symbols(self, **params):
         """Query isolated margin symbol info for all pairs
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-isolated-margin-symbol-user_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Isolated-Margin-Symbol
 
         .. code:: python
 
@@ -4072,7 +4072,7 @@ class Client(BaseClient):
     def get_isolated_margin_fee_data(self, **params):
         """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Fee-Data
 
         :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
         :type vipLevel: int
@@ -4109,7 +4109,7 @@ class Client(BaseClient):
     def get_isolated_margin_tier_data(self, **params):
         """Get isolated margin tier data collection with any tier as https://www.binance.com/en/margin-data
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-tier-data-user_data
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data
 
         :param symbol: required
         :type symbol: str
@@ -4141,7 +4141,7 @@ class Client(BaseClient):
     def margin_manual_liquidation(self, **params):
         """
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-manual-liquidation-margin
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Manual-Liquidation
 
 
 
@@ -4197,7 +4197,7 @@ class Client(BaseClient):
     def get_bnb_burn_spot_margin(self, **params):
         """Get BNB Burn Status
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
+        https://developers.binance.com/docs/margin_trading/account/Get-BNB-Burn-Status
 
         .. code:: python
 
@@ -4221,7 +4221,7 @@ class Client(BaseClient):
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-priceindex-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Margin-PriceIndex
 
         :param symbol: name of the symbol pair
         :type symbol: str
@@ -4523,7 +4523,7 @@ class Client(BaseClient):
     def create_margin_order(self, **params):
         """Post a new order for margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-order-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-Order
 
         :param symbol: required
         :type symbol: str
@@ -4650,7 +4650,7 @@ class Client(BaseClient):
 
         Either orderId or origClientOrderId must be sent.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-order-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-Order
 
         :param symbol: required
         :type symbol: str
@@ -4691,6 +4691,21 @@ class Client(BaseClient):
         )
 
     def cancel_all_open_margin_orders(self, **params):
+        """
+        Cancels all active orders on a symbol for margin account.
+
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-All-Open-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
         return self._request_margin_api(
             "delete", "margin/openOrders", signed=True, data=params
         )
@@ -4698,7 +4713,7 @@ class Client(BaseClient):
     def set_margin_max_leverage(self, **params):
         """Adjust cross margin max leverage
 
-        https://binance-docs.github.io/apidocs/spot/en/#adjust-cross-margin-max-leverage-user_data
+        https://developers.binance.com/docs/margin_trading/account
 
         :param maxLeverage: required Can only adjust 3 or 5，Example: maxLeverage=3
         :type maxLeverage: int
@@ -4719,7 +4734,7 @@ class Client(BaseClient):
     def get_margin_transfer_history(self, **params):
         """Query margin transfer history
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-cross-margin-transfer-history-user_data
+        https://developers.binance.com/docs/margin_trading/transfer
 
         :param asset: optional
         :type asset: str
@@ -4874,7 +4889,8 @@ class Client(BaseClient):
     def get_cross_margin_data(self, **params):
         """Query Cross Margin Fee Data (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-fee-data-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Fee-Data
+
         :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
         :type vipLevel: int
         :param coin
@@ -4907,7 +4923,7 @@ class Client(BaseClient):
     def get_margin_interest_history(self, **params):
         """Get Interest History (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-Interest-History
 
         :param asset:
         :type asset: str
@@ -4952,7 +4968,7 @@ class Client(BaseClient):
     def get_margin_force_liquidation_rec(self, **params):
         """Get Force Liquidation Record (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-force-liquidation-record-user_data
+        https://developers.binance.com/docs/margin_trading/trade
 
         :param startTime:
         :type startTime: str
@@ -4999,7 +5015,7 @@ class Client(BaseClient):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Order
 
         :param symbol: required
         :type symbol: str
@@ -5048,7 +5064,7 @@ class Client(BaseClient):
         When all symbols are returned, the number of requests counted against the rate limiter is equal to the number
         of symbols currently trading on the exchange.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-Orders
 
         :param symbol: optional
         :type symbol: str
@@ -5094,7 +5110,7 @@ class Client(BaseClient):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-all-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-Orders
 
         :param symbol: required
         :type symbol: str
@@ -5153,7 +5169,7 @@ class Client(BaseClient):
 
         If fromId is set, it will get orders >= that fromId. Otherwise most recent orders are returned.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-trade-list-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Trade-List
 
         :param symbol: required
         :type symbol: str
@@ -5236,7 +5252,7 @@ class Client(BaseClient):
     def get_max_margin_transfer(self, **params):
         """Query max transfer-out amount
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-max-transfer-out-amount-user_data
+        https://developers.binance.com/docs/margin_trading/transfer/Query-Max-Transfer-Out-Amount
 
         :param asset: required
         :type asset: str
@@ -5261,7 +5277,7 @@ class Client(BaseClient):
     def get_margin_delist_schedule(self, **params):
         """Get tokens or symbols delist schedule for cross margin and isolated margin
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-Delist-Schedule
 
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -5299,7 +5315,7 @@ class Client(BaseClient):
     def create_margin_oco_order(self, **params):
         """Post a new OCO trade for margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-oco-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OCO
 
 
         :param symbol: required
@@ -5409,7 +5425,7 @@ class Client(BaseClient):
     def cancel_margin_oco_order(self, **params):
         """Cancel an entire Order List for a margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-oco-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-OCO
 
         :param symbol: required
         :type symbol: str
@@ -5492,7 +5508,7 @@ class Client(BaseClient):
     def get_margin_oco_order(self, **params):
         """Retrieves a specific OCO based on provided optional parameters
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-oco-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-OCO
 
         :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
         :type symbol: str
@@ -5538,7 +5554,7 @@ class Client(BaseClient):
     def get_open_margin_oco_orders(self, **params):
         """Retrieves open OCO trades
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-oco-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-OCO
 
         :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
         :type symbol: str
@@ -5617,7 +5633,7 @@ class Client(BaseClient):
 
         Can be used to keep the stream alive.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Margin-User-Data-Stream
 
         :returns: API response
 
@@ -5636,7 +5652,7 @@ class Client(BaseClient):
     def margin_stream_keepalive(self, listenKey):
         """PING a cross-margin data stream to prevent a time out.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Margin-User-Data-Stream
 
         :param listenKey: required
         :type listenKey: str
@@ -5658,7 +5674,7 @@ class Client(BaseClient):
     def margin_stream_close(self, listenKey):
         """Close out a cross-margin data stream.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Margin-User-Data-Stream
 
         :param listenKey: required
         :type listenKey: str
@@ -5686,7 +5702,7 @@ class Client(BaseClient):
 
         Can be used to keep the stream alive.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -5711,7 +5727,7 @@ class Client(BaseClient):
     def isolated_margin_stream_keepalive(self, symbol, listenKey):
         """PING an isolated margin data stream to prevent a time out.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -5735,7 +5751,7 @@ class Client(BaseClient):
     def isolated_margin_stream_close(self, symbol, listenKey):
         """Close out an isolated margin data stream.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -13962,6 +13978,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/margin/tradeCoeff.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/margin_trading/account/Get-Summary-Of-Margin-Account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -13985,6 +14003,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/margin/available-inventory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/market-data/Query-margin-avaliable-inventory
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14478,6 +14498,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/margin/leverageBracket.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Liability-Coin-Leverage-Bracket-in-Cross-Margin-Pro-Mode
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14921,6 +14943,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/margin/rateLimit/order.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Current-Margin-Order-Count-Usage
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16565,6 +16589,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/margin/allOrderList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-OCO
 
         :param params: parameters required by the endpoint
         :type params: dict
