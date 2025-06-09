@@ -1,0 +1,2002 @@
+#spot ====================
+
+create_sor_order (self, **params):
+    """
+    POST /api/v3/sor/order
+    """
+    return self._post("sor/order", version=self.PRIVATE_API_VERSION, data=params)
+
+create_order_list_oto (self, **params):
+    """
+    POST /api/v3/orderList/oto
+    """
+    return self._post("orderList/oto", version=self.PRIVATE_API_VERSION, data=params)
+
+create_order_list_otoco (self, **params):
+    """
+    POST /api/v3/orderList/otoco
+    """
+    return self._post("orderList/otoco", version=self.PRIVATE_API_VERSION, data=params)
+
+cancel_order_list (self, **params):
+    """
+    DELETE /api/v3/orderList
+    """
+    return self._delete("orderList", version=self.PRIVATE_API_VERSION, data=params)
+
+get_ui_klines (self, **params):
+    """
+    GET /api/v3/uiKlines
+    """
+    return self._get("uiKlines", version=self.PRIVATE_API_VERSION, data=params)
+
+margin_copy_trading_futures_user_status (self, **params):
+    """
+    GET /sapi/v1/copyTrading/futures/userStatus
+    """
+    return self._request_margin_api("get, "copyTrading/futures/userStatus", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_copy_trading_futures_lead_symbol (self, **params):
+    """
+    GET /sapi/v1/copyTrading/futures/leadSymbol
+    """
+    return self._request_margin_api("get, "copyTrading/futures/leadSymbol", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_account_info (self, **params):
+    """
+    GET /sapi/v1/account/info
+    """
+    return self._request_margin_api("get, "account/info", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_capital_withdraw_address_list (self, **params):
+    """
+    GET /sapi/v1/capital/withdraw/address/list
+    """
+    return self._request_margin_api("get, "capital/withdraw/address/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_flexible_borrow (self, **params):
+    """
+    POST /sapi/v2/loan/flexible/borrow
+    """
+    return self._request_margin_api("post, "loan/flexible/borrow", version=undefined, data=params)
+
+margin_loan_flexible_ongoing_orders (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/ongoing/orders
+    """
+    return self._request_margin_api("get, "loan/flexible/ongoing/orders", version=undefined, data=params)
+
+margin_loan_flexible_borrow_history (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/borrow/history
+    """
+    return self._request_margin_api("get, "loan/flexible/borrow/history", version=undefined, data=params)
+
+margin_create_loan_flexible_repay (self, **params):
+    """
+    POST /sapi/v2/loan/flexible/repay
+    """
+    return self._request_margin_api("post, "loan/flexible/repay", version=undefined, data=params)
+
+margin_loan_flexible_repay_history (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/repay/history
+    """
+    return self._request_margin_api("get, "loan/flexible/repay/history", version=undefined, data=params)
+
+margin_create_loan_flexible_adjust_ltv (self, **params):
+    """
+    POST /sapi/v2/loan/flexible/adjust/ltv
+    """
+    return self._request_margin_api("post, "loan/flexible/adjust/ltv", version=undefined, data=params)
+
+margin_loan_flexible_ltv_adjustment_history (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/ltv/adjustment/history
+    """
+    return self._request_margin_api("get, "loan/flexible/ltv/adjustment/history", version=undefined, data=params)
+
+margin_loan_flexible_loanable_data (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/loanable/data
+    """
+    return self._request_margin_api("get, "loan/flexible/loanable/data", version=undefined, data=params)
+
+margin_loan_flexible_collateral_data (self, **params):
+    """
+    GET /sapi/v2/loan/flexible/collateral/data
+    """
+    return self._request_margin_api("get, "loan/flexible/collateral/data", version=undefined, data=params)
+
+margin_dci_product_list (self, **params):
+    """
+    GET /sapi/v1/dci/product/list
+    """
+    return self._request_margin_api("get, "dci/product/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_dci_product_subscribe (self, **params):
+    """
+    POST /sapi/v1/dci/product/subscribe
+    """
+    return self._request_margin_api("post, "dci/product/subscribe", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_dci_product_positions (self, **params):
+    """
+    GET /sapi/v1/dci/product/positions
+    """
+    return self._request_margin_api("get, "dci/product/positions", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_dci_product_accounts (self, **params):
+    """
+    GET /sapi/v1/dci/product/accounts
+    """
+    return self._request_margin_api("get, "dci/product/accounts", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_dci_product_auto_compound_edit_status (self, **params):
+    """
+    POST /sapi/v1/dci/product/auto_compound/edit-status
+    """
+    return self._request_margin_api("post, "dci/product/auto_compound/edit-status", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_convert_limit_place_order (self, **params):
+    """
+    POST /sapi/v1/convert/limit/placeOrder
+    """
+    return self._request_margin_api("post, "convert/limit/placeOrder", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_convert_limit_cancel_order (self, **params):
+    """
+    POST /sapi/v1/convert/limit/cancelOrder
+    """
+    return self._request_margin_api("post, "convert/limit/cancelOrder", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_convert_limit_query_open_orders (self, **params):
+    """
+    GET /sapi/v1/convert/limit/queryOpenOrders
+    """
+    return self._request_margin_api("get, "convert/limit/queryOpenOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_pools (self, **params):
+    """
+    GET /sapi/v1/bswap/pools
+    """
+    return self._request_margin_api("get, "bswap/pools", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_liquidity (self, **params):
+    """
+    GET /sapi/v1/bswap/liquidity
+    """
+    return self._request_margin_api("get, "bswap/liquidity", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_bswap_liquidity_add (self, **params):
+    """
+    POST /sapi/v1/bswap/liquidityAdd
+    """
+    return self._request_margin_api("post, "bswap/liquidityAdd", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_bswap_liquidity_remove (self, **params):
+    """
+    POST /sapi/v1/bswap/liquidityRemove
+    """
+    return self._request_margin_api("post, "bswap/liquidityRemove", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_liquidity_ops (self, **params):
+    """
+    GET /sapi/v1/bswap/liquidityOps
+    """
+    return self._request_margin_api("get, "bswap/liquidityOps", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_quote (self, **params):
+    """
+    GET /sapi/v1/bswap/quote
+    """
+    return self._request_margin_api("get, "bswap/quote", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_bswap_swap (self, **params):
+    """
+    POST /sapi/v1/bswap/swap
+    """
+    return self._request_margin_api("post, "bswap/swap", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_swap (self, **params):
+    """
+    GET /sapi/v1/bswap/swap
+    """
+    return self._request_margin_api("get, "bswap/swap", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_pool_configure (self, **params):
+    """
+    GET /sapi/v1/bswap/poolConfigure
+    """
+    return self._request_margin_api("get, "bswap/poolConfigure", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_add_liquidity_preview (self, **params):
+    """
+    GET /sapi/v1/bswap/addLiquidityPreview
+    """
+    return self._request_margin_api("get, "bswap/addLiquidityPreview", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_remove_liquidity_preview (self, **params):
+    """
+    GET /sapi/v1/bswap/removeLiquidityPreview
+    """
+    return self._request_margin_api("get, "bswap/removeLiquidityPreview", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_unclaimed_rewards (self, **params):
+    """
+    GET /sapi/v1/bswap/unclaimedRewards
+    """
+    return self._request_margin_api("get, "bswap/unclaimedRewards", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_bswap_claim_rewards (self, **params):
+    """
+    POST /sapi/v1/bswap/claimRewards
+    """
+    return self._request_margin_api("post, "bswap/claimRewards", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_bswap_claimed_history (self, **params):
+    """
+    GET /sapi/v1/bswap/claimedHistory
+    """
+    return self._request_margin_api("get, "bswap/claimedHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_staking_staking_record (self, **params):
+    """
+    GET /sapi/v1/staking/stakingRecord
+    """
+    return self._request_margin_api("get, "staking/stakingRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_spot_delist_schedule (self, **params):
+    """
+    GET /sapi/v1/spot/delist-schedule
+    """
+    return self._request_margin_api("get, "spot/delist-schedule", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_history_wbeth_rewards_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/history/wbethRewardsHistory
+    """
+    return self._request_margin_api("get, "eth-staking/eth/history/wbethRewardsHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_eth_staking_eth_stake (self, **params):
+    """
+    POST /sapi/v2/eth-staking/eth/stake
+    """
+    return self._request_margin_api("post, "eth-staking/eth/stake", version=undefined, data=params)
+
+margin_eth_staking_account (self, **params):
+    """
+    GET /sapi/v2/eth-staking/account
+    """
+    return self._request_margin_api("get, "eth-staking/account", version=undefined, data=params)
+
+margin_create_eth_staking_wbeth_unwrap (self, **params):
+    """
+    POST /sapi/v1/eth-staking/wbeth/unwrap
+    """
+    return self._request_margin_api("post, "eth-staking/wbeth/unwrap", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_eth_staking_eth_redeem (self, **params):
+    """
+    POST /sapi/v1/eth-staking/eth/redeem
+    """
+    return self._request_margin_api("post, "eth-staking/eth/redeem", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_history_staking_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/history/stakingHistory
+    """
+    return self._request_margin_api("get, "eth-staking/eth/history/stakingHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_history_redemption_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/history/redemptionHistory
+    """
+    return self._request_margin_api("get, "eth-staking/eth/history/redemptionHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_eth_staking_wbeth_wrap (self, **params):
+    """
+    POST /sapi/v1/eth-staking/wbeth/wrap
+    """
+    return self._request_margin_api("post, "eth-staking/wbeth/wrap", version=self.PUBLIC_API_VERSION, data=params)
+
+get_all_order_list (self, **params):
+    """
+    GET /api/v3/allOrderList
+    """
+    return self._get("allOrderList", version=self.PRIVATE_API_VERSION, data=params)
+
+get_account_commission (self, **params):
+    """
+    GET /api/v3/account/commission
+    """
+    return self._get("account/commission", version=self.PRIVATE_API_VERSION, data=params)
+
+get_ticker_trading_day (self, **params):
+    """
+    GET /api/v3/ticker/tradingDay
+    """
+    return self._get("ticker/tradingDay", version=self.PRIVATE_API_VERSION, data=params)
+
+create_sor_order_test (self, **params):
+    """
+    POST /api/v3/sor/order/test
+    """
+    return self._post("sor/order/test", version=self.PRIVATE_API_VERSION, data=params)
+
+margin_capital_deposit_address_list (self, **params):
+    """
+    GET /sapi/v1/capital/deposit/address/list
+    """
+    return self._request_margin_api("get, "capital/deposit/address/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_available_inventory (self, **params):
+    """
+    GET /sapi/v1/margin/available-inventory
+    """
+    return self._request_margin_api("get, "margin/available-inventory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_leverage_bracket (self, **params):
+    """
+    GET /sapi/v1/margin/leverageBracket
+    """
+    return self._request_margin_api("get, "margin/leverageBracket", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_request_interest_rate (self, **params):
+    """
+    GET /sapi/v1/loan/vip/request/interestRate
+    """
+    return self._request_margin_api("get, "loan/vip/request/interestRate", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_hist_data_link (self, **params):
+    """
+    GET /sapi/v1/futures/histDataLink
+    """
+    return self._request_margin_api("get, "futures/histDataLink", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_asset_wallet_balance (self, **params):
+    """
+    GET /sapi/v1/asset/wallet/balance
+    """
+    return self._request_margin_api("get, "asset/wallet/balance", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_asset_custody_transfer_history (self, **params):
+    """
+    GET /sapi/v1/asset/custody/transfer-history
+    """
+    return self._request_margin_api("get, "asset/custody/transfer-history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_loanable_data (self, **params):
+    """
+    GET /sapi/v1/loan/vip/loanable/data
+    """
+    return self._request_margin_api("get, "loan/vip/loanable/data", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_ongoing_orders (self, **params):
+    """
+    GET /sapi/v1/loan/vip/ongoing/orders
+    """
+    return self._request_margin_api("get, "loan/vip/ongoing/orders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_repay (self, **params):
+    """
+    POST /sapi/v1/portfolio/repay
+    """
+    return self._request_margin_api("post, "portfolio/repay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_index_info (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/index/info
+    """
+    return self._request_margin_api("get, "lending/auto-invest/index/info", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_index_user_summary (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/index/user-summary
+    """
+    return self._request_margin_api("get, "lending/auto-invest/index/user-summary", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_auto_invest_one_off (self, **params):
+    """
+    POST /sapi/v1/lending/auto-invest/one-off
+    """
+    return self._request_margin_api("post, "lending/auto-invest/one-off", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_one_off_status (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/one-off/status
+    """
+    return self._request_margin_api("get, "lending/auto-invest/one-off/status", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_auto_invest_redeem (self, **params):
+    """
+    POST /sapi/v1/lending/auto-invest/redeem
+    """
+    return self._request_margin_api("post, "lending/auto-invest/redeem", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_redeem_history (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/redeem/history
+    """
+    return self._request_margin_api("get, "lending/auto-invest/redeem/history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_rebalance_history (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/rebalance/history
+    """
+    return self._request_margin_api("get, "lending/auto-invest/rebalance/history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_margin_asset_leverage (self, **params):
+    """
+    GET /sapi/v1/portfolio/margin-asset-leverage
+    """
+    return self._request_margin_api("get, "portfolio/margin-asset-leverage", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_auto_collection (self, **params):
+    """
+    POST /sapi/v1/portfolio/auto-collection
+    """
+    return self._request_margin_api("post, "portfolio/auto-collection", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_asset_collection (self, **params):
+    """
+    POST /sapi/v1/portfolio/asset-collection
+    """
+    return self._request_margin_api("post, "portfolio/asset-collection", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_bnb_transfer (self, **params):
+    """
+    POST /sapi/v1/portfolio/bnb-transfer
+    """
+    return self._request_margin_api("post, "portfolio/bnb-transfer", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_history_subscription_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/history/subscriptionRecord
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/history/subscriptionRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_locked_history_subscription_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/locked/history/subscriptionRecord
+    """
+    return self._request_margin_api("get, "simple-earn/locked/history/subscriptionRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_history_redemption_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/history/redemptionRecord
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/history/redemptionRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_flexible_repay_history (self, **params):
+    """
+    POST /sapi/v1/loan/flexible/repay/history
+    """
+    return self._request_margin_api("post, "loan/flexible/repay/history", version=self.PUBLIC_API_VERSION, data=params)
+
+get_order_list (self, **params):
+    """
+    GET /api/v3/orderList
+    """
+    return self._get("orderList", version=self.PRIVATE_API_VERSION, data=params)
+
+get_open_orders_ (self, **params):
+    """
+    GET /api/v3/openOrders-
+    """
+    return self._get("openOrders-", version=self.PRIVATE_API_VERSION, data=params)
+
+get_ticker_price_ (self, **params):
+    """
+    GET /api/v3/ticker/price-
+    """
+    return self._get("ticker/price-", version=self.PRIVATE_API_VERSION, data=params)
+
+margin_create_loan_vip_borrow (self, **params):
+    """
+    POST /sapi/v1/loan/vip/borrow
+    """
+    return self._request_margin_api("post, "loan/vip/borrow", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_repay_futures_switch (self, **params):
+    """
+    POST /sapi/v1/portfolio/repay-futures-switch
+    """
+    return self._request_margin_api("post, "portfolio/repay-futures-switch", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_repay_futures_switch (self, **params):
+    """
+    GET /sapi/v1/portfolio/repay-futures-switch
+    """
+    return self._request_margin_api("get, "portfolio/repay-futures-switch", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_portfolio_repay_futures_negative_balance (self, **params):
+    """
+    POST /sapi/v1/portfolio/repay-futures-negative-balance
+    """
+    return self._request_margin_api("post, "portfolio/repay-futures-negative-balance", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_vip_renew (self, **params):
+    """
+    POST /sapi/v1/loan/vip/renew
+    """
+    return self._request_margin_api("post, "loan/vip/renew", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_collateral_data (self, **params):
+    """
+    GET /sapi/v1/loan/vip/collateral/data
+    """
+    return self._request_margin_api("get, "loan/vip/collateral/data", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_request_data (self, **params):
+    """
+    GET /sapi/v1/loan/vip/request/data
+    """
+    return self._request_margin_api("get, "loan/vip/request/data", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_eoptions_enable (self, **params):
+    """
+    POST /sapi/v1/sub-account/eoptions/enable
+    """
+    return self._request_margin_api("post, "sub-account/eoptions/enable", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_query_trans_log (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/query-trans-log
+    """
+    return self._request_margin_api("get, "managed-subaccount/query-trans-log", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_daily_product_list (self, **params):
+    """
+    GET /sapi/v1/lending/daily/product/list
+    """
+    return self._request_margin_api("get, "lending/daily/product/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_daily_user_left_quota (self, **params):
+    """
+    GET /sapi/v1/lending/daily/userLeftQuota
+    """
+    return self._request_margin_api("get, "lending/daily/userLeftQuota", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_daily_purchase (self, **params):
+    """
+    POST /sapi/v1/lending/daily/purchase
+    """
+    return self._request_margin_api("post, "lending/daily/purchase", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_daily_user_redemption_quota (self, **params):
+    """
+    GET /sapi/v1/lending/daily/userRedemptionQuota
+    """
+    return self._request_margin_api("get, "lending/daily/userRedemptionQuota", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_daily_redeem (self, **params):
+    """
+    POST /sapi/v1/lending/daily/redeem
+    """
+    return self._request_margin_api("post, "lending/daily/redeem", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_daily_token_position (self, **params):
+    """
+    GET /sapi/v1/lending/daily/token/position
+    """
+    return self._request_margin_api("get, "lending/daily/token/position", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_union_account (self, **params):
+    """
+    GET /sapi/v1/lending/union/account
+    """
+    return self._request_margin_api("get, "lending/union/account", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_union_purchase_record (self, **params):
+    """
+    GET /sapi/v1/lending/union/purchaseRecord
+    """
+    return self._request_margin_api("get, "lending/union/purchaseRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_union_redemption_record (self, **params):
+    """
+    GET /sapi/v1/lending/union/redemptionRecord
+    """
+    return self._request_margin_api("get, "lending/union/redemptionRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_union_interest_history (self, **params):
+    """
+    GET /sapi/v1/lending/union/interestHistory
+    """
+    return self._request_margin_api("get, "lending/union/interestHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_target_asset_list (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/target-asset/list
+    """
+    return self._request_margin_api("get, "lending/auto-invest/target-asset/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_target_asset_roi_list (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/target-asset/roi/list
+    """
+    return self._request_margin_api("get, "lending/auto-invest/target-asset/roi/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_all_asset (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/all/asset
+    """
+    return self._request_margin_api("get, "lending/auto-invest/all/asset", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_source_asset_list (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/source-asset/list
+    """
+    return self._request_margin_api("get, "lending/auto-invest/source-asset/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_auto_invest_plan_add (self, **params):
+    """
+    POST /sapi/v1/lending/auto-invest/plan/add
+    """
+    return self._request_margin_api("post, "lending/auto-invest/plan/add", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_auto_invest_plan_edit_status (self, **params):
+    """
+    POST /sapi/v1/lending/auto-invest/plan/edit-status
+    """
+    return self._request_margin_api("post, "lending/auto-invest/plan/edit-status", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_plan_list (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/plan/list
+    """
+    return self._request_margin_api("get, "lending/auto-invest/plan/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_plan_id (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/plan/id
+    """
+    return self._request_margin_api("get, "lending/auto-invest/plan/id", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_auto_invest_history_list (self, **params):
+    """
+    GET /sapi/v1/lending/auto-invest/history/list
+    """
+    return self._request_margin_api("get, "lending/auto-invest/history/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_delist_schedule (self, **params):
+    """
+    GET /sapi/v1/margin/delist-schedule
+    """
+    return self._request_margin_api("get, "margin/delist-schedule", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_capital_deposit_credit_apply (self, **params):
+    """
+    POST /sapi/v1/capital/deposit/credit-apply
+    """
+    return self._request_margin_api("post, "capital/deposit/credit-apply", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_asset_index_price (self, **params):
+    """
+    GET /sapi/v1/portfolio/asset-index-price
+    """
+    return self._request_margin_api("get, "portfolio/asset-index-price", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_deposit_address (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/deposit/address
+    """
+    return self._request_margin_api("get, "managed-subaccount/deposit/address", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_algo_spot_new_order_twap (self, **params):
+    """
+    POST /sapi/v1/algo/spot/newOrderTwap
+    """
+    return self._request_margin_api("post, "algo/spot/newOrderTwap", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_cancel_algo_spot_order (self, **params):
+    """
+    DELETE /sapi/v1/algo/spot/order
+    """
+    return self._request_margin_api("delete, "algo/spot/order", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_spot_open_orders (self, **params):
+    """
+    GET /sapi/v1/algo/spot/openOrders
+    """
+    return self._request_margin_api("get, "algo/spot/openOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_spot_historical_orders (self, **params):
+    """
+    GET /sapi/v1/algo/spot/historicalOrders
+    """
+    return self._request_margin_api("get, "algo/spot/historicalOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_spot_sub_orders (self, **params):
+    """
+    GET /sapi/v1/algo/spot/subOrders
+    """
+    return self._request_margin_api("get, "algo/spot/subOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_query_trans_log_for_investor (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/queryTransLogForInvestor
+    """
+    return self._request_margin_api("get, "managed-subaccount/queryTransLogForInvestor", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_query_trans_log_for_trade_parent (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/queryTransLogForTradeParent
+    """
+    return self._request_margin_api("get, "managed-subaccount/queryTransLogForTradeParent", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_info (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/info
+    """
+    return self._request_margin_api("get, "managed-subaccount/info", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_sub_account_transaction_statistics (self, **params):
+    """
+    GET /sapi/v1/sub-account/transaction-statistics
+    """
+    return self._request_margin_api("get, "sub-account/transaction-statistics", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_interest_history (self, **params):
+    """
+    GET /sapi/v1/portfolio/interest-history
+    """
+    return self._request_margin_api("get, "portfolio/interest-history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_borrow (self, **params):
+    """
+    POST /sapi/v1/loan/borrow
+    """
+    return self._request_margin_api("post, "loan/borrow", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_sub_account_api_ip_restriction (self, **params):
+    """
+    POST /sapi/v1/sub-account/subAccountApi/ipRestriction
+    """
+    return self._request_margin_api("post, "sub-account/subAccountApi/ipRestriction", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_sub_account_api_ip_restriction_ip_list (self, **params):
+    """
+    POST /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList
+    """
+    return self._request_margin_api("post, "sub-account/subAccountApi/ipRestriction/ipList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_fetch_future_asset (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/fetch-future-asset
+    """
+    return self._request_margin_api("get, "managed-subaccount/fetch-future-asset", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_margin_asset (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/marginAsset
+    """
+    return self._request_margin_api("get, "managed-subaccount/marginAsset", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_capital_contract_convertible_coins (self, **params):
+    """
+    GET /sapi/v1/capital/contract/convertible-coins
+    """
+    return self._request_margin_api("get, "capital/contract/convertible-coins", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_capital_contract_convertible_coins (self, **params):
+    """
+    POST /sapi/v1/capital/contract/convertible-coins
+    """
+    return self._request_margin_api("post, "capital/contract/convertible-coins", version=self.PUBLIC_API_VERSION, data=params)
+
+get_acccount (self, **params):
+    """
+    GET /api/v3/acccount
+    """
+    return self._get("acccount", version=self.PRIVATE_API_VERSION, data=params)
+
+margin_loan_vip_collateral_account (self, **params):
+    """
+    GET /sapi/v1/loan/vip/collateral/account
+    """
+    return self._request_margin_api("get, "loan/vip/collateral/account", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_convert_exchange_info (self, **params):
+    """
+    GET /sapi/v1/convert/exchangeInfo
+    """
+    return self._request_margin_api("get, "convert/exchangeInfo", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_convert_asset_info (self, **params):
+    """
+    GET /sapi/v1/convert/assetInfo
+    """
+    return self._request_margin_api("get, "convert/assetInfo", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_convert_order_status (self, **params):
+    """
+    GET /sapi/v1/convert/orderStatus
+    """
+    return self._request_margin_api("get, "convert/orderStatus", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_asset_ledger_transfer_cloud_mining_query_by_page (self, **params):
+    """
+    GET /sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage
+    """
+    return self._request_margin_api("get, "asset/ledger-transfer/cloud-mining/queryByPage", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_sub_account_api_ip_restriction (self, **params):
+    """
+    POST /sapi/v2/sub-account/subAccountApi/ipRestriction
+    """
+    return self._request_margin_api("post, "sub-account/subAccountApi/ipRestriction", version=undefined, data=params)
+
+margin_create_loan_vip_repay (self, **params):
+    """
+    POST /sapi/v1/loan/vip/repay
+    """
+    return self._request_margin_api("post, "loan/vip/repay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_vip_repay_history (self, **params):
+    """
+    GET /sapi/v1/loan/vip/repay/history
+    """
+    return self._request_margin_api("get, "loan/vip/repay/history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_loanable_data (self, **params):
+    """
+    GET /sapi/v1/loan/loanable/data
+    """
+    return self._request_margin_api("get, "loan/loanable/data", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_collateral_data (self, **params):
+    """
+    GET /sapi/v1/loan/collateral/data
+    """
+    return self._request_margin_api("get, "loan/collateral/data", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_repay_collateral_rate (self, **params):
+    """
+    GET /sapi/v1/loan/repay/collateral/rate
+    """
+    return self._request_margin_api("get, "loan/repay/collateral/rate", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_customize_margin_call (self, **params):
+    """
+    POST /sapi/v1/loan/customize/margin_call
+    """
+    return self._request_margin_api("post, "loan/customize/margin_call", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_asset_convert_transfer (self, **params):
+    """
+    POST /sapi/v1/asset/convert-transfer
+    """
+    return self._request_margin_api("post, "asset/convert-transfer", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_asset_convert_transfer_query_by_page (self, **params):
+    """
+    POST /sapi/v1/asset/convert-transfer/queryByPage
+    """
+    return self._request_margin_api("post, "asset/convert-transfer/queryByPage", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_futures_loan_borrow (self, **params):
+    """
+    POST /sapi/v1/futures/loan/borrow
+    """
+    return self._request_margin_api("post, "futures/loan/borrow", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_futures_loan_repay (self, **params):
+    """
+    POST /sapi/v1/futures/loan/repay
+    """
+    return self._request_margin_api("post, "futures/loan/repay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_configs (self, **params):
+    """
+    GET /sapi/v1/futures/loan/configs
+    """
+    return self._request_margin_api("get, "futures/loan/configs", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_configs (self, **params):
+    """
+    GET /sapi/v2/futures/loan/configs
+    """
+    return self._request_margin_api("get, "futures/loan/configs", version=undefined, data=params)
+
+margin_futures_loan_calc_adjust_level (self, **params):
+    """
+    GET /sapi/v1/futures/loan/calcAdjustLevel
+    """
+    return self._request_margin_api("get, "futures/loan/calcAdjustLevel", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_calc_adjust_level (self, **params):
+    """
+    GET /sapi/v2/futures/loan/calcAdjustLevel
+    """
+    return self._request_margin_api("get, "futures/loan/calcAdjustLevel", version=undefined, data=params)
+
+margin_futures_loan_calc_max_adjust_amount (self, **params):
+    """
+    GET /sapi/v1/futures/loan/calcMaxAdjustAmount
+    """
+    return self._request_margin_api("get, "futures/loan/calcMaxAdjustAmount", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_calc_max_adjust_amount (self, **params):
+    """
+    GET /sapi/v2/futures/loan/calcMaxAdjustAmount
+    """
+    return self._request_margin_api("get, "futures/loan/calcMaxAdjustAmount", version=undefined, data=params)
+
+margin_create_futures_loan_adjust_collateral (self, **params):
+    """
+    POST /sapi/v1/futures/loan/adjustCollateral
+    """
+    return self._request_margin_api("post, "futures/loan/adjustCollateral", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_futures_loan_adjust_collateral (self, **params):
+    """
+    POST /sapi/v2/futures/loan/adjustCollateral
+    """
+    return self._request_margin_api("post, "futures/loan/adjustCollateral", version=undefined, data=params)
+
+margin_futures_loan_collateral_repay_limit (self, **params):
+    """
+    GET /sapi/v1/futures/loan/collateralRepayLimit
+    """
+    return self._request_margin_api("get, "futures/loan/collateralRepayLimit", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_collateral_repay (self, **params):
+    """
+    GET /sapi/v1/futures/loan/collateralRepay
+    """
+    return self._request_margin_api("get, "futures/loan/collateralRepay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_futures_loan_collateral_repay (self, **params):
+    """
+    POST /sapi/v1/futures/loan/collateralRepay
+    """
+    return self._request_margin_api("post, "futures/loan/collateralRepay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_futures_loan_collateral_repay_result (self, **params):
+    """
+    GET /sapi/v1/futures/loan/collateralRepayResult
+    """
+    return self._request_margin_api("get, "futures/loan/collateralRepayResult", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_cancel_sub_account_sub_account_api_ip_restriction_ip_list (self, **params):
+    """
+    DELETE /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList
+    """
+    return self._request_margin_api("delete, "sub-account/subAccountApi/ipRestriction/ipList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_customized_fixed_purchase (self, **params):
+    """
+    POST /sapi/v1/lending/customizedFixed/purchase
+    """
+    return self._request_margin_api("post, "lending/customizedFixed/purchase", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_trade_coeff (self, **params):
+    """
+    GET /sapi/v1/margin/tradeCoeff
+    """
+    return self._request_margin_api("get, "margin/tradeCoeff", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_borrow_history (self, **params):
+    """
+    GET /sapi/v1/loan/borrow/history
+    """
+    return self._request_margin_api("get, "loan/borrow/history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_sub_account_sub_account_api_ip_restriction (self, **params):
+    """
+    GET /sapi/v1/sub-account/subAccountApi/ipRestriction
+    """
+    return self._request_margin_api("get, "sub-account/subAccountApi/ipRestriction", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_pm_loan (self, **params):
+    """
+    GET /sapi/v1/portfolio/pmLoan
+    """
+    return self._request_margin_api("get, "portfolio/pmLoan", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_collateral_rate (self, **params):
+    """
+    GET /sapi/v1/portfolio/collateralRate
+    """
+    return self._request_margin_api("get, "portfolio/collateralRate", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_pub_algo_list (self, **params):
+    """
+    GET /sapi/v1/mining/pub/algoList
+    """
+    return self._request_margin_api("get, "mining/pub/algoList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_pub_coin_list (self, **params):
+    """
+    GET /sapi/v1/mining/pub/coinList
+    """
+    return self._request_margin_api("get, "mining/pub/coinList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_algo_futures_new_order_twap (self, **params):
+    """
+    POST /sapi/v1/algo/futures/newOrderTwap
+    """
+    return self._request_margin_api("post, "algo/futures/newOrderTwap", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_rate_limit_order (self, **params):
+    """
+    GET /sapi/v1/margin/rateLimit/order
+    """
+    return self._request_margin_api("get, "margin/rateLimit/order", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_portfolio_account (self, **params):
+    """
+    GET /sapi/v1/portfolio/account
+    """
+    return self._request_margin_api("get, "portfolio/account", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_algo_futures_new_order_vp (self, **params):
+    """
+    POST /sapi/v1/algo/futures/newOrderVp
+    """
+    return self._request_margin_api("post, "algo/futures/newOrderVp", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_cancel_algo_futures_order (self, **params):
+    """
+    DELETE /sapi/v1/algo/futures/order
+    """
+    return self._request_margin_api("delete, "algo/futures/order", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_futures_open_orders (self, **params):
+    """
+    GET /sapi/v1/algo/futures/openOrders
+    """
+    return self._request_margin_api("get, "algo/futures/openOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_futures_historical_orders (self, **params):
+    """
+    GET /sapi/v1/algo/futures/historicalOrders
+    """
+    return self._request_margin_api("get, "algo/futures/historicalOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_algo_futures_sub_orders (self, **params):
+    """
+    GET /sapi/v1/algo/futures/subOrders
+    """
+    return self._request_margin_api("get, "algo/futures/subOrders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_account_snapshot (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/accountSnapshot
+    """
+    return self._request_margin_api("get, "managed-subaccount/accountSnapshot", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_sub_account_listto (self, **params):
+    """
+    GET /sapi/v1/sub-account/listto
+    """
+    return self._request_margin_api("get, "sub-account/listto", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_payment_uid (self, **params):
+    """
+    GET /sapi/v1/mining/payment/uid
+    """
+    return self._request_margin_api("get, "mining/payment/uid", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_nft_history_transactions (self, **params):
+    """
+    GET /sapi/v1/nft/history/transactions
+    """
+    return self._request_margin_api("get, "nft/history/transactions", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_nft_history_deposit (self, **params):
+    """
+    GET /sapi/v1/nft/history/deposit
+    """
+    return self._request_margin_api("get, "nft/history/deposit", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_nft_history_withdraw (self, **params):
+    """
+    GET /sapi/v1/nft/history/withdraw
+    """
+    return self._request_margin_api("get, "nft/history/withdraw", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_nft_user_get_asset (self, **params):
+    """
+    GET /sapi/v1/nft/user/getAsset
+    """
+    return self._request_margin_api("get, "nft/user/getAsset", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_rebate_tax_query (self, **params):
+    """
+    GET /sapi/v1/rebate/taxQuery
+    """
+    return self._request_margin_api("get, "rebate/taxQuery", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_pay_transactionsto (self, **params):
+    """
+    GET /sapi/v1/pay/transactionsto
+    """
+    return self._request_margin_api("get, "pay/transactionsto", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_capital_withdraw_historyto (self, **params):
+    """
+    GET /sapi/v1/capital/withdraw/historyto
+    """
+    return self._request_margin_api("get, "capital/withdraw/historyto", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_account_api_restrictions_ip_restriction (self, **params):
+    """
+    POST /sapi/v1/account/apiRestrictions/ipRestriction
+    """
+    return self._request_margin_api("post, "account/apiRestrictions/ipRestriction", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_account_api_restrictions_ip_restriction_ip_list (self, **params):
+    """
+    POST /sapi/v1/account/apiRestrictions/ipRestriction/ipList
+    """
+    return self._request_margin_api("post, "account/apiRestrictions/ipRestriction/ipList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_account_api_restrictions_ip_restriction (self, **params):
+    """
+    GET /sapi/v1/account/apiRestrictions/ipRestriction
+    """
+    return self._request_margin_api("get, "account/apiRestrictions/ipRestriction", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_cancel_account_api_restrictions_ip_restriction_ip_list (self, **params):
+    """
+    DELETE /sapi/v1/account/apiRestrictions/ipRestriction/ipList
+    """
+    return self._request_margin_api("delete, "account/apiRestrictions/ipRestriction/ipList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_incometo (self, **params):
+    """
+    GET /sapi/v1/loan/incometo
+    """
+    return self._request_margin_api("get, "loan/incometo", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_margin_all_order_list (self, **params):
+    """
+    GET /sapi/v1/margin/allOrderList
+    """
+    return self._request_margin_api("get, "margin/allOrderList", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_managed_subaccount_deposit (self, **params):
+    """
+    POST /sapi/v1/managed-subaccount/deposit
+    """
+    return self._request_margin_api("post, "managed-subaccount/deposit", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_managed_subaccount_asset (self, **params):
+    """
+    GET /sapi/v1/managed-subaccount/asset
+    """
+    return self._request_margin_api("get, "managed-subaccount/asset", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_managed_subaccount_withdraw (self, **params):
+    """
+    POST /sapi/v1/managed-subaccount/withdraw
+    """
+    return self._request_margin_api("post, "managed-subaccount/withdraw", version=self.PUBLIC_API_VERSION, data=params)
+
+system_status (self, **params):
+    """
+    GET /wapi/v3/systemStatus
+    """
+    return self._get("systemStatus", version=self.PRIVATE_API_VERSION, data=params)
+
+create_withdraw (self, **params):
+    """
+    POST /wapi/v3/withdraw
+    """
+    return self._post("withdraw", version=self.PRIVATE_API_VERSION, data=params)
+
+deposit_history (self, **params):
+    """
+    GET /wapi/v3/depositHistory
+    """
+    return self._get("depositHistory", version=self.PRIVATE_API_VERSION, data=params)
+
+withdraw_history (self, **params):
+    """
+    GET /wapi/v3/withdrawHistory
+    """
+    return self._get("withdrawHistory", version=self.PRIVATE_API_VERSION, data=params)
+
+deposit_address (self, **params):
+    """
+    GET /wapi/v3/depositAddress
+    """
+    return self._get("depositAddress", version=self.PRIVATE_API_VERSION, data=params)
+
+account_status (self, **params):
+    """
+    GET /wapi/v3/accountStatus
+    """
+    return self._get("accountStatus", version=self.PRIVATE_API_VERSION, data=params)
+
+api_trading_status (self, **params):
+    """
+    GET /wapi/v3/apiTradingStatus
+    """
+    return self._get("apiTradingStatus", version=self.PRIVATE_API_VERSION, data=params)
+
+user_asset_dribblet_log (self, **params):
+    """
+    GET /wapi/v3/userAssetDribbletLog
+    """
+    return self._get("userAssetDribbletLog", version=self.PRIVATE_API_VERSION, data=params)
+
+asset_detail (self, **params):
+    """
+    GET /wapi/v3/assetDetail
+    """
+    return self._get("assetDetail", version=self.PRIVATE_API_VERSION, data=params)
+
+trade_fee (self, **params):
+    """
+    GET /wapi/v3/tradeFee
+    """
+    return self._get("tradeFee", version=self.PRIVATE_API_VERSION, data=params)
+
+sub_account_list (self, **params):
+    """
+    GET /wapi/v3/sub-account/list
+    """
+    return self._get("sub-account/list", version=self.PRIVATE_API_VERSION, data=params)
+
+sub_account_transfer_history (self, **params):
+    """
+    GET /wapi/v3/sub-account/transfer/history
+    """
+    return self._get("sub-account/transfer/history", version=self.PRIVATE_API_VERSION, data=params)
+
+create_sub_account_transfer (self, **params):
+    """
+    POST /wapi/v3/sub-account/transfer
+    """
+    return self._post("sub-account/transfer", version=self.PRIVATE_API_VERSION, data=params)
+
+sub_account_assets (self, **params):
+    """
+    GET /wapi/v3/sub-account/assets
+    """
+    return self._get("sub-account/assets", version=self.PRIVATE_API_VERSION, data=params)
+
+margin_account_status (self, **params):
+    """
+    GET /sapi/v1/account/status
+    """
+    return self._request_margin_api("get, "account/status", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_asset_trade_fee (self, **params):
+    """
+    GET /sapi/v1/asset/tradeFee
+    """
+    return self._request_margin_api("get, "asset/tradeFee", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_virtual_sub_account (self, **params):
+    """
+    POST /sapi/v1/sub-account/virtualSubAccount
+    """
+    return self._request_margin_api("post, "sub-account/virtualSubAccount", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_payment_list (self, **params):
+    """
+    GET /sapi/v1/mining/payment/list
+    """
+    return self._request_margin_api("get, "mining/payment/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_payment_other (self, **params):
+    """
+    GET /sapi/v1/mining/payment/other
+    """
+    return self._request_margin_api("get, "mining/payment/other", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_hash_transfer_config_details (self, **params):
+    """
+    GET /sapi/v1/mining/hash-transfer/config/details
+    """
+    return self._request_margin_api("get, "mining/hash-transfer/config/details", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_hash_transfer_config_details_list (self, **params):
+    """
+    GET /sapi/v1/mining/hash-transfer/config/details/list
+    """
+    return self._request_margin_api("get, "mining/hash-transfer/config/details/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_hash_transfer_profit_details (self, **params):
+    """
+    GET /sapi/v1/mining/hash-transfer/profit/details
+    """
+    return self._request_margin_api("get, "mining/hash-transfer/profit/details", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_mining_hash_transfer_config (self, **params):
+    """
+    POST /sapi/v1/mining/hash-transfer/config
+    """
+    return self._request_margin_api("post, "mining/hash-transfer/config", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_mining_hash_transfer_config_cancel (self, **params):
+    """
+    POST /sapi/v1/mining/hash-transfer/config/cancel
+    """
+    return self._request_margin_api("post, "mining/hash-transfer/config/cancel", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_sub_account_futures_transferto (self, **params):
+    """
+    POST /sapi/v1/sub-account/futures/transferto
+    """
+    return self._request_margin_api("post, "sub-account/futures/transferto", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_lending_project_position_list (self, **params):
+    """
+    GET /sapi/v1/lending/project/position/list
+    """
+    return self._request_margin_api("get, "lending/project/position/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_worker_detail (self, **params):
+    """
+    GET /sapi/v1/mining/worker/detail
+    """
+    return self._request_margin_api("get, "mining/worker/detail", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_worker_list (self, **params):
+    """
+    GET /sapi/v1/mining/worker/list
+    """
+    return self._request_margin_api("get, "mining/worker/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_statistics_user_status (self, **params):
+    """
+    GET /sapi/v1/mining/statistics/user/status
+    """
+    return self._request_margin_api("get, "mining/statistics/user/status", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_mining_statistics_user_list (self, **params):
+    """
+    GET /sapi/v1/mining/statistics/user/list
+    """
+    return self._request_margin_api("get, "mining/statistics/user/list", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_account_disable_fast_withdraw_switch (self, **params):
+    """
+    POST /sapi/v1/account/disableFastWithdrawSwitch
+    """
+    return self._request_margin_api("post, "account/disableFastWithdrawSwitch", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_account_enable_fast_withdraw_switch (self, **params):
+    """
+    POST /sapi/v1/account/enableFastWithdrawSwitch
+    """
+    return self._request_margin_api("post, "account/enableFastWithdrawSwitch", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_asset_convert_transfer_query_by_page (self, **params):
+    """
+    GET /sapi/v1/asset/convert-transfer/queryByPage
+    """
+    return self._request_margin_api("get, "asset/convert-transfer/queryByPage", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_margin_listen_key (self, **params):
+    """
+    POST /sapi/v1/margin/listen-key
+    """
+    return self._request_margin_api("post, "margin/listen-key", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_modify_margin_listen_key (self, **params):
+    """
+    PUT /sapi/v1/margin/listen-key
+    """
+    return self._request_margin_api("put, "margin/listen-key", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_cancel_margin_listen_key (self, **params):
+    """
+    DELETE /sapi/v1/margin/listen-key
+    """
+    return self._request_margin_api("delete, "margin/listen-key", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_locked_history_redemption_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/locked/history/redemptionRecord
+    """
+    return self._request_margin_api("get, "simple-earn/locked/history/redemptionRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_history_rewards_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/history/rewardsRecord
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/history/rewardsRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_locked_history_rewards_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/locked/history/rewardsRecord
+    """
+    return self._request_margin_api("get, "simple-earn/locked/history/rewardsRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_simple_earn_flexible_set_auto_subscribe (self, **params):
+    """
+    POST /sapi/v1/simple-earn/flexible/setAutoSubscribe
+    """
+    return self._request_margin_api("post, "simple-earn/flexible/setAutoSubscribe", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_simple_earn_locked_set_auto_subscribe (self, **params):
+    """
+    POST /sapi/v1/simple-earn/locked/setAutoSubscribe
+    """
+    return self._request_margin_api("post, "simple-earn/locked/setAutoSubscribe", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_personal_left_quota (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/personalLeftQuota
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/personalLeftQuota", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_locked_personal_left_quota (self, **params):
+    """
+    GET /sapi/v1/simple-earn/locked/personalLeftQuota
+    """
+    return self._request_margin_api("get, "simple-earn/locked/personalLeftQuota", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_subscription_preview (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/subscriptionPreview
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/subscriptionPreview", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_locked_subscription_preview (self, **params):
+    """
+    GET /sapi/v1/simple-earn/locked/subscriptionPreview
+    """
+    return self._request_margin_api("get, "simple-earn/locked/subscriptionPreview", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_history_rate_history (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/history/rateHistory
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/history/rateHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_simple_earn_flexible_history_collateral_record (self, **params):
+    """
+    GET /sapi/v1/simple-earn/flexible/history/collateralRecord
+    """
+    return self._request_margin_api("get, "simple-earn/flexible/history/collateralRecord", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_lending_auto_invest_plan_edit (self, **params):
+    """
+    POST /sapi/v1/lending/auto-invest/plan/edit
+    """
+    return self._request_margin_api("post, "lending/auto-invest/plan/edit", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_history_rewards_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/history/rewardsHistory
+    """
+    return self._request_margin_api("get, "eth-staking/eth/history/rewardsHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_quota (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/quota
+    """
+    return self._request_margin_api("get, "eth-staking/eth/quota", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_eth_history_rate_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/eth/history/rateHistory
+    """
+    return self._request_margin_api("get, "eth-staking/eth/history/rateHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_wbeth_history_wrap_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/wbeth/history/wrapHistory
+    """
+    return self._request_margin_api("get, "eth-staking/wbeth/history/wrapHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_eth_staking_wbeth_history_unwrap_history (self, **params):
+    """
+    GET /sapi/v1/eth-staking/wbeth/history/unwrapHistory
+    """
+    return self._request_margin_api("get, "eth-staking/wbeth/history/unwrapHistory", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_income (self, **params):
+    """
+    GET /sapi/v1/loan/income
+    """
+    return self._request_margin_api("get, "loan/income", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_ongoing_orders (self, **params):
+    """
+    GET /sapi/v1/loan/ongoing/orders
+    """
+    return self._request_margin_api("get, "loan/ongoing/orders", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_repay (self, **params):
+    """
+    POST /sapi/v1/loan/repay
+    """
+    return self._request_margin_api("post, "loan/repay", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_repay_history (self, **params):
+    """
+    GET /sapi/v1/loan/repay/history
+    """
+    return self._request_margin_api("get, "loan/repay/history", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_create_loan_adjust_ltv (self, **params):
+    """
+    POST /sapi/v1/loan/adjust/ltv
+    """
+    return self._request_margin_api("post, "loan/adjust/ltv", version=self.PUBLIC_API_VERSION, data=params)
+
+margin_loan_ltv_adjustment_history (self, **params):
+    """
+    GET /sapi/v1/loan/ltv/adjustment/history
+    """
+    return self._request_margin_api("get, "loan/ltv/adjustment/history", version=self.PUBLIC_API_VERSION, data=params)
+
+#futures ====================
+
+futures_create_fee_burn (self, **params):
+    """
+    POST /fapi/v1/feeBurn
+    """
+    return self._request_futures_api("post, "feeBurn", version=1, data=params)
+
+futures_fee_burn (self, **params):
+    """
+    GET /fapi/v1/feeBurn
+    """
+    return self._request_futures_api("get, "feeBurn", version=1, data=params)
+
+futures_rate_limit_order (self, **params):
+    """
+    GET /fapi/v1/rateLimit/order
+    """
+    return self._request_futures_api("get, "rateLimit/order", version=1, data=params)
+
+futures_modify_batch_orders (self, **params):
+    """
+    PUT /fapi/v1/batchOrders
+    """
+    return self._request_futures_api("put, "batchOrders", version=1, data=params)
+
+futures_data_basis (self, **params):
+    """
+    GET /futures/data/basis
+    """
+    return self._request_futures_data_api("get, "basis", version=undefined, data=params)
+
+futures_data_delivery_price (self, **params):
+    """
+    GET /futures/data/delivery-price
+    """
+    return self._request_futures_data_api("get, "delivery-price", version=undefined, data=params)
+
+futures_data_takerlongshort_ratio (self, **params):
+    """
+    GET /futures/data/takerlongshortRatio
+    """
+    return self._request_futures_data_api("get, "takerlongshortRatio", version=undefined, data=params)
+
+futures_funding_info (self, **params):
+    """
+    GET /fapi/v1/fundingInfo
+    """
+    return self._request_futures_api("get, "fundingInfo", version=1, data=params)
+
+futures_income_asyn (self, **params):
+    """
+    GET /fapi/v1/income/asyn
+    """
+    return self._request_futures_api("get, "income/asyn", version=1, data=params)
+
+futures_order_asyn (self, **params):
+    """
+    GET /fapi/v1/order/asyn
+    """
+    return self._request_futures_api("get, "order/asyn", version=1, data=params)
+
+futures_trade_asyn (self, **params):
+    """
+    GET /fapi/v1/trade/asyn
+    """
+    return self._request_futures_api("get, "trade/asyn", version=1, data=params)
+
+futures_income_asyn_id (self, **params):
+    """
+    GET /fapi/v1/income/asyn/id
+    """
+    return self._request_futures_api("get, "income/asyn/id", version=1, data=params)
+
+futures_order_asyn_id (self, **params):
+    """
+    GET /fapi/v1/order/asyn/id
+    """
+    return self._request_futures_api("get, "order/asyn/id", version=1, data=params)
+
+futures_trade_asyn_id (self, **params):
+    """
+    GET /fapi/v1/trade/asyn/id
+    """
+    return self._request_futures_api("get, "trade/asyn/id", version=1, data=params)
+
+futures_create_batch_order (self, **params):
+    """
+    POST /fapi/v1/batchOrder
+    """
+    return self._request_futures_api("post, "batchOrder", version=1, data=params)
+
+futures_modify_batch_order (self, **params):
+    """
+    PUT /fapi/v1/batchOrder
+    """
+    return self._request_futures_api("put, "batchOrder", version=1, data=params)
+
+futures_cancel_batch_order (self, **params):
+    """
+    DELETE /fapi/v1/batchOrder
+    """
+    return self._request_futures_api("delete, "batchOrder", version=1, data=params)
+
+futures_order_asynto (self, **params):
+    """
+    GET /fapi/v1/order/asynto
+    """
+    return self._request_futures_api("get, "order/asynto", version=1, data=params)
+
+futures_order_asyn_idto (self, **params):
+    """
+    GET /fapi/v1/order/asyn/idto
+    """
+    return self._request_futures_api("get, "order/asyn/idto", version=1, data=params)
+
+futures_trade_asynto (self, **params):
+    """
+    GET /fapi/v1/trade/asynto
+    """
+    return self._request_futures_api("get, "trade/asynto", version=1, data=params)
+
+futures_trade_asyn_idto (self, **params):
+    """
+    GET /fapi/v1/trade/asyn/idto
+    """
+    return self._request_futures_api("get, "trade/asyn/idto", version=1, data=params)
+
+futures_order_amendment (self, **params):
+    """
+    GET /fapi/v1/orderAmendment
+    """
+    return self._request_futures_api("get, "orderAmendment", version=1, data=params)
+
+futures_pm_account_info (self, **params):
+    """
+    GET /fapi/v1/pmAccountInfo
+    """
+    return self._request_futures_api("get, "pmAccountInfo", version=1, data=params)
+
+futures_income_asynto (self, **params):
+    """
+    GET /fapi/v1/income/asynto
+    """
+    return self._request_futures_api("get, "income/asynto", version=1, data=params)
+
+futures_income_asyn_idto (self, **params):
+    """
+    GET /fapi/v1/income/asyn/idto
+    """
+    return self._request_futures_api("get, "income/asyn/idto", version=1, data=params)
+
+futures_asset_indexto (self, **params):
+    """
+    GET /fapi/v1/assetIndexto
+    """
+    return self._request_futures_api("get, "assetIndexto", version=1, data=params)
+
+futures_all_force_orders (self, **params):
+    """
+    GET /fapi/v1/allForceOrders
+    """
+    return self._request_futures_api("get, "allForceOrders", version=1, data=params)
+
+futures_open_order (self, **params):
+    """
+    GET /fapi/v1/openOrder
+    """
+    return self._request_futures_api("get, "openOrder", version=1, data=params)
+
+futures_accountrelated (self, **params):
+    """
+    GET /fapi/v1/accountrelated
+    """
+    return self._request_futures_api("get, "accountrelated", version=1, data=params)
+
+futures_asset_index (self, **params):
+    """
+    GET /fapi/v1/assetIndex
+    """
+    return self._request_futures_api("get, "assetIndex", version=1, data=params)
+
+#coin ====================
+
+futures_coin_data_delivery_price (self, **params):
+    """
+    GET /futures/data/delivery-price
+    """
+    return self._request_futures_coin_data_api("get, "delivery-price", version=undefined, data=params)
+
+futures_coin_data_top_long_short_account_ratio (self, **params):
+    """
+    GET /futures/data/topLongShortAccountRatio
+    """
+    return self._request_futures_coin_data_api("get, "topLongShortAccountRatio", version=undefined, data=params)
+
+futures_coin_data_top_long_short_position_ratio (self, **params):
+    """
+    GET /futures/data/topLongShortPositionRatio
+    """
+    return self._request_futures_coin_data_api("get, "topLongShortPositionRatio", version=undefined, data=params)
+
+futures_coin_data_global_long_short_account_ratio (self, **params):
+    """
+    GET /futures/data/globalLongShortAccountRatio
+    """
+    return self._request_futures_coin_data_api("get, "globalLongShortAccountRatio", version=undefined, data=params)
+
+futures_coin_data_takerlongshort_ratio (self, **params):
+    """
+    GET /futures/data/takerlongshortRatio
+    """
+    return self._request_futures_coin_data_api("get, "takerlongshortRatio", version=undefined, data=params)
+
+futures_coin_funding_info (self, **params):
+    """
+    GET /dapi/v1/fundingInfo
+    """
+    return self._request_futures_coin_api("get, "fundingInfo", version=1, data=params)
+
+futures_coin_income_asynto (self, **params):
+    """
+    GET /dapi/v1/income/asynto
+    """
+    return self._request_futures_coin_api("get, "income/asynto", version=1, data=params)
+
+futures_coin_income_asyn_idto (self, **params):
+    """
+    GET /dapi/v1/income/asyn/idto
+    """
+    return self._request_futures_coin_api("get, "income/asyn/idto", version=1, data=params)
+
+futures_coin_modify_order (self, **params):
+    """
+    PUT /dapi/v1/order
+    """
+    return self._request_futures_coin_api("put, "order", version=1, data=params)
+
+futures_coin_modify_batch_orders (self, **params):
+    """
+    PUT /dapi/v1/batchOrders
+    """
+    return self._request_futures_coin_api("put, "batchOrders", version=1, data=params)
+
+futures_coin_pm_account_info (self, **params):
+    """
+    GET /dapi/v1/pmAccountInfo
+    """
+    return self._request_futures_coin_api("get, "pmAccountInfo", version=1, data=params)
+
+futures_coin_pm_exchange_info (self, **params):
+    """
+    GET /dapi/v1/pmExchangeInfo
+    """
+    return self._request_futures_coin_api("get, "pmExchangeInfo", version=1, data=params)
+
+futures_coin_order_amendment (self, **params):
+    """
+    GET /dapi/v1/orderAmendment
+    """
+    return self._request_futures_coin_api("get, "orderAmendment", version=1, data=params)
+
+futures_coin_all_force_orders (self, **params):
+    """
+    GET /dapi/v1/allForceOrders
+    """
+    return self._request_futures_coin_api("get, "allForceOrders", version=1, data=params)
+
+futures_coin_commission_rate (self, **params):
+    """
+    GET /dapi/v1/commissionRate
+    """
+    return self._request_futures_coin_api("get, "commissionRate", version=1, data=params)
+
+futures_coin_adl_quantile (self, **params):
+    """
+    GET /dapi/v1/adlQuantile
+    """
+    return self._request_futures_coin_api("get, "adlQuantile", version=1, data=params)
+
+futures_coin_data_taker_buy_sell_vol (self, **params):
+    """
+    GET /futures/data/takerBuySellVol
+    """
+    return self._request_futures_coin_data_api("get, "takerBuySellVol", version=undefined, data=params)
+
+futures_coin_data_basis (self, **params):
+    """
+    GET /futures/data/basis
+    """
+    return self._request_futures_coin_data_api("get, "basis", version=undefined, data=params)
+
+futures_coin_create_countdown_cancel_all (self, **params):
+    """
+    POST /dapi/v1/countdownCancelAll
+    """
+    return self._request_futures_coin_api("post, "countdownCancelAll", version=1, data=params)
+
+futures_coin_open_order (self, **params):
+    """
+    GET /dapi/v1/openOrder
+    """
+    return self._request_futures_coin_api("get, "openOrder", version=1, data=params)
+
+futures_coin_income_asyn (self, **params):
+    """
+    GET /dapi/v1/income/asyn
+    """
+    return self._request_futures_coin_api("get, "income/asyn", version=1, data=params)
+
+futures_coin_income_asyn_id (self, **params):
+    """
+    GET /dapi/v1/income/asyn/id
+    """
+    return self._request_futures_coin_api("get, "income/asyn/id", version=1, data=params)
+
+create_listen_key (self, **params):
+    """
+    POST /fapi/v1/listenKey
+    """
+    return self.undefined("post, "listenKey", version=1, data=params)
+
+#options ====================
+
+options_margin_account (self, **params):
+    """
+    GET /eapi/v1/marginAccount
+    """
+    return self._request_options_api("get, "marginAccount", version=1, data=params)
+
+options_income_asynto (self, **params):
+    """
+    GET /eapi/v1/income/asynto
+    """
+    return self._request_options_api("get, "income/asynto", version=1, data=params)
+
+options_income_asyn_idto (self, **params):
+    """
+    GET /eapi/v1/income/asyn/idto
+    """
+    return self._request_options_api("get, "income/asyn/idto", version=1, data=params)
+
+options_exercise_history (self, **params):
+    """
+    GET /eapi/v1/exerciseHistory
+    """
+    return self._request_options_api("get, "exerciseHistory", version=1, data=params)
+
+options_open_interest (self, **params):
+    """
+    GET /eapi/v1/openInterest
+    """
+    return self._request_options_api("get, "openInterest", version=1, data=params)
+
+options_create_countdown_cancel_all (self, **params):
+    """
+    POST /eapi/v1/countdownCancelAll
+    """
+    return self._request_options_api("post, "countdownCancelAll", version=1, data=params)
+
+options_countdown_cancel_all (self, **params):
+    """
+    GET /eapi/v1/countdownCancelAll
+    """
+    return self._request_options_api("get, "countdownCancelAll", version=1, data=params)
+
+options_create_countdown_cancel_all_heart_beat (self, **params):
+    """
+    POST /eapi/v1/countdownCancelAllHeartBeat
+    """
+    return self._request_options_api("post, "countdownCancelAllHeartBeat", version=1, data=params)
+
+options_cancel_all_open_orders_by_underlying (self, **params):
+    """
+    DELETE /eapi/v1/allOpenOrdersByUnderlying
+    """
+    return self._request_options_api("delete, "allOpenOrdersByUnderlying", version=1, data=params)
+
+options_exercise_record (self, **params):
+    """
+    GET /eapi/v1/exerciseRecord
+    """
+    return self._request_options_api("get, "exerciseRecord", version=1, data=params)
+
+options_bill (self, **params):
+    """
+    GET /eapi/v1/bill
+    """
+    return self._request_options_api("get, "bill", version=1, data=params)
+
+options_income_asyn (self, **params):
+    """
+    GET /eapi/v1/income/asyn
+    """
+    return self._request_options_api("get, "income/asyn", version=1, data=params)
+
+options_income_asyn_id (self, **params):
+    """
+    GET /eapi/v1/income/asyn/id
+    """
+    return self._request_options_api("get, "income/asyn/id", version=1, data=params)
+
+options_create_listen_key (self, **params):
+    """
+    POST /eapi/v1/listenKey
+    """
+    return self._request_options_api("post, "listenKey", version=1, data=params)
+
+options_modify_listen_key (self, **params):
+    """
+    PUT /eapi/v1/listenKey
+    """
+    return self._request_options_api("put, "listenKey", version=1, data=params)
+
+options_cancel_listen_key (self, **params):
+    """
+    DELETE /eapi/v1/listenKey
+    """
+    return self._request_options_api("delete, "listenKey", version=1, data=params)
+
+options_create_mmp_set (self, **params):
+    """
+    POST /eapi/v1/mmpSet
+    """
+    return self._request_options_api("post, "mmpSet", version=1, data=params)
+
+options_create_mmp_reset (self, **params):
+    """
+    POST /eapi/v1/mmpReset
+    """
+    return self._request_options_api("post, "mmpReset", version=1, data=params)
+
+#portfolio ====================
+
+portfolio_create_ping (self, **params):
+    """
+    POST /papi/v1/ping
+    """
+    return self._request_papi_api("post, "ping", version=1, data=params)
+
+futures_exchange_info (self, **params):
+    """
+    GET /fapi/v1/exchangeInfo
+    """
+    return self._request_futures_api("get, "exchangeInfo", version=1, data=params)
+
+portfolio_create_cm_position_side_dual (self, **params):
+    """
+    POST /papi/v1/cm/positionSide/dual
+    """
+    return self._request_papi_api("post, "cm/positionSide/dual", version=1, data=params)
+
+portfolio_create_listen_key (self, **params):
+    """
+    POST /papi/v1/listenKey
+    """
+    return self._request_papi_api("post, "listenKey", version=1, data=params)
+
+portfolio_modify_listen_key (self, **params):
+    """
+    PUT /papi/v1/listenKey
+    """
+    return self._request_papi_api("put, "listenKey", version=1, data=params)
+
+portfolio_cancel_listen_key (self, **params):
+    """
+    DELETE /papi/v1/listenKey
+    """
+    return self._request_papi_api("delete, "listenKey", version=1, data=params)
+
