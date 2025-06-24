@@ -8035,7 +8035,7 @@ class Client(BaseClient):
     def futures_coin_ping(self):
         """Test connectivity to the Rest API
 
-        https://binance-docs.github.io/apidocs/delivery/en/#test-connectivity
+       https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api
 
         """
         return self._request_futures_coin_api("get", "ping")
@@ -8043,7 +8043,7 @@ class Client(BaseClient):
     def futures_coin_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#check-server-time
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Check-Server-time
 
         """
         return self._request_futures_coin_api("get", "time")
@@ -8051,7 +8051,7 @@ class Client(BaseClient):
     def futures_coin_exchange_info(self):
         """Current exchange trading rules and symbol information
 
-        https://binance-docs.github.io/apidocs/delivery/en/#exchange-information
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information
 
         """
         return self._request_futures_coin_api("get", "exchangeInfo")
@@ -8059,7 +8059,7 @@ class Client(BaseClient):
     def futures_coin_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://binance-docs.github.io/apidocs/delivery/en/#order-book
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Order-Book
 
         """
         return self._request_futures_coin_api("get", "depth", data=params)
@@ -8067,7 +8067,7 @@ class Client(BaseClient):
     def futures_coin_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
-        https://binance-docs.github.io/apidocs/delivery/en/#recent-trades-list
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Recent-Trades-List
 
         """
         return self._request_futures_coin_api("get", "trades", data=params)
@@ -8075,7 +8075,7 @@ class Client(BaseClient):
     def futures_coin_historical_trades(self, **params):
         """Get older market historical trades.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#old-trades-lookup-market_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Old-Trades-Lookup
 
         """
         return self._request_futures_coin_api("get", "historicalTrades", data=params)
@@ -8084,7 +8084,7 @@ class Client(BaseClient):
         """Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same
         price will have the quantity aggregated.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#compressed-aggregate-trades-list
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List
 
         """
         return self._request_futures_coin_api("get", "aggTrades", data=params)
@@ -8092,7 +8092,7 @@ class Client(BaseClient):
     def futures_coin_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "klines", data=params)
@@ -8100,7 +8100,7 @@ class Client(BaseClient):
     def futures_coin_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#continuous-contract-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "continuousKlines", data=params)
@@ -8108,7 +8108,7 @@ class Client(BaseClient):
     def futures_coin_index_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#index-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "indexPriceKlines", data=params)
@@ -8116,7 +8116,7 @@ class Client(BaseClient):
     def futures_coin_premium_index_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#premium-index-kline-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
 
         """
         return self._request_futures_coin_api("get", "premiumIndexKlines", data=params)
@@ -8124,7 +8124,7 @@ class Client(BaseClient):
     def futures_coin_mark_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#mark-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "markPriceKlines", data=params)
@@ -8132,7 +8132,7 @@ class Client(BaseClient):
     def futures_coin_mark_price(self, **params):
         """Get Mark Price and Funding Rate
 
-        https://binance-docs.github.io/apidocs/delivery/en/#index-price-and-mark-price
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-and-Mark-Price
 
         """
         return self._request_futures_coin_api("get", "premiumIndex", data=params)
@@ -8140,7 +8140,7 @@ class Client(BaseClient):
     def futures_coin_funding_rate(self, **params):
         """Get funding rate history
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-funding-rate-history-of-perpetual-futures
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Rate-History-of-Perpetual-Futures
 
         """
         return self._request_futures_coin_api("get", "fundingRate", data=params)
@@ -8148,7 +8148,7 @@ class Client(BaseClient):
     def futures_coin_ticker(self, **params):
         """24 hour rolling window price change statistics.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#24hr-ticker-price-change-statistics
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics
 
         """
         return self._request_futures_coin_api("get", "ticker/24hr", data=params)
@@ -8156,7 +8156,7 @@ class Client(BaseClient):
     def futures_coin_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#symbol-price-ticker
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Price-Ticker
 
         """
         return self._request_futures_coin_api("get", "ticker/price", data=params)
@@ -8164,15 +8164,50 @@ class Client(BaseClient):
     def futures_coin_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#symbol-order-book-ticker
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker
 
         """
         return self._request_futures_coin_api("get", "ticker/bookTicker", data=params)
 
+    def futures_coin_top_longshort_position_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "topLongShortPositionRatio", data=params)
+
+    def futures_coin_top_longshort_account_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "topLongShortAccountRatio", data=params)
+
+    def futures_coin_global_longshort_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Long-Short-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "globalLongShortAccountRatio", data=params)
+
+    def futures_coin_taker_buy_sell_volume(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Taker-Buy-Sell-Volume
+        """
+        return self._request_futures_coin_data_api("get", "takerBuySellVol", data=params)
+
+    def futures_coin_basis(self, **params):
+        """Get future basis of a specific symbol
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Basis
+        """
+        return self._request_futures_coin_data_api("get", "basis", data=params)
+
     def futures_coin_index_price_constituents(self, **params):
         """Get index price constituents
 
-        https://binance-docs.github.io/apidocs/delivery/en/#query-index-price-constituents
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Constituents
 
         """
         return self._request_futures_coin_api("get", "constituents", data=params)
@@ -8180,7 +8215,7 @@ class Client(BaseClient):
     def futures_coin_liquidation_orders(self, **params):
         """Get all liquidation orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#user-39-s-force-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8190,7 +8225,7 @@ class Client(BaseClient):
     def futures_coin_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#open-interest
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest
 
         """
         return self._request_futures_coin_api("get", "openInterest", data=params)
@@ -8198,7 +8233,7 @@ class Client(BaseClient):
     def futures_coin_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#open-interest-statistics-market-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest-Statistics
 
         """
         return self._request_futures_coin_data_api(
@@ -8208,7 +8243,7 @@ class Client(BaseClient):
     def futures_coin_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
-        https://binance-docs.github.io/apidocs/delivery/en/#notional-bracket-for-pair-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Notional-Bracket-for-Symbol
 
         """
         return self._request_futures_coin_api(
@@ -8245,7 +8280,7 @@ class Client(BaseClient):
     def futures_coin_create_order(self, **params):
         """Send in a new order.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#new-order-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api
 
         """
         if "newClientOrderId" not in params:
@@ -8255,7 +8290,7 @@ class Client(BaseClient):
     def futures_coin_place_batch_order(self, **params):
         """Send in new orders.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#place-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Place-Multiple-Orders
 
         To avoid modifying the existing signature generation and parameter order logic,
         the url encoding is done on the special query param, batchOrders, in the early stage.
@@ -8270,10 +8305,18 @@ class Client(BaseClient):
 
         return self._request_futures_coin_api("post", "batchOrders", True, data=params)
 
+    def futures_coin_modify_order(self, **params):
+        """Modify an existing order. Currently only LIMIT order modification is supported.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order
+
+        """
+        return self._request_futures_coin_api("put", "order", True, data=params)
+
     def futures_coin_get_order(self, **params):
         """Check an order's status.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#query-order-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Order
 
         """
         return self._request_futures_coin_api("get", "order", True, data=params)
@@ -8281,7 +8324,7 @@ class Client(BaseClient):
     def futures_coin_get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#current-all-open-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Current-All-Open-Orders
 
         """
         return self._request_futures_coin_api("get", "openOrders", True, data=params)
@@ -8289,7 +8332,7 @@ class Client(BaseClient):
     def futures_coin_get_all_orders(self, **params):
         """Get all futures account orders; active, canceled, or filled.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#all-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/All-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8299,7 +8342,7 @@ class Client(BaseClient):
     def futures_coin_cancel_order(self, **params):
         """Cancel an active futures order.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-order-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Order
 
         """
         return self._request_futures_coin_api(
@@ -8309,7 +8352,7 @@ class Client(BaseClient):
     def futures_coin_cancel_all_open_orders(self, **params):
         """Cancel all open futures orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-all-open-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-All-Open-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8319,7 +8362,7 @@ class Client(BaseClient):
     def futures_coin_cancel_orders(self, **params):
         """Cancel multiple futures orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Multiple-Orders
 
         """
         if params.get("orderidlist"):
@@ -8334,10 +8377,45 @@ class Client(BaseClient):
             "delete", "batchOrders", True, data=params
         )
 
+    def futures_coin_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param countdownTime: required
+        :type countdownTime: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "symbol": "BTCUSDT",
+            "countdownTime": "100000"
+        }
+
+        """
+        return self._request_futures_coin_api(
+            "post", "countdownCancelAll", True, data=params
+        )
+
+    def futures_coin_get_open_order(self, **params):
+        """Get current open order.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Current-Open-Order
+
+        """
+        return self._request_futures_coin_api(
+            "get", "openOrder", signed=True, data=params
+        )
+
     def futures_coin_account_balance(self, **params):
         """Get futures account balance
 
-        https://binance-docs.github.io/apidocs/delivery/en/#futures-account-balance-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Futures-Account-Balance
 
         """
         return self._request_futures_coin_api(
@@ -8347,7 +8425,7 @@ class Client(BaseClient):
     def futures_coin_account(self, **params):
         """Get current account information.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#account-information-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Account-Information
 
         """
         return self._request_futures_coin_api(
@@ -8357,7 +8435,7 @@ class Client(BaseClient):
     def futures_coin_change_leverage(self, **params):
         """Change user's initial leverage of specific symbol market
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-initial-leverage-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Initial-Leverage
 
         """
         return self._request_futures_coin_api(
@@ -8367,7 +8445,7 @@ class Client(BaseClient):
     def futures_coin_change_margin_type(self, **params):
         """Change the margin type for a symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-margin-type-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Margin-Type
 
         """
         return self._request_futures_coin_api(
@@ -8377,7 +8455,7 @@ class Client(BaseClient):
     def futures_coin_change_position_margin(self, **params):
         """Change the position margin for a symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#modify-isolated-position-margin-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin
 
         """
         return self._request_futures_coin_api(
@@ -8387,7 +8465,7 @@ class Client(BaseClient):
     def futures_coin_position_margin_history(self, **params):
         """Get position margin change history
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-position-margin-change-history-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Position-Margin-Change-History
 
         """
         return self._request_futures_coin_api(
@@ -8397,7 +8475,7 @@ class Client(BaseClient):
     def futures_coin_position_information(self, **params):
         """Get position information
 
-        https://binance-docs.github.io/apidocs/delivery/en/#position-information-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-Information
 
         """
         return self._request_futures_coin_api("get", "positionRisk", True, data=params)
@@ -8405,7 +8483,7 @@ class Client(BaseClient):
     def futures_coin_account_trades(self, **params):
         """Get trades for the authenticated account and symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#account-trade-list-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Account-Trade-List
 
         """
         return self._request_futures_coin_api("get", "userTrades", True, data=params)
@@ -8413,7 +8491,7 @@ class Client(BaseClient):
     def futures_coin_income_history(self, **params):
         """Get income history for authenticated account
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-income-history-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Income-History
 
         """
         return self._request_futures_coin_api("get", "income", True, data=params)
@@ -8421,7 +8499,8 @@ class Client(BaseClient):
     def futures_coin_change_position_mode(self, **params):
         """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-position-mode-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Position-Mode
+
         """
         return self._request_futures_coin_api(
             "post", "positionSide/dual", True, data=params
@@ -8430,7 +8509,7 @@ class Client(BaseClient):
     def futures_coin_get_position_mode(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-current-position-mode-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Current-Position-Mode
 
         """
         return self._request_futures_coin_api(
@@ -8456,7 +8535,7 @@ class Client(BaseClient):
     def futures_coin_account_order_history_download(self, **params):
         """Get Download Id For Futures Order History
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Order-History
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Order-History
 
         :param startTime: required - Start timestamp in ms
         :type startTime: int
@@ -8488,7 +8567,7 @@ class Client(BaseClient):
     def futures_coin_accout_order_history_download_link(self, **params):
         """Get futures order history download link by Id
 
-        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
 
         :param downloadId: required - Download ID obtained from futures_coin_download_id
         :type downloadId: str
@@ -8529,7 +8608,7 @@ class Client(BaseClient):
     def futures_coin_account_trade_history_download(self, **params):
         """Get Download Id For Futures Trade History (USER_DATA)
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Trade-History
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Trade-History
 
         :param startTime: required - Start timestamp in ms
         :type startTime: int
@@ -8557,7 +8636,7 @@ class Client(BaseClient):
     def futures_coin_account_trade_history_download_link(self, **params):
         """Get futures trade download link by Id
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Futures-Trade-Download-Link-by-Id
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Trade-Download-Link-by-Id
 
         :param downloadId: required - Download ID obtained from futures_coin_trade_download_id
         :type downloadId: str
@@ -13889,6 +13968,8 @@ class Client(BaseClient):
         Placeholder function for GET /dapi/v1/income/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Transaction-History-Download-Link-by-Id
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14025,6 +14106,8 @@ class Client(BaseClient):
         Placeholder function for GET /dapi/v1/orderAmendment.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Order-Modify-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14086,6 +14169,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /dapi/v1/pmAccountInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/portfolio-margin-endpoints
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14523,6 +14608,8 @@ class Client(BaseClient):
         Placeholder function for GET /dapi/v1/fundingInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Info
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14684,6 +14771,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /dapi/v1/adlQuantile.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15202,6 +15291,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /dapi/v1/income/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Transaction-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15803,6 +15894,8 @@ class Client(BaseClient):
         Placeholder function for GET /dapi/v1/commissionRate.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/User-Commission-Rate
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15900,6 +15993,8 @@ class Client(BaseClient):
         """
         Placeholder function for PUT /dapi/v1/batchOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Multiple-Orders
 
         :param params: parameters required by the endpoint
         :type params: dict
