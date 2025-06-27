@@ -150,6 +150,9 @@ class Client(BaseClient):
         return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
+        """
+        https://developers.binance.com/docs/derivatives/option/market-data
+        """
         uri = self._create_options_api_uri(path)
 
         force_params = kwargs.pop("force_params", True)
@@ -8908,7 +8911,7 @@ class Client(BaseClient):
     def options_ping(self):
         """Test connectivity
 
-        https://binance-docs.github.io/apidocs/voptions/en/#test-connectivity
+        https://developers.binance.com/docs/derivatives/option/market-data/Test-Connectivity
 
         """
         return self._request_options_api("get", "ping")
@@ -8916,7 +8919,7 @@ class Client(BaseClient):
     def options_time(self):
         """Get server time
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-server-time
+        https://developers.binance.com/docs/derivatives/option/market-data
 
         """
         return self._request_options_api("get", "time")
@@ -8932,7 +8935,7 @@ class Client(BaseClient):
     def options_exchange_info(self):
         """Get current limit info and trading pair info
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-current-limit-info-and-trading-pair-info
+        https://developers.binance.com/docs/derivatives/option/market-data/Exchange-Information
 
         """
         return self._request_options_api("get", "exchangeInfo")
@@ -8940,7 +8943,7 @@ class Client(BaseClient):
     def options_index_price(self, **params):
         """Get the spot index price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-spot-index-price
+        https://developers.binance.com/docs/derivatives/option/market-data/Symbol-Price-Ticker
 
         :param underlying: required - Spot pair（Option contract underlying asset）- BTCUSDT
         :type underlying: str
@@ -8951,7 +8954,7 @@ class Client(BaseClient):
     def options_price(self, **params):
         """Get the latest price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-price
+        https://developers.binance.com/docs/derivatives/option/market-data/24hr-Ticker-Price-Change-Statistics
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8962,7 +8965,7 @@ class Client(BaseClient):
     def options_mark_price(self, **params):
         """Get the latest mark price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-mark-price
+        https://developers.binance.com/docs/derivatives/option/market-data/Option-Mark-Price
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8973,7 +8976,7 @@ class Client(BaseClient):
     def options_order_book(self, **params):
         """Depth information
 
-        https://binance-docs.github.io/apidocs/voptions/en/#depth-information
+        https://developers.binance.com/docs/derivatives/option/market-data/Order-Book
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8986,7 +8989,7 @@ class Client(BaseClient):
     def options_klines(self, **params):
         """Candle data
 
-        https://binance-docs.github.io/apidocs/voptions/en/#candle-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9005,7 +9008,7 @@ class Client(BaseClient):
     def options_recent_trades(self, **params):
         """Recently completed Option trades
 
-        https://binance-docs.github.io/apidocs/voptions/en/#recently-completed-option-trades
+        https://developers.binance.com/docs/derivatives/option/market-data/Recent-Trades-List
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9018,7 +9021,7 @@ class Client(BaseClient):
     def options_historical_trades(self, **params):
         """Query trade history
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-trade-history
+        https://developers.binance.com/docs/derivatives/option/market-data/Old-Trades-Lookup
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9035,13 +9038,35 @@ class Client(BaseClient):
     def options_account_info(self, **params):
         """Account asset info (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#account-asset-info-user_data
+        https://developers.binance.com/docs/derivatives/option/account
 
         :param recvWindow: optional
         :type recvWindow: int
 
         """
         return self._request_options_api("get", "account", signed=True, data=params)
+
+    def options_get_bill(self, **params):
+        """Get account funding flows
+
+        https://developers.binance.com/docs/derivatives/option/account/Account-Funding-Flow
+
+        :param currency: required
+        :type currency: str
+        :param recordId: optional
+        :type recordId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+        """
+        return self._request_options_api("get", "bill", signed=True, data=params)
 
     def options_funds_transfer(self, **params):
         """Funds transfer (USER_DATA)
@@ -9063,7 +9088,7 @@ class Client(BaseClient):
     def options_positions(self, **params):
         """Option holdings info (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-holdings-info-user_data
+        https://developers.binance.com/docs/derivatives/option/trade/Option-Position-Information
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9072,6 +9097,27 @@ class Client(BaseClient):
 
         """
         return self._request_options_api("get", "position", signed=True, data=params)
+
+    def options_exercise_record(self, **params):
+        """
+        Get account exercise records.
+
+        https://developers.binance.com/docs/derivatives/option/trade/User-Exercise-Record
+
+        :param symbol: optional
+        :type symbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+        """
+        return self._request_options_api("get", "exerciseRecord", signed=True, data=params)
 
     def options_bill(self, **params):
         """Account funding flow (USER_DATA)
@@ -9097,7 +9143,7 @@ class Client(BaseClient):
     def options_place_order(self, **params):
         """Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9130,7 +9176,7 @@ class Client(BaseClient):
     def options_place_batch_order(self, **params):
         """Place Multiple Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#place-multiple-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Place-Multiple-Orders
 
         :param orders: required - order list. Max 5 orders - [{"symbol":"BTC-210115-35000-C","price":"100","quantity":"0.0001","side":"BUY","type":"LIMIT"}]
         :type orders: list
@@ -9148,7 +9194,7 @@ class Client(BaseClient):
     def options_cancel_order(self, **params):
         """Cancel Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-Option-Order
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9165,7 +9211,7 @@ class Client(BaseClient):
     def options_cancel_batch_order(self, **params):
         """Cancel Multiple Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-multiple-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-Multiple-Option-Orders
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9184,7 +9230,7 @@ class Client(BaseClient):
     def options_cancel_all_orders(self, **params):
         """Cancel all Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-all-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-all-Option-orders-on-specific-symbol
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9199,7 +9245,7 @@ class Client(BaseClient):
     def options_query_order(self, **params):
         """Query Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Single-Order
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9216,7 +9262,7 @@ class Client(BaseClient):
     def options_query_pending_orders(self, **params):
         """Query current pending Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-current-pending-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Current-Open-Option-Orders
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9237,7 +9283,7 @@ class Client(BaseClient):
     def options_query_order_history(self, **params):
         """Query Option order history (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-history-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Option-Order-History
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9260,7 +9306,7 @@ class Client(BaseClient):
     def options_user_trades(self, **params):
         """Option Trade List (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-trade-list-user_data
+        https://developers.binance.com/docs/derivatives/option/trade/Account-Trade-List
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -14080,6 +14126,8 @@ class Client(BaseClient):
         Placeholder function for GET /eapi/v1/countdownCancelAll.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Get-Auto-Cancel-All-Open-Orders-Config
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14710,6 +14758,8 @@ class Client(BaseClient):
         Placeholder function for POST /eapi/v1/countdownCancelAll.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Set-Auto-Cancel-All-Open-Orders-Config
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14785,6 +14835,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /eapi/v1/income/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/account/Get-Option-Transaction-History-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15196,6 +15248,8 @@ class Client(BaseClient):
         Placeholder function for DELETE /eapi/v1/allOpenOrdersByUnderlying.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-All-Option-Orders-By-Underlying
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15368,12 +15422,61 @@ class Client(BaseClient):
         Placeholder function for GET /eapi/v1/marginAccount.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints
+
         :param params: parameters required by the endpoint
         :type params: dict
 
         :returns: API response
         """
         return self._request_options_api("get", "marginAccount", signed=True, data=params)
+
+    def options_get_market_maker_protection_config(self, **params):
+        """
+        Get config for MMP.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Get-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("get", "mmp", signed=True, data=params)
+
+    def options_post_market_maker_protection_config(self, **params):
+        """
+        Set config for MMP.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Set-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param windowTimeInMilliseconds: required
+        :type windowTimeInMilliseconds: int
+        :param frozenTimeInMilliseconds: required
+        :type frozenTimeInMilliseconds: int
+        :param qtyLimit: required
+        :type qtyLimit: decimal
+        :param deltaLimit: required
+        :type deltaLimit: decimal
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("post", "mmpSet", signed=True, data=params)
+
+    def options_reset_market_maker_protection_config(self, **params):
+        """
+        Reset MMP, start MMP order again.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Reset-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("post", "mmpReset", signed=True, data=params)
 
     def margin_v1_post_localentity_withdraw_apply(self, **params):
         """
@@ -15549,6 +15652,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /eapi/v1/countdownCancelAllHeartBeat.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Auto-Cancel-All-Open-Orders-Heartbeat
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16606,6 +16711,8 @@ class Client(BaseClient):
         Placeholder function for GET /eapi/v1/income/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/account/Get-Download-Id-For-Option-Transaction-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16797,18 +16904,6 @@ class Client(BaseClient):
         """
         return self._request_margin_api("get", "simple-earn/locked/history/subscriptionRecord", signed=True, data=params, version=1)
 
-    def futures_coin_v1_put_order(self, **params):
-        """
-        Placeholder function for PUT /dapi/v1/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
-
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
-
     def margin_v1_get_managed_subaccount_asset(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/asset.
@@ -16898,12 +16993,29 @@ class Client(BaseClient):
         Placeholder function for GET /eapi/v1/exerciseHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/option/market-data/Historical-Exercise-Records
+
         :param params: parameters required by the endpoint
         :type params: dict
 
         :returns: API response
         """
         return self._request_options_api("get", "exerciseHistory", signed=False, data=params)
+
+    def options_open_interest(self, **params):
+        """Get present open interest specific underlying asset on specific expiration date.
+
+        https://developers.binance.com/docs/derivatives/option/market-data/Open-Interest
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        :param underlyingAsset: required
+        :type underlyingAsset: str
+        :param expiration: required (e.g '221225')
+        :type expiration: str
+
+        """
+        return self._request_options_api("get", "openInterest", data=params)
 
     def margin_v1_get_convert_exchange_info(self, **params):
         """
@@ -16957,6 +17069,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /eapi/v1/blockTrades.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-data/Recent-Block-Trade-List
 
         :param params: parameters required by the endpoint
         :type params: dict
