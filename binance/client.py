@@ -16112,6 +16112,20 @@ class Client(BaseClient):
         """
         return self._request_margin_api("post", "broker/subAccount/bnbBurn/spot", signed=True, data=params, version=1)
 
+    def futures_coin_v1_put_order(self, **params):
+        """
+        Placeholder function for PUT /dapi/v1/order.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+
+        :returns: API response
+        """
+        return self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
+
     def futures_coin_v1_put_batch_orders(self, **params):
         """
         Placeholder function for PUT /dapi/v1/batchOrders.
