@@ -10018,6 +10018,24 @@ class Client(BaseClient):
             "post", "um/positionSide/dual", signed=True, data=params
         )
 
+    def papi_change_cm_position_side_dual(self, **params):
+        """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-CM-Position-Mode
+
+        :param dualSidePosition: required
+        :type dualSidePosition: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_papi_api(
+            "post", "cm/positionSide/dual", signed=True, data=params
+        )
+
     def papi_get_um_position_side_dual(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
 
@@ -10051,7 +10069,7 @@ class Client(BaseClient):
     def papi_get_um_leverage_bracket(self, **params):
         """Query UM notional and leverage brackets.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Margin-Max-Borrow
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/UM-Notional-and-Leverage-Brackets
 
         :param symbol: optional
         :type symbol: str
@@ -10353,7 +10371,7 @@ class Client(BaseClient):
     def papi_get_um_account_v2(self, **params):
         """Get current UM account asset and position information.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail-V2
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -10424,7 +10442,7 @@ class Client(BaseClient):
     def papi_get_um_trade_asyn_id(self, **params):
         """Get UM futures trade download link by Id.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Trade-History
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Trade-Download-Link-by-Id
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -10763,7 +10781,7 @@ class Client(BaseClient):
     def papi_get_um_all_orders(self, **params):
         """Get all account UM orders; active, canceled, or filled.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Orders
 
         :returns: API response
 
@@ -10851,7 +10869,7 @@ class Client(BaseClient):
     def papi_get_cm_all_orders(self, **params):
         """Get all account CM orders; active, canceled, or filled.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-CM-Orders
 
         :returns: API response
 
@@ -11055,7 +11073,7 @@ class Client(BaseClient):
     def papi_get_margin_open_orders(self, **params):
         """Query Current Margin Open Order.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-Margin-Open-Order
 
         :returns: API response
 
@@ -11127,7 +11145,7 @@ class Client(BaseClient):
     def papi_get_margin_repay_debt(self, **params):
         """Repay debt for a margin loan.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Trade-List
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Repay-Debt
 
         :returns: API response
 
