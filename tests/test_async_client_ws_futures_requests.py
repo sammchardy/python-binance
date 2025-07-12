@@ -68,7 +68,7 @@ async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClient
         type="LIMIT",
         timeInForce="GTC",
         quantity=0.1,
-        price=str(float(ticker["bidPrice"]) + 2),
+        price=str(float(ticker["bidPrice"]) + 5),
     )
     assert_contract_order(futuresClientAsync, order)
     order = await futuresClientAsync.ws_futures_edit_order(
@@ -101,7 +101,7 @@ async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresCli
             type="LIMIT",
             timeInForce="GTC",
             quantity=0.1,
-            price=str(float(ticker["bidPrice"]) + 2),
+            price=str(float(ticker["bidPrice"]) + 5),
         )
         assert_contract_order(futuresClientAsync, order)
         order = await futuresClientAsync.ws_futures_edit_order(
