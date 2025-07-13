@@ -36,6 +36,7 @@ from binance.exceptions import (
     BinanceWebsocketClosed,
     BinanceWebsocketUnableToConnect,
     BinanceWebsocketQueueOverflow,
+    ReadLoopClosed,
 )
 from binance.helpers import get_loop
 from binance.ws.constants import WSListenerState
@@ -247,6 +248,8 @@ class ReconnectingWebsocket:
                         "m": f"{e}",
                     })
                     break
+        except Exception as e:
+            self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
         finally:
             self._handle_read_loop = None  # Signal the coro is stopped
             self._reconnects = 0
@@ -272,6 +275,10 @@ class ReconnectingWebsocket:
     async def recv(self):
         res = None
         while not res:
+            if not self._handle_read_loop:
+                raise ReadLoopClosed(
+                    "Read loop has been closed, please reset the websocket connection and listen to the message error."
+                )
             try:
                 res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
             except asyncio.TimeoutError:
