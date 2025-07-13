@@ -37,8 +37,8 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_20 = "20"
 
     def __init__(
-        self, 
-        client: AsyncClient, 
+        self,
+        client: AsyncClient,
         user_timeout=KEEPALIVE_TIMEOUT,
         max_queue_size: int = 100,
     ):
@@ -861,7 +861,7 @@ class BinanceSocketManager:
 
     def options_multiplex_socket(self, streams: List[str]):
         """Start a multiplexed socket using a list of socket names.
-        
+
         https://developers.binance.com/docs/derivatives/option/websocket-market-streams
 
         """
@@ -1015,7 +1015,7 @@ class BinanceSocketManager:
 
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER
 
-        Stream provides real-time 24hr ticker information for all symbols. Only symbols whose ticker info 
+        Stream provides real-time 24hr ticker information for all symbols. Only symbols whose ticker info
         changed will be sent. Updates every 1000ms.
 
         :param symbol: The option symbol to subscribe to (e.g. "BTC-220930-18000-C")
@@ -1040,7 +1040,7 @@ class BinanceSocketManager:
 
     def options_recent_trades_socket(self, symbol: str):
         """Subscribe to a real-time trade information stream.
-        
+
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Trade-Streams
 
         Stream pushes raw trade information for a specific symbol or underlying asset.
@@ -1055,7 +1055,7 @@ class BinanceSocketManager:
         self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE
     ):
         """Subscribe to a Kline/Candlestick data stream.
-        
+
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams
 
         Stream pushes updates to the current klines/candlestick every 1000ms (if existing).
@@ -1088,7 +1088,9 @@ class BinanceSocketManager:
         """
         return self._get_options_socket(symbol.upper() + "@depth" + str(depth))
 
-    def futures_depth_socket(self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M):
+    def futures_depth_socket(
+        self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M
+    ):
         """Subscribe to a futures depth data stream
 
         https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
@@ -1145,7 +1147,9 @@ class BinanceSocketManager:
         :param expiration_date: The expiration date (e.g., "221125" for Nov 25, 2022)
         :type expiration_date: str
         """
-        return self._get_options_socket(symbol.upper() + "@openInterest@" + expiration_date)
+        return self._get_options_socket(
+            symbol.upper() + "@openInterest@" + expiration_date
+        )
 
     def options_mark_price_socket(self, symbol: str):
         """Subscribe to an options mark price stream.
@@ -1228,8 +1232,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     async def _before_socket_listener_start(self):
         assert self._client
         self._bsm = BinanceSocketManager(
-            client=self._client,
-            max_queue_size=self._max_queue_size
+            client=self._client, max_queue_size=self._max_queue_size
         )
 
     def _start_async_socket(
@@ -1242,7 +1245,9 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         start_time = time.time()
         while not self._bsm:
             if time.time() - start_time > 5:
-                raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
+                raise RuntimeError(
+                    "Binance Socket Manager failed to initialize after 5 seconds"
+                )
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
         socket_path: str = path or socket._path  # noqa

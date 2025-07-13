@@ -11,3 +11,5 @@ setuptools
 aioresponses
 pre-commit
 orjson
+ruff==0.11.12
+pyright
