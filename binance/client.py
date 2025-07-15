@@ -96,7 +96,7 @@ class Client(BaseClient):
         """
         if not (200 <= response.status_code < 300):
             raise BinanceAPIException(response, response.status_code, response.text)
-        
+
         if response.text == "":
             return {}
 
@@ -150,6 +150,9 @@ class Client(BaseClient):
         return self._request(method, uri, signed, force_params, **kwargs)
 
     def _request_options_api(self, method, path, signed=False, **kwargs) -> Dict:
+        """
+        https://developers.binance.com/docs/derivatives/option/market-data
+        """
         uri = self._create_options_api_uri(path)
 
         force_params = kwargs.pop("force_params", True)
@@ -215,6 +218,8 @@ class Client(BaseClient):
     def get_exchange_info(self) -> Dict:
         """Return rate limits and list of symbols
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information
+
         :returns: list - List of product dictionaries
 
         .. code-block:: python
@@ -279,6 +284,8 @@ class Client(BaseClient):
     def get_symbol_info(self, symbol) -> Optional[Dict]:
         """Return information about a symbol
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#exchange-information
+
         :param symbol: required e.g. BNBBTC
         :type symbol: str
 
@@ -330,7 +337,7 @@ class Client(BaseClient):
     def ping(self) -> Dict:
         """Test connectivity to the Rest API.
 
-        https://binance-docs.github.io/apidocs/spot/en/#test-connectivity
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#test-connectivity
 
         :returns: Empty array
 
@@ -346,7 +353,7 @@ class Client(BaseClient):
     def get_server_time(self) -> Dict:
         """Test connectivity to the Rest API and get the current server time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#check-server-time
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/general-endpoints#check-server-time
 
         :returns: Current server time
 
@@ -538,8 +545,8 @@ class Client(BaseClient):
     def get_aggregate_trades(self, **params) -> Dict:
         """Get compressed, aggregate trades. Trades that fill at the time,
         from the same order, with the same price will have the quantity aggregated.
-        
-        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#compressedaggregate-trades-list
 
         :param symbol: required
         :type symbol: str
@@ -698,7 +705,7 @@ class Client(BaseClient):
 
         """
         return self._get("uiKlines", data=params)
-    
+
     def get_klines(self, **params) -> Dict:
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
@@ -746,6 +753,17 @@ class Client(BaseClient):
     ) -> Dict:
         """Get klines of spot (get_klines) or futures (futures_klines) endpoints.
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+
         :param klines_type: Historical klines type: SPOT or FUTURES
         :type klines_type: HistoricalKlinesType
 
@@ -780,6 +798,17 @@ class Client(BaseClient):
     ):
         """Get the earliest valid open timestamp from Binance
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+
         :param symbol: Name of symbol pair e.g. BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
@@ -810,6 +839,17 @@ class Client(BaseClient):
         klines_type: HistoricalKlinesType = HistoricalKlinesType.SPOT,
     ):
         """Get Historical Klines from Binance
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
 
         :param symbol: Name of symbol pair e.g. BNBBTC
         :type symbol: str
@@ -946,6 +986,17 @@ class Client(BaseClient):
     ):
         """Get Historical Klines generator from Binance
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#klinecandlestick-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
+
         :param symbol: Name of symbol pair e.g. BNBBTC
         :type symbol: str
         :param interval: Binance Kline interval
@@ -1058,7 +1109,7 @@ class Client(BaseClient):
 
     def get_avg_price(self, **params):
         """Current average price for a symbol.
-        
+
         https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#current-average-price
 
         :param symbol:
@@ -1139,7 +1190,7 @@ class Client(BaseClient):
     def get_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-price-ticker
 
         :param symbol:
         :type symbol: str
@@ -1213,7 +1264,7 @@ class Client(BaseClient):
     def get_orderbook_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/spot/en/#symbol-order-book-ticker
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints#symbol-order-book-ticker
 
         :param symbol:
         :type symbol: str
@@ -1265,7 +1316,7 @@ class Client(BaseClient):
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
-        https://binance-docs.github.io/apidocs/spot/en/#new-order-trade
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1384,6 +1435,8 @@ class Client(BaseClient):
     def order_limit(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit order
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
+
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
         :param symbol: required
@@ -1417,6 +1470,8 @@ class Client(BaseClient):
 
     def order_limit_buy(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit buy order
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
 
         Any order with an icebergQty MUST have timeInForce set to GTC.
 
@@ -1454,6 +1509,8 @@ class Client(BaseClient):
     def order_limit_sell(self, timeInForce=BaseClient.TIME_IN_FORCE_GTC, **params):
         """Send in a new limit sell order
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
+
         :param symbol: required
         :type symbol: str
         :param quantity: required
@@ -1486,6 +1543,8 @@ class Client(BaseClient):
     def order_market(self, **params):
         """Send in a new market order
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
+
         :param symbol: required
         :type symbol: str
         :param side: required
@@ -1515,6 +1574,8 @@ class Client(BaseClient):
     def order_market_buy(self, **params):
         """Send in a new market buy order
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
+
         :param symbol: required
         :type symbol: str
         :param quantity: required
@@ -1540,6 +1601,8 @@ class Client(BaseClient):
 
     def order_market_sell(self, **params):
         """Send in a new market sell order
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1712,6 +1775,8 @@ class Client(BaseClient):
     def order_oco_buy(self, **params):
         """Send in a new OCO buy order
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade
+
         :param symbol: required
         :type symbol: str
         :param listClientOrderId: A unique id for the list order. Automatically generated if not sent.
@@ -1751,6 +1816,8 @@ class Client(BaseClient):
 
     def order_oco_sell(self, **params):
         """Send in a new OCO sell order
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#new-order-list---oco-trade
 
         :param symbol: required
         :type symbol: str
@@ -1792,7 +1859,7 @@ class Client(BaseClient):
     def create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
 
-        https://binance-docs.github.io/apidocs/spot/en/#test-new-order-trade
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#test-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1830,7 +1897,7 @@ class Client(BaseClient):
     def get_order(self, **params):
         """Check an order's status. Either orderId or origClientOrderId must be sent.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-order-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-order-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1869,7 +1936,7 @@ class Client(BaseClient):
     def get_all_orders(self, **params):
         """Get all account orders; active, canceled, or filled.
 
-        https://binance-docs.github.io/apidocs/spot/en/#all-orders-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#all-orders-user_data
 
         :param symbol: required
         :type symbol: str
@@ -1914,7 +1981,7 @@ class Client(BaseClient):
     def cancel_order(self, **params):
         """Cancel an active order. Either orderId or origClientOrderId must be sent.
 
-        https://binance-docs.github.io/apidocs/spot/en/#cancel-order-trade
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -1944,6 +2011,16 @@ class Client(BaseClient):
         return self._delete("order", True, data=params)
 
     def cancel_all_open_orders(self, **params):
+        """
+        Cancel all open orders on a symbol.
+
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-all-open-orders-on-a-symbol-trade
+
+        :param symbol: required
+        :type symbol: str
+
+        :returns: API response
+        """
         return self._delete("openOrders", True, data=params)
 
     def cancel_replace_order(self, **params):
@@ -1953,7 +2030,7 @@ class Client(BaseClient):
 
         A new order that was not attempted (i.e. when newOrderResult: NOT_ATTEMPTED), will still increase the order count by 1.
 
-        https://binance-docs.github.io/apidocs/spot/en/#cancel-an-existing-order-and-send-a-new-order-trade
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/trading-endpoints#cancel-an-existing-order-and-send-a-new-order-trade
 
         :param symbol: required
         :type symbol: str
@@ -2057,7 +2134,7 @@ class Client(BaseClient):
     def get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://binance-docs.github.io/apidocs/spot/en/#current-open-orders-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#current-open-orders-user_data
 
         :param symbol: optional
         :type symbol: str
@@ -2093,7 +2170,7 @@ class Client(BaseClient):
 
     def get_open_oco_orders(self, **params):
         """Get all open orders on a symbol.
-        https://binance-docs.github.io/apidocs/spot/en/#query-open-oco-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-open-order-lists-user_data
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
         :returns: API response
@@ -2129,7 +2206,7 @@ class Client(BaseClient):
     def get_account(self, **params):
         """Get current account information.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#account-information-user_data
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2168,6 +2245,8 @@ class Client(BaseClient):
     def get_asset_balance(self, asset=None, **params):
         """Get current asset balance.
 
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#account-information-user_data
+
         :param asset: optional - the asset to get the balance of
         :type asset: str
         :param recvWindow: the number of milliseconds the request is valid for
@@ -2200,7 +2279,7 @@ class Client(BaseClient):
     def get_my_trades(self, **params):
         """Get trades for a specific symbol.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-trade-list-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#account-trade-list-user_data
 
         :param symbol: required
         :type symbol: str
@@ -2241,7 +2320,7 @@ class Client(BaseClient):
     def get_current_order_count(self, **params):
         """Displays the user's current order count usage for all intervals.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-unfilled-order-count-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-unfilled-order-count-user_data
 
         :returns: API response
 
@@ -2270,7 +2349,7 @@ class Client(BaseClient):
     def get_prevented_matches(self, **params):
         """Displays the list of orders that were expired because of STP.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-prevented-matches-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-prevented-matches-user_data
 
         :param symbol: required
         :type symbol: str
@@ -2307,7 +2386,7 @@ class Client(BaseClient):
     def get_allocations(self, **params):
         """Retrieves allocations resulting from SOR order placement.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-allocations-user_data
+        https://developers.binance.com/docs/binance-spot-api-docs/rest-api/account-endpoints#query-allocations-user_data
 
         :param symbol: required
         :type symbol: str
@@ -2497,7 +2576,7 @@ class Client(BaseClient):
     def get_dust_assets(self, **params):
         """Get assets that can be converted into BNB
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-assets-that-can-be-converted-into-bnb-user_data
+        https://developers.binance.com/docs/wallet/asset/assets-can-convert-bnb
 
         :returns: API response
 
@@ -2683,7 +2762,7 @@ class Client(BaseClient):
     def make_universal_transfer(self, **params):
         """User Universal Transfer
 
-        https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer
+        https://developers.binance.com/docs/wallet/asset/user-universal-transfer
 
         :param type: required
         :type type: str (ENUM)
@@ -2717,7 +2796,7 @@ class Client(BaseClient):
     def query_universal_transfer_history(self, **params):
         """Query User Universal Transfer History
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-user-universal-transfer-history
+        https://developers.binance.com/docs/wallet/asset/query-user-universal-transfer
 
         :param type: required
         :type type: str (ENUM)
@@ -3182,7 +3261,7 @@ class Client(BaseClient):
     def get_margin_account(self, **params):
         """Query cross-margin account details
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-account-details-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Account-Details
 
         :returns: API response
 
@@ -3240,7 +3319,7 @@ class Client(BaseClient):
     def get_isolated_margin_account(self, **params):
         """Query isolated margin account details
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-account-info-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Account-Info
 
         :param symbols: optional up to 5 margin pairs as a comma separated string
         :type asset: str
@@ -3353,7 +3432,7 @@ class Client(BaseClient):
     def enable_isolated_margin_account(self, **params):
         """Enable isolated margin account for a specific symbol.
 
-        https://binance-docs.github.io/apidocs/spot/en/#enable-isolated-margin-account-trade
+        https://developers.binance.com/docs/margin_trading/account/Enable-Isolated-Margin-Account
 
         :param symbol:
         :type asset: str
@@ -3377,7 +3456,7 @@ class Client(BaseClient):
         """Disable isolated margin account for a specific symbol. Each trading pair can only
         be deactivated once every 24 hours.
 
-        https://binance-docs.github.io/apidocs/spot/en/#disable-isolated-margin-account-trade
+        https://developers.binance.com/docs/margin_trading/account/Disable-Isolated-Margin-Account
 
         :param symbol:
         :type asset: str
@@ -3399,7 +3478,7 @@ class Client(BaseClient):
     def get_enabled_isolated_margin_account_limit(self, **params):
         """Query enabled isolated margin account limit.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-enabled-isolated-margin-account-limit-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Enabled-Isolated-Margin-Account-Limit
 
         :returns: API response
 
@@ -3549,7 +3628,7 @@ class Client(BaseClient):
 
     def get_cross_margin_collateral_ratio(self, **params):
         """
-        https://binance-docs.github.io/apidocs/spot/en/#cross-margin-collateral-ratio-market_data
+        https://developers.binance.com/docs/margin_trading/market-data
 
         :param none
 
@@ -3601,7 +3680,7 @@ class Client(BaseClient):
     def get_small_liability_exchange_assets(self, **params):
         """Query the coins which can be small liability exchange
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-coin-list-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-Coin-List
 
         :returns: API response
 
@@ -3624,7 +3703,7 @@ class Client(BaseClient):
     def exchange_small_liability_assets(self, **params):
         """Cross Margin Small Liability Exchange
 
-        https://binance-docs.github.io/apidocs/spot/en/#small-liability-exchange-margin
+        https://developers.binance.com/docs/margin_trading/trade/Small-Liability-Exchange
 
         :param assetNames: The assets list of small liability exchange
         :type assetNames: array
@@ -3642,7 +3721,7 @@ class Client(BaseClient):
     def get_small_liability_exchange_history(self, **params):
         """Get Small liability Exchange History
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-small-liability-exchange-history-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Get-Small-Liability-Exchange-History
 
         :param current: Currently querying page. Start from 1. Default:1
         :type current: int
@@ -3678,7 +3757,7 @@ class Client(BaseClient):
     def get_future_hourly_interest_rate(self, **params):
         """Get user the next hourly estimate interest
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-a-future-hourly-interest-rate-user_data
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay
 
         :param assets: List of assets, separated by commas, up to 20
         :type assets: str
@@ -3707,7 +3786,7 @@ class Client(BaseClient):
     def get_margin_capital_flow(self, **params):
         """Get cross or isolated margin capital flow
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-cross-or-isolated-margin-capital-flow-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Isolated-Margin-Capital-Flow
 
         :param asset: optional
         :type asset: str
@@ -3816,7 +3895,7 @@ class Client(BaseClient):
     def get_margin_all_assets(self, **params):
         """Get All Margin Assets (MARKET_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-margin-assets-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Margin-Assets
 
         .. code:: python
 
@@ -3853,7 +3932,7 @@ class Client(BaseClient):
     def get_margin_all_pairs(self, **params):
         """Get All Cross Margin Pairs (MARKET_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-cross-margin-pairs-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Cross-Margin-Pairs
 
         .. code:: python
 
@@ -3956,7 +4035,7 @@ class Client(BaseClient):
     def get_all_isolated_margin_symbols(self, **params):
         """Query isolated margin symbol info for all pairs
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-all-isolated-margin-symbol-user_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-All-Isolated-Margin-Symbol
 
         .. code:: python
 
@@ -3996,7 +4075,7 @@ class Client(BaseClient):
     def get_isolated_margin_fee_data(self, **params):
         """Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com/en/margin-fee
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-fee-data-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Isolated-Margin-Fee-Data
 
         :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
         :type vipLevel: int
@@ -4033,7 +4112,7 @@ class Client(BaseClient):
     def get_isolated_margin_tier_data(self, **params):
         """Get isolated margin tier data collection with any tier as https://www.binance.com/en/margin-data
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-isolated-margin-tier-data-user_data
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Isolated-Margin-Tier-Data
 
         :param symbol: required
         :type symbol: str
@@ -4065,7 +4144,7 @@ class Client(BaseClient):
     def margin_manual_liquidation(self, **params):
         """
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-manual-liquidation-margin
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Manual-Liquidation
 
 
 
@@ -4092,7 +4171,7 @@ class Client(BaseClient):
     def toggle_bnb_burn_spot_margin(self, **params):
         """Toggle BNB Burn On Spot Trade And Margin Interest
 
-        https://binance-docs.github.io/apidocs/spot/en/#toggle-bnb-burn-on-spot-trade-and-margin-interest-user_data
+        https://developers.binance.com/docs/wallet/asset/Toggle-BNB-Burn-On-Spot-Trade-And-Margin-Interest
 
         :param spotBNBBurn: Determines whether to use BNB to pay for trading fees on SPOT
         :type spotBNBBurn: bool
@@ -4121,7 +4200,7 @@ class Client(BaseClient):
     def get_bnb_burn_spot_margin(self, **params):
         """Get BNB Burn Status
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-bnb-burn-status-user_data
+        https://developers.binance.com/docs/margin_trading/account/Get-BNB-Burn-Status
 
         .. code:: python
 
@@ -4145,7 +4224,7 @@ class Client(BaseClient):
     def get_margin_price_index(self, **params):
         """Query margin priceIndex
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-priceindex-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Margin-PriceIndex
 
         :param symbol: name of the symbol pair
         :type symbol: str
@@ -4447,7 +4526,7 @@ class Client(BaseClient):
     def create_margin_order(self, **params):
         """Post a new order for margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-order-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-Order
 
         :param symbol: required
         :type symbol: str
@@ -4574,7 +4653,7 @@ class Client(BaseClient):
 
         Either orderId or origClientOrderId must be sent.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-order-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-Order
 
         :param symbol: required
         :type symbol: str
@@ -4615,6 +4694,21 @@ class Client(BaseClient):
         )
 
     def cancel_all_open_margin_orders(self, **params):
+        """
+        Cancels all active orders on a symbol for margin account.
+
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-All-Open-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param isIsolated: set to 'TRUE' for isolated margin (default 'FALSE')
+        :type isIsolated: str
+        :param recvWindow: the number of milliseconds the request is valid for
+        :type recvWindow: int
+        :returns: API response
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
         return self._request_margin_api(
             "delete", "margin/openOrders", signed=True, data=params
         )
@@ -4622,7 +4716,7 @@ class Client(BaseClient):
     def set_margin_max_leverage(self, **params):
         """Adjust cross margin max leverage
 
-        https://binance-docs.github.io/apidocs/spot/en/#adjust-cross-margin-max-leverage-user_data
+        https://developers.binance.com/docs/margin_trading/account
 
         :param maxLeverage: required Can only adjust 3 or 5，Example: maxLeverage=3
         :type maxLeverage: int
@@ -4643,7 +4737,7 @@ class Client(BaseClient):
     def get_margin_transfer_history(self, **params):
         """Query margin transfer history
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-cross-margin-transfer-history-user_data
+        https://developers.binance.com/docs/margin_trading/transfer
 
         :param asset: optional
         :type asset: str
@@ -4798,7 +4892,8 @@ class Client(BaseClient):
     def get_cross_margin_data(self, **params):
         """Query Cross Margin Fee Data (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-cross-margin-fee-data-user_data
+        https://developers.binance.com/docs/margin_trading/account/Query-Cross-Margin-Fee-Data
+
         :param vipLevel: User's current specific margin data will be returned if vipLevel is omitted
         :type vipLevel: int
         :param coin
@@ -4831,7 +4926,7 @@ class Client(BaseClient):
     def get_margin_interest_history(self, **params):
         """Get Interest History (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-interest-history-user_data
+        https://developers.binance.com/docs/margin_trading/borrow-and-repay/Get-Interest-History
 
         :param asset:
         :type asset: str
@@ -4876,7 +4971,7 @@ class Client(BaseClient):
     def get_margin_force_liquidation_rec(self, **params):
         """Get Force Liquidation Record (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-force-liquidation-record-user_data
+        https://developers.binance.com/docs/margin_trading/trade
 
         :param startTime:
         :type startTime: str
@@ -4923,7 +5018,7 @@ class Client(BaseClient):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Order
 
         :param symbol: required
         :type symbol: str
@@ -4972,7 +5067,7 @@ class Client(BaseClient):
         When all symbols are returned, the number of requests counted against the rate limiter is equal to the number
         of symbols currently trading on the exchange.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-Orders
 
         :param symbol: optional
         :type symbol: str
@@ -5018,7 +5113,7 @@ class Client(BaseClient):
 
         For some historical orders cummulativeQuoteQty will be < 0, meaning the data is not available at this time.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-all-order-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-Orders
 
         :param symbol: required
         :type symbol: str
@@ -5077,7 +5172,7 @@ class Client(BaseClient):
 
         If fromId is set, it will get orders >= that fromId. Otherwise most recent orders are returned.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-trade-list-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Trade-List
 
         :param symbol: required
         :type symbol: str
@@ -5160,7 +5255,7 @@ class Client(BaseClient):
     def get_max_margin_transfer(self, **params):
         """Query max transfer-out amount
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-max-transfer-out-amount-user_data
+        https://developers.binance.com/docs/margin_trading/transfer/Query-Max-Transfer-Out-Amount
 
         :param asset: required
         :type asset: str
@@ -5185,7 +5280,7 @@ class Client(BaseClient):
     def get_margin_delist_schedule(self, **params):
         """Get tokens or symbols delist schedule for cross margin and isolated margin
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-tokens-or-symbols-delist-schedule-for-cross-margin-and-isolated-margin-market_data
+        https://developers.binance.com/docs/margin_trading/market-data/Get-Delist-Schedule
 
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -5223,7 +5318,7 @@ class Client(BaseClient):
     def create_margin_oco_order(self, **params):
         """Post a new OCO trade for margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-new-oco-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OCO
 
 
         :param symbol: required
@@ -5333,7 +5428,7 @@ class Client(BaseClient):
     def cancel_margin_oco_order(self, **params):
         """Cancel an entire Order List for a margin account.
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-account-cancel-oco-trade
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-Cancel-OCO
 
         :param symbol: required
         :type symbol: str
@@ -5416,7 +5511,7 @@ class Client(BaseClient):
     def get_margin_oco_order(self, **params):
         """Retrieves a specific OCO based on provided optional parameters
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-oco-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-OCO
 
         :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
         :type symbol: str
@@ -5462,7 +5557,7 @@ class Client(BaseClient):
     def get_open_margin_oco_orders(self, **params):
         """Retrieves open OCO trades
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-margin-account-39-s-open-oco-user_data
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-Open-OCO
 
         :param isIsolated: for isolated margin or not, "TRUE", "FALSE"，default "FALSE"
         :type symbol: str
@@ -5541,7 +5636,7 @@ class Client(BaseClient):
 
         Can be used to keep the stream alive.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Margin-User-Data-Stream
 
         :returns: API response
 
@@ -5560,7 +5655,7 @@ class Client(BaseClient):
     def margin_stream_keepalive(self, listenKey):
         """PING a cross-margin data stream to prevent a time out.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Margin-User-Data-Stream
 
         :param listenKey: required
         :type listenKey: str
@@ -5582,7 +5677,7 @@ class Client(BaseClient):
     def margin_stream_close(self, listenKey):
         """Close out a cross-margin data stream.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Margin-User-Data-Stream
 
         :param listenKey: required
         :type listenKey: str
@@ -5610,7 +5705,7 @@ class Client(BaseClient):
 
         Can be used to keep the stream alive.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Start-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -5635,7 +5730,7 @@ class Client(BaseClient):
     def isolated_margin_stream_keepalive(self, symbol, listenKey):
         """PING an isolated margin data stream to prevent a time out.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Keepalive-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -5659,7 +5754,7 @@ class Client(BaseClient):
     def isolated_margin_stream_close(self, symbol, listenKey):
         """Close out an isolated margin data stream.
 
-        https://binance-docs.github.io/apidocs/spot/en/#listen-key-isolated-margin
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Close-Isolated-Margin-User-Data-Stream
 
         :param symbol: required - symbol for the isolated margin account
         :type symbol: str
@@ -7182,7 +7277,7 @@ class Client(BaseClient):
     def futures_ping(self):
         """Test connectivity to the Rest API
 
-        https://binance-docs.github.io/apidocs/futures/en/#test-connectivity
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api
 
         """
         return self._request_futures_api("get", "ping")
@@ -7190,7 +7285,7 @@ class Client(BaseClient):
     def futures_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#check-server-time
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Check-Server-Time
 
         """
         return self._request_futures_api("get", "time")
@@ -7198,7 +7293,7 @@ class Client(BaseClient):
     def futures_exchange_info(self):
         """Current exchange trading rules and symbol information
 
-        https://binance-docs.github.io/apidocs/futures/en/#exchange-information-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Exchange-Information
 
         """
         return self._request_futures_api("get", "exchangeInfo")
@@ -7206,7 +7301,7 @@ class Client(BaseClient):
     def futures_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://binance-docs.github.io/apidocs/futures/en/#order-book-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Order-Book
 
         """
         return self._request_futures_api("get", "depth", data=params)
@@ -7214,7 +7309,7 @@ class Client(BaseClient):
     def futures_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
-        https://binance-docs.github.io/apidocs/futures/en/#recent-trades-list-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Recent-Trades-List
 
         """
         return self._request_futures_api("get", "trades", data=params)
@@ -7222,7 +7317,7 @@ class Client(BaseClient):
     def futures_historical_trades(self, **params):
         """Get older market historical trades.
 
-        https://binance-docs.github.io/apidocs/futures/en/#old-trades-lookup-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Old-Trades-Lookup
 
         """
         return self._request_futures_api("get", "historicalTrades", data=params)
@@ -7231,7 +7326,7 @@ class Client(BaseClient):
         """Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same
         price will have the quantity aggregated.
 
-        https://binance-docs.github.io/apidocs/futures/en/#compressed-aggregate-trades-list-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List
 
         """
         return self._request_futures_api("get", "aggTrades", data=params)
@@ -7239,7 +7334,7 @@ class Client(BaseClient):
     def futures_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#kline-candlestick-data-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Kline-Candlestick-Data
 
         """
         return self._request_futures_api("get", "klines", data=params)
@@ -7247,7 +7342,7 @@ class Client(BaseClient):
     def futures_mark_price_klines(self, **params):
         """Kline/candlestick bars for the mark price of a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#mark-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_api("get", "markPriceKlines", data=params)
@@ -7255,7 +7350,7 @@ class Client(BaseClient):
     def futures_index_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#index-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_api("get", "indexPriceKlines", data=params)
@@ -7263,7 +7358,7 @@ class Client(BaseClient):
     def futures_premium_index_klines(self, **params):
         """Premium index kline bars of a symbol.l. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#premium-index-kline-data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
 
         """
         return self._request_futures_api("get", "premiumIndexKlines", data=params)
@@ -7271,7 +7366,7 @@ class Client(BaseClient):
     def futures_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/futures/en/#continuous-contract-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data
 
         """
         return self._request_futures_api("get", "continuousKlines", data=params)
@@ -7361,7 +7456,7 @@ class Client(BaseClient):
     def futures_mark_price(self, **params):
         """Get Mark Price and Funding Rate
 
-        https://binance-docs.github.io/apidocs/futures/en/#mark-price-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Mark-Price
 
         """
         return self._request_futures_api("get", "premiumIndex", data=params)
@@ -7369,7 +7464,7 @@ class Client(BaseClient):
     def futures_funding_rate(self, **params):
         """Get funding rate history
 
-        https://binance-docs.github.io/apidocs/futures/en/#get-funding-rate-history-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-History
 
         """
         return self._request_futures_api("get", "fundingRate", data=params)
@@ -7377,7 +7472,7 @@ class Client(BaseClient):
     def futures_top_longshort_account_ratio(self, **params):
         """Get present long to short ratio for top accounts of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-accounts-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio
         """
         return self._request_futures_data_api(
             "get", "topLongShortAccountRatio", data=params
@@ -7386,7 +7481,7 @@ class Client(BaseClient):
     def futures_top_longshort_position_ratio(self, **params):
         """Get present long to short ratio for top positions of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#top-trader-long-short-ratio-positions
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio
         """
         return self._request_futures_data_api(
             "get", "topLongShortPositionRatio", data=params
@@ -7395,12 +7490,12 @@ class Client(BaseClient):
     def futures_global_longshort_ratio(self, **params):
         """Get present global long to short ratio of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#long-short-ratio
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Long-Short-Ratio
         """
         return self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
-        
+
     def futures_taker_longshort_ratio(self, **params):
         """Get taker buy to sell volume ratio of a specific symbol
 
@@ -7410,10 +7505,19 @@ class Client(BaseClient):
             "get", "takerlongshortRatio", data=params
         )
 
+    def futures_basis(self, **params):
+        """Get future basis of a specific symbol
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Basis
+        """
+        return self._request_futures_data_api(
+            "get", "basis", data=params
+        )
+
     def futures_ticker(self, **params):
         """24 hour rolling window price change statistics.
 
-        https://binance-docs.github.io/apidocs/futures/en/#24hr-ticker-price-change-statistics-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics
 
         """
         return self._request_futures_api("get", "ticker/24hr", data=params)
@@ -7421,7 +7525,7 @@ class Client(BaseClient):
     def futures_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/futures/en/#symbol-price-ticker-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker
 
         """
         return self._request_futures_api("get", "ticker/price", data=params)
@@ -7429,23 +7533,39 @@ class Client(BaseClient):
     def futures_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/futures/en/#symbol-order-book-ticker-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker
 
         """
         return self._request_futures_api("get", "ticker/bookTicker", data=params)
 
+    def futures_delivery_price(self, **params):
+        """Get latest price for a symbol or symbols
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Delivery-Price
+
+        """
+        return self._request_futures_data_api("get", "delivery-price", data=params)
+
     def futures_index_price_constituents(self, **params):
         """Get index price constituents
 
-        https://binance-docs.github.io/apidocs/futures/en/#query-index-price-constituents
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Index-Constituents
 
         """
         return self._request_futures_api("get", "constituents", data=params)
 
+    def futures_insurance_fund_balance_snapshot(self, **params):
+        """Get Insurance Fund Balance Snapshot
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Insurance-Fund-Balance
+
+        """
+        return self._request_futures_api("get", "insuranceBalance", data=params)
+
     def futures_liquidation_orders(self, **params):
         """Get all liquidation orders
 
-        https://binance-docs.github.io/apidocs/futures/en/#get-all-liquidation-orders-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Users-Force-Orders
 
         """
         return self._request_futures_api("get", "forceOrders", signed=True, data=params)
@@ -7455,7 +7575,7 @@ class Client(BaseClient):
         Immediate-or-Cancel (IOC) & Fill-or-Kill (FOK) Expire Ratio (IFER), among others.
         https://www.binance.com/en/support/faq/binance-futures-trading-quantitative-rules-4f462ebe6ff445d4a170be7d9e897272
 
-        https://binance-docs.github.io/apidocs/futures/en/#futures-trading-quantitative-rules-indicators-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Futures-Trading-Quantitative-Rules-Indicators
 
         :param symbol: optional
         :type symbol: str
@@ -7540,7 +7660,7 @@ class Client(BaseClient):
     def futures_commission_rate(self, **params):
         """Get Futures commission rate
 
-        https://binance-docs.github.io/apidocs/futures/en/#user-commission-rate-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/User-Commission-Rate
 
         :param symbol: required
         :type symbol: str
@@ -7565,7 +7685,7 @@ class Client(BaseClient):
     def futures_adl_quantile_estimate(self, **params):
         """Get Position ADL Quantile Estimate
 
-        https://binance-docs.github.io/apidocs/futures/en/#position-adl-quantile-estimation-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation
 
         """
         return self._request_futures_api("get", "adlQuantile", signed=True, data=params)
@@ -7573,7 +7693,7 @@ class Client(BaseClient):
     def futures_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#open-interest
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest
 
         """
         return self._request_futures_api("get", "openInterest", data=params)
@@ -7581,7 +7701,7 @@ class Client(BaseClient):
     def futures_index_info(self, **params):
         """Get index_info
 
-        https://binance-docs.github.io/apidocs/futures/en/#indexInfo
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Composite-Index-Symbol-Information
 
         """
         return self._request_futures_api("get", "indexInfo", data=params)
@@ -7589,7 +7709,7 @@ class Client(BaseClient):
     def futures_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#open-interest-statistics
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Open-Interest-Statistics
 
         """
         return self._request_futures_data_api("get", "openInterestHist", data=params)
@@ -7597,7 +7717,7 @@ class Client(BaseClient):
     def futures_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
-        https://binance-docs.github.io/apidocs/futures/en/#notional-and-leverage-brackets-market_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Notional-and-Leverage-Brackets
 
         """
         return self._request_futures_api("get", "leverageBracket", True, data=params)
@@ -7651,7 +7771,7 @@ class Client(BaseClient):
     def futures_create_order(self, **params):
         """Send in a new order.
 
-        https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
 
         """
         if "newClientOrderId" not in params:
@@ -7661,7 +7781,7 @@ class Client(BaseClient):
     def futures_modify_order(self, **params):
         """Modify an existing order. Currently only LIMIT order modification is supported.
 
-        https://binance-docs.github.io/apidocs/futures/en/#modify-order-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Modify-Order
 
         """
         return self._request_futures_api("put", "order", True, data=params)
@@ -7669,7 +7789,7 @@ class Client(BaseClient):
     def futures_create_test_order(self, **params):
         """Testing order request, this order will not be submitted to matching engine
 
-        https://binance-docs.github.io/apidocs/futures/en/#test-order-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Order-Test
 
         """
         return self._request_futures_api("post", "order/test", True, data=params)
@@ -7677,7 +7797,7 @@ class Client(BaseClient):
     def futures_place_batch_order(self, **params):
         """Send in new orders.
 
-        https://binance-docs.github.io/apidocs/futures/en/#place-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Place-Multiple-Orders
 
         To avoid modifying the existing signature generation and parameter order logic,
         the url encoding is done on the special query param, batchOrders, in the early stage.
@@ -7696,7 +7816,7 @@ class Client(BaseClient):
     def futures_get_order(self, **params):
         """Check an order's status.
 
-        https://binance-docs.github.io/apidocs/futures/en/#query-order-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Order
 
         """
         return self._request_futures_api("get", "order", True, data=params)
@@ -7704,7 +7824,7 @@ class Client(BaseClient):
     def futures_get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#current-open-orders-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Open-Orders
 
         """
         return self._request_futures_api("get", "openOrders", True, data=params)
@@ -7712,7 +7832,7 @@ class Client(BaseClient):
     def futures_get_all_orders(self, **params):
         """Get all futures account orders; active, canceled, or filled.
 
-        https://binance-docs.github.io/apidocs/futures/en/#all-orders-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/All-Orders
 
         """
         return self._request_futures_api("get", "allOrders", True, data=params)
@@ -7720,7 +7840,7 @@ class Client(BaseClient):
     def futures_cancel_order(self, **params):
         """Cancel an active futures order.
 
-        https://binance-docs.github.io/apidocs/futures/en/#cancel-order-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Order
 
         """
         return self._request_futures_api("delete", "order", True, data=params)
@@ -7728,7 +7848,7 @@ class Client(BaseClient):
     def futures_cancel_all_open_orders(self, **params):
         """Cancel all open futures orders
 
-        https://binance-docs.github.io/apidocs/futures/en/#cancel-all-open-orders-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Open-Orders
 
         """
         return self._request_futures_api("delete", "allOpenOrders", True, data=params)
@@ -7736,7 +7856,7 @@ class Client(BaseClient):
     def futures_cancel_orders(self, **params):
         """Cancel multiple futures orders
 
-        https://binance-docs.github.io/apidocs/futures/en/#cancel-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Multiple-Orders
 
         """
         if params.get("orderidlist"):
@@ -7754,7 +7874,7 @@ class Client(BaseClient):
     def futures_countdown_cancel_all(self, **params):
         """Cancel all open orders of the specified symbol at the end of the specified countdown.
 
-        https://binance-docs.github.io/apidocs/futures/en/#auto-cancel-all-open-orders-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders
 
         :param symbol: required
         :type symbol: str
@@ -7787,7 +7907,7 @@ class Client(BaseClient):
     def futures_account(self, **params):
         """Get current account information.
 
-        https://binance-docs.github.io/apidocs/futures/en/#account-information-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Information-V2
 
         """
         return self._request_futures_api("get", "account", True, 2, data=params)
@@ -7795,7 +7915,7 @@ class Client(BaseClient):
     def futures_change_leverage(self, **params):
         """Change user's initial leverage of specific symbol market
 
-        https://binance-docs.github.io/apidocs/futures/en/#change-initial-leverage-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Initial-Leverage
 
         """
         return self._request_futures_api("post", "leverage", True, data=params)
@@ -7803,7 +7923,7 @@ class Client(BaseClient):
     def futures_change_margin_type(self, **params):
         """Change the margin type for a symbol
 
-        https://binance-docs.github.io/apidocs/futures/en/#change-margin-type-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Margin-Type
 
         """
         return self._request_futures_api("post", "marginType", True, data=params)
@@ -7811,7 +7931,7 @@ class Client(BaseClient):
     def futures_change_position_margin(self, **params):
         """Change the position margin for a symbol
 
-        https://binance-docs.github.io/apidocs/futures/en/#modify-isolated-position-margin-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin
 
         """
         return self._request_futures_api("post", "positionMargin", True, data=params)
@@ -7819,7 +7939,7 @@ class Client(BaseClient):
     def futures_position_margin_history(self, **params):
         """Get position margin change history
 
-        https://binance-docs.github.io/apidocs/futures/en/#get-postion-margin-change-history-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Get-Position-Margin-Change-History
 
         """
         return self._request_futures_api(
@@ -7829,7 +7949,7 @@ class Client(BaseClient):
     def futures_position_information(self, **params):
         """Get position information
 
-        https://binance-docs.github.io/apidocs/futures/en/#position-information-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Position-Information-V3
 
         """
         return self._request_futures_api("get", "positionRisk", True, 3, data=params)
@@ -7837,7 +7957,7 @@ class Client(BaseClient):
     def futures_account_trades(self, **params):
         """Get trades for the authenticated account and symbol.
 
-        https://binance-docs.github.io/apidocs/futures/en/#account-trade-list-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Account-Trade-List
 
         """
         return self._request_futures_api("get", "userTrades", True, data=params)
@@ -7845,7 +7965,7 @@ class Client(BaseClient):
     def futures_income_history(self, **params):
         """Get income history for authenticated account
 
-        https://binance-docs.github.io/apidocs/futures/en/#get-income-history-user_data
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Income-History
 
         """
         return self._request_futures_api("get", "income", True, data=params)
@@ -7853,7 +7973,7 @@ class Client(BaseClient):
     def futures_change_position_mode(self, **params):
         """Change position mode for authenticated account
 
-        https://binance-docs.github.io/apidocs/futures/en/#change-position-mode-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Position-Mode
 
         """
         return self._request_futures_api("post", "positionSide/dual", True, data=params)
@@ -7869,7 +7989,7 @@ class Client(BaseClient):
     def futures_change_multi_assets_mode(self, multiAssetsMargin: bool):
         """Change user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
 
-        https://binance-docs.github.io/apidocs/futures/en/#change-multi-assets-mode-trade
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Change-Multi-Assets-Mode
 
         """
         params = {"multiAssetsMargin": "true" if multiAssetsMargin else "false"}
@@ -7899,11 +8019,17 @@ class Client(BaseClient):
 
     # new methods
     def futures_account_config(self, **params):
+        """Get futures account configuration
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Account-Config
+        """
         return self._request_futures_api(
             "get", "accountConfig", signed=True, version=1, data=params
         )
 
     def futures_symbol_config(self, **params):
+        """Get current account symbol configuration
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Symbol-Config
+        """
         return self._request_futures_api(
             "get", "symbolConfig", signed=True, version=1, data=params
         )
@@ -7912,7 +8038,7 @@ class Client(BaseClient):
     def futures_coin_ping(self):
         """Test connectivity to the Rest API
 
-        https://binance-docs.github.io/apidocs/delivery/en/#test-connectivity
+       https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api
 
         """
         return self._request_futures_coin_api("get", "ping")
@@ -7920,7 +8046,7 @@ class Client(BaseClient):
     def futures_coin_time(self):
         """Test connectivity to the Rest API and get the current server time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#check-server-time
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Check-Server-time
 
         """
         return self._request_futures_coin_api("get", "time")
@@ -7928,7 +8054,7 @@ class Client(BaseClient):
     def futures_coin_exchange_info(self):
         """Current exchange trading rules and symbol information
 
-        https://binance-docs.github.io/apidocs/delivery/en/#exchange-information
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information
 
         """
         return self._request_futures_coin_api("get", "exchangeInfo")
@@ -7936,7 +8062,7 @@ class Client(BaseClient):
     def futures_coin_order_book(self, **params):
         """Get the Order Book for the market
 
-        https://binance-docs.github.io/apidocs/delivery/en/#order-book
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Order-Book
 
         """
         return self._request_futures_coin_api("get", "depth", data=params)
@@ -7944,7 +8070,7 @@ class Client(BaseClient):
     def futures_coin_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
-        https://binance-docs.github.io/apidocs/delivery/en/#recent-trades-list
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Recent-Trades-List
 
         """
         return self._request_futures_coin_api("get", "trades", data=params)
@@ -7952,7 +8078,7 @@ class Client(BaseClient):
     def futures_coin_historical_trades(self, **params):
         """Get older market historical trades.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#old-trades-lookup-market_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Old-Trades-Lookup
 
         """
         return self._request_futures_coin_api("get", "historicalTrades", data=params)
@@ -7961,7 +8087,7 @@ class Client(BaseClient):
         """Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same
         price will have the quantity aggregated.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#compressed-aggregate-trades-list
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Compressed-Aggregate-Trades-List
 
         """
         return self._request_futures_coin_api("get", "aggTrades", data=params)
@@ -7969,7 +8095,7 @@ class Client(BaseClient):
     def futures_coin_klines(self, **params):
         """Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "klines", data=params)
@@ -7977,7 +8103,7 @@ class Client(BaseClient):
     def futures_coin_continous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#continuous-contract-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "continuousKlines", data=params)
@@ -7985,7 +8111,7 @@ class Client(BaseClient):
     def futures_coin_index_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#index-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "indexPriceKlines", data=params)
@@ -7993,7 +8119,7 @@ class Client(BaseClient):
     def futures_coin_premium_index_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#premium-index-kline-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Premium-Index-Kline-Data
 
         """
         return self._request_futures_coin_api("get", "premiumIndexKlines", data=params)
@@ -8001,7 +8127,7 @@ class Client(BaseClient):
     def futures_coin_mark_price_klines(self, **params):
         """Kline/candlestick bars for the index price of a pair..
 
-        https://binance-docs.github.io/apidocs/delivery/en/#mark-price-kline-candlestick-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Mark-Price-Kline-Candlestick-Data
 
         """
         return self._request_futures_coin_api("get", "markPriceKlines", data=params)
@@ -8009,7 +8135,7 @@ class Client(BaseClient):
     def futures_coin_mark_price(self, **params):
         """Get Mark Price and Funding Rate
 
-        https://binance-docs.github.io/apidocs/delivery/en/#index-price-and-mark-price
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Price-and-Mark-Price
 
         """
         return self._request_futures_coin_api("get", "premiumIndex", data=params)
@@ -8017,7 +8143,7 @@ class Client(BaseClient):
     def futures_coin_funding_rate(self, **params):
         """Get funding rate history
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-funding-rate-history-of-perpetual-futures
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Rate-History-of-Perpetual-Futures
 
         """
         return self._request_futures_coin_api("get", "fundingRate", data=params)
@@ -8025,7 +8151,7 @@ class Client(BaseClient):
     def futures_coin_ticker(self, **params):
         """24 hour rolling window price change statistics.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#24hr-ticker-price-change-statistics
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/24hr-Ticker-Price-Change-Statistics
 
         """
         return self._request_futures_coin_api("get", "ticker/24hr", data=params)
@@ -8033,7 +8159,7 @@ class Client(BaseClient):
     def futures_coin_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#symbol-price-ticker
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Price-Ticker
 
         """
         return self._request_futures_coin_api("get", "ticker/price", data=params)
@@ -8041,15 +8167,50 @@ class Client(BaseClient):
     def futures_coin_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#symbol-order-book-ticker
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Symbol-Order-Book-Ticker
 
         """
         return self._request_futures_coin_api("get", "ticker/bookTicker", data=params)
 
+    def futures_coin_top_longshort_position_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Trader-Long-Short-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "topLongShortPositionRatio", data=params)
+
+    def futures_coin_top_longshort_account_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Top-Long-Short-Account-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "topLongShortAccountRatio", data=params)
+
+    def futures_coin_global_longshort_ratio(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Long-Short-Ratio
+        """
+        return self._request_futures_coin_data_api("get", "globalLongShortAccountRatio", data=params)
+
+    def futures_coin_taker_buy_sell_volume(self, **params):
+        """Get present long to short ratio for top positions of a specific symbol.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Taker-Buy-Sell-Volume
+        """
+        return self._request_futures_coin_data_api("get", "takerBuySellVol", data=params)
+
+    def futures_coin_basis(self, **params):
+        """Get future basis of a specific symbol
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Basis
+        """
+        return self._request_futures_coin_data_api("get", "basis", data=params)
+
     def futures_coin_index_price_constituents(self, **params):
         """Get index price constituents
 
-        https://binance-docs.github.io/apidocs/delivery/en/#query-index-price-constituents
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Index-Constituents
 
         """
         return self._request_futures_coin_api("get", "constituents", data=params)
@@ -8057,7 +8218,7 @@ class Client(BaseClient):
     def futures_coin_liquidation_orders(self, **params):
         """Get all liquidation orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#user-39-s-force-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Users-Force-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8067,7 +8228,7 @@ class Client(BaseClient):
     def futures_coin_open_interest(self, **params):
         """Get present open interest of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#open-interest
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest
 
         """
         return self._request_futures_coin_api("get", "openInterest", data=params)
@@ -8075,7 +8236,7 @@ class Client(BaseClient):
     def futures_coin_open_interest_hist(self, **params):
         """Get open interest statistics of a specific symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#open-interest-statistics-market-data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Open-Interest-Statistics
 
         """
         return self._request_futures_coin_data_api(
@@ -8085,7 +8246,7 @@ class Client(BaseClient):
     def futures_coin_leverage_bracket(self, **params):
         """Notional and Leverage Brackets
 
-        https://binance-docs.github.io/apidocs/delivery/en/#notional-bracket-for-pair-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Notional-Bracket-for-Symbol
 
         """
         return self._request_futures_coin_api(
@@ -8095,7 +8256,7 @@ class Client(BaseClient):
     def new_transfer_history(self, **params):
         """Get future account transaction history list
 
-        https://binance-docs.github.io/apidocs/delivery/en/#new-future-account-transfer
+        https://developers.binance.com/docs/wallet/asset/query-user-universal-transfer
 
         """
         return self._request_margin_api("get", "asset/transfer", True, data=params)
@@ -8113,7 +8274,7 @@ class Client(BaseClient):
     def universal_transfer(self, **params):
         """Unviversal transfer api accross different binance account types
 
-        https://binance-docs.github.io/apidocs/spot/en/#user-universal-transfer
+        https://developers.binance.com/docs/wallet/asset/user-universal-transfer
         """
         return self._request_margin_api(
             "post", "asset/transfer", signed=True, data=params
@@ -8122,7 +8283,7 @@ class Client(BaseClient):
     def futures_coin_create_order(self, **params):
         """Send in a new order.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#new-order-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api
 
         """
         if "newClientOrderId" not in params:
@@ -8132,7 +8293,7 @@ class Client(BaseClient):
     def futures_coin_place_batch_order(self, **params):
         """Send in new orders.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#place-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Place-Multiple-Orders
 
         To avoid modifying the existing signature generation and parameter order logic,
         the url encoding is done on the special query param, batchOrders, in the early stage.
@@ -8147,10 +8308,18 @@ class Client(BaseClient):
 
         return self._request_futures_coin_api("post", "batchOrders", True, data=params)
 
+    def futures_coin_modify_order(self, **params):
+        """Modify an existing order. Currently only LIMIT order modification is supported.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order
+
+        """
+        return self._request_futures_coin_api("put", "order", True, data=params)
+
     def futures_coin_get_order(self, **params):
         """Check an order's status.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#query-order-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Order
 
         """
         return self._request_futures_coin_api("get", "order", True, data=params)
@@ -8158,7 +8327,7 @@ class Client(BaseClient):
     def futures_coin_get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#current-all-open-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Current-All-Open-Orders
 
         """
         return self._request_futures_coin_api("get", "openOrders", True, data=params)
@@ -8166,7 +8335,7 @@ class Client(BaseClient):
     def futures_coin_get_all_orders(self, **params):
         """Get all futures account orders; active, canceled, or filled.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#all-orders-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/All-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8176,7 +8345,7 @@ class Client(BaseClient):
     def futures_coin_cancel_order(self, **params):
         """Cancel an active futures order.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-order-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Order
 
         """
         return self._request_futures_coin_api(
@@ -8186,7 +8355,7 @@ class Client(BaseClient):
     def futures_coin_cancel_all_open_orders(self, **params):
         """Cancel all open futures orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-all-open-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-All-Open-Orders
 
         """
         return self._request_futures_coin_api(
@@ -8196,7 +8365,7 @@ class Client(BaseClient):
     def futures_coin_cancel_orders(self, **params):
         """Cancel multiple futures orders
 
-        https://binance-docs.github.io/apidocs/delivery/en/#cancel-multiple-orders-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Cancel-Multiple-Orders
 
         """
         if params.get("orderidlist"):
@@ -8211,10 +8380,45 @@ class Client(BaseClient):
             "delete", "batchOrders", True, data=params
         )
 
+    def futures_coin_countdown_cancel_all(self, **params):
+        """Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Auto-Cancel-All-Open-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param countdownTime: required
+        :type countdownTime: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        .. code-block:: python
+        {
+            "symbol": "BTCUSDT",
+            "countdownTime": "100000"
+        }
+
+        """
+        return self._request_futures_coin_api(
+            "post", "countdownCancelAll", True, data=params
+        )
+
+    def futures_coin_get_open_order(self, **params):
+        """Get current open order.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Query-Current-Open-Order
+
+        """
+        return self._request_futures_coin_api(
+            "get", "openOrder", signed=True, data=params
+        )
+
     def futures_coin_account_balance(self, **params):
         """Get futures account balance
 
-        https://binance-docs.github.io/apidocs/delivery/en/#futures-account-balance-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Futures-Account-Balance
 
         """
         return self._request_futures_coin_api(
@@ -8224,7 +8428,7 @@ class Client(BaseClient):
     def futures_coin_account(self, **params):
         """Get current account information.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#account-information-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Account-Information
 
         """
         return self._request_futures_coin_api(
@@ -8234,7 +8438,7 @@ class Client(BaseClient):
     def futures_coin_change_leverage(self, **params):
         """Change user's initial leverage of specific symbol market
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-initial-leverage-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Initial-Leverage
 
         """
         return self._request_futures_coin_api(
@@ -8244,7 +8448,7 @@ class Client(BaseClient):
     def futures_coin_change_margin_type(self, **params):
         """Change the margin type for a symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-margin-type-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Margin-Type
 
         """
         return self._request_futures_coin_api(
@@ -8254,7 +8458,7 @@ class Client(BaseClient):
     def futures_coin_change_position_margin(self, **params):
         """Change the position margin for a symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#modify-isolated-position-margin-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Isolated-Position-Margin
 
         """
         return self._request_futures_coin_api(
@@ -8264,7 +8468,7 @@ class Client(BaseClient):
     def futures_coin_position_margin_history(self, **params):
         """Get position margin change history
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-position-margin-change-history-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Position-Margin-Change-History
 
         """
         return self._request_futures_coin_api(
@@ -8274,7 +8478,7 @@ class Client(BaseClient):
     def futures_coin_position_information(self, **params):
         """Get position information
 
-        https://binance-docs.github.io/apidocs/delivery/en/#position-information-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-Information
 
         """
         return self._request_futures_coin_api("get", "positionRisk", True, data=params)
@@ -8282,7 +8486,7 @@ class Client(BaseClient):
     def futures_coin_account_trades(self, **params):
         """Get trades for the authenticated account and symbol.
 
-        https://binance-docs.github.io/apidocs/delivery/en/#account-trade-list-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Account-Trade-List
 
         """
         return self._request_futures_coin_api("get", "userTrades", True, data=params)
@@ -8290,7 +8494,7 @@ class Client(BaseClient):
     def futures_coin_income_history(self, **params):
         """Get income history for authenticated account
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-income-history-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Income-History
 
         """
         return self._request_futures_coin_api("get", "income", True, data=params)
@@ -8298,7 +8502,8 @@ class Client(BaseClient):
     def futures_coin_change_position_mode(self, **params):
         """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#change-position-mode-trade
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Change-Position-Mode
+
         """
         return self._request_futures_coin_api(
             "post", "positionSide/dual", True, data=params
@@ -8307,7 +8512,7 @@ class Client(BaseClient):
     def futures_coin_get_position_mode(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
 
-        https://binance-docs.github.io/apidocs/delivery/en/#get-current-position-mode-user_data
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Current-Position-Mode
 
         """
         return self._request_futures_coin_api(
@@ -8333,7 +8538,7 @@ class Client(BaseClient):
     def futures_coin_account_order_history_download(self, **params):
         """Get Download Id For Futures Order History
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Order-History
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Order-History
 
         :param startTime: required - Start timestamp in ms
         :type startTime: int
@@ -8365,7 +8570,7 @@ class Client(BaseClient):
     def futures_coin_accout_order_history_download_link(self, **params):
         """Get futures order history download link by Id
 
-        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
 
         :param downloadId: required - Download ID obtained from futures_coin_download_id
         :type downloadId: str
@@ -8406,7 +8611,7 @@ class Client(BaseClient):
     def futures_coin_account_trade_history_download(self, **params):
         """Get Download Id For Futures Trade History (USER_DATA)
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Download-Id-For-Futures-Trade-History
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Trade-History
 
         :param startTime: required - Start timestamp in ms
         :type startTime: int
@@ -8434,7 +8639,7 @@ class Client(BaseClient):
     def futures_coin_account_trade_history_download_link(self, **params):
         """Get futures trade download link by Id
 
-        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/Get-Futures-Trade-Download-Link-by-Id
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Trade-Download-Link-by-Id
 
         :param downloadId: required - Download ID obtained from futures_coin_trade_download_id
         :type downloadId: str
@@ -8706,7 +8911,7 @@ class Client(BaseClient):
     def options_ping(self):
         """Test connectivity
 
-        https://binance-docs.github.io/apidocs/voptions/en/#test-connectivity
+        https://developers.binance.com/docs/derivatives/option/market-data/Test-Connectivity
 
         """
         return self._request_options_api("get", "ping")
@@ -8714,7 +8919,7 @@ class Client(BaseClient):
     def options_time(self):
         """Get server time
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-server-time
+        https://developers.binance.com/docs/derivatives/option/market-data
 
         """
         return self._request_options_api("get", "time")
@@ -8730,7 +8935,7 @@ class Client(BaseClient):
     def options_exchange_info(self):
         """Get current limit info and trading pair info
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-current-limit-info-and-trading-pair-info
+        https://developers.binance.com/docs/derivatives/option/market-data/Exchange-Information
 
         """
         return self._request_options_api("get", "exchangeInfo")
@@ -8738,7 +8943,7 @@ class Client(BaseClient):
     def options_index_price(self, **params):
         """Get the spot index price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-spot-index-price
+        https://developers.binance.com/docs/derivatives/option/market-data/Symbol-Price-Ticker
 
         :param underlying: required - Spot pair（Option contract underlying asset）- BTCUSDT
         :type underlying: str
@@ -8749,7 +8954,7 @@ class Client(BaseClient):
     def options_price(self, **params):
         """Get the latest price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-price
+        https://developers.binance.com/docs/derivatives/option/market-data/24hr-Ticker-Price-Change-Statistics
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8760,7 +8965,7 @@ class Client(BaseClient):
     def options_mark_price(self, **params):
         """Get the latest mark price
 
-        https://binance-docs.github.io/apidocs/voptions/en/#get-the-latest-mark-price
+        https://developers.binance.com/docs/derivatives/option/market-data/Option-Mark-Price
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8771,7 +8976,7 @@ class Client(BaseClient):
     def options_order_book(self, **params):
         """Depth information
 
-        https://binance-docs.github.io/apidocs/voptions/en/#depth-information
+        https://developers.binance.com/docs/derivatives/option/market-data/Order-Book
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8784,7 +8989,7 @@ class Client(BaseClient):
     def options_klines(self, **params):
         """Candle data
 
-        https://binance-docs.github.io/apidocs/voptions/en/#candle-data
+        https://developers.binance.com/docs/derivatives/option/market-data/Kline-Candlestick-Data
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8803,7 +9008,7 @@ class Client(BaseClient):
     def options_recent_trades(self, **params):
         """Recently completed Option trades
 
-        https://binance-docs.github.io/apidocs/voptions/en/#recently-completed-option-trades
+        https://developers.binance.com/docs/derivatives/option/market-data/Recent-Trades-List
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8816,7 +9021,7 @@ class Client(BaseClient):
     def options_historical_trades(self, **params):
         """Query trade history
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-trade-history
+        https://developers.binance.com/docs/derivatives/option/market-data/Old-Trades-Lookup
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8833,13 +9038,35 @@ class Client(BaseClient):
     def options_account_info(self, **params):
         """Account asset info (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#account-asset-info-user_data
+        https://developers.binance.com/docs/derivatives/option/account
 
         :param recvWindow: optional
         :type recvWindow: int
 
         """
         return self._request_options_api("get", "account", signed=True, data=params)
+
+    def options_get_bill(self, **params):
+        """Get account funding flows
+
+        https://developers.binance.com/docs/derivatives/option/account/Account-Funding-Flow
+
+        :param currency: required
+        :type currency: str
+        :param recordId: optional
+        :type recordId: int
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+        """
+        return self._request_options_api("get", "bill", signed=True, data=params)
 
     def options_funds_transfer(self, **params):
         """Funds transfer (USER_DATA)
@@ -8861,7 +9088,7 @@ class Client(BaseClient):
     def options_positions(self, **params):
         """Option holdings info (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-holdings-info-user_data
+        https://developers.binance.com/docs/derivatives/option/trade/Option-Position-Information
 
         :param symbol: optional - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8870,6 +9097,27 @@ class Client(BaseClient):
 
         """
         return self._request_options_api("get", "position", signed=True, data=params)
+
+    def options_exercise_record(self, **params):
+        """
+        Get account exercise records.
+
+        https://developers.binance.com/docs/derivatives/option/trade/User-Exercise-Record
+
+        :param symbol: optional
+        :type symbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional
+        :type limit: int
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+        """
+        return self._request_options_api("get", "exerciseRecord", signed=True, data=params)
 
     def options_bill(self, **params):
         """Account funding flow (USER_DATA)
@@ -8895,7 +9143,7 @@ class Client(BaseClient):
     def options_place_order(self, **params):
         """Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8928,7 +9176,7 @@ class Client(BaseClient):
     def options_place_batch_order(self, **params):
         """Place Multiple Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#place-multiple-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Place-Multiple-Orders
 
         :param orders: required - order list. Max 5 orders - [{"symbol":"BTC-210115-35000-C","price":"100","quantity":"0.0001","side":"BUY","type":"LIMIT"}]
         :type orders: list
@@ -8946,7 +9194,7 @@ class Client(BaseClient):
     def options_cancel_order(self, **params):
         """Cancel Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-Option-Order
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8963,7 +9211,7 @@ class Client(BaseClient):
     def options_cancel_batch_order(self, **params):
         """Cancel Multiple Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-multiple-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-Multiple-Option-Orders
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8982,7 +9230,7 @@ class Client(BaseClient):
     def options_cancel_all_orders(self, **params):
         """Cancel all Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#cancel-all-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-all-Option-orders-on-specific-symbol
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -8997,7 +9245,7 @@ class Client(BaseClient):
     def options_query_order(self, **params):
         """Query Option order (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Single-Order
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9014,7 +9262,7 @@ class Client(BaseClient):
     def options_query_pending_orders(self, **params):
         """Query current pending Option orders (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-current-pending-option-orders-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Current-Open-Option-Orders
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9035,7 +9283,7 @@ class Client(BaseClient):
     def options_query_order_history(self, **params):
         """Query Option order history (TRADE)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#query-option-order-history-trade
+        https://developers.binance.com/docs/derivatives/option/trade/Query-Option-Order-History
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9058,7 +9306,7 @@ class Client(BaseClient):
     def options_user_trades(self, **params):
         """Option Trade List (USER_DATA)
 
-        https://binance-docs.github.io/apidocs/voptions/en/#option-trade-list-user_data
+        https://developers.binance.com/docs/derivatives/option/trade/Account-Trade-List
 
         :param symbol: required - Option trading pair - BTC-200730-9000-C
         :type symbol: str
@@ -9770,6 +10018,24 @@ class Client(BaseClient):
             "post", "um/positionSide/dual", signed=True, data=params
         )
 
+    def papi_change_cm_position_side_dual(self, **params):
+        """Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Change-CM-Position-Mode
+
+        :param dualSidePosition: required
+        :type dualSidePosition: str
+
+        :param recvWindow: optional
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_papi_api(
+            "post", "cm/positionSide/dual", signed=True, data=params
+        )
+
     def papi_get_um_position_side_dual(self, **params):
         """Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
 
@@ -9803,7 +10069,7 @@ class Client(BaseClient):
     def papi_get_um_leverage_bracket(self, **params):
         """Query UM notional and leverage brackets.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Margin-Max-Borrow
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/UM-Notional-and-Leverage-Brackets
 
         :param symbol: optional
         :type symbol: str
@@ -10105,7 +10371,7 @@ class Client(BaseClient):
     def papi_get_um_account_v2(self, **params):
         """Get current UM account asset and position information.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Account-Detail-V2
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -10176,7 +10442,7 @@ class Client(BaseClient):
     def papi_get_um_trade_asyn_id(self, **params):
         """Get UM futures trade download link by Id.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-Download-Id-For-UM-Futures-Trade-History
+        https://developers.binance.com/docs/derivatives/portfolio-margin/account/Get-UM-Futures-Trade-Download-Link-by-Id
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -10515,7 +10781,7 @@ class Client(BaseClient):
     def papi_get_um_all_orders(self, **params):
         """Get all account UM orders; active, canceled, or filled.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-UM-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-UM-Orders
 
         :returns: API response
 
@@ -10603,7 +10869,7 @@ class Client(BaseClient):
     def papi_get_cm_all_orders(self, **params):
         """Get all account CM orders; active, canceled, or filled.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-CM-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-All-CM-Orders
 
         :returns: API response
 
@@ -10807,7 +11073,7 @@ class Client(BaseClient):
     def papi_get_margin_open_orders(self, **params):
         """Query Current Margin Open Order.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Margin-Account-Order
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Query-Current-Margin-Open-Order
 
         :returns: API response
 
@@ -10879,7 +11145,7 @@ class Client(BaseClient):
     def papi_get_margin_repay_debt(self, **params):
         """Repay debt for a margin loan.
 
-        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Trade-List
+        https://developers.binance.com/docs/derivatives/portfolio-margin/trade/Margin-Account-Repay-Debt
 
         :returns: API response
 
@@ -13748,7 +14014,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/vip/ongoing/orders", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_payment_other(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/payment/other.
@@ -13760,11 +14026,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/payment/other", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_income_asyn_id(self, **params):
         """
         Placeholder function for GET /dapi/v1/income/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Futures-Transaction-History-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13772,7 +14040,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_simple_earn_flexible_history_subscription_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/simple-earn/flexible/history/subscriptionRecord.
@@ -13784,7 +14052,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "simple-earn/flexible/history/subscriptionRecord", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_auto_invest_one_off(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/auto-invest/one-off.
@@ -13796,7 +14064,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/auto-invest/one-off", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_commission_coin_futures(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/coinFutures.
@@ -13808,7 +14076,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
+
     def v3_post_order_list_otoco(self, **params):
         """
         Placeholder function for POST /api/v3/orderList/otoco.
@@ -13820,11 +14088,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("post", "orderList/otoco", signed=True, data=params, version="v3")
-        
+
     def futures_v1_get_order_asyn(self, **params):
         """
         Placeholder function for GET /fapi/v1/order/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Order-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13832,7 +14102,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "order/asyn", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_asset_custody_transfer_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/asset/custody/transfer-history.
@@ -13844,7 +14114,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "asset/custody/transfer-history", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_blvt(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccount/blvt.
@@ -13856,7 +14126,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccount/blvt", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sol_staking_sol_redeem(self, **params):
         """
         Placeholder function for POST /sapi/v1/sol-staking/sol/redeem.
@@ -13868,11 +14138,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sol-staking/sol/redeem", signed=True, data=params, version=1)
-        
+
     def options_v1_get_countdown_cancel_all(self, **params):
         """
         Placeholder function for GET /eapi/v1/countdownCancelAll.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Get-Auto-Cancel-All-Open-Orders-Config
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13880,11 +14152,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "countdownCancelAll", signed=True, data=params)
-        
+
     def margin_v1_get_margin_trade_coeff(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/tradeCoeff.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/account/Get-Summary-Of-Margin-Account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13892,11 +14166,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/tradeCoeff", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_order_amendment(self, **params):
         """
         Placeholder function for GET /dapi/v1/orderAmendment.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Get-Order-Modify-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13904,11 +14180,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_margin_available_inventory(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/available-inventory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/market-data/Query-margin-avaliable-inventory
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13916,7 +14194,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/available-inventory", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_account_api_restrictions_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for POST /sapi/v1/account/apiRestrictions/ipRestriction/ipList.
@@ -13928,7 +14206,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_eth_staking_account(self, **params):
         """
         Placeholder function for GET /sapi/v2/eth-staking/account.
@@ -13940,7 +14218,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "eth-staking/account", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_loan_income(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/income.
@@ -13952,11 +14230,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/income", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_pm_account_info(self, **params):
         """
         Placeholder function for GET /dapi/v1/pmAccountInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/portfolio-margin-endpoints
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -13964,7 +14244,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_query_trans_log_for_investor(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForInvestor.
@@ -13976,7 +14256,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/queryTransLogForInvestor", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_dci_product_auto_compound_edit_status(self, **params):
         """
         Placeholder function for POST /sapi/v1/dci/product/auto_compound/edit-status.
@@ -13988,11 +14268,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "dci/product/auto_compound/edit-status", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_trade_asyn(self, **params):
         """
         Placeholder function for GET /fapi/v1/trade/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Trade-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14000,7 +14282,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "trade/asyn", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_vip_request_interest_rate(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/vip/request/interestRate.
@@ -14012,11 +14294,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/vip/request/interestRate", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_funding_info(self, **params):
         """
         Placeholder function for GET /fapi/v1/fundingInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Get-Funding-Rate-Info
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14024,7 +14308,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "fundingInfo", signed=False, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_repay_rate(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/repay/rate.
@@ -14036,7 +14320,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/repay/rate", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_lending_auto_invest_plan_id(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/plan/id.
@@ -14048,7 +14332,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/plan/id", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_adjust_ltv(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/adjust/ltv.
@@ -14060,7 +14344,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/adjust/ltv", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_statistics_user_status(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/statistics/user/status.
@@ -14072,7 +14356,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/statistics/user/status", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_transfer_futures(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/transfer/futures.
@@ -14084,7 +14368,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/transfer/futures", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_algo_spot_new_order_twap(self, **params):
         """
         Placeholder function for POST /sapi/v1/algo/spot/newOrderTwap.
@@ -14096,7 +14380,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "algo/spot/newOrderTwap", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_target_asset_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/target-asset/list.
@@ -14108,7 +14392,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/target-asset/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_capital_deposit_address_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/capital/deposit/address/list.
@@ -14120,7 +14404,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "capital/deposit/address/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_bnb_burn_margin_interest(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/marginInterest.
@@ -14132,7 +14416,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccount/bnbBurn/marginInterest", signed=True, data=params, version=1)
-        
+
     def margin_v2_post_loan_flexible_repay(self, **params):
         """
         Placeholder function for POST /sapi/v2/loan/flexible/repay.
@@ -14144,7 +14428,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/flexible/repay", signed=True, data=params, version=2)
-        
+
     def margin_v2_get_loan_flexible_loanable_data(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/loanable/data.
@@ -14156,7 +14440,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/loanable/data", signed=True, data=params, version=2)
-        
+
     def margin_v1_post_broker_sub_account_api_permission(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/permission.
@@ -14168,7 +14452,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/permission", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi.
@@ -14180,7 +14464,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_dci_product_positions(self, **params):
         """
         Placeholder function for GET /sapi/v1/dci/product/positions.
@@ -14192,7 +14476,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "dci/product/positions", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_convert_limit_cancel_order(self, **params):
         """
         Placeholder function for POST /sapi/v1/convert/limit/cancelOrder.
@@ -14204,7 +14488,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "convert/limit/cancelOrder", signed=True, data=params, version=1)
-        
+
     def v3_post_order_list_oto(self, **params):
         """
         Placeholder function for POST /api/v3/orderList/oto.
@@ -14216,7 +14500,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("post", "orderList/oto", signed=True, data=params, version="v3")
-        
+
     def margin_v1_get_mining_hash_transfer_config_details_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/hash-transfer/config/details/list.
@@ -14228,7 +14512,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/hash-transfer/config/details/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_hash_transfer_profit_details(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/hash-transfer/profit/details.
@@ -14240,7 +14524,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/hash-transfer/profit/details", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount.
@@ -14252,7 +14536,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_portfolio_balance(self, **params):
         """
         Placeholder function for GET /sapi/v1/portfolio/balance.
@@ -14264,7 +14548,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "portfolio/balance", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sub_account_eoptions_enable(self, **params):
         """
         Placeholder function for POST /sapi/v1/sub-account/eoptions/enable.
@@ -14276,7 +14560,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/eoptions/enable", signed=True, data=params, version=1)
-        
+
     def papi_v1_post_ping(self, **params):
         """
         Placeholder function for POST /papi/v1/ping.
@@ -14288,7 +14572,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_papi_api("post", "ping", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_loanable_data(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/loanable/data.
@@ -14300,7 +14584,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/loanable/data", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_eth_staking_wbeth_unwrap(self, **params):
         """
         Placeholder function for POST /sapi/v1/eth-staking/wbeth/unwrap.
@@ -14312,7 +14596,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "eth-staking/wbeth/unwrap", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_eth_staking_eth_history_staking_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/stakingHistory.
@@ -14324,7 +14608,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "eth-staking/eth/history/stakingHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_staking_staking_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/staking/stakingRecord.
@@ -14336,7 +14620,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "staking/stakingRecord", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_rebate_recent_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/rebate/recentRecord.
@@ -14348,7 +14632,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/rebate/recentRecord", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_vip_collateral_account(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/vip/collateral/account.
@@ -14360,7 +14644,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/vip/collateral/account", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_algo_spot_open_orders(self, **params):
         """
         Placeholder function for GET /sapi/v1/algo/spot/openOrders.
@@ -14372,7 +14656,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "algo/spot/openOrders", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_repay(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/repay.
@@ -14384,11 +14668,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/repay", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_funding_info(self, **params):
         """
         Placeholder function for GET /dapi/v1/fundingInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Get-Funding-Info
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14396,11 +14682,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "fundingInfo", signed=False, data=params, version=1)
-        
+
     def margin_v1_get_margin_leverage_bracket(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/leverageBracket.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/market-data/Query-Liability-Coin-Leverage-Bracket-in-Cross-Margin-Pro-Mode
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14408,7 +14696,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/leverageBracket", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_portfolio_collateral_rate(self, **params):
         """
         Placeholder function for GET /sapi/v2/portfolio/collateralRate.
@@ -14420,7 +14708,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "portfolio/collateralRate", signed=True, data=params, version=2)
-        
+
     def margin_v2_post_loan_flexible_adjust_ltv(self, **params):
         """
         Placeholder function for POST /sapi/v2/loan/flexible/adjust/ltv.
@@ -14432,7 +14720,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/flexible/adjust/ltv", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_convert_order_status(self, **params):
         """
         Placeholder function for GET /sapi/v1/convert/orderStatus.
@@ -14444,7 +14732,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccountApi/ipRestriction.
@@ -14456,7 +14744,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_dci_product_subscribe(self, **params):
         """
         Placeholder function for POST /sapi/v1/dci/product/subscribe.
@@ -14468,11 +14756,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "dci/product/subscribe", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_income_asyn_id(self, **params):
         """
         Placeholder function for GET /fapi/v1/income/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Transaction-History-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14480,11 +14770,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
+
     def options_v1_post_countdown_cancel_all(self, **params):
         """
         Placeholder function for POST /eapi/v1/countdownCancelAll.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Set-Auto-Cancel-All-Open-Orders-Config
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14492,7 +14784,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("post", "countdownCancelAll", signed=True, data=params)
-        
+
     def margin_v1_post_mining_hash_transfer_config_cancel(self, **params):
         """
         Placeholder function for POST /sapi/v1/mining/hash-transfer/config/cancel.
@@ -14504,7 +14796,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "mining/hash-transfer/config/cancel", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_deposit_hist(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/depositHist.
@@ -14516,7 +14808,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/depositHist", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_payment_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/payment/list.
@@ -14528,11 +14820,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/payment/list", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_pm_account_info(self, **params):
         """
         Placeholder function for GET /fapi/v1/pmAccountInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/portfolio-margin-endpoints
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14540,11 +14834,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_adl_quantile(self, **params):
         """
         Placeholder function for GET /dapi/v1/adlQuantile.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Position-ADL-Quantile-Estimation
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14552,11 +14848,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "adlQuantile", signed=True, data=params, version=1)
-        
+
     def options_v1_get_income_asyn_id(self, **params):
         """
         Placeholder function for GET /eapi/v1/income/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/account/Get-Option-Transaction-History-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14564,7 +14862,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "income/asyn/id", signed=True, data=params)
-        
+
     def v3_post_cancel_replace(self, **params):
         """
         Placeholder function for POST /api/v3/cancelReplace.
@@ -14576,7 +14874,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("post", "cancelReplace", signed=True, data=params, version="v3")
-        
+
     def margin_v1_post_account_enable_fast_withdraw_switch(self, **params):
         """
         Placeholder function for POST /sapi/v1/account/enableFastWithdrawSwitch.
@@ -14588,7 +14886,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "account/enableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_transfer_futures(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/transfer/futures.
@@ -14600,7 +14898,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/transfer/futures", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sol_staking_sol_stake(self, **params):
         """
         Placeholder function for POST /sapi/v1/sol-staking/sol/stake.
@@ -14612,7 +14910,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sol-staking/sol/stake", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_borrow(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/borrow.
@@ -14624,7 +14922,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/borrow", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_info(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/info.
@@ -14636,7 +14934,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/info", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_auto_invest_plan_edit_status(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/auto-invest/plan/edit-status.
@@ -14648,7 +14946,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/auto-invest/plan/edit-status", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_unclaimed_rewards(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/unclaimedRewards.
@@ -14660,7 +14958,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/unclaimedRewards", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_asset_convert_transfer_query_by_page(self, **params):
         """
         Placeholder function for POST /sapi/v1/asset/convert-transfer/queryByPage.
@@ -14672,7 +14970,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "asset/convert-transfer/queryByPage", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_boost_rewards_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/boostRewardsHistory.
@@ -14684,7 +14982,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/boostRewardsHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_one_off_status(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/one-off/status.
@@ -14696,7 +14994,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/one-off/status", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccount.
@@ -14708,7 +15006,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccount", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page(self, **params):
         """
         Placeholder function for GET /sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage.
@@ -14720,7 +15018,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "asset/ledger-transfer/cloud-mining/queryByPage", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_pub_coin_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/pub/coinList.
@@ -14732,7 +15030,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/pub/coinList", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_repay_history(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/repay/history.
@@ -14744,7 +15042,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/repay/history", signed=True, data=params, version=2)
-        
+
     def v3_post_sor_order(self, **params):
         """
         Placeholder function for POST /api/v3/sor/order.
@@ -14756,7 +15054,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("post", "sor/order", signed=True, data=params, version="v3")
-        
+
     def margin_v1_post_capital_deposit_credit_apply(self, **params):
         """
         Placeholder function for POST /sapi/v1/capital/deposit/credit-apply.
@@ -14768,7 +15066,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "capital/deposit/credit-apply", signed=True, data=params, version=1)
-        
+
     def futures_v1_put_batch_order(self, **params):
         """
         Placeholder function for PUT /fapi/v1/batchOrder.
@@ -14780,7 +15078,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("put", "batchOrder", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_statistics_user_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/statistics/user/list.
@@ -14792,7 +15090,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/statistics/user/list", signed=True, data=params, version=1)
-        
+
     def futures_v1_post_batch_order(self, **params):
         """
         Placeholder function for POST /fapi/v1/batchOrder.
@@ -14804,7 +15102,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("post", "batchOrder", signed=True, data=params, version=1)
-        
+
     def v3_get_ticker_trading_day(self, **params):
         """
         Placeholder function for GET /api/v3/ticker/tradingDay.
@@ -14816,7 +15114,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("get", "ticker/tradingDay", signed=False, data=params, version="v3")
-        
+
     def margin_v1_get_mining_worker_detail(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/worker/detail.
@@ -14828,7 +15126,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/worker/detail", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_fetch_future_asset(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/fetch-future-asset.
@@ -14840,11 +15138,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/fetch-future-asset", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_margin_rate_limit_order(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/rateLimit/order.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Current-Margin-Order-Count-Usage
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14852,7 +15152,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/rateLimit/order", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_localentity_vasp(self, **params):
         """
         Placeholder function for GET /sapi/v1/localentity/vasp.
@@ -14864,7 +15164,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "localentity/vasp", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_rate_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/rateHistory.
@@ -14876,7 +15176,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/rateHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/ipRestriction.
@@ -14888,7 +15188,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_transfer(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/transfer.
@@ -14900,7 +15200,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/transfer", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_account(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/account.
@@ -14912,7 +15212,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/account", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_account_info(self, **params):
         """
         Placeholder function for GET /sapi/v1/account/info.
@@ -14924,7 +15224,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "account/info", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_portfolio_repay_futures_switch(self, **params):
         """
         Placeholder function for POST /sapi/v1/portfolio/repay-futures-switch.
@@ -14936,7 +15236,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "portfolio/repay-futures-switch", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_vip_borrow(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/vip/borrow.
@@ -14948,7 +15248,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/vip/borrow", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_ltv_adjustment_history(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/ltv/adjustment/history.
@@ -14960,11 +15260,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/ltv/adjustment/history", signed=True, data=params, version=2)
-        
+
     def options_v1_delete_all_open_orders_by_underlying(self, **params):
         """
         Placeholder function for DELETE /eapi/v1/allOpenOrdersByUnderlying.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/trade/Cancel-All-Option-Orders-By-Underlying
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14972,7 +15274,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("delete", "allOpenOrdersByUnderlying", signed=True, data=params)
-        
+
     def margin_v1_get_broker_sub_account_futures_summary(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/futuresSummary.
@@ -14984,7 +15286,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_spot_summary(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/spotSummary.
@@ -14996,7 +15298,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/spotSummary", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sub_account_blvt_enable(self, **params):
         """
         Placeholder function for POST /sapi/v1/sub-account/blvt/enable.
@@ -15008,7 +15310,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/blvt/enable", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_algo_spot_historical_orders(self, **params):
         """
         Placeholder function for GET /sapi/v1/algo/spot/historicalOrders.
@@ -15020,7 +15322,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "algo/spot/historicalOrders", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_vip_repay_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/vip/repay/history.
@@ -15032,7 +15334,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/vip/repay/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_borrow_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/borrow/history.
@@ -15044,7 +15346,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/borrow/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_auto_invest_redeem(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/auto-invest/redeem.
@@ -15056,11 +15358,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/auto-invest/redeem", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_income_asyn(self, **params):
         """
         Placeholder function for GET /dapi/v1/income/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Transaction-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15068,7 +15372,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "income/asyn", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_managed_subaccount_deposit(self, **params):
         """
         Placeholder function for POST /sapi/v1/managed-subaccount/deposit.
@@ -15080,7 +15384,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "managed-subaccount/deposit", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_daily_purchase(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/daily/purchase.
@@ -15092,11 +15396,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/daily/purchase", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_trade_asyn_id(self, **params):
         """
         Placeholder function for GET /fapi/v1/trade/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Trade-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15104,7 +15410,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "trade/asyn/id", signed=True, data=params, version=1)
-        
+
     def margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for DELETE /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList.
@@ -15116,7 +15422,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("delete", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_copy_trading_futures_user_status(self, **params):
         """
         Placeholder function for GET /sapi/v1/copyTrading/futures/userStatus.
@@ -15128,11 +15434,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "copyTrading/futures/userStatus", signed=True, data=params, version=1)
-        
+
     def options_v1_get_margin_account(self, **params):
         """
         Placeholder function for GET /eapi/v1/marginAccount.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15140,7 +15448,54 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "marginAccount", signed=True, data=params)
-        
+
+    def options_get_market_maker_protection_config(self, **params):
+        """
+        Get config for MMP.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Get-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("get", "mmp", signed=True, data=params)
+
+    def options_post_market_maker_protection_config(self, **params):
+        """
+        Set config for MMP.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Set-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param windowTimeInMilliseconds: required
+        :type windowTimeInMilliseconds: int
+        :param frozenTimeInMilliseconds: required
+        :type frozenTimeInMilliseconds: int
+        :param qtyLimit: required
+        :type qtyLimit: decimal
+        :param deltaLimit: required
+        :type deltaLimit: decimal
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("post", "mmpSet", signed=True, data=params)
+
+    def options_reset_market_maker_protection_config(self, **params):
+        """
+        Reset MMP, start MMP order again.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Reset-Market-Maker-Protection-Config
+
+        :param underlying: required
+        :type underlying: str
+        :param recvWindow: optional
+        :type recvWindow: int
+        """
+        return self._request_options_api("post", "mmpReset", signed=True, data=params)
+
     def margin_v1_post_localentity_withdraw_apply(self, **params):
         """
         Placeholder function for POST /sapi/v1/localentity/withdraw/apply.
@@ -15152,7 +15507,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "localentity/withdraw/apply", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_asset_wallet_balance(self, **params):
         """
         Placeholder function for GET /sapi/v1/asset/wallet/balance.
@@ -15164,7 +15519,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "asset/wallet/balance", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_transfer(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/transfer.
@@ -15176,7 +15531,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/transfer", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_customized_fixed_purchase(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/customizedFixed/purchase.
@@ -15188,7 +15543,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/customizedFixed/purchase", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_algo_futures_new_order_twap(self, **params):
         """
         Placeholder function for POST /sapi/v1/algo/futures/newOrderTwap.
@@ -15200,7 +15555,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "algo/futures/newOrderTwap", signed=True, data=params, version=1)
-        
+
     def margin_v2_post_eth_staking_eth_stake(self, **params):
         """
         Placeholder function for POST /sapi/v2/eth-staking/eth/stake.
@@ -15212,7 +15567,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "eth-staking/eth/stake", signed=True, data=params, version=2)
-        
+
     def margin_v1_post_loan_flexible_repay_history(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/flexible/repay/history.
@@ -15224,7 +15579,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/flexible/repay/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_index_info(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/index/info.
@@ -15236,7 +15591,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/index/info", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_redemption_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/redemptionHistory.
@@ -15248,7 +15603,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/redemptionHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_rebate_futures_recent_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/rebate/futures/recentRecord.
@@ -15260,7 +15615,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/rebate/futures/recentRecord", signed=True, data=params, version=1)
-        
+
     def margin_v3_get_broker_sub_account_futures_summary(self, **params):
         """
         Placeholder function for GET /sapi/v3/broker/subAccount/futuresSummary.
@@ -15272,7 +15627,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=3)
-        
+
     def margin_v1_get_lending_auto_invest_target_asset_roi_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/target-asset/roi/list.
@@ -15284,7 +15639,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/target-asset/roi/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_universal_transfer(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/universalTransfer.
@@ -15296,11 +15651,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/universalTransfer", signed=True, data=params, version=1)
-        
+
     def futures_v1_put_batch_orders(self, **params):
         """
         Placeholder function for PUT /fapi/v1/batchOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Modify-Multiple-Orders
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15308,11 +15665,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("put", "batchOrders", signed=True, data=params, version=1)
-        
+
     def options_v1_post_countdown_cancel_all_heart_beat(self, **params):
         """
         Placeholder function for POST /eapi/v1/countdownCancelAllHeartBeat.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-maker-endpoints/Auto-Cancel-All-Open-Orders-Heartbeat
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15320,7 +15679,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("post", "countdownCancelAllHeartBeat", signed=True, data=params)
-        
+
     def margin_v1_get_loan_collateral_data(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/collateral/data.
@@ -15332,7 +15691,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/collateral/data", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_repay_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/repay/history.
@@ -15344,7 +15703,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/repay/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_convert_limit_place_order(self, **params):
         """
         Placeholder function for POST /sapi/v1/convert/limit/placeOrder.
@@ -15356,11 +15715,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "convert/limit/placeOrder", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_convert_exchange_info(self, **params):
         """
         Placeholder function for GET /fapi/v1/convert/exchangeInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/convert
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15368,7 +15729,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "convert/exchangeInfo", signed=False, data=params, version=1)
-        
+
     def v3_get_all_order_list(self, **params):
         """
         Placeholder function for GET /api/v3/allOrderList.
@@ -15380,7 +15741,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("get", "allOrderList", signed=True, data=params, version="v3")
-        
+
     def margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for DELETE /sapi/v1/broker/subAccountApi/ipRestriction/ipList.
@@ -15392,7 +15753,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("delete", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sub_account_virtual_sub_account(self, **params):
         """
         Placeholder function for POST /sapi/v1/sub-account/virtualSubAccount.
@@ -15404,7 +15765,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/virtualSubAccount", signed=True, data=params, version=1)
-        
+
     def margin_v1_put_localentity_deposit_provide_info(self, **params):
         """
         Placeholder function for PUT /sapi/v1/localentity/deposit/provide-info.
@@ -15416,7 +15777,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("put", "localentity/deposit/provide-info", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_portfolio_mint(self, **params):
         """
         Placeholder function for POST /sapi/v1/portfolio/mint.
@@ -15428,11 +15789,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "portfolio/mint", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_order_amendment(self, **params):
         """
         Placeholder function for GET /fapi/v1/orderAmendment.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Get-Order-Modify-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15440,7 +15803,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sol_staking_sol_claim(self, **params):
         """
         Placeholder function for POST /sapi/v1/sol-staking/sol/claim.
@@ -15452,7 +15815,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sol-staking/sol/claim", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_daily_redeem(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/daily/redeem.
@@ -15464,7 +15827,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/daily/redeem", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_mining_hash_transfer_config(self, **params):
         """
         Placeholder function for POST /sapi/v1/mining/hash-transfer/config.
@@ -15476,7 +15839,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "mining/hash-transfer/config", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_rebalance_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/rebalance/history.
@@ -15488,7 +15851,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/rebalance/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_repay_collateral_rate(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/repay/collateral/rate.
@@ -15500,11 +15863,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/repay/collateral/rate", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_income_asyn(self, **params):
         """
         Placeholder function for GET /fapi/v1/income/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Download-Id-For-Futures-Transaction-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15512,7 +15877,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "income/asyn", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_payment_uid(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/payment/uid.
@@ -15524,7 +15889,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/payment/uid", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_borrow_history(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/borrow/history.
@@ -15536,7 +15901,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/borrow/history", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_capital_contract_convertible_coins(self, **params):
         """
         Placeholder function for GET /sapi/v1/capital/contract/convertible-coins.
@@ -15548,7 +15913,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_permission_vanilla_options(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/permission/vanillaOptions.
@@ -15560,7 +15925,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/permission/vanillaOptions", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_redeem_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/redeem/history.
@@ -15572,7 +15937,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/redeem/history", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_localentity_withdraw_history(self, **params):
         """
         Placeholder function for GET /sapi/v2/localentity/withdraw/history.
@@ -15584,7 +15949,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "localentity/withdraw/history", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_eth_staking_eth_history_redemption_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/redemptionHistory.
@@ -15596,11 +15961,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "eth-staking/eth/history/redemptionHistory", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_fee_burn(self, **params):
         """
         Placeholder function for GET /fapi/v1/feeBurn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-BNB-Burn-Status
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15608,7 +15975,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "feeBurn", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_index_user_summary(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/index/user-summary.
@@ -15620,7 +15987,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/index/user-summary", signed=True, data=params, version=1)
-        
+
     def margin_v2_post_loan_flexible_borrow(self, **params):
         """
         Placeholder function for POST /sapi/v2/loan/flexible/borrow.
@@ -15632,7 +15999,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/flexible/borrow", signed=True, data=params, version=2)
-        
+
     def margin_v1_post_loan_vip_repay(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/vip/repay.
@@ -15644,11 +16011,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/vip/repay", signed=True, data=params, version=1)
-        
+
     def futures_coin_v1_get_commission_rate(self, **params):
         """
         Placeholder function for GET /dapi/v1/commissionRate.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/account/rest-api/User-Commission-Rate
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15656,7 +16025,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("get", "commissionRate", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_convert_asset_info(self, **params):
         """
         Placeholder function for GET /sapi/v1/convert/assetInfo.
@@ -15668,7 +16037,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "convert/assetInfo", signed=True, data=params, version=1)
-        
+
     def v3_post_sor_order_test(self, **params):
         """
         Placeholder function for POST /api/v3/sor/order/test.
@@ -15680,7 +16049,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("post", "sor/order/test", signed=True, data=params, version="v3")
-        
+
     def margin_v1_post_broker_universal_transfer(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/universalTransfer.
@@ -15692,7 +16061,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/universalTransfer", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_account_disable_fast_withdraw_switch(self, **params):
         """
         Placeholder function for POST /sapi/v1/account/disableFastWithdrawSwitch.
@@ -15704,11 +16073,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "account/disableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_asset_index(self, **params):
         """
         Placeholder function for GET /fapi/v1/assetIndex.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Multi-Assets-Mode-Asset-Index
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15716,7 +16087,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "assetIndex", signed=False, data=params, version=1)
-        
+
     def margin_v1_get_account_api_restrictions_ip_restriction(self, **params):
         """
         Placeholder function for GET /sapi/v1/account/apiRestrictions/ipRestriction.
@@ -15728,7 +16099,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_bnb_burn_spot(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/spot.
@@ -15740,11 +16111,27 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccount/bnbBurn/spot", signed=True, data=params, version=1)
-        
+
+    def futures_coin_v1_put_order(self, **params):
+        """
+        Placeholder function for PUT /dapi/v1/order.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Order
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+
+        :returns: API response
+        """
+        return self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
+
     def futures_coin_v1_put_batch_orders(self, **params):
         """
         Placeholder function for PUT /dapi/v1/batchOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/coin-margined-futures/trade/rest-api/Modify-Multiple-Orders
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15752,7 +16139,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_coin_api("put", "batchOrders", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_margin_delist_schedule(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/delist-schedule.
@@ -15764,7 +16151,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/delist-schedule", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_permission_universal_transfer(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/permission/universalTransfer.
@@ -15776,7 +16163,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/permission/universalTransfer", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_ltv_adjustment_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/ltv/adjustment/history.
@@ -15788,7 +16175,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/ltv/adjustment/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_localentity_withdraw_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/localentity/withdraw/history.
@@ -15800,7 +16187,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "localentity/withdraw/history", signed=True, data=params, version=1)
-        
+
     def margin_v2_post_sub_account_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for POST /sapi/v2/sub-account/subAccountApi/ipRestriction.
@@ -15812,11 +16199,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
+
     def futures_v1_get_rate_limit_order(self, **params):
         """
         Placeholder function for GET /fapi/v1/rateLimit/order.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Query-Rate-Limit
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15824,7 +16213,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "rateLimit/order", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_api_commission_futures(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/futures.
@@ -15836,7 +16225,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_staking_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/stakingHistory.
@@ -15848,11 +16237,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/stakingHistory", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_open_order(self, **params):
         """
         Placeholder function for GET /fapi/v1/openOrder.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Current-Open-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15860,7 +16251,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "openOrder", signed=True, data=params, version=1)
-        
+
     def margin_v1_delete_algo_spot_order(self, **params):
         """
         Placeholder function for DELETE /sapi/v1/algo/spot/order.
@@ -15872,7 +16263,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("delete", "algo/spot/order", signed=True, data=params, version=1)
-        
+
     def margin_v1_delete_account_api_restrictions_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for DELETE /sapi/v1/account/apiRestrictions/ipRestriction/ipList.
@@ -15884,7 +16275,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("delete", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_capital_contract_convertible_coins(self, **params):
         """
         Placeholder function for POST /sapi/v1/capital/contract/convertible-coins.
@@ -15896,7 +16287,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_margin_asset(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/marginAsset.
@@ -15908,7 +16299,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/marginAsset", signed=True, data=params, version=1)
-        
+
     def v3_delete_order_list(self, **params):
         """
         Placeholder function for DELETE /api/v3/orderList.
@@ -15920,7 +16311,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("delete", "orderList", signed=True, data=params, version="v3")
-        
+
     def margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for POST /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList.
@@ -15932,7 +16323,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_commission(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission.
@@ -15944,11 +16335,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/commission", signed=True, data=params, version=1)
-        
+
     def futures_v1_post_fee_burn(self, **params):
         """
         Placeholder function for POST /fapi/v1/feeBurn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Toggle-BNB-Burn-On-Futures-Trade
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15956,7 +16349,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("post", "feeBurn", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_margin_summary(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/marginSummary.
@@ -15968,7 +16361,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/marginSummary", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_plan_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/plan/list.
@@ -15980,7 +16373,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/plan/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_loan_vip_loanable_data(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/vip/loanable/data.
@@ -15992,7 +16385,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/vip/loanable/data", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_collateral_data(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/collateral/data.
@@ -16004,7 +16397,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/collateral/data", signed=True, data=params, version=2)
-        
+
     def margin_v1_delete_broker_sub_account_api(self, **params):
         """
         Placeholder function for DELETE /sapi/v1/broker/subAccountApi.
@@ -16016,7 +16409,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("delete", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_history_bnsol_rewards_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/bnsolRewardsHistory.
@@ -16028,7 +16421,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/history/bnsolRewardsHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_convert_limit_query_open_orders(self, **params):
         """
         Placeholder function for GET /sapi/v1/convert/limit/queryOpenOrders.
@@ -16040,7 +16433,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "convert/limit/queryOpenOrders", signed=True, data=params, version=1)
-        
+
     def v3_get_account_commission(self, **params):
         """
         Placeholder function for GET /api/v3/account/commission.
@@ -16052,7 +16445,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("get", "account/commission", signed=True, data=params, version="v3")
-        
+
     def margin_v1_get_managed_subaccount_query_trans_log(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/query-trans-log.
@@ -16064,7 +16457,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/query-trans-log", signed=True, data=params, version=1)
-        
+
     def margin_v2_post_broker_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for POST /sapi/v2/broker/subAccountApi/ipRestriction.
@@ -16076,7 +16469,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_lending_auto_invest_all_asset(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/all/asset.
@@ -16088,11 +16481,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/all/asset", signed=True, data=params, version=1)
-        
+
     def futures_v1_post_convert_accept_quote(self, **params):
         """
         Placeholder function for POST /fapi/v1/convert/acceptQuote.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Accept-Quote
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16100,7 +16495,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("post", "convert/acceptQuote", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_spot_delist_schedule(self, **params):
         """
         Placeholder function for GET /sapi/v1/spot/delist-schedule.
@@ -16112,7 +16507,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "spot/delist-schedule", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_account_api_restrictions_ip_restriction(self, **params):
         """
         Placeholder function for POST /sapi/v1/account/apiRestrictions/ipRestriction.
@@ -16124,7 +16519,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_dci_product_accounts(self, **params):
         """
         Placeholder function for GET /sapi/v1/dci/product/accounts.
@@ -16136,7 +16531,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "dci/product/accounts", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sub_account_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for GET /sapi/v1/sub-account/subAccountApi/ipRestriction.
@@ -16148,7 +16543,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sub_account_transaction_statistics(self, **params):
         """
         Placeholder function for GET /sapi/v1/sub-account/transaction-statistics.
@@ -16160,7 +16555,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sub-account/transaction-statistics", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_deposit_address(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/deposit/address.
@@ -16172,7 +16567,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/deposit/address", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_portfolio_account(self, **params):
         """
         Placeholder function for GET /sapi/v2/portfolio/account.
@@ -16184,7 +16579,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "portfolio/account", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_simple_earn_locked_history_redemption_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/simple-earn/locked/history/redemptionRecord.
@@ -16196,11 +16591,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "simple-earn/locked/history/redemptionRecord", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_order_asyn_id(self, **params):
         """
         Placeholder function for GET /fapi/v1/order/asyn/id.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Get-Futures-Order-History-Download-Link-by-Id
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16208,7 +16605,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "order/asyn/id", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_managed_subaccount_withdraw(self, **params):
         """
         Placeholder function for POST /sapi/v1/managed-subaccount/withdraw.
@@ -16220,7 +16617,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "managed-subaccount/withdraw", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_localentity_deposit_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/localentity/deposit/history.
@@ -16232,7 +16629,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "localentity/deposit/history", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_eth_staking_wbeth_wrap(self, **params):
         """
         Placeholder function for POST /sapi/v1/eth-staking/wbeth/wrap.
@@ -16244,7 +16641,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "eth-staking/wbeth/wrap", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_simple_earn_locked_set_redeem_option(self, **params):
         """
         Placeholder function for POST /sapi/v1/simple-earn/locked/setRedeemOption.
@@ -16256,7 +16653,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "simple-earn/locked/setRedeemOption", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_ip_restriction_ip_list(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/ipRestriction/ipList.
@@ -16268,7 +16665,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_broker_sub_account_api_commission_futures(self, **params):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/futures.
@@ -16280,7 +16677,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_lending_auto_invest_history_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/history/list.
@@ -16292,7 +16689,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/history/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_customize_margin_call(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/customize/margin_call.
@@ -16304,7 +16701,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/customize/margin_call", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_bnb_burn_status(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/bnbBurn/status.
@@ -16316,7 +16713,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/bnbBurn/status", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_account_snapshot(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/accountSnapshot.
@@ -16328,7 +16725,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/accountSnapshot", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_asset_convert_transfer(self, **params):
         """
         Placeholder function for POST /sapi/v1/asset/convert-transfer.
@@ -16340,11 +16737,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "asset/convert-transfer", signed=True, data=params, version=1)
-        
+
     def options_v1_get_income_asyn(self, **params):
         """
         Placeholder function for GET /eapi/v1/income/asyn.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/account/Get-Download-Id-For-Option-Transaction-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16352,7 +16751,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "income/asyn", signed=True, data=params)
-        
+
     def margin_v1_get_broker_sub_account_api_commission_coin_futures(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/coinFutures.
@@ -16364,7 +16763,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_broker_sub_account_futures_summary(self, **params):
         """
         Placeholder function for GET /sapi/v2/broker/subAccount/futuresSummary.
@@ -16376,7 +16775,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=2)
-        
+
     def margin_v1_get_loan_ongoing_orders(self, **params):
         """
         Placeholder function for GET /sapi/v1/loan/ongoing/orders.
@@ -16388,7 +16787,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/ongoing/orders", signed=True, data=params, version=1)
-        
+
     def margin_v2_get_loan_flexible_ongoing_orders(self, **params):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/ongoing/orders.
@@ -16400,7 +16799,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "loan/flexible/ongoing/orders", signed=True, data=params, version=2)
-        
+
     def margin_v1_post_algo_futures_new_order_vp(self, **params):
         """
         Placeholder function for POST /sapi/v1/algo/futures/newOrderVp.
@@ -16412,11 +16811,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "algo/futures/newOrderVp", signed=True, data=params, version=1)
-        
+
     def futures_v1_post_convert_get_quote(self, **params):
         """
         Placeholder function for POST /fapi/v1/convert/getQuote.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Send-quote-request
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16424,7 +16825,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("post", "convert/getQuote", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_algo_spot_sub_orders(self, **params):
         """
         Placeholder function for GET /sapi/v1/algo/spot/subOrders.
@@ -16436,7 +16837,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "algo/spot/subOrders", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_portfolio_redeem(self, **params):
         """
         Placeholder function for POST /sapi/v1/portfolio/redeem.
@@ -16448,7 +16849,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "portfolio/redeem", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_lending_auto_invest_plan_add(self, **params):
         """
         Placeholder function for POST /sapi/v1/lending/auto-invest/plan/add.
@@ -16460,7 +16861,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "lending/auto-invest/plan/add", signed=True, data=params, version=1)
-        
+
     def v3_get_order_list(self, **params):
         """
         Placeholder function for GET /api/v3/orderList.
@@ -16472,7 +16873,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_api("get", "orderList", signed=True, data=params, version="v3")
-        
+
     def margin_v1_get_lending_auto_invest_source_asset_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/lending/auto-invest/source-asset/list.
@@ -16484,11 +16885,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "lending/auto-invest/source-asset/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_margin_all_order_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/margin/allOrderList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Margin-Account-All-OCO
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16496,7 +16899,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "margin/allOrderList", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_eth_staking_eth_redeem(self, **params):
         """
         Placeholder function for POST /sapi/v1/eth-staking/eth/redeem.
@@ -16508,7 +16911,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "eth-staking/eth/redeem", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_rebate_historical_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/rebate/historicalRecord.
@@ -16520,7 +16923,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/rebate/historicalRecord", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_simple_earn_locked_history_subscription_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/simple-earn/locked/history/subscriptionRecord.
@@ -16532,19 +16935,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "simple-earn/locked/history/subscriptionRecord", signed=True, data=params, version=1)
-        
-    def futures_coin_v1_put_order(self, **params):
-        """
-        Placeholder function for PUT /dapi/v1/order.
-        Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
-        :param params: parameters required by the endpoint
-        :type params: dict
-
-        :returns: API response
-        """
-        return self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
-        
     def margin_v1_get_managed_subaccount_asset(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/asset.
@@ -16556,7 +16947,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/asset", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_sol_staking_sol_quota(self, **params):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/quota.
@@ -16568,7 +16959,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "sol-staking/sol/quota", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_loan_vip_renew(self, **params):
         """
         Placeholder function for POST /sapi/v1/loan/vip/renew.
@@ -16580,7 +16971,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "loan/vip/renew", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent(self, **params):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForTradeParent.
@@ -16592,7 +16983,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "managed-subaccount/queryTransLogForTradeParent", signed=True, data=params, version=1)
-        
+
     def margin_v1_post_sub_account_sub_account_api_ip_restriction(self, **params):
         """
         Placeholder function for POST /sapi/v1/sub-account/subAccountApi/ipRestriction.
@@ -16604,7 +16995,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_simple_earn_flexible_history_redemption_record(self, **params):
         """
         Placeholder function for GET /sapi/v1/simple-earn/flexible/history/redemptionRecord.
@@ -16616,7 +17007,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "simple-earn/flexible/history/redemptionRecord", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_broker_sub_account_api(self, **params):
         """
         Placeholder function for GET /sapi/v1/broker/subAccountApi.
@@ -16628,11 +17019,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     def options_v1_get_exercise_history(self, **params):
         """
         Placeholder function for GET /eapi/v1/exerciseHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-data/Historical-Exercise-Records
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16640,7 +17033,22 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "exerciseHistory", signed=False, data=params)
-        
+
+    def options_open_interest(self, **params):
+        """Get present open interest specific underlying asset on specific expiration date.
+
+        https://developers.binance.com/docs/derivatives/option/market-data/Open-Interest
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        :param underlyingAsset: required
+        :type underlyingAsset: str
+        :param expiration: required (e.g '221225')
+        :type expiration: str
+
+        """
+        return self._request_options_api("get", "openInterest", data=params)
+
     def margin_v1_get_convert_exchange_info(self, **params):
         """
         Placeholder function for GET /sapi/v1/convert/exchangeInfo.
@@ -16652,7 +17060,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "convert/exchangeInfo", signed=False, data=params, version=1)
-        
+
     def futures_v1_delete_batch_order(self, **params):
         """
         Placeholder function for DELETE /fapi/v1/batchOrder.
@@ -16664,7 +17072,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("delete", "batchOrder", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_eth_staking_eth_history_wbeth_rewards_history(self, **params):
         """
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/wbethRewardsHistory.
@@ -16676,7 +17084,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "eth-staking/eth/history/wbethRewardsHistory", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_pub_algo_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/pub/algoList.
@@ -16688,11 +17096,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/pub/algoList", signed=True, data=params, version=1)
-        
+
     def options_v1_get_block_trades(self, **params):
         """
         Placeholder function for GET /eapi/v1/blockTrades.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/option/market-data/Recent-Block-Trade-List
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16700,7 +17110,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_options_api("get", "blockTrades", signed=False, data=params)
-        
+
     def margin_v1_get_copy_trading_futures_lead_symbol(self, **params):
         """
         Placeholder function for GET /sapi/v1/copyTrading/futures/leadSymbol.
@@ -16712,7 +17122,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "copyTrading/futures/leadSymbol", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_mining_worker_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/mining/worker/list.
@@ -16724,7 +17134,7 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "mining/worker/list", signed=True, data=params, version=1)
-        
+
     def margin_v1_get_dci_product_list(self, **params):
         """
         Placeholder function for GET /sapi/v1/dci/product/list.
@@ -16736,11 +17146,13 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_margin_api("get", "dci/product/list", signed=True, data=params, version=1)
-        
+
     def futures_v1_get_convert_order_status(self, **params):
         """
         Placeholder function for GET /fapi/v1/convert/orderStatus.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/convert/Order-Status
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16748,4 +17160,3 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
