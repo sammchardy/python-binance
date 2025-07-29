@@ -2430,7 +2430,7 @@ class Client(BaseClient):
     def get_system_status(self):
         """Get system status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#system-status-sapi-system
+        https://developers.binance.com/docs/wallet/others/system-status
 
         :returns: API response
 
@@ -2450,6 +2450,7 @@ class Client(BaseClient):
         """Get account status detail.
 
         https://binance-docs.github.io/apidocs/spot/en/#account-status-sapi-user_data
+        https://developers.binance.com/docs/wallet/account/account-status
         :param version: the api version
         :param version: int
         :param recvWindow: the number of milliseconds the request is valid for
@@ -2473,7 +2474,7 @@ class Client(BaseClient):
     def get_account_api_trading_status(self, **params):
         """Fetch account api trading status detail.
 
-        https://binance-docs.github.io/apidocs/spot/en/#account-api-trading-status-sapi-user_data
+        https://developers.binance.com/docs/wallet/account/account-api-trading-status
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2545,7 +2546,7 @@ class Client(BaseClient):
     def get_account_api_permissions(self, **params):
         """Fetch api key permissions.
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-api-key-permission-user_data
+        https://developers.binance.com/docs/wallet/account/api-key-permission
 
         :param recvWindow: the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2605,7 +2606,7 @@ class Client(BaseClient):
     def get_dust_log(self, **params):
         """Get log of small amounts exchanged for BNB.
 
-        https://binance-docs.github.io/apidocs/spot/en/#dustlog-sapi-user_data
+        https://developers.binance.com/docs/wallet/asset/dust-log
 
         :param startTime: optional
         :type startTime: int
@@ -2677,7 +2678,7 @@ class Client(BaseClient):
     def transfer_dust(self, **params):
         """Convert dust assets to BNB.
 
-        https://binance-docs.github.io/apidocs/spot/en/#dust-transfer-user_data
+        https://developers.binance.com/docs/wallet/asset/dust-transfer
 
         :param asset: The asset being converted. e.g: 'ONE'
         :type asset: str
@@ -2715,7 +2716,7 @@ class Client(BaseClient):
     def get_asset_dividend_history(self, **params):
         """Query asset dividend record.
 
-        https://binance-docs.github.io/apidocs/spot/en/#asset-dividend-record-user_data
+        https://developers.binance.com/docs/wallet/asset/assets-divided-record
 
         :param asset: optional
         :type asset: str
@@ -2852,7 +2853,7 @@ class Client(BaseClient):
     def get_trade_fee(self, **params):
         """Get trade fee.
 
-        https://binance-docs.github.io/apidocs/spot/en/#trade-fee-sapi-user_data
+        https://developers.binance.com/docs/wallet/asset/trade-fee
 
         :param symbol: optional
         :type symbol: str
@@ -2887,7 +2888,7 @@ class Client(BaseClient):
     def get_asset_details(self, **params):
         """Fetch details on assets.
 
-        https://binance-docs.github.io/apidocs/spot/en/#asset-detail-sapi-user_data
+        https://developers.binance.com/docs/wallet/asset
 
         :param asset: optional
         :type asset: str
@@ -2920,7 +2921,7 @@ class Client(BaseClient):
     def get_spot_delist_schedule(self, **params):
         """Get symbols delist schedule for spot
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-symbols-delist-schedule-for-spot-market_data
+        https://developers.binance.com/docs/wallet/others/delist-schedule
 
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
@@ -2945,7 +2946,7 @@ class Client(BaseClient):
             ]
         """
         return self._request_margin_api(
-            "get", "/spot/delist-schedule", True, data=params
+            "get", "spot/delist-schedule", True, data=params
         )
 
     # Withdraw Endpoints
@@ -2953,7 +2954,7 @@ class Client(BaseClient):
     def withdraw(self, **params):
         """Submit a withdraw request.
 
-        https://binance-docs.github.io/apidocs/spot/en/#withdraw-sapi
+        https://developers.binance.com/docs/wallet/capital/withdraw
 
         Assumptions:
 
@@ -2996,7 +2997,7 @@ class Client(BaseClient):
     def get_deposit_history(self, **params):
         """Fetch deposit history.
 
-        https://binance-docs.github.io/apidocs/spot/en/#deposit-history-supporting-network-user_data
+        https://developers.binance.com/docs/wallet/capital/deposite-history
 
         :param coin: optional
         :type coin: str
@@ -3054,7 +3055,7 @@ class Client(BaseClient):
     def get_withdraw_history(self, **params):
         """Fetch withdraw history.
 
-        https://binance-docs.github.io/apidocs/spot/en/#withdraw-history-supporting-network-user_data
+        https://developers.binance.com/docs/wallet/capital/withdraw-history
 
         :param coin: optional
         :type coin: str
@@ -3155,7 +3156,7 @@ class Client(BaseClient):
     def get_deposit_address(self, coin: str, network: Optional[str] = None, **params):
         """Fetch a deposit address for a symbol
 
-        https://binance-docs.github.io/apidocs/spot/en/#deposit-address-supporting-network-user_data
+        https://developers.binance.com/docs/wallet/capital/deposite-address
 
         :param coin: required
         :type coin: str
@@ -8262,11 +8263,21 @@ class Client(BaseClient):
         return self._request_margin_api("get", "asset/transfer", True, data=params)
 
     def funding_wallet(self, **params):
+        """ Query Funding Wallet
+
+        https://developers.binance.com/docs/wallet/asset/funding-wallet
+
+        """
         return self._request_margin_api(
             "post", "asset/get-funding-asset", True, data=params
         )
 
     def get_user_asset(self, **params):
+        """ Get user assets, just for positive data
+
+        https://developers.binance.com/docs/wallet/asset/user-assets
+
+        """
         return self._request_margin_api(
             "post", "asset/getUserAsset", True, data=params, version=3
         )
@@ -8678,7 +8689,7 @@ class Client(BaseClient):
     def get_all_coins_info(self, **params):
         """Get information of coins (available for deposit and withdraw) for user.
 
-        https://binance-docs.github.io/apidocs/spot/en/#all-coins-39-information-user_data
+        https://developers.binance.com/docs/wallet/capital
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -8755,7 +8766,7 @@ class Client(BaseClient):
     def get_account_snapshot(self, **params):
         """Get daily account snapshot of specific type.
 
-        https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
+        https://developers.binance.com/docs/wallet/account/daily-account-snapshoot
 
         :param type: required. Valid values are SPOT/MARGIN/FUTURES.
         :type type: string
@@ -14108,6 +14119,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/asset/custody/transfer-history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/asset/query-user-delegation
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14374,6 +14387,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/algo/spot/newOrderTwap.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/algo/spot-algo/Time-Weighted-Average-Price-New-Order
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14397,6 +14412,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/capital/deposit/address/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/capital/deposite-address
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14542,6 +14559,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/portfolio/balance.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Classic-Portfolio-Margin-Balance-Info
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14650,6 +14669,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/algo/spot/openOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/algo/spot-algo/Query-Current-Algo-Open-Orders
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14701,6 +14722,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/portfolio/collateralRate.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Portfolio-Margin-Pro-Tiered-Collateral-Rate
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14880,6 +14903,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/account/enableFastWithdrawSwitch.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/account/enable-fast-withdraw-switch
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15012,6 +15037,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/asset/ledger-transfer/cloud-mining/queryByPage.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/asset/cloud-mining-payment-and-refund-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15059,6 +15086,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/capital/deposit/credit-apply.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/capital/one-click-arrival-deposite-apply
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15158,6 +15187,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/localentity/vasp.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/travel-rule/onboarded-vasp-list
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15218,6 +15249,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/account/info.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15229,6 +15262,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/portfolio/repay-futures-switch.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Change-Auto-repay-futures-Status
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15315,6 +15350,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/algo/spot/historicalOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/spot-algo/Query-Historical-Algo-Orders
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15501,6 +15538,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/localentity/withdraw/apply.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/travel-rule/withdraw
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15512,6 +15551,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/asset/wallet/balance.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/asset/query-user-wallet-balance
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15548,6 +15589,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/algo/futures/newOrderTwap.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/future-algo/Time-Weighted-Average-Price-New-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15771,6 +15814,8 @@ class Client(BaseClient):
         Placeholder function for PUT /sapi/v1/localentity/deposit/provide-info.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/travel-rule/deposit-provide-info
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15782,6 +15827,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/portfolio/mint.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Mint-BFUSD-Portfolio-Margin
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15931,6 +15978,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/lending/auto-invest/redeem/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/travel-rule/withdraw-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15942,6 +15991,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/localentity/withdraw/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/withdraw-history-v2
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16066,6 +16117,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/account/disableFastWithdrawSwitch.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/account/disable-fast-withdraw-switch
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16256,6 +16309,8 @@ class Client(BaseClient):
         """
         Placeholder function for DELETE /sapi/v1/algo/spot/order.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/spot-algo/Cancel-Algo-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16501,6 +16556,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/spot/delist-schedule.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/wallet/asset/spot-delist-schedule
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16573,6 +16630,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v2/portfolio/account.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Classic-Portfolio-Margin-Account-Info-V2
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16622,6 +16681,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/localentity/deposit/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/deposit-history
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16805,6 +16866,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/algo/futures/newOrderVp.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/algo/future-algo
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16831,6 +16894,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/algo/spot/subOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/algo/spot-algo/Query-Sub-Orders
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16842,6 +16907,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/portfolio/redeem.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Redeem-BFUSD-Portfolio-Margin
 
         :param params: parameters required by the endpoint
         :type params: dict
