@@ -93,7 +93,7 @@ def get_loop():
     inspired by https://stackoverflow.com/questions/46727787/runtimeerror-there-is-no-current-event-loop-in-thread-in-async-apscheduler
     """
     try:
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return loop
     except RuntimeError as e:
         if str(e).startswith("There is no current event loop in thread"):
