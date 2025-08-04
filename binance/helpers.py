@@ -96,7 +96,7 @@ def get_loop():
         loop = asyncio.get_running_loop()
         return loop
     except RuntimeError as e:
-        if str(e).endswith("no running event loop"):
+        if str(e) == "no running event loop":
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             return loop
