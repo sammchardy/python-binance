@@ -6317,7 +6317,7 @@ class Client(BaseClient):
     def get_sub_account_list(self, **params):
         """Query Sub-account List.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-list-sapi-for-master-account
+        https://developers.binance.com/docs/sub_account/account-management/Query-Sub-account-List
 
         :param email: optional - Sub-account email
         :type email: str
@@ -6357,7 +6357,7 @@ class Client(BaseClient):
     def get_sub_account_transfer_history(self, **params):
         """Query Sub-account Transfer History.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-asset-transfer-history-sapi-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Spot-Asset-Transfer-History
 
         :param fromEmail: optional
         :type fromEmail: str
@@ -6409,7 +6409,7 @@ class Client(BaseClient):
     def get_sub_account_futures_transfer_history(self, **params):
         """Query Sub-account Futures Transfer History.
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-futures-asset-transfer-history-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Futures-Asset-Transfer-History
 
         :param email: required
         :type email: str
@@ -6461,7 +6461,7 @@ class Client(BaseClient):
     def create_sub_account_futures_transfer(self, **params):
         """Execute sub-account Futures transfer
 
-        https://github.com/binance-exchange/binance-official-api-docs/blob/9dbe0e961b80557bb19708a707c7fad08842b28e/wapi-api.md#sub-account-transferfor-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Sub-account-Futures-Asset-Transfer
 
         :param fromEmail: required - Sender email
         :type fromEmail: str
@@ -6495,7 +6495,7 @@ class Client(BaseClient):
     def get_sub_account_assets(self, **params):
         """Fetch sub-account assets
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-assets-sapi-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Assets-V4
 
         :param email: required
         :type email: str
@@ -6546,7 +6546,7 @@ class Client(BaseClient):
     def query_subaccount_spot_summary(self, **params):
         """Query Sub-account Spot Assets Summary (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-sub-account-spot-assets-summary-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Query-Sub-account-Spot-Assets-Summary
 
         :param email: optional - Sub account email
         :type email: str
@@ -6586,7 +6586,7 @@ class Client(BaseClient):
     def get_subaccount_deposit_address(self, **params):
         """Get Sub-account Deposit Address (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-deposit-address-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Sub-account-Deposit-Address
 
         :param email: required - Sub account email
         :type email: str
@@ -6618,7 +6618,7 @@ class Client(BaseClient):
     def get_subaccount_deposit_history(self, **params):
         """Get Sub-account Deposit History (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-deposit-address-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Sub-account-Deposit-History
 
         :param email: required - Sub account email
         :type email: str
@@ -6678,7 +6678,7 @@ class Client(BaseClient):
     def get_subaccount_futures_margin_status(self, **params):
         """Get Sub-account's Status on Margin/Futures (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-sub-account-39-s-status-on-margin-futures-for-master-account
+        https://developers.binance.com/docs/sub_account/account-management/Get-Sub-accounts-Status-on-Margin-Or-Futures
 
         :param email: optional - Sub account email
         :type email: str
@@ -6738,7 +6738,7 @@ class Client(BaseClient):
     def get_subaccount_margin_details(self, **params):
         """Get Detail on Sub-account's Margin Account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-detail-on-sub-account-39-s-margin-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Margin-Account
 
         :param email: required - Sub account email
         :type email: str
@@ -6807,7 +6807,7 @@ class Client(BaseClient):
     def get_subaccount_margin_summary(self, **params):
         """Get Summary of Sub-account's Margin Account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-summary-of-sub-account-39-s-margin-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Summary-of-Sub-accounts-Margin-Account
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -6846,7 +6846,7 @@ class Client(BaseClient):
     def enable_subaccount_futures(self, **params):
         """Enable Futures for Sub-account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#enable-futures-for-sub-account-for-master-account
+        https://developers.binance.com/docs/sub_account/account-management/Enable-Futures-for-Sub-account
 
         :param email: required - Sub account email
         :type email: str
@@ -6875,7 +6875,7 @@ class Client(BaseClient):
     def get_subaccount_futures_details(self, **params):
         """Get Detail on Sub-account's Futures Account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-detail-on-sub-account-39-s-futures-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Detail-on-Sub-accounts-Futures-Account
 
         :param email: required - Sub account email
         :type email: str
@@ -6927,7 +6927,7 @@ class Client(BaseClient):
     def get_subaccount_futures_summary(self, **params):
         """Get Summary of Sub-account's Futures Account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-summary-of-sub-account-39-s-futures-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Summary-of-Sub-accounts-Futures-Account-V2
 
         :param recvWindow: optional
         :type recvWindow: int
@@ -6981,7 +6981,7 @@ class Client(BaseClient):
     def get_subaccount_futures_positionrisk(self, **params):
         """Get Futures Position-Risk of Sub-account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#get-futures-position-risk-of-sub-account-for-master-account
+        https://developers.binance.com/docs/sub_account/account-management/Get-Futures-Position-Risk-of-Sub-account-V2
 
         :param email: required - Sub account email
         :type email: str
@@ -7015,7 +7015,7 @@ class Client(BaseClient):
     def make_subaccount_futures_transfer(self, **params):
         """Futures Transfer for Sub-account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#futures-transfer-for-sub-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management
 
         :param email: required - Sub account email
         :type email: str
@@ -7047,7 +7047,7 @@ class Client(BaseClient):
     def make_subaccount_margin_transfer(self, **params):
         """Margin Transfer for Sub-account (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#margin-transfer-for-sub-account-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Margin-Transfer-for-Sub-account
 
         :param email: required - Sub account email
         :type email: str
@@ -7077,7 +7077,7 @@ class Client(BaseClient):
     def make_subaccount_to_subaccount_transfer(self, **params):
         """Transfer to Sub-account of Same Master (For Sub-account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-sub-account-of-same-master-for-sub-account
+        https://developers.binance.com/docs/sub_account/asset-management/Transfer-to-Sub-account-of-Same-Master
 
         :param toEmail: required - Sub account email
         :type toEmail: str
@@ -7106,7 +7106,7 @@ class Client(BaseClient):
     def make_subaccount_to_master_transfer(self, **params):
         """Transfer to Master (For Sub-account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-master-for-sub-account
+        https://developers.binance.com/docs/sub_account/asset-management/Transfer-to-Master
 
         :param asset: required - The asset being transferred, e.g., USDT
         :type asset: str
@@ -7133,7 +7133,7 @@ class Client(BaseClient):
     def get_subaccount_transfer_history(self, **params):
         """Sub-account Transfer History (For Sub-account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#transfer-to-master-for-sub-account
+        https://developers.binance.com/docs/sub_account/asset-management/Sub-account-Transfer-History
 
         :param asset: required - The asset being transferred, e.g., USDT
         :type asset: str
@@ -7185,7 +7185,7 @@ class Client(BaseClient):
     def make_subaccount_universal_transfer(self, **params):
         """Universal Transfer (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#universal-transfer-for-master-account
+        https://developers.binance.com/docs/sub_account/asset-management/Universal-Transfer
 
         :param fromEmail: optional
         :type fromEmail: str
@@ -7220,7 +7220,7 @@ class Client(BaseClient):
     def get_universal_transfer_history(self, **params):
         """Universal Transfer (For Master Account)
 
-        https://binance-docs.github.io/apidocs/spot/en/#query-universal-transfer-history
+        https://developers.binance.com/docs/sub_account/asset-management/Query-Universal-Transfer-History
 
         :param fromEmail: optional
         :type fromEmail: str
@@ -9740,7 +9740,7 @@ class Client(BaseClient):
     def get_convert_trade_history(self, **params):
         """Get C2C Trade History
 
-        https://binance-docs.github.io/apidocs/spot/en/#pay-endpoints
+        https://developers.binance.com/docs/convert/trade/Get-Convert-Trade-History
 
         :param startTime: required - Start Time - 1593511200000
         :type startTime: int
@@ -9761,7 +9761,7 @@ class Client(BaseClient):
     def convert_request_quote(self, **params):
         """Request a quote for the requested token pairs
 
-        https://binance-docs.github.io/apidocs/spot/en/#send-quote-request-user_data
+        https://developers.binance.com/docs/convert/trade
 
         :param fromAsset: required - Asset to convert from - BUSD
         :type fromAsset: str
@@ -9785,7 +9785,7 @@ class Client(BaseClient):
     def convert_accept_quote(self, **params):
         """Accept the offered quote by quote ID.
 
-        https://binance-docs.github.io/apidocs/spot/en/#accept-quote-trade
+        https://developers.binance.com/docs/convert/trade/Accept-Quote
 
         :param quoteId: required - 457235734584567
         :type quoteId: str
@@ -14019,6 +14019,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/loan/vip/ongoing/orders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        GET /sapi/v1/loan/vip/ongoing/orders
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14030,6 +14032,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/mining/payment/other.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/mining/rest-api/Extra-Bonus-List
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14057,6 +14061,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/simple-earn/flexible/history/subscriptionRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/simple_earn/history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14080,6 +14086,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/coinFutures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Change-Sub-Account-CM-Futures-Commission
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14144,6 +14152,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/sol-staking/sol/redeem.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/staking/Redeem-SOL
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14225,6 +14235,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v2/eth-staking/account.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14236,6 +14248,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/loan/income.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/stable-rate/market-data
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14263,6 +14277,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForInvestor.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Investor
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14274,6 +14290,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/dci/product/auto_compound/edit-status.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/dual_investment/trade/Change-Auto-Compound-status
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14301,6 +14319,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/loan/vip/request/interestRate.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/vip_loan/market-data
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14326,6 +14346,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/repay/rate.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Check-Collateral-Repay-Rate
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14363,6 +14385,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/statistics/user/status.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Statistic-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14374,6 +14398,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/broker/transfer/futures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Sub-Account-Transfer-History-Futures
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14427,6 +14453,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/marginInterest.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Enable-Or-Disable-BNB-Burn-for-Sub-Account-Margin-Interest
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14438,6 +14466,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v2/loan/flexible/repay.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Repay
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14451,6 +14481,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v2/loan/flexible/loanable/data.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Assets-Data
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14462,6 +14494,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/permission.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Change-Sub-Account-Api-Permission
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14475,6 +14509,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/subAccountApi.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Create-Api-Key-for-Sub-Account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14487,6 +14523,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/dci/product/positions.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/dual_investment/trade/Get-Dual-Investment-positions
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14498,6 +14536,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/convert/limit/cancelOrder.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/convert/trade/Cancel-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14523,6 +14563,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/hash-transfer/config/details/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14535,6 +14577,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/hash-transfer/profit/details.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-Detail
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14546,6 +14590,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Query-Sub-Account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14572,6 +14618,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/sub-account/eoptions/enable.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/account-management/Enable-Options-for-Sub-account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14621,6 +14669,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/stakingHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14645,6 +14695,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/rebate/recentRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Query-Spot-Commission-Rebate-Recent-Record
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14656,6 +14708,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/loan/vip/collateral/account.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/user-information/Check-Locked-Value-of-VIP-Collateral-Account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14737,6 +14791,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v2/loan/flexible/adjust/ltv.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/trade/Flexible-Loan-Adjust-LTV
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14748,6 +14804,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/convert/orderStatus.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/convert/trade/Order-Status
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14761,6 +14819,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccountApi/ipRestriction.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Get-IPRestriction-for-Sub-Account-Api-Key
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14772,6 +14832,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/dci/product/subscribe.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/dual_investment/trade
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14813,6 +14875,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/mining/hash-transfer/config/cancel.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Cancel-hashrate-resale-configuration
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14825,6 +14889,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccount/depositHist.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Get-Sub-Account-Deposit-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14836,6 +14902,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/mining/payment/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/mining/rest-api/Earnings-List
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14917,6 +14985,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/transfer/futures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Sub-Account-Transfer-Futures
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14928,6 +14998,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/sol-staking/sol/stake.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/staking
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -14953,6 +15025,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/info.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -14976,6 +15050,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/unclaimedRewards.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-Unclaimed-rewards
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15001,6 +15077,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/boostRewardsHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-Boost-rewards-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15024,6 +15102,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/broker/subAccount.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15051,6 +15131,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/pub/coinList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Acquiring-CoinName
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15062,6 +15144,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/repay/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Repayment-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15113,6 +15197,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/statistics/user/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Account-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15149,6 +15235,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/worker/detail.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Request-for-Detail-Miner-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15160,6 +15248,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/fetch-future-asset.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Futures-Asset-Details
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15201,6 +15291,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/rateHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-BNSOL-Rate-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15225,6 +15317,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/transfer.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Sub-Account-Transfer-History-Spot
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15236,6 +15330,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/sol-staking/account.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15289,6 +15385,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v2/loan/flexible/ltv/adjustment/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15326,6 +15424,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/broker/subAccount/spotSummary.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Sub-Account-Spot-Asset-Info
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15365,6 +15465,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/loan/vip/repay/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/vip_loan/user-information/Get-VIP-Loan-Repayment-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15376,6 +15478,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/loan/borrow/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/stable-rate/user-information
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15415,6 +15519,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/managed-subaccount/deposit.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15453,6 +15559,8 @@ class Client(BaseClient):
         Placeholder function for DELETE /sapi/v1/sub-account/subAccountApi/ipRestriction/ipList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/api-management/Delete-IP-List-For-a-Sub-account-API-Key
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15464,6 +15572,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/copyTrading/futures/userStatus.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/copy_trading/future-copy-trading
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15566,6 +15676,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/transfer.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/asset
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15604,6 +15716,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v2/eth-staking/eth/stake.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/staking
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15640,6 +15754,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/redemptionHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-SOL-redemption-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15652,6 +15768,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/rebate/futures/recentRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Query-Futures-Commission-Rebate-Record
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15663,6 +15781,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v3/broker/subAccount/futuresSummary.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Sub-Account-Futures-Asset-Info
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15687,6 +15807,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/broker/universalTransfer.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Universal-Transfer-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15740,6 +15862,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/loan/repay/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/crypto_loan/stable-rate/user-information/Get-Loan-Repayment-History
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15751,6 +15875,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/convert/limit/placeOrder.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/convert/trade/Place-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15790,6 +15916,8 @@ class Client(BaseClient):
         Placeholder function for DELETE /sapi/v1/broker/subAccountApi/ipRestriction/ipList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Delete-IPRestriction-for-Sub-Account-Api-Key
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15801,6 +15929,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/sub-account/virtualSubAccount.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/account-management
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15856,6 +15986,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/sol-staking/sol/claim.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/sol-staking/staking/Claim-Boost-rewards
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15879,6 +16011,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/mining/hash-transfer/config.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/mining/rest-api/Hashrate-Resale-Request
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -15930,6 +16064,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/payment/uid.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Mining-Account-Earning
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -15941,6 +16077,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/borrow/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Borrow-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16006,6 +16144,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/redemptionHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-ETH-redemption-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16044,6 +16184,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v2/loan/flexible/borrow.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/trade
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16055,6 +16197,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/loan/vip/repay.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Repay
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16082,6 +16226,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/convert/assetInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/convert/market-data/Query-order-quantity-precision-per-asset
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16105,6 +16251,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/broker/universalTransfer.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Universal-Transfer
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16158,6 +16306,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/subAccount/bnbBurn/spot.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Enable-Or-Disable-BNB-Burn-for-Sub-Account-Spot-Margin
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16210,6 +16360,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/subAccountApi/permission/universalTransfer.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Enable-Universal-Transfer-Permission-For-SubAccount-Api-Key
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16221,6 +16373,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/loan/ltv/adjustment/history.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/stable-rate/user-information/Get-Loan-LTV-Adjustment-History
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16245,6 +16399,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v2/sub-account/subAccountApi/ipRestriction.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/api-management/Add-IP-Restriction-for-Sub-Account-API-key
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16272,6 +16428,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/futures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Query-Sub-Account-UM-Futures-Commission
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16283,6 +16441,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/stakingHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/history
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16348,6 +16508,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/marginAsset.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Margin-Asset-Details
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16384,6 +16546,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/fee
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16410,6 +16574,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccount/marginSummary.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Query-Sub-Account-Margin-Asset-Info
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16434,6 +16600,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/loan/vip/loanable/data.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/vip_loan/market-data/Get-Loanable-Assets-Data
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16445,6 +16613,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/collateral/data.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16458,6 +16628,8 @@ class Client(BaseClient):
         Placeholder function for DELETE /sapi/v1/broker/subAccountApi.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Delete-Sub-Account-Api-Key
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16470,6 +16642,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/sol-staking/sol/history/bnsolRewardsHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/sol-staking/history/Get-BNSOL-rewards-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16481,6 +16655,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/convert/limit/queryOpenOrders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/convert/trade/Query-Order
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16506,6 +16682,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/query-trans-log.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Trading-Team-Sub
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16517,6 +16695,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v2/broker/subAccountApi/ipRestriction.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Update-IP-Restriction-for-Sub-Account-API-key-For-Master-Account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16582,6 +16762,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/dci/product/accounts.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/dual_investment/trade/Check-Dual-Investment-accounts
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16593,6 +16775,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/sub-account/subAccountApi/ipRestriction.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/api-management
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16606,6 +16790,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/sub-account/transaction-statistics.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/account-management/Query-Sub-account-Transaction-Statistics
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16617,6 +16803,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/deposit/address.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Get-Managed-Sub-account-Deposit-Address
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16644,6 +16832,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/simple-earn/locked/history/redemptionRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/simple_earn/history/Get-Locked-Redemption-Record
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16669,6 +16859,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/managed-subaccount/withdraw.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Withdrawl-Assets-From-The-Managed-Sub-account
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16696,6 +16888,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/eth-staking/wbeth/wrap.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/staking/Wrap-BETH
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16707,6 +16901,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/simple-earn/locked/setRedeemOption.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Set-Locked-Redeem-Option
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16731,6 +16927,8 @@ class Client(BaseClient):
         """
         Placeholder function for POST /sapi/v1/broker/subAccountApi/commission/futures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Change-Sub-Account-UM-Futures-Commission
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16768,6 +16966,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccount/bnbBurn/status.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Get-BNB-Burn-Status-for-Sub-Account
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16779,6 +16979,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/managed-subaccount/accountSnapshot.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Snapshot
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16818,6 +17020,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/broker/subAccountApi/commission/coinFutures.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/binance_link/exchange-link/fee/Query-Sub-Account-CM-Futures-Commission
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16853,6 +17057,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v2/loan/flexible/ongoing/orders.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Ongoing-Orders
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -16972,6 +17178,8 @@ class Client(BaseClient):
         Placeholder function for POST /sapi/v1/eth-staking/eth/redeem.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/staking/Redeem-ETH
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -16996,6 +17204,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/simple-earn/locked/history/subscriptionRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/simple_earn/history/Get-Locked-Subscription-Record
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17008,6 +17218,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/asset.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-account-Asset-Details
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17019,6 +17231,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/sol-staking/sol/quota.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/sol-staking/account/Get-SOL-staking-quota-details
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -17044,6 +17258,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/managed-subaccount/queryTransLogForTradeParent.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/sub_account/managed-sub-account/Query-Managed-Sub-Account-Transfer-Log-Trading-Team-Master
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17068,6 +17284,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/simple-earn/flexible/history/redemptionRecord.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/simple_earn/history/Get-Flexible-Redemption-Record
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17079,6 +17297,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/broker/subAccountApi.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Query-Sub-Account-Api-Key
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -17121,6 +17341,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/convert/exchangeInfo.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/convert/market-data
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17145,6 +17367,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/eth-staking/eth/history/wbethRewardsHistory.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-rewards-history
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17156,6 +17380,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/mining/pub/algoList.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/mining/rest-api
 
         :param params: parameters required by the endpoint
         :type params: dict
@@ -17183,6 +17409,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/copyTrading/futures/leadSymbol.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/copy_trading/future-copy-trading/Get-Futures-Lead-Trading-Symbol-Whitelist
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17195,6 +17423,8 @@ class Client(BaseClient):
         Placeholder function for GET /sapi/v1/mining/worker/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
 
+        https://developers.binance.com/docs/mining/rest-api/Request-for-Miner-List
+
         :param params: parameters required by the endpoint
         :type params: dict
 
@@ -17206,6 +17436,8 @@ class Client(BaseClient):
         """
         Placeholder function for GET /sapi/v1/dci/product/list.
         Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/dual_investment/market-data
 
         :param params: parameters required by the endpoint
         :type params: dict
