@@ -17459,3 +17459,1768 @@ class Client(BaseClient):
         :returns: API response
         """
         return self._request_futures_api("get", "convert/orderStatus", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_order_oto(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/order/oto.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OTO
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/order/oto", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_order_otoco(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/order/otoco.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Margin-Account-New-OTOCO
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/order/otoco", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_api_key(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/apiKey.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Create-Special-Key-of-Low-Latency-Trading
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    def sapi_v1_delete_margin_api_key(self, **params):
+        """
+        Placeholder function for DELETE /sapi/v1/margin/apiKey.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Delete-Special-Key-of-Low-Latency-Trading
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("delete", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    def sapi_v1_put_margin_api_key_ip(self, **params):
+        """
+        Placeholder function for PUT /sapi/v1/margin/apiKey/ip.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Edit-ip-for-Special-Key-of-Low-Latency-Trading
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("put", "/sapi/v1/margin/apiKey/ip", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_api_key_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/api-key-list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Special-Key-List-of-Low-Latency-Trading
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/api-key-list", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_api_key(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/apiKey.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/trade/Query-Special-Key-of-Low-Latency-Trading
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_listen_key(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/listen-key.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/risk-data-stream/Start-User-Data-Stream
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    def sapi_v1_put_margin_listen_key(self, **params):
+        """
+        Placeholder function for PUT /sapi/v1/margin/listen-key.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/risk-data-stream/Keepalive-User-Data-Stream
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("put", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    def sapi_v1_delete_margin_listen_key(self, **params):
+        """
+        Placeholder function for DELETE /sapi/v1/margin/listen-key.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/margin_trading/risk-data-stream/Close-User-Data-Stream
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("delete", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_account(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/account.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/account", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_margin_asset_leverage(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/margin-asset-leverage.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Get-Portfolio-Margin-Asset-Leverage
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/margin-asset-leverage", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_repay(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/repay.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Classic-Portfolio-Margin-Bankruptcy-Loan-Repay
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/repay", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_bnb_transfer(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/bnb-transfer.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/BNB-transfer
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/bnb-transfer", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_auto_collection(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/auto-collection.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Fund-Auto-collection
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/auto-collection", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_asset_collection(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/asset-collection.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Fund-Collection-by-Asset
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/asset-collection", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_pm_loan(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/pmLoan.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Classic-Portfolio-Margin-Bankruptcy-Loan-Amount
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/pmLoan", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_repay_futures_negative_balance(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/repay-futures-negative-balance.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Repay-futures-Negative-Balance
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/repay-futures-negative-balance", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_repay_futures_switch(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/repay-futures-switch.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Auto-repay-futures-Status
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/repay-futures-switch", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_interest_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/interest-history.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Classic-Portfolio-Margin-Negative-Balance-Interest-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/interest-history", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_pmloan_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/pmloan-history.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Query-Portfolio-Margin-Pro-Bankruptcy-Loan-Repay-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/pmloan-history", signed=True, data=params, version=1)
+
+    def sapi_v1_post_portfolio_earn_asset_transfer(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/portfolio/earn-asset-transfer.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Transfer-LDUSDT-Portfolio-Margin
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/portfolio/earn-asset-transfer", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_earn_asset_balance(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/earn-asset-balance.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/account/Get-Transferable-Earn-Asset-Balance-Portfolio-Margin
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/earn-asset-balance", signed=True, data=params, version=1)
+
+    def sapi_v1_get_futures_hist_data_link(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/futures/histDataLink.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/futures-data/market-data
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/futures/histDataLink", signed=True, data=params, version=1)
+
+    def sapi_v1_delete_algo_futures_order(self, **params):
+        """
+        Placeholder function for DELETE /sapi/v1/algo/futures/order.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/future-algo/Cancel-Algo-Order
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("delete", "/sapi/v1/algo/futures/order", signed=True, data=params, version=1)
+
+    def sapi_v1_get_algo_futures_sub_orders(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/algo/futures/subOrders.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/future-algo/Query-Sub-Orders
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/algo/futures/subOrders", signed=True, data=params, version=1)
+
+    def sapi_v1_get_algo_futures_open_orders(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/algo/futures/openOrders.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/future-algo/Query-Current-Algo-Open-Orders
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/algo/futures/openOrders", signed=True, data=params, version=1)
+
+    def sapi_v1_get_algo_futures_historical_orders(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/algo/futures/historicalOrders.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/algo/future-algo/Query-Historical-Algo-Orders
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/algo/futures/historicalOrders", signed=True, data=params, version=1)
+
+    def sapi_v1_get_capital_withdraw_address_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/capital/withdraw/address/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/capital/fetch-withdraw-address
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/capital/withdraw/address/list", signed=True, data=params, version=1)
+
+    def sapi_v1_get_capital_withdraw_quota(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/capital/withdraw/quota.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/capital/fetch-withdraw-quota
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/capital/withdraw/quota", signed=True, data=params, version=1)
+
+    def sapi_v1_get_address_verify_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/addressVerify/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/address-verification-list
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/addressVerify/list", signed=True, data=params, version=1)
+
+    def sapi_v1_post_localentity_broker_withdraw_apply(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/localentity/broker/withdraw/apply.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/broker-withdraw
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/localentity/broker/withdraw/apply", signed=True, data=params, version=1)
+
+    def sapi_v1_put_localentity_broker_deposit_provide_info(self, **params):
+        """
+        Placeholder function for PUT /sapi/v1/localentity/broker/deposit/provide-info.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/broker-deposit-provide-info
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("put", "/sapi/v1/localentity/broker/deposit/provide-info", signed=True, data=params, version=1)
+
+    def sapi_v1_get_localentity_questionnaire_requirements(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/localentity/questionnaire-requirements.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/travel-rule/questionnaire-requirements
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/localentity/questionnaire-requirements", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_loan_group_ltv_details(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/loan-group/ltv-details.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/ltv-details", signed=True, data=params, version=1)
+
+    def sapi_v1_delete_margin_loan_group(self, **params):
+        """
+        Placeholder function for DELETE /sapi/v1/margin/loan-group.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/account/Institution-Loan-Group-Close
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("delete", "/sapi/v1/margin/loan-group", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_loan_group_edit_member(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/loan-group/edit-member.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/account/Institution-Loan-Group-Edit-Member
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/edit-member", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_loan_groups_activated(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/loan-groups/activated.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/account/Query-Institution-Loan-Group_Activated
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/loan-groups/activated", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_loan_group_force_liquidation(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/loan-group/force-liquidation.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/trade
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/force-liquidation", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_loan_group_transfer_out(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/loan-group/transfer-out.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/transfer
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/transfer-out", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_loan_group_borrow(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/loan-group/borrow.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/borrow-and-repay
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/borrow", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_loan_group_interest_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/loan-group/interest-history.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/borrow-and-repay/Institution-Loan-Group-Interest-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/interest-history", signed=True, data=params, version=1)
+
+    def sapi_v1_post_margin_loan_group_repay(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/margin/loan-group/repay.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/borrow-and-repay/Institution-Loan-Group-Repay
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/repay", signed=True, data=params, version=1)
+
+    def sapi_v1_get_margin_loan_group_borrow_repay(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/margin/loan-group/borrow-repay.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/institutional_loan/borrow-and-repay/Institution-Loan-Group-Borrow-Repay-Records
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/borrow-repay", signed=True, data=params, version=1)
+
+    def sapi_v1_post_sub_account_futures_move_position(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/sub-account/futures/move-position.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/asset-management/Move-Position-for-Sub-account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+
+    def sapi_v1_get_sub_account_futures_move_position(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/sub-account/futures/move-position.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/sub_account/asset-management/Get-Move-Position-History-for-Sub-account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+
+    def sapi_v1_post_broker_sub_account_futures(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/broker/subAccount/futures.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Enable-Futures-for-Sub-Account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/broker/subAccount/futures", signed=True, data=params, version=1)
+
+    def sapi_v1_get_broker_info(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/broker/info.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Link-Account-Information
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/broker/info", signed=True, data=params, version=1)
+
+    def sapi_v1_delete_broker_sub_account(self, **params):
+        """
+        Placeholder function for DELETE /sapi/v1/broker/subAccount.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/account/Delete-Sub-Account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("delete", "/sapi/v1/broker/subAccount", signed=True, data=params, version=1)
+
+    def sapi_v2_get_broker_sub_account_deposit_hist(self, **params):
+        """
+        Placeholder function for GET /sapi/v2/broker/subAccount/depositHist.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/exchange-link/asset/Get-Sub-Account-Deposit-History-v2
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v2/broker/subAccount/depositHist", signed=True, data=params, version=2)
+
+    def sapi_v1_get_api_referral_if_new_user(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/apiReferral/ifNewUser.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    def sapi_v1_post_api_referral_customization(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/apiReferral/customization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Customize-Id-For-Client-For-Partner
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    def sapi_v1_get_api_referral_customization(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/apiReferral/customization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Get-Client-Email-Customized-Id
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    def sapi_v1_post_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Customize-Id-For-Client-For-Client
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def sapi_v1_get_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Get-User-Customize-Id
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def sapi_v1_get_api_referral_rebate_recent_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/apiReferral/rebate/recentRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Query-Rebate-Recent-Record-For-Partner
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/apiReferral/rebate/recentRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_api_referral_kickback_recent_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/apiReferral/kickback/recentRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/spot/Query-Rebate-Recent-Record-For-Client
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/apiReferral/kickback/recentRecord", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_if_new_user(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/ifNewUser.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    def fapi_v1_post_api_referral_customization(self, **params):
+        """
+        Placeholder function for POST /fapi/v1/apiReferral/customization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Customize-Id-For-Client-For-Partner
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("post", "/fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_customization(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/customization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Client-Email-Customized-Id
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    def fapi_v1_post_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for POST /fapi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Customize-Id-For-Client-For-Client
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("post", "/fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-User-Customize-Id
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def fapi_v1_get_income(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/income.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Income-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/income", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_trader_num(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/traderNum.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Trader-Number
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/traderNum", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_overview(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/overview.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Rebate-Data-Overview
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/overview", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_trade_vol(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/tradeVol.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-User-Trade-Volume
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/tradeVol", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_rebate_vol(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/rebateVol.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Rebate-Volume
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/rebateVol", signed=True, data=params, version=1)
+
+    def fapi_v1_get_api_referral_trader_summary(self, **params):
+        """
+        Placeholder function for GET /fapi/v1/apiReferral/traderSummary.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-Trader-Detail
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_futures_api("get", "/fapi/v1/apiReferral/traderSummary", signed=True, data=params, version=1)
+
+    def papi_v1_get_api_referral_if_new_user(self, **params):
+        """
+        Placeholder function for GET /papi/v1/apiReferral/ifNewUser.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Query-Client-If-New-User-PAPI
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_papi_api("get", "/papi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    def papi_v1_post_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for POST /papi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Customize-Id-For-Client-For-Client-PAPI
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_papi_api("post", "/papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def papi_v1_get_api_referral_user_customization(self, **params):
+        """
+        Placeholder function for GET /papi/v1/apiReferral/userCustomization.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/futures/Get-User-Customize-Id-PAPI
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_papi_api("get", "/papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    def v1_get_api_key_user_status(self, **params):
+        """
+        Placeholder function for GET /v1/api-key/user-status.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/link-and-trade/fast-api/get-user-status
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/v1/api-key/user-status", signed=True, data=params)
+
+    def sapi_v1_post_block_match_order_place(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/place.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/place", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_order_take(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/take.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Take
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/take", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_order_cancel(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/cancel.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Cancel
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/cancel", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_order_extend(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/extend.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Extend
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/extend", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_order_query_order_history(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/query-order-history.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Query-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/query-order-history", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_order_query_open_order(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/order/query-open-order.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Query-Open
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/order/query-open-order", signed=True, data=params, version=1)
+
+    def sapi_v1_post_block_match_symbols(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/block-match/symbols.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/spot_block_match/rest-api/Post-Spot-Block-Match-Symbols
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/block-match/symbols", signed=True, data=params, version=1)
+
+    def sapi_v1_get_eth_staking_eth_quota(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/eth-staking/eth/quota.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/eth-staking/account/Get-current-ETH-staking-quota
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/quota", signed=True, data=params, version=1)
+
+    def sapi_v1_get_eth_staking_eth_history_rewards_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/eth-staking/eth/history/rewardsHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-ETH-rewards-distribution-history
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/history/rewardsHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_eth_staking_eth_history_rate_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/eth-staking/eth/history/rateHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-BETH-Rate-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/history/rateHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_eth_staking_wbeth_history_wrap_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/eth-staking/wbeth/history/wrapHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-wrap-history
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/eth-staking/wbeth/history/wrapHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_eth_staking_wbeth_history_unwrap_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/eth-staking/wbeth/history/unwrapHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/eth-staking/history/Get-WBETH-unwrap-history
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/eth-staking/wbeth/history/unwrapHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/list", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_personal_left_quota(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/personalLeftQuota.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/account/Get-Onchain-Locked-Personal-Left-Quota
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/personalLeftQuota", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_position(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/position.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/account/Get-Onchain-Locked-Product-Position
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/position", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_account(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/account.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/account/Onchain-Account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/account", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_subscription_preview(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/subscriptionPreview.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/earn
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/subscriptionPreview", signed=True, data=params, version=1)
+
+    def sapi_v1_post_onchain_yields_locked_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/onchain-yields/locked/subscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/earn/Subscribe-Onchain-Locked-Product
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/subscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_post_onchain_yields_locked_set_auto_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/onchain-yields/locked/setAutoSubscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/earn/Set-Onchain-Locked-Auto-Subscribe
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/setAutoSubscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_post_onchain_yields_locked_set_redeem_option(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/onchain-yields/locked/setRedeemOption.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/earn/Set-Onchain-Locked-Redeem-Option
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/setRedeemOption", signed=True, data=params, version=1)
+
+    def sapi_v1_post_onchain_yields_locked_redeem(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/onchain-yields/locked/redeem.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/earn/Redeem-Onchain-Locked-Product
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/redeem", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_history_subscription_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/history/subscriptionRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/history
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/subscriptionRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_history_rewards_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/history/rewardsRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/history/Get-Onchain-Locked-Rewards-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/rewardsRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_onchain_yields_locked_history_redemption_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/onchain-yields/locked/history/redemptionRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/staking/on-chain-yields/history/Get-Onchain-Locked-Redemption-Record
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/redemptionRecord", signed=True, data=params, version=1)
+
+    def sapi_v2_get_loan_interest_rate_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v2/loan/interestRateHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/market-data/Get-Flexible-Loan-Interest-Rate-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v2/loan/interestRateHistory", signed=True, data=params, version=2)
+
+    def sapi_v2_get_loan_flexible_liquidation_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v2/loan/flexible/liquidation/history.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/crypto_loan/flexible-rate/user-information/Get-Flexible-Loan-Liquidation-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v2/loan/flexible/liquidation/history", signed=True, data=params, version=2)
+
+    def sapi_v1_get_loan_vip_interest_rate_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/loan/vip/interestRateHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/market-data/Get-VIP-Loan-Interest-Rate-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/loan/vip/interestRateHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_loan_vip_collateral_data(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/loan/vip/collateral/data.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/market-data/Get-Collateral-Asset-Data
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/loan/vip/collateral/data", signed=True, data=params, version=1)
+
+    def sapi_v1_get_loan_vip_accrued_interest(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/loan/vip/accruedInterest.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/user-information/Get-VIP-Loan-Accrued-Interest
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/loan/vip/accruedInterest", signed=True, data=params, version=1)
+
+    def sapi_v1_get_loan_vip_request_data(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/loan/vip/request/data.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/user-information/Query-Application-Status
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/loan/vip/request/data", signed=True, data=params, version=1)
+
+    def sapi_v1_post_loan_vip_renew(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/loan/vip/renew.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/trade
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/loan/vip/renew", signed=True, data=params, version=1)
+
+    def sapi_v1_post_loan_vip_borrow(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/loan/vip/borrow.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/vip_loan/trade/VIP-Loan-Borrow
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/loan/vip/borrow", signed=True, data=params, version=1)
+
+    def sapi_v1_get_c2c_order_match_list_user_order_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/c2c/orderMatch/listUserOrderHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/c2c/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/c2c/orderMatch/listUserOrderHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_fiat_orders(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/fiat/orders.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/fiat/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/fiat/orders", signed=True, data=params, version=1)
+
+    def sapi_v1_get_fiat_payments(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/fiat/payments.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/fiat/rest-api/Get-Fiat-Payments-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/fiat/payments", signed=True, data=params, version=1)
+
+    def sapi_v1_get_nft_history_deposit(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/nft/history/deposit.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/nft/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/nft/history/deposit", signed=True, data=params, version=1)
+
+    def sapi_v1_get_nft_history_withdraw(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/nft/history/withdraw.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/nft/rest-api/Get-NFT-Withdraw-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/nft/history/withdraw", signed=True, data=params, version=1)
+
+    def sapi_v1_get_nft_history_transactions(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/nft/history/transactions.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/nft/rest-api/Get-NFT-Transaction-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/nft/history/transactions", signed=True, data=params, version=1)
+
+    def sapi_v1_get_nft_user_get_asset(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/nft/user/getAsset.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/nft/rest-api/Get-NFT-Asset
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/nft/user/getAsset", signed=True, data=params, version=1)
+
+    def sapi_v1_post_giftcard_create_code(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/giftcard/createCode.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/giftcard/createCode", signed=True, data=params, version=1)
+
+    def sapi_v1_post_giftcard_buy_code(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/giftcard/buyCode.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data/Create-a-dual-token-gift-card
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/giftcard/buyCode", signed=True, data=params, version=1)
+
+    def sapi_v1_post_giftcard_redeem_code(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/giftcard/redeemCode.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data/Redeem-a-Binance-Gift-Card
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/giftcard/redeemCode", signed=True, data=params, version=1)
+
+    def sapi_v1_get_giftcard_verify(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/giftcard/verify.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data/Verify-Binance-Gift-Card-by-Gift-Card-Number
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/giftcard/verify", signed=True, data=params, version=1)
+
+    def sapi_v1_get_giftcard_buy_code_token_limit(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/giftcard/buyCode/token-limit.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data/Fetch-Token-Limit
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/giftcard/buyCode/token-limit", signed=True, data=params, version=1)
+
+    def sapi_v1_get_giftcard_cryptography_rsa_public_key(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/giftcard/cryptography/rsa-public-key.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/gift_card/market-data/Fetch-RSA-Public-Key
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/giftcard/cryptography/rsa-public-key", signed=True, data=params, version=1)
+
+    def sapi_v1_get_rebate_tax_query(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/rebate/taxQuery.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/rebate/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/rebate/taxQuery", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_account(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/account.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/account", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Simple-Earn-Flexible-Product-List
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/list", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_locked_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/locked/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Simple-Earn-Locked-Product-List
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/list", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_position(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/position.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Flexible-Product-Position
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/position", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_locked_position(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/locked/position.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Locked-Product-Position
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/position", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_personal_left_quota(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/personalLeftQuota.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Flexible-Personal-Left-Quota
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/personalLeftQuota", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_locked_personal_left_quota(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/locked/personalLeftQuota.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/account/Get-Locked-Personal-Left-Quota
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/personalLeftQuota", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_flexible_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/flexible/subscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/subscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_locked_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/locked/subscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Subscribe-Locked-Product
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/subscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_flexible_redeem(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/flexible/redeem.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Redeem-Flexible-Product
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/redeem", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_locked_redeem(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/locked/redeem.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Redeem-Locked-Product
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/redeem", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_flexible_set_auto_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/flexible/setAutoSubscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Set-Flexible-Auto-Subscribe
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/setAutoSubscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_post_simple_earn_locked_set_auto_subscribe(self, **params):
+        """
+        Placeholder function for POST /sapi/v1/simple-earn/locked/setAutoSubscribe.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Set-Locked-Auto-Subscribe
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/setAutoSubscribe", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_subscription_preview(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/subscriptionPreview.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Get-Flexible-Subscription-Preview
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/subscriptionPreview", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_locked_subscription_preview(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/locked/subscriptionPreview.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/earn/Get-Locked-Subscription-Preview
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/subscriptionPreview", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_history_rewards_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/history/rewardsRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/history/Get-Flexible-Rewards-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/rewardsRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_locked_history_rewards_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/locked/history/rewardsRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/history/Get-Locked-Rewards-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/history/rewardsRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_history_collateral_record(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/history/collateralRecord.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/history/Get-Collateral-Record
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/collateralRecord", signed=True, data=params, version=1)
+
+    def sapi_v1_get_simple_earn_flexible_history_rate_history(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/simple-earn/flexible/history/rateHistory.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/simple_earn/history/Get-Rate-History
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/rateHistory", signed=True, data=params, version=1)
+
+    def sapi_v1_get_pay_transactions(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/pay/transactions.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/pay/rest-api
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/pay/transactions", signed=True, data=params, version=1)
+
+    def sapi_v1_get_portfolio_asset_index_price(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/asset-index-price.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/asset-index-price", data=params, version=1)
+
+    def sapi_v1_get_portfolio_collateral_rate(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/portfolio/collateralRate.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/derivatives/portfolio-margin-pro/market-data/Classic-Portfolio-Margin-Collateral-Rate
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/portfolio/collateralRate", data=params, version=1)
+
+    def sapi_v1_get_spot_open_symbol_list(self, **params):
+        """
+        Placeholder function for GET /sapi/v1/spot/open-symbol-list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/wallet/asset/open-symbol-list
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_margin_api("get", "/sapi/v1/spot/open-symbol-list", data=params, version=1)
+
+    def bapi_defi_v1_get_public_wallet_direct_buw_wallet_cex_alpha_all_token_list(self, **params):
+        """
+        Placeholder function for GET /bapi/defi/v1/public/wallet-direct/buw/wallet/cex/alpha/all/token/list.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/alpha/market-data/rest-api/token-list
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/bapi/defi/v1/public/wallet-direct/buw/wallet/cex/alpha/all/token/list", data=params)
+
+    def bapi_defi_v1_get_public_alpha_trade_get_exchange_info(self, **params):
+        """
+        Placeholder function for GET /bapi/defi/v1/public/alpha-trade/get-exchange-info.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/alpha/market-data/rest-api/get-exchange-info
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/get-exchange-info", data=params)
+
+    def bapi_defi_v1_get_public_alpha_trade_agg_trades(self, **params):
+        """
+        Placeholder function for GET /bapi/defi/v1/public/alpha-trade/agg-trades.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/alpha/market-data/rest-api/aggregated-trades
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/agg-trades", data=params)
+
+    def bapi_defi_v1_get_public_alpha_trade_klines(self, **params):
+        """
+        Placeholder function for GET /bapi/defi/v1/public/alpha-trade/klines.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/alpha/market-data/rest-api/klines
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/klines", data=params)
+
+    def bapi_defi_v1_get_public_alpha_trade_ticker(self, **params):
+        """
+        Placeholder function for GET /bapi/defi/v1/public/alpha-trade/ticker.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/alpha/market-data/rest-api/24hr-ticker-price-change
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/ticker", data=params)
+
+    def bapi_ekyc_v2_post_public_ekyc_customer_share_kyc_data(self, **params):
+        """
+        Placeholder function for POST /bapi/ekyc/v2/public/ekyc/customer/share-kyc-data.
+        Note: This function was auto-generated. Any issue please open an issue on GitHub.
+
+        https://developers.binance.com/docs/binance_link/kyc-saas
+
+        :param params: parameters required by the endpoint
+        :type params: dict
+        """
+        return self._request_website("post", "/bapi/ekyc/v2/public/ekyc/customer/share-kyc-data", data=params)
+
