@@ -168,7 +168,7 @@ class AsyncClient(BaseClient):
         """
         if not str(response.status).startswith("2"):
             raise BinanceAPIException(response, response.status, await response.text())
-        
+
         text = await response.text()
         if text == "":
             return {}
@@ -1773,7 +1773,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
-        
+
     async def futures_taker_longshort_ratio(self, **params):
         return await self._request_futures_data_api(
             "get", "takerlongshortRatio", data=params
@@ -4056,1311 +4056,2151 @@ class AsyncClient(BaseClient):
 
     async def margin_v1_get_loan_vip_ongoing_orders(self, **params):
         return await self._request_margin_api("get", "loan/vip/ongoing/orders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_vip_ongoing_orders.__doc__ = Client.margin_v1_get_loan_vip_ongoing_orders.__doc__
-            
+
     async def margin_v1_get_mining_payment_other(self, **params):
         return await self._request_margin_api("get", "mining/payment/other", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_payment_other.__doc__ = Client.margin_v1_get_mining_payment_other.__doc__
-            
+
     async def futures_coin_v1_get_income_asyn_id(self, **params):
         return await self._request_futures_coin_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_income_asyn_id.__doc__ = Client.futures_coin_v1_get_income_asyn_id.__doc__
-            
+
     async def margin_v1_get_simple_earn_flexible_history_subscription_record(self, **params):
         return await self._request_margin_api("get", "simple-earn/flexible/history/subscriptionRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_simple_earn_flexible_history_subscription_record.__doc__ = Client.margin_v1_get_simple_earn_flexible_history_subscription_record.__doc__
-            
+
     async def margin_v1_post_lending_auto_invest_one_off(self, **params):
         return await self._request_margin_api("post", "lending/auto-invest/one-off", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_auto_invest_one_off.__doc__ = Client.margin_v1_post_lending_auto_invest_one_off.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_commission_coin_futures(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_commission_coin_futures.__doc__ = Client.margin_v1_post_broker_sub_account_api_commission_coin_futures.__doc__
-            
+
     async def v3_post_order_list_otoco(self, **params):
         return await self._request_api("post", "orderList/otoco", signed=True, data=params, version="v3")
-        
+
     v3_post_order_list_otoco.__doc__ = Client.v3_post_order_list_otoco.__doc__
-            
+
     async def futures_v1_get_order_asyn(self, **params):
         return await self._request_futures_api("get", "order/asyn", signed=True, data=params, version=1)
-        
+
     futures_v1_get_order_asyn.__doc__ = Client.futures_v1_get_order_asyn.__doc__
-            
+
     async def margin_v1_get_asset_custody_transfer_history(self, **params):
         return await self._request_margin_api("get", "asset/custody/transfer-history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_asset_custody_transfer_history.__doc__ = Client.margin_v1_get_asset_custody_transfer_history.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_blvt(self, **params):
         return await self._request_margin_api("post", "broker/subAccount/blvt", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_blvt.__doc__ = Client.margin_v1_post_broker_sub_account_blvt.__doc__
-            
+
     async def margin_v1_post_sol_staking_sol_redeem(self, **params):
         return await self._request_margin_api("post", "sol-staking/sol/redeem", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sol_staking_sol_redeem.__doc__ = Client.margin_v1_post_sol_staking_sol_redeem.__doc__
-            
+
     async def options_v1_get_countdown_cancel_all(self, **params):
         return await self._request_options_api("get", "countdownCancelAll", signed=True, data=params)
-        
+
     options_v1_get_countdown_cancel_all.__doc__ = Client.options_v1_get_countdown_cancel_all.__doc__
-            
+
     async def margin_v1_get_margin_trade_coeff(self, **params):
         return await self._request_margin_api("get", "margin/tradeCoeff", signed=True, data=params, version=1)
-        
+
     margin_v1_get_margin_trade_coeff.__doc__ = Client.margin_v1_get_margin_trade_coeff.__doc__
-            
+
     async def futures_coin_v1_get_order_amendment(self, **params):
         return await self._request_futures_coin_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_order_amendment.__doc__ = Client.futures_coin_v1_get_order_amendment.__doc__
-            
+
     async def margin_v1_get_margin_available_inventory(self, **params):
         return await self._request_margin_api("get", "margin/available-inventory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_margin_available_inventory.__doc__ = Client.margin_v1_get_margin_available_inventory.__doc__
-            
+
     async def margin_v1_post_account_api_restrictions_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("post", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_post_account_api_restrictions_ip_restriction_ip_list.__doc__ = Client.margin_v1_post_account_api_restrictions_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v2_get_eth_staking_account(self, **params):
         return await self._request_margin_api("get", "eth-staking/account", signed=True, data=params, version=2)
-        
+
     margin_v2_get_eth_staking_account.__doc__ = Client.margin_v2_get_eth_staking_account.__doc__
-            
+
     async def margin_v1_get_loan_income(self, **params):
         return await self._request_margin_api("get", "loan/income", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_income.__doc__ = Client.margin_v1_get_loan_income.__doc__
-            
+
     async def futures_coin_v1_get_pm_account_info(self, **params):
         return await self._request_futures_coin_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_pm_account_info.__doc__ = Client.futures_coin_v1_get_pm_account_info.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_query_trans_log_for_investor(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/queryTransLogForInvestor", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_query_trans_log_for_investor.__doc__ = Client.margin_v1_get_managed_subaccount_query_trans_log_for_investor.__doc__
-            
+
     async def margin_v1_post_dci_product_auto_compound_edit_status(self, **params):
         return await self._request_margin_api("post", "dci/product/auto_compound/edit-status", signed=True, data=params, version=1)
-        
+
     margin_v1_post_dci_product_auto_compound_edit_status.__doc__ = Client.margin_v1_post_dci_product_auto_compound_edit_status.__doc__
-            
+
     async def futures_v1_get_trade_asyn(self, **params):
         return await self._request_futures_api("get", "trade/asyn", signed=True, data=params, version=1)
-        
+
     futures_v1_get_trade_asyn.__doc__ = Client.futures_v1_get_trade_asyn.__doc__
-            
+
     async def margin_v1_get_loan_vip_request_interest_rate(self, **params):
         return await self._request_margin_api("get", "loan/vip/request/interestRate", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_vip_request_interest_rate.__doc__ = Client.margin_v1_get_loan_vip_request_interest_rate.__doc__
-            
+
     async def futures_v1_get_funding_info(self, **params):
         return await self._request_futures_api("get", "fundingInfo", signed=False, data=params, version=1)
-        
+
     futures_v1_get_funding_info.__doc__ = Client.futures_v1_get_funding_info.__doc__
-            
+
     async def v3_get_all_orders(self, **params):
         return await self._request_api("get", "allOrders", signed=True, data=params, version="v3")
-        
+
     async def margin_v2_get_loan_flexible_repay_rate(self, **params):
         return await self._request_margin_api("get", "loan/flexible/repay/rate", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_repay_rate.__doc__ = Client.margin_v2_get_loan_flexible_repay_rate.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_plan_id(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/plan/id", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_plan_id.__doc__ = Client.margin_v1_get_lending_auto_invest_plan_id.__doc__
-            
+
     async def margin_v1_post_loan_adjust_ltv(self, **params):
         return await self._request_margin_api("post", "loan/adjust/ltv", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_adjust_ltv.__doc__ = Client.margin_v1_post_loan_adjust_ltv.__doc__
-            
+
     async def margin_v1_get_mining_statistics_user_status(self, **params):
         return await self._request_margin_api("get", "mining/statistics/user/status", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_statistics_user_status.__doc__ = Client.margin_v1_get_mining_statistics_user_status.__doc__
-            
+
     async def margin_v1_get_broker_transfer_futures(self, **params):
         return await self._request_margin_api("get", "broker/transfer/futures", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_transfer_futures.__doc__ = Client.margin_v1_get_broker_transfer_futures.__doc__
-            
+
     async def margin_v1_post_algo_spot_new_order_twap(self, **params):
         return await self._request_margin_api("post", "algo/spot/newOrderTwap", signed=True, data=params, version=1)
-        
+
     margin_v1_post_algo_spot_new_order_twap.__doc__ = Client.margin_v1_post_algo_spot_new_order_twap.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_target_asset_list(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/target-asset/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_target_asset_list.__doc__ = Client.margin_v1_get_lending_auto_invest_target_asset_list.__doc__
-            
+
     async def margin_v1_get_capital_deposit_address_list(self, **params):
         return await self._request_margin_api("get", "capital/deposit/address/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_capital_deposit_address_list.__doc__ = Client.margin_v1_get_capital_deposit_address_list.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_bnb_burn_margin_interest(self, **params):
         return await self._request_margin_api("post", "broker/subAccount/bnbBurn/marginInterest", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_bnb_burn_margin_interest.__doc__ = Client.margin_v1_post_broker_sub_account_bnb_burn_margin_interest.__doc__
-            
+
     async def margin_v2_post_loan_flexible_repay(self, **params):
         return await self._request_margin_api("post", "loan/flexible/repay", signed=True, data=params, version=2)
-        
+
     margin_v2_post_loan_flexible_repay.__doc__ = Client.margin_v2_post_loan_flexible_repay.__doc__
-            
+
     async def margin_v2_get_loan_flexible_loanable_data(self, **params):
         return await self._request_margin_api("get", "loan/flexible/loanable/data", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_loanable_data.__doc__ = Client.margin_v2_get_loan_flexible_loanable_data.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_permission(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/permission", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_permission.__doc__ = Client.margin_v1_post_broker_sub_account_api_permission.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api.__doc__ = Client.margin_v1_post_broker_sub_account_api.__doc__
-            
+
     async def margin_v1_get_dci_product_positions(self, **params):
         return await self._request_margin_api("get", "dci/product/positions", signed=True, data=params, version=1)
-        
+
     margin_v1_get_dci_product_positions.__doc__ = Client.margin_v1_get_dci_product_positions.__doc__
-            
+
     async def margin_v1_post_convert_limit_cancel_order(self, **params):
         return await self._request_margin_api("post", "convert/limit/cancelOrder", signed=True, data=params, version=1)
-        
+
     margin_v1_post_convert_limit_cancel_order.__doc__ = Client.margin_v1_post_convert_limit_cancel_order.__doc__
-            
+
     async def v3_post_order_list_oto(self, **params):
         return await self._request_api("post", "orderList/oto", signed=True, data=params, version="v3")
-        
+
     v3_post_order_list_oto.__doc__ = Client.v3_post_order_list_oto.__doc__
-            
+
     async def margin_v1_get_mining_hash_transfer_config_details_list(self, **params):
         return await self._request_margin_api("get", "mining/hash-transfer/config/details/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_hash_transfer_config_details_list.__doc__ = Client.margin_v1_get_mining_hash_transfer_config_details_list.__doc__
-            
+
     async def margin_v1_get_mining_hash_transfer_profit_details(self, **params):
         return await self._request_margin_api("get", "mining/hash-transfer/profit/details", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_hash_transfer_profit_details.__doc__ = Client.margin_v1_get_mining_hash_transfer_profit_details.__doc__
-            
+
     async def margin_v1_get_broker_sub_account(self, **params):
         return await self._request_margin_api("get", "broker/subAccount", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account.__doc__ = Client.margin_v1_get_broker_sub_account.__doc__
-            
+
     async def margin_v1_get_portfolio_balance(self, **params):
         return await self._request_margin_api("get", "portfolio/balance", signed=True, data=params, version=1)
-        
+
     margin_v1_get_portfolio_balance.__doc__ = Client.margin_v1_get_portfolio_balance.__doc__
-            
+
     async def margin_v1_post_sub_account_eoptions_enable(self, **params):
         return await self._request_margin_api("post", "sub-account/eoptions/enable", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sub_account_eoptions_enable.__doc__ = Client.margin_v1_post_sub_account_eoptions_enable.__doc__
-            
+
     async def papi_v1_post_ping(self, **params):
         return await self._request_papi_api("post", "ping", signed=True, data=params, version=1)
-        
+
     papi_v1_post_ping.__doc__ = Client.papi_v1_post_ping.__doc__
-            
+
     async def margin_v1_get_loan_loanable_data(self, **params):
         return await self._request_margin_api("get", "loan/loanable/data", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_loanable_data.__doc__ = Client.margin_v1_get_loan_loanable_data.__doc__
-            
+
     async def margin_v1_post_eth_staking_wbeth_unwrap(self, **params):
         return await self._request_margin_api("post", "eth-staking/wbeth/unwrap", signed=True, data=params, version=1)
-        
+
     margin_v1_post_eth_staking_wbeth_unwrap.__doc__ = Client.margin_v1_post_eth_staking_wbeth_unwrap.__doc__
-            
+
     async def margin_v1_get_eth_staking_eth_history_staking_history(self, **params):
         return await self._request_margin_api("get", "eth-staking/eth/history/stakingHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_eth_staking_eth_history_staking_history.__doc__ = Client.margin_v1_get_eth_staking_eth_history_staking_history.__doc__
-            
+
     async def margin_v1_get_staking_staking_record(self, **params):
         return await self._request_margin_api("get", "staking/stakingRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_staking_staking_record.__doc__ = Client.margin_v1_get_staking_staking_record.__doc__
-            
+
     async def margin_v1_get_broker_rebate_recent_record(self, **params):
         return await self._request_margin_api("get", "broker/rebate/recentRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_rebate_recent_record.__doc__ = Client.margin_v1_get_broker_rebate_recent_record.__doc__
-            
+
     async def v3_delete_user_data_stream(self, **params):
         return await self._request_api("delete", "userDataStream", signed=True, data=params, version="v3")
-        
+
     async def v3_get_open_order_list(self, **params):
         return await self._request_api("get", "openOrderList", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_loan_vip_collateral_account(self, **params):
         return await self._request_margin_api("get", "loan/vip/collateral/account", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_vip_collateral_account.__doc__ = Client.margin_v1_get_loan_vip_collateral_account.__doc__
-            
+
     async def margin_v1_get_algo_spot_open_orders(self, **params):
         return await self._request_margin_api("get", "algo/spot/openOrders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_algo_spot_open_orders.__doc__ = Client.margin_v1_get_algo_spot_open_orders.__doc__
-            
+
     async def margin_v1_post_loan_repay(self, **params):
         return await self._request_margin_api("post", "loan/repay", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_repay.__doc__ = Client.margin_v1_post_loan_repay.__doc__
-            
+
     async def futures_coin_v1_get_funding_info(self, **params):
         return await self._request_futures_coin_api("get", "fundingInfo", signed=False, data=params, version=1)
-        
+
     futures_coin_v1_get_funding_info.__doc__ = Client.futures_coin_v1_get_funding_info.__doc__
-            
+
     async def margin_v1_get_margin_leverage_bracket(self, **params):
         return await self._request_margin_api("get", "margin/leverageBracket", signed=True, data=params, version=1)
-        
+
     margin_v1_get_margin_leverage_bracket.__doc__ = Client.margin_v1_get_margin_leverage_bracket.__doc__
-            
+
     async def margin_v2_get_portfolio_collateral_rate(self, **params):
         return await self._request_margin_api("get", "portfolio/collateralRate", signed=True, data=params, version=2)
-        
+
     margin_v2_get_portfolio_collateral_rate.__doc__ = Client.margin_v2_get_portfolio_collateral_rate.__doc__
-            
+
     async def margin_v2_post_loan_flexible_adjust_ltv(self, **params):
         return await self._request_margin_api("post", "loan/flexible/adjust/ltv", signed=True, data=params, version=2)
-        
+
     margin_v2_post_loan_flexible_adjust_ltv.__doc__ = Client.margin_v2_post_loan_flexible_adjust_ltv.__doc__
-            
+
     async def margin_v1_get_convert_order_status(self, **params):
         return await self._request_margin_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
+
     margin_v1_get_convert_order_status.__doc__ = Client.margin_v1_get_convert_order_status.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("get", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_api_ip_restriction.__doc__ = Client.margin_v1_get_broker_sub_account_api_ip_restriction.__doc__
-            
+
     async def margin_v1_post_dci_product_subscribe(self, **params):
         return await self._request_margin_api("post", "dci/product/subscribe", signed=True, data=params, version=1)
-        
+
     margin_v1_post_dci_product_subscribe.__doc__ = Client.margin_v1_post_dci_product_subscribe.__doc__
-            
+
     async def futures_v1_get_income_asyn_id(self, **params):
         return await self._request_futures_api("get", "income/asyn/id", signed=True, data=params, version=1)
-        
+
     futures_v1_get_income_asyn_id.__doc__ = Client.futures_v1_get_income_asyn_id.__doc__
-            
+
     async def options_v1_post_countdown_cancel_all(self, **params):
         return await self._request_options_api("post", "countdownCancelAll", signed=True, data=params)
-        
+
     options_v1_post_countdown_cancel_all.__doc__ = Client.options_v1_post_countdown_cancel_all.__doc__
-            
+
     async def margin_v1_post_mining_hash_transfer_config_cancel(self, **params):
         return await self._request_margin_api("post", "mining/hash-transfer/config/cancel", signed=True, data=params, version=1)
-        
+
     margin_v1_post_mining_hash_transfer_config_cancel.__doc__ = Client.margin_v1_post_mining_hash_transfer_config_cancel.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_deposit_hist(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/depositHist", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_deposit_hist.__doc__ = Client.margin_v1_get_broker_sub_account_deposit_hist.__doc__
-            
+
     async def margin_v1_get_mining_payment_list(self, **params):
         return await self._request_margin_api("get", "mining/payment/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_payment_list.__doc__ = Client.margin_v1_get_mining_payment_list.__doc__
-            
+
     async def futures_v1_get_pm_account_info(self, **params):
         return await self._request_futures_api("get", "pmAccountInfo", signed=True, data=params, version=1)
-        
+
     futures_v1_get_pm_account_info.__doc__ = Client.futures_v1_get_pm_account_info.__doc__
-            
+
     async def futures_coin_v1_get_adl_quantile(self, **params):
         return await self._request_futures_coin_api("get", "adlQuantile", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_adl_quantile.__doc__ = Client.futures_coin_v1_get_adl_quantile.__doc__
-            
+
     async def options_v1_get_income_asyn_id(self, **params):
         return await self._request_options_api("get", "income/asyn/id", signed=True, data=params)
-        
+
     options_v1_get_income_asyn_id.__doc__ = Client.options_v1_get_income_asyn_id.__doc__
-            
+
     async def v3_post_cancel_replace(self, **params):
         return await self._request_api("post", "cancelReplace", signed=True, data=params, version="v3")
-        
+
     v3_post_cancel_replace.__doc__ = Client.v3_post_cancel_replace.__doc__
-            
+
     async def v3_post_order_test(self, **params):
         return await self._request_api("post", "order/test", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_post_account_enable_fast_withdraw_switch(self, **params):
         return await self._request_margin_api("post", "account/enableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
+
     margin_v1_post_account_enable_fast_withdraw_switch.__doc__ = Client.margin_v1_post_account_enable_fast_withdraw_switch.__doc__
-            
+
     async def margin_v1_post_broker_transfer_futures(self, **params):
         return await self._request_margin_api("post", "broker/transfer/futures", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_transfer_futures.__doc__ = Client.margin_v1_post_broker_transfer_futures.__doc__
-            
+
     async def margin_v1_get_margin_isolated_transfer(self, **params):
         return await self._request_margin_api("get", "margin/isolated/transfer", signed=True, data=params, version=1)
-        
+
     async def v3_post_order_cancel_replace(self, **params):
         return await self._request_api("post", "order/cancelReplace", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_post_sol_staking_sol_stake(self, **params):
         return await self._request_margin_api("post", "sol-staking/sol/stake", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sol_staking_sol_stake.__doc__ = Client.margin_v1_post_sol_staking_sol_stake.__doc__
-            
+
     async def margin_v1_post_loan_borrow(self, **params):
         return await self._request_margin_api("post", "loan/borrow", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_borrow.__doc__ = Client.margin_v1_post_loan_borrow.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_info(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/info", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_info.__doc__ = Client.margin_v1_get_managed_subaccount_info.__doc__
-            
+
     async def margin_v1_post_lending_auto_invest_plan_edit_status(self, **params):
         return await self._request_margin_api("post", "lending/auto-invest/plan/edit-status", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_auto_invest_plan_edit_status.__doc__ = Client.margin_v1_post_lending_auto_invest_plan_edit_status.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_unclaimed_rewards(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/unclaimedRewards", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_unclaimed_rewards.__doc__ = Client.margin_v1_get_sol_staking_sol_history_unclaimed_rewards.__doc__
-            
+
     async def margin_v1_post_asset_convert_transfer_query_by_page(self, **params):
         return await self._request_margin_api("post", "asset/convert-transfer/queryByPage", signed=True, data=params, version=1)
-        
+
     margin_v1_post_asset_convert_transfer_query_by_page.__doc__ = Client.margin_v1_post_asset_convert_transfer_query_by_page.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_boost_rewards_history(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/boostRewardsHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_boost_rewards_history.__doc__ = Client.margin_v1_get_sol_staking_sol_history_boost_rewards_history.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_one_off_status(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/one-off/status", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_one_off_status.__doc__ = Client.margin_v1_get_lending_auto_invest_one_off_status.__doc__
-            
+
     async def margin_v1_post_broker_sub_account(self, **params):
         return await self._request_margin_api("post", "broker/subAccount", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account.__doc__ = Client.margin_v1_post_broker_sub_account.__doc__
-            
+
     async def margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page(self, **params):
         return await self._request_margin_api("get", "asset/ledger-transfer/cloud-mining/queryByPage", signed=True, data=params, version=1)
-        
+
     margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page.__doc__ = Client.margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page.__doc__
-            
+
     async def margin_v1_get_mining_pub_coin_list(self, **params):
         return await self._request_margin_api("get", "mining/pub/coinList", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_pub_coin_list.__doc__ = Client.margin_v1_get_mining_pub_coin_list.__doc__
-            
+
     async def margin_v2_get_loan_flexible_repay_history(self, **params):
         return await self._request_margin_api("get", "loan/flexible/repay/history", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_repay_history.__doc__ = Client.margin_v2_get_loan_flexible_repay_history.__doc__
-            
+
     async def v3_post_sor_order(self, **params):
         return await self._request_api("post", "sor/order", signed=True, data=params, version="v3")
-        
+
     v3_post_sor_order.__doc__ = Client.v3_post_sor_order.__doc__
-            
+
     async def margin_v1_post_capital_deposit_credit_apply(self, **params):
         return await self._request_margin_api("post", "capital/deposit/credit-apply", signed=True, data=params, version=1)
-        
+
     margin_v1_post_capital_deposit_credit_apply.__doc__ = Client.margin_v1_post_capital_deposit_credit_apply.__doc__
-            
+
     async def futures_v1_put_batch_order(self, **params):
         return await self._request_futures_api("put", "batchOrder", signed=True, data=params, version=1)
-        
+
     futures_v1_put_batch_order.__doc__ = Client.futures_v1_put_batch_order.__doc__
-            
+
     async def v3_get_my_prevented_matches(self, **params):
         return await self._request_api("get", "myPreventedMatches", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_mining_statistics_user_list(self, **params):
         return await self._request_margin_api("get", "mining/statistics/user/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_statistics_user_list.__doc__ = Client.margin_v1_get_mining_statistics_user_list.__doc__
-            
+
     async def futures_v1_post_batch_order(self, **params):
         return await self._request_futures_api("post", "batchOrder", signed=True, data=params, version=1)
-        
+
     futures_v1_post_batch_order.__doc__ = Client.futures_v1_post_batch_order.__doc__
-            
+
     async def v3_get_ticker_trading_day(self, **params):
         return await self._request_api("get", "ticker/tradingDay", signed=False, data=params, version="v3")
-        
+
     v3_get_ticker_trading_day.__doc__ = Client.v3_get_ticker_trading_day.__doc__
-            
+
     async def margin_v1_get_mining_worker_detail(self, **params):
         return await self._request_margin_api("get", "mining/worker/detail", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_worker_detail.__doc__ = Client.margin_v1_get_mining_worker_detail.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_fetch_future_asset(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/fetch-future-asset", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_fetch_future_asset.__doc__ = Client.margin_v1_get_managed_subaccount_fetch_future_asset.__doc__
-            
+
     async def margin_v1_get_margin_rate_limit_order(self, **params):
         return await self._request_margin_api("get", "margin/rateLimit/order", signed=True, data=params, version=1)
-        
+
     margin_v1_get_margin_rate_limit_order.__doc__ = Client.margin_v1_get_margin_rate_limit_order.__doc__
-            
+
     async def margin_v1_get_localentity_vasp(self, **params):
         return await self._request_margin_api("get", "localentity/vasp", signed=True, data=params, version=1)
-        
+
     margin_v1_get_localentity_vasp.__doc__ = Client.margin_v1_get_localentity_vasp.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_rate_history(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/rateHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_rate_history.__doc__ = Client.margin_v1_get_sol_staking_sol_history_rate_history.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_ip_restriction.__doc__ = Client.margin_v1_post_broker_sub_account_api_ip_restriction.__doc__
-            
+
     async def margin_v1_get_broker_transfer(self, **params):
         return await self._request_margin_api("get", "broker/transfer", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_transfer.__doc__ = Client.margin_v1_get_broker_transfer.__doc__
-            
+
     async def margin_v1_get_sol_staking_account(self, **params):
         return await self._request_margin_api("get", "sol-staking/account", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_account.__doc__ = Client.margin_v1_get_sol_staking_account.__doc__
-            
+
     async def margin_v1_get_account_info(self, **params):
         return await self._request_margin_api("get", "account/info", signed=True, data=params, version=1)
-        
+
     margin_v1_get_account_info.__doc__ = Client.margin_v1_get_account_info.__doc__
-            
+
     async def margin_v1_post_portfolio_repay_futures_switch(self, **params):
         return await self._request_margin_api("post", "portfolio/repay-futures-switch", signed=True, data=params, version=1)
-        
+
     margin_v1_post_portfolio_repay_futures_switch.__doc__ = Client.margin_v1_post_portfolio_repay_futures_switch.__doc__
-            
+
     async def margin_v1_post_loan_vip_borrow(self, **params):
         return await self._request_margin_api("post", "loan/vip/borrow", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_vip_borrow.__doc__ = Client.margin_v1_post_loan_vip_borrow.__doc__
-            
+
     async def margin_v2_get_loan_flexible_ltv_adjustment_history(self, **params):
         return await self._request_margin_api("get", "loan/flexible/ltv/adjustment/history", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_ltv_adjustment_history.__doc__ = Client.margin_v2_get_loan_flexible_ltv_adjustment_history.__doc__
-            
+
     async def options_v1_delete_all_open_orders_by_underlying(self, **params):
         return await self._request_options_api("delete", "allOpenOrdersByUnderlying", signed=True, data=params)
-        
+
     options_v1_delete_all_open_orders_by_underlying.__doc__ = Client.options_v1_delete_all_open_orders_by_underlying.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_futures_summary(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_futures_summary.__doc__ = Client.margin_v1_get_broker_sub_account_futures_summary.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_spot_summary(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/spotSummary", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_spot_summary.__doc__ = Client.margin_v1_get_broker_sub_account_spot_summary.__doc__
-            
+
     async def margin_v1_post_sub_account_blvt_enable(self, **params):
         return await self._request_margin_api("post", "sub-account/blvt/enable", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sub_account_blvt_enable.__doc__ = Client.margin_v1_post_sub_account_blvt_enable.__doc__
-            
+
     async def margin_v1_get_algo_spot_historical_orders(self, **params):
         return await self._request_margin_api("get", "algo/spot/historicalOrders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_algo_spot_historical_orders.__doc__ = Client.margin_v1_get_algo_spot_historical_orders.__doc__
-            
+
     async def margin_v1_get_loan_vip_repay_history(self, **params):
         return await self._request_margin_api("get", "loan/vip/repay/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_vip_repay_history.__doc__ = Client.margin_v1_get_loan_vip_repay_history.__doc__
-            
+
     async def margin_v1_get_loan_borrow_history(self, **params):
         return await self._request_margin_api("get", "loan/borrow/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_borrow_history.__doc__ = Client.margin_v1_get_loan_borrow_history.__doc__
-            
+
     async def margin_v1_post_lending_auto_invest_redeem(self, **params):
         return await self._request_margin_api("post", "lending/auto-invest/redeem", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_auto_invest_redeem.__doc__ = Client.margin_v1_post_lending_auto_invest_redeem.__doc__
-            
+
     async def v3_get_account(self, **params):
         return await self._request_api("get", "account", signed=True, data=params, version="v3")
-        
+
     async def v3_delete_order(self, **params):
         return await self._request_api("delete", "order", signed=True, data=params, version="v3")
-        
+
     async def futures_coin_v1_get_income_asyn(self, **params):
         return await self._request_futures_coin_api("get", "income/asyn", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_income_asyn.__doc__ = Client.futures_coin_v1_get_income_asyn.__doc__
-            
+
     async def margin_v1_post_managed_subaccount_deposit(self, **params):
         return await self._request_margin_api("post", "managed-subaccount/deposit", signed=True, data=params, version=1)
-        
+
     margin_v1_post_managed_subaccount_deposit.__doc__ = Client.margin_v1_post_managed_subaccount_deposit.__doc__
-            
+
     async def margin_v1_post_lending_daily_purchase(self, **params):
         return await self._request_margin_api("post", "lending/daily/purchase", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_daily_purchase.__doc__ = Client.margin_v1_post_lending_daily_purchase.__doc__
-            
+
     async def futures_v1_get_trade_asyn_id(self, **params):
         return await self._request_futures_api("get", "trade/asyn/id", signed=True, data=params, version=1)
-        
+
     futures_v1_get_trade_asyn_id.__doc__ = Client.futures_v1_get_trade_asyn_id.__doc__
-            
+
     async def margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("delete", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list.__doc__ = Client.margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v1_get_copy_trading_futures_user_status(self, **params):
         return await self._request_margin_api("get", "copyTrading/futures/userStatus", signed=True, data=params, version=1)
-        
+
     margin_v1_get_copy_trading_futures_user_status.__doc__ = Client.margin_v1_get_copy_trading_futures_user_status.__doc__
-            
+
     async def options_v1_get_margin_account(self, **params):
         return await self._request_options_api("get", "marginAccount", signed=True, data=params)
-        
+
     options_v1_get_margin_account.__doc__ = Client.options_v1_get_margin_account.__doc__
-            
+
     async def margin_v1_post_localentity_withdraw_apply(self, **params):
         return await self._request_margin_api("post", "localentity/withdraw/apply", signed=True, data=params, version=1)
-        
+
     margin_v1_post_localentity_withdraw_apply.__doc__ = Client.margin_v1_post_localentity_withdraw_apply.__doc__
-            
+
     async def v3_put_user_data_stream(self, **params):
         return await self._request_api("put", "userDataStream", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_asset_wallet_balance(self, **params):
         return await self._request_margin_api("get", "asset/wallet/balance", signed=True, data=params, version=1)
-        
+
     margin_v1_get_asset_wallet_balance.__doc__ = Client.margin_v1_get_asset_wallet_balance.__doc__
-            
+
     async def margin_v1_post_broker_transfer(self, **params):
         return await self._request_margin_api("post", "broker/transfer", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_transfer.__doc__ = Client.margin_v1_post_broker_transfer.__doc__
-            
+
     async def margin_v1_post_lending_customized_fixed_purchase(self, **params):
         return await self._request_margin_api("post", "lending/customizedFixed/purchase", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_customized_fixed_purchase.__doc__ = Client.margin_v1_post_lending_customized_fixed_purchase.__doc__
-            
+
     async def margin_v1_post_algo_futures_new_order_twap(self, **params):
         return await self._request_margin_api("post", "algo/futures/newOrderTwap", signed=True, data=params, version=1)
-        
+
     margin_v1_post_algo_futures_new_order_twap.__doc__ = Client.margin_v1_post_algo_futures_new_order_twap.__doc__
-            
+
     async def margin_v2_post_eth_staking_eth_stake(self, **params):
         return await self._request_margin_api("post", "eth-staking/eth/stake", signed=True, data=params, version=2)
-        
+
     margin_v2_post_eth_staking_eth_stake.__doc__ = Client.margin_v2_post_eth_staking_eth_stake.__doc__
-            
+
     async def margin_v1_post_loan_flexible_repay_history(self, **params):
         return await self._request_margin_api("post", "loan/flexible/repay/history", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_flexible_repay_history.__doc__ = Client.margin_v1_post_loan_flexible_repay_history.__doc__
-            
+
     async def v3_post_user_data_stream(self, **params):
         return await self._request_api("post", "userDataStream", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_lending_auto_invest_index_info(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/index/info", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_index_info.__doc__ = Client.margin_v1_get_lending_auto_invest_index_info.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_redemption_history(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/redemptionHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_redemption_history.__doc__ = Client.margin_v1_get_sol_staking_sol_history_redemption_history.__doc__
-            
+
     async def margin_v1_get_broker_rebate_futures_recent_record(self, **params):
         return await self._request_margin_api("get", "broker/rebate/futures/recentRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_rebate_futures_recent_record.__doc__ = Client.margin_v1_get_broker_rebate_futures_recent_record.__doc__
-            
+
     async def margin_v3_get_broker_sub_account_futures_summary(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=3)
-        
+
     margin_v3_get_broker_sub_account_futures_summary.__doc__ = Client.margin_v3_get_broker_sub_account_futures_summary.__doc__
-            
+
     async def margin_v1_post_margin_manual_liquidation(self, **params):
         return await self._request_margin_api("post", "margin/manual-liquidation", signed=True, data=params, version=1)
-        
+
     async def margin_v1_get_lending_auto_invest_target_asset_roi_list(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/target-asset/roi/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_target_asset_roi_list.__doc__ = Client.margin_v1_get_lending_auto_invest_target_asset_roi_list.__doc__
-            
+
     async def margin_v1_get_broker_universal_transfer(self, **params):
         return await self._request_margin_api("get", "broker/universalTransfer", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_universal_transfer.__doc__ = Client.margin_v1_get_broker_universal_transfer.__doc__
-            
+
     async def futures_v1_put_batch_orders(self, **params):
         return await self._request_futures_api("put", "batchOrders", signed=True, data=params, version=1)
-        
+
     futures_v1_put_batch_orders.__doc__ = Client.futures_v1_put_batch_orders.__doc__
-            
+
     async def options_v1_post_countdown_cancel_all_heart_beat(self, **params):
         return await self._request_options_api("post", "countdownCancelAllHeartBeat", signed=True, data=params)
-        
+
     options_v1_post_countdown_cancel_all_heart_beat.__doc__ = Client.options_v1_post_countdown_cancel_all_heart_beat.__doc__
-            
+
     async def margin_v1_get_loan_collateral_data(self, **params):
         return await self._request_margin_api("get", "loan/collateral/data", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_collateral_data.__doc__ = Client.margin_v1_get_loan_collateral_data.__doc__
-            
+
     async def margin_v1_get_loan_repay_history(self, **params):
         return await self._request_margin_api("get", "loan/repay/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_repay_history.__doc__ = Client.margin_v1_get_loan_repay_history.__doc__
-            
+
     async def margin_v1_post_convert_limit_place_order(self, **params):
         return await self._request_margin_api("post", "convert/limit/placeOrder", signed=True, data=params, version=1)
-        
+
     margin_v1_post_convert_limit_place_order.__doc__ = Client.margin_v1_post_convert_limit_place_order.__doc__
-            
+
     async def futures_v1_get_convert_exchange_info(self, **params):
         return await self._request_futures_api("get", "convert/exchangeInfo", signed=False, data=params, version=1)
-        
+
     futures_v1_get_convert_exchange_info.__doc__ = Client.futures_v1_get_convert_exchange_info.__doc__
-            
+
     async def v3_get_all_order_list(self, **params):
         return await self._request_api("get", "allOrderList", signed=True, data=params, version="v3")
-        
+
     v3_get_all_order_list.__doc__ = Client.v3_get_all_order_list.__doc__
-            
+
     async def margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("delete", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list.__doc__ = Client.margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v1_post_sub_account_virtual_sub_account(self, **params):
         return await self._request_margin_api("post", "sub-account/virtualSubAccount", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sub_account_virtual_sub_account.__doc__ = Client.margin_v1_post_sub_account_virtual_sub_account.__doc__
-            
+
     async def margin_v1_put_localentity_deposit_provide_info(self, **params):
         return await self._request_margin_api("put", "localentity/deposit/provide-info", signed=True, data=params, version=1)
-        
+
     margin_v1_put_localentity_deposit_provide_info.__doc__ = Client.margin_v1_put_localentity_deposit_provide_info.__doc__
-            
+
     async def margin_v1_post_portfolio_mint(self, **params):
         return await self._request_margin_api("post", "portfolio/mint", signed=True, data=params, version=1)
-        
+
     margin_v1_post_portfolio_mint.__doc__ = Client.margin_v1_post_portfolio_mint.__doc__
-            
+
     async def futures_v1_get_order_amendment(self, **params):
         return await self._request_futures_api("get", "orderAmendment", signed=True, data=params, version=1)
-        
+
     futures_v1_get_order_amendment.__doc__ = Client.futures_v1_get_order_amendment.__doc__
-            
+
     async def margin_v1_post_sol_staking_sol_claim(self, **params):
         return await self._request_margin_api("post", "sol-staking/sol/claim", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sol_staking_sol_claim.__doc__ = Client.margin_v1_post_sol_staking_sol_claim.__doc__
-            
+
     async def margin_v1_post_lending_daily_redeem(self, **params):
         return await self._request_margin_api("post", "lending/daily/redeem", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_daily_redeem.__doc__ = Client.margin_v1_post_lending_daily_redeem.__doc__
-            
+
     async def margin_v1_post_mining_hash_transfer_config(self, **params):
         return await self._request_margin_api("post", "mining/hash-transfer/config", signed=True, data=params, version=1)
-        
+
     margin_v1_post_mining_hash_transfer_config.__doc__ = Client.margin_v1_post_mining_hash_transfer_config.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_rebalance_history(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/rebalance/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_rebalance_history.__doc__ = Client.margin_v1_get_lending_auto_invest_rebalance_history.__doc__
-            
+
     async def margin_v1_get_loan_repay_collateral_rate(self, **params):
         return await self._request_margin_api("get", "loan/repay/collateral/rate", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_repay_collateral_rate.__doc__ = Client.margin_v1_get_loan_repay_collateral_rate.__doc__
-            
+
     async def futures_v1_get_income_asyn(self, **params):
         return await self._request_futures_api("get", "income/asyn", signed=True, data=params, version=1)
-        
+
     futures_v1_get_income_asyn.__doc__ = Client.futures_v1_get_income_asyn.__doc__
-            
+
     async def margin_v1_get_mining_payment_uid(self, **params):
         return await self._request_margin_api("get", "mining/payment/uid", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_payment_uid.__doc__ = Client.margin_v1_get_mining_payment_uid.__doc__
-            
+
     async def margin_v2_get_loan_flexible_borrow_history(self, **params):
         return await self._request_margin_api("get", "loan/flexible/borrow/history", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_borrow_history.__doc__ = Client.margin_v2_get_loan_flexible_borrow_history.__doc__
-            
+
     async def v3_get_order(self, **params):
         return await self._request_api("get", "order", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_capital_contract_convertible_coins(self, **params):
         return await self._request_margin_api("get", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
+
     margin_v1_get_capital_contract_convertible_coins.__doc__ = Client.margin_v1_get_capital_contract_convertible_coins.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_permission_vanilla_options(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/permission/vanillaOptions", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_permission_vanilla_options.__doc__ = Client.margin_v1_post_broker_sub_account_api_permission_vanilla_options.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_redeem_history(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/redeem/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_redeem_history.__doc__ = Client.margin_v1_get_lending_auto_invest_redeem_history.__doc__
-            
+
     async def margin_v2_get_localentity_withdraw_history(self, **params):
         return await self._request_margin_api("get", "localentity/withdraw/history", signed=True, data=params, version=2)
-        
+
     margin_v2_get_localentity_withdraw_history.__doc__ = Client.margin_v2_get_localentity_withdraw_history.__doc__
-            
+
     async def margin_v1_get_eth_staking_eth_history_redemption_history(self, **params):
         return await self._request_margin_api("get", "eth-staking/eth/history/redemptionHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_eth_staking_eth_history_redemption_history.__doc__ = Client.margin_v1_get_eth_staking_eth_history_redemption_history.__doc__
-            
+
     async def futures_v1_get_fee_burn(self, **params):
         return await self._request_futures_api("get", "feeBurn", signed=True, data=params, version=1)
-        
+
     futures_v1_get_fee_burn.__doc__ = Client.futures_v1_get_fee_burn.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_index_user_summary(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/index/user-summary", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_index_user_summary.__doc__ = Client.margin_v1_get_lending_auto_invest_index_user_summary.__doc__
-            
+
     async def margin_v2_post_loan_flexible_borrow(self, **params):
         return await self._request_margin_api("post", "loan/flexible/borrow", signed=True, data=params, version=2)
-        
+
     margin_v2_post_loan_flexible_borrow.__doc__ = Client.margin_v2_post_loan_flexible_borrow.__doc__
-            
+
     async def margin_v1_post_loan_vip_repay(self, **params):
         return await self._request_margin_api("post", "loan/vip/repay", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_vip_repay.__doc__ = Client.margin_v1_post_loan_vip_repay.__doc__
-            
+
     async def futures_coin_v1_get_commission_rate(self, **params):
         return await self._request_futures_coin_api("get", "commissionRate", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_get_commission_rate.__doc__ = Client.futures_coin_v1_get_commission_rate.__doc__
-            
+
     async def margin_v1_get_convert_asset_info(self, **params):
         return await self._request_margin_api("get", "convert/assetInfo", signed=True, data=params, version=1)
-        
+
     margin_v1_get_convert_asset_info.__doc__ = Client.margin_v1_get_convert_asset_info.__doc__
-            
+
     async def v3_post_sor_order_test(self, **params):
         return await self._request_api("post", "sor/order/test", signed=True, data=params, version="v3")
-        
+
     v3_post_sor_order_test.__doc__ = Client.v3_post_sor_order_test.__doc__
-            
+
     async def margin_v1_post_broker_universal_transfer(self, **params):
         return await self._request_margin_api("post", "broker/universalTransfer", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_universal_transfer.__doc__ = Client.margin_v1_post_broker_universal_transfer.__doc__
-            
+
     async def margin_v1_post_account_disable_fast_withdraw_switch(self, **params):
         return await self._request_margin_api("post", "account/disableFastWithdrawSwitch", signed=True, data=params, version=1)
-        
+
     margin_v1_post_account_disable_fast_withdraw_switch.__doc__ = Client.margin_v1_post_account_disable_fast_withdraw_switch.__doc__
-            
+
     async def futures_v1_get_asset_index(self, **params):
         return await self._request_futures_api("get", "assetIndex", signed=False, data=params, version=1)
-        
+
     futures_v1_get_asset_index.__doc__ = Client.futures_v1_get_asset_index.__doc__
-            
+
     async def v3_get_rate_limit_order(self, **params):
         return await self._request_api("get", "rateLimit/order", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_account_api_restrictions_ip_restriction(self, **params):
         return await self._request_margin_api("get", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_get_account_api_restrictions_ip_restriction.__doc__ = Client.margin_v1_get_account_api_restrictions_ip_restriction.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_bnb_burn_spot(self, **params):
         return await self._request_margin_api("post", "broker/subAccount/bnbBurn/spot", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_bnb_burn_spot.__doc__ = Client.margin_v1_post_broker_sub_account_bnb_burn_spot.__doc__
-            
+
     async def futures_coin_v1_put_batch_orders(self, **params):
         return await self._request_futures_coin_api("put", "batchOrders", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_put_batch_orders.__doc__ = Client.futures_coin_v1_put_batch_orders.__doc__
-            
+
     async def v3_delete_open_orders(self, **params):
         return await self._request_api("delete", "openOrders", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_post_broker_sub_account_api_permission_universal_transfer(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/permission/universalTransfer", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_permission_universal_transfer.__doc__ = Client.margin_v1_post_broker_sub_account_api_permission_universal_transfer.__doc__
-            
+
     async def v3_get_my_allocations(self, **params):
         return await self._request_api("get", "myAllocations", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_loan_ltv_adjustment_history(self, **params):
         return await self._request_margin_api("get", "loan/ltv/adjustment/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_ltv_adjustment_history.__doc__ = Client.margin_v1_get_loan_ltv_adjustment_history.__doc__
-            
+
     async def margin_v1_get_localentity_withdraw_history(self, **params):
         return await self._request_margin_api("get", "localentity/withdraw/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_localentity_withdraw_history.__doc__ = Client.margin_v1_get_localentity_withdraw_history.__doc__
-            
+
     async def margin_v2_post_sub_account_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
+
     margin_v2_post_sub_account_sub_account_api_ip_restriction.__doc__ = Client.margin_v2_post_sub_account_sub_account_api_ip_restriction.__doc__
-            
+
     async def futures_v1_get_rate_limit_order(self, **params):
         return await self._request_futures_api("get", "rateLimit/order", signed=True, data=params, version=1)
-        
+
     futures_v1_get_rate_limit_order.__doc__ = Client.futures_v1_get_rate_limit_order.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_api_commission_futures(self, **params):
         return await self._request_margin_api("get", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_api_commission_futures.__doc__ = Client.margin_v1_get_broker_sub_account_api_commission_futures.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_staking_history(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/stakingHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_staking_history.__doc__ = Client.margin_v1_get_sol_staking_sol_history_staking_history.__doc__
-            
+
     async def futures_v1_get_open_order(self, **params):
         return await self._request_futures_api("get", "openOrder", signed=True, data=params, version=1)
-        
+
     futures_v1_get_open_order.__doc__ = Client.futures_v1_get_open_order.__doc__
-            
+
     async def margin_v1_delete_algo_spot_order(self, **params):
         return await self._request_margin_api("delete", "algo/spot/order", signed=True, data=params, version=1)
-        
+
     margin_v1_delete_algo_spot_order.__doc__ = Client.margin_v1_delete_algo_spot_order.__doc__
-            
+
     async def v3_post_order(self, **params):
         return await self._request_api("post", "order", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_delete_account_api_restrictions_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("delete", "account/apiRestrictions/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_delete_account_api_restrictions_ip_restriction_ip_list.__doc__ = Client.margin_v1_delete_account_api_restrictions_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v1_post_capital_contract_convertible_coins(self, **params):
         return await self._request_margin_api("post", "capital/contract/convertible-coins", signed=True, data=params, version=1)
-        
+
     margin_v1_post_capital_contract_convertible_coins.__doc__ = Client.margin_v1_post_capital_contract_convertible_coins.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_margin_asset(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/marginAsset", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_margin_asset.__doc__ = Client.margin_v1_get_managed_subaccount_margin_asset.__doc__
-            
+
     async def v3_delete_order_list(self, **params):
         return await self._request_api("delete", "orderList", signed=True, data=params, version="v3")
-        
+
     v3_delete_order_list.__doc__ = Client.v3_delete_order_list.__doc__
-            
+
     async def margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list.__doc__ = Client.margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_commission(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/commission", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_commission.__doc__ = Client.margin_v1_post_broker_sub_account_api_commission.__doc__
-            
+
     async def futures_v1_post_fee_burn(self, **params):
         return await self._request_futures_api("post", "feeBurn", signed=True, data=params, version=1)
-        
+
     futures_v1_post_fee_burn.__doc__ = Client.futures_v1_post_fee_burn.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_margin_summary(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/marginSummary", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_margin_summary.__doc__ = Client.margin_v1_get_broker_sub_account_margin_summary.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_plan_list(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/plan/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_plan_list.__doc__ = Client.margin_v1_get_lending_auto_invest_plan_list.__doc__
-            
+
     async def margin_v1_get_loan_vip_loanable_data(self, **params):
         return await self._request_margin_api("get", "loan/vip/loanable/data", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_vip_loanable_data.__doc__ = Client.margin_v1_get_loan_vip_loanable_data.__doc__
-            
+
     async def margin_v2_get_loan_flexible_collateral_data(self, **params):
         return await self._request_margin_api("get", "loan/flexible/collateral/data", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_collateral_data.__doc__ = Client.margin_v2_get_loan_flexible_collateral_data.__doc__
-            
+
     async def margin_v1_delete_broker_sub_account_api(self, **params):
         return await self._request_margin_api("delete", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     margin_v1_delete_broker_sub_account_api.__doc__ = Client.margin_v1_delete_broker_sub_account_api.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_history_bnsol_rewards_history(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/history/bnsolRewardsHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_history_bnsol_rewards_history.__doc__ = Client.margin_v1_get_sol_staking_sol_history_bnsol_rewards_history.__doc__
-            
+
     async def margin_v1_get_convert_limit_query_open_orders(self, **params):
         return await self._request_margin_api("get", "convert/limit/queryOpenOrders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_convert_limit_query_open_orders.__doc__ = Client.margin_v1_get_convert_limit_query_open_orders.__doc__
-            
+
     async def v3_get_account_commission(self, **params):
         return await self._request_api("get", "account/commission", signed=True, data=params, version="v3")
-        
+
     v3_get_account_commission.__doc__ = Client.v3_get_account_commission.__doc__
-            
+
     async def v3_post_order_list_oco(self, **params):
         return await self._request_api("post", "orderList/oco", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_managed_subaccount_query_trans_log(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/query-trans-log", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_query_trans_log.__doc__ = Client.margin_v1_get_managed_subaccount_query_trans_log.__doc__
-            
+
     async def margin_v2_post_broker_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/ipRestriction", signed=True, data=params, version=2)
-        
+
     margin_v2_post_broker_sub_account_api_ip_restriction.__doc__ = Client.margin_v2_post_broker_sub_account_api_ip_restriction.__doc__
-            
+
     async def margin_v1_get_lending_auto_invest_all_asset(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/all/asset", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_all_asset.__doc__ = Client.margin_v1_get_lending_auto_invest_all_asset.__doc__
-            
+
     async def futures_v1_post_convert_accept_quote(self, **params):
         return await self._request_futures_api("post", "convert/acceptQuote", signed=True, data=params, version=1)
-        
+
     futures_v1_post_convert_accept_quote.__doc__ = Client.futures_v1_post_convert_accept_quote.__doc__
-            
+
     async def margin_v1_get_spot_delist_schedule(self, **params):
         return await self._request_margin_api("get", "spot/delist-schedule", signed=True, data=params, version=1)
-        
+
     margin_v1_get_spot_delist_schedule.__doc__ = Client.margin_v1_get_spot_delist_schedule.__doc__
-            
+
     async def margin_v1_post_account_api_restrictions_ip_restriction(self, **params):
         return await self._request_margin_api("post", "account/apiRestrictions/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_post_account_api_restrictions_ip_restriction.__doc__ = Client.margin_v1_post_account_api_restrictions_ip_restriction.__doc__
-            
+
     async def margin_v1_get_dci_product_accounts(self, **params):
         return await self._request_margin_api("get", "dci/product/accounts", signed=True, data=params, version=1)
-        
+
     margin_v1_get_dci_product_accounts.__doc__ = Client.margin_v1_get_dci_product_accounts.__doc__
-            
+
     async def margin_v1_get_sub_account_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("get", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sub_account_sub_account_api_ip_restriction.__doc__ = Client.margin_v1_get_sub_account_sub_account_api_ip_restriction.__doc__
-            
+
     async def margin_v1_get_sub_account_transaction_statistics(self, **params):
         return await self._request_margin_api("get", "sub-account/transaction-statistics", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sub_account_transaction_statistics.__doc__ = Client.margin_v1_get_sub_account_transaction_statistics.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_deposit_address(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/deposit/address", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_deposit_address.__doc__ = Client.margin_v1_get_managed_subaccount_deposit_address.__doc__
-            
+
     async def margin_v2_get_portfolio_account(self, **params):
         return await self._request_margin_api("get", "portfolio/account", signed=True, data=params, version=2)
-        
+
     margin_v2_get_portfolio_account.__doc__ = Client.margin_v2_get_portfolio_account.__doc__
-            
+
     async def margin_v1_get_simple_earn_locked_history_redemption_record(self, **params):
         return await self._request_margin_api("get", "simple-earn/locked/history/redemptionRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_simple_earn_locked_history_redemption_record.__doc__ = Client.margin_v1_get_simple_earn_locked_history_redemption_record.__doc__
-            
+
     async def futures_v1_get_order_asyn_id(self, **params):
         return await self._request_futures_api("get", "order/asyn/id", signed=True, data=params, version=1)
-        
+
     futures_v1_get_order_asyn_id.__doc__ = Client.futures_v1_get_order_asyn_id.__doc__
-            
+
     async def margin_v1_post_managed_subaccount_withdraw(self, **params):
         return await self._request_margin_api("post", "managed-subaccount/withdraw", signed=True, data=params, version=1)
-        
+
     margin_v1_post_managed_subaccount_withdraw.__doc__ = Client.margin_v1_post_managed_subaccount_withdraw.__doc__
-            
+
     async def margin_v1_get_localentity_deposit_history(self, **params):
         return await self._request_margin_api("get", "localentity/deposit/history", signed=True, data=params, version=1)
-        
+
     margin_v1_get_localentity_deposit_history.__doc__ = Client.margin_v1_get_localentity_deposit_history.__doc__
-            
+
     async def margin_v1_post_eth_staking_wbeth_wrap(self, **params):
         return await self._request_margin_api("post", "eth-staking/wbeth/wrap", signed=True, data=params, version=1)
-        
+
     margin_v1_post_eth_staking_wbeth_wrap.__doc__ = Client.margin_v1_post_eth_staking_wbeth_wrap.__doc__
-            
+
     async def margin_v1_post_simple_earn_locked_set_redeem_option(self, **params):
         return await self._request_margin_api("post", "simple-earn/locked/setRedeemOption", signed=True, data=params, version=1)
-        
+
     margin_v1_post_simple_earn_locked_set_redeem_option.__doc__ = Client.margin_v1_post_simple_earn_locked_set_redeem_option.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_ip_restriction_ip_list(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/ipRestriction/ipList", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_ip_restriction_ip_list.__doc__ = Client.margin_v1_post_broker_sub_account_api_ip_restriction_ip_list.__doc__
-            
+
     async def margin_v1_post_broker_sub_account_api_commission_futures(self, **params):
         return await self._request_margin_api("post", "broker/subAccountApi/commission/futures", signed=True, data=params, version=1)
-        
+
     margin_v1_post_broker_sub_account_api_commission_futures.__doc__ = Client.margin_v1_post_broker_sub_account_api_commission_futures.__doc__
-            
+
     async def v3_get_open_orders(self, **params):
         return await self._request_api("get", "openOrders", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_lending_auto_invest_history_list(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/history/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_history_list.__doc__ = Client.margin_v1_get_lending_auto_invest_history_list.__doc__
-            
+
     async def margin_v1_post_loan_customize_margin_call(self, **params):
         return await self._request_margin_api("post", "loan/customize/margin_call", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_customize_margin_call.__doc__ = Client.margin_v1_post_loan_customize_margin_call.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_bnb_burn_status(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/bnbBurn/status", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_bnb_burn_status.__doc__ = Client.margin_v1_get_broker_sub_account_bnb_burn_status.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_account_snapshot(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/accountSnapshot", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_account_snapshot.__doc__ = Client.margin_v1_get_managed_subaccount_account_snapshot.__doc__
-            
+
     async def margin_v1_post_asset_convert_transfer(self, **params):
         return await self._request_margin_api("post", "asset/convert-transfer", signed=True, data=params, version=1)
-        
+
     margin_v1_post_asset_convert_transfer.__doc__ = Client.margin_v1_post_asset_convert_transfer.__doc__
-            
+
     async def options_v1_get_income_asyn(self, **params):
         return await self._request_options_api("get", "income/asyn", signed=True, data=params)
-        
+
     options_v1_get_income_asyn.__doc__ = Client.options_v1_get_income_asyn.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_api_commission_coin_futures(self, **params):
         return await self._request_margin_api("get", "broker/subAccountApi/commission/coinFutures", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_api_commission_coin_futures.__doc__ = Client.margin_v1_get_broker_sub_account_api_commission_coin_futures.__doc__
-            
+
     async def margin_v2_get_broker_sub_account_futures_summary(self, **params):
         return await self._request_margin_api("get", "broker/subAccount/futuresSummary", signed=True, data=params, version=2)
-        
+
     margin_v2_get_broker_sub_account_futures_summary.__doc__ = Client.margin_v2_get_broker_sub_account_futures_summary.__doc__
-            
+
     async def margin_v1_get_loan_ongoing_orders(self, **params):
         return await self._request_margin_api("get", "loan/ongoing/orders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_loan_ongoing_orders.__doc__ = Client.margin_v1_get_loan_ongoing_orders.__doc__
-            
+
     async def margin_v2_get_loan_flexible_ongoing_orders(self, **params):
         return await self._request_margin_api("get", "loan/flexible/ongoing/orders", signed=True, data=params, version=2)
-        
+
     margin_v2_get_loan_flexible_ongoing_orders.__doc__ = Client.margin_v2_get_loan_flexible_ongoing_orders.__doc__
-            
+
     async def margin_v1_post_algo_futures_new_order_vp(self, **params):
         return await self._request_margin_api("post", "algo/futures/newOrderVp", signed=True, data=params, version=1)
-        
+
     margin_v1_post_algo_futures_new_order_vp.__doc__ = Client.margin_v1_post_algo_futures_new_order_vp.__doc__
-            
+
     async def futures_v1_post_convert_get_quote(self, **params):
         return await self._request_futures_api("post", "convert/getQuote", signed=True, data=params, version=1)
-        
+
     futures_v1_post_convert_get_quote.__doc__ = Client.futures_v1_post_convert_get_quote.__doc__
-            
+
     async def margin_v1_get_algo_spot_sub_orders(self, **params):
         return await self._request_margin_api("get", "algo/spot/subOrders", signed=True, data=params, version=1)
-        
+
     margin_v1_get_algo_spot_sub_orders.__doc__ = Client.margin_v1_get_algo_spot_sub_orders.__doc__
-            
+
     async def margin_v1_post_portfolio_redeem(self, **params):
         return await self._request_margin_api("post", "portfolio/redeem", signed=True, data=params, version=1)
-        
+
     margin_v1_post_portfolio_redeem.__doc__ = Client.margin_v1_post_portfolio_redeem.__doc__
-            
+
     async def margin_v1_post_lending_auto_invest_plan_add(self, **params):
         return await self._request_margin_api("post", "lending/auto-invest/plan/add", signed=True, data=params, version=1)
-        
+
     margin_v1_post_lending_auto_invest_plan_add.__doc__ = Client.margin_v1_post_lending_auto_invest_plan_add.__doc__
-            
+
     async def v3_get_order_list(self, **params):
         return await self._request_api("get", "orderList", signed=True, data=params, version="v3")
-        
+
     v3_get_order_list.__doc__ = Client.v3_get_order_list.__doc__
-            
+
     async def v3_get_my_trades(self, **params):
         return await self._request_api("get", "myTrades", signed=True, data=params, version="v3")
-        
+
     async def margin_v1_get_lending_auto_invest_source_asset_list(self, **params):
         return await self._request_margin_api("get", "lending/auto-invest/source-asset/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_lending_auto_invest_source_asset_list.__doc__ = Client.margin_v1_get_lending_auto_invest_source_asset_list.__doc__
-            
+
     async def margin_v1_get_margin_all_order_list(self, **params):
         return await self._request_margin_api("get", "margin/allOrderList", signed=True, data=params, version=1)
-        
+
     margin_v1_get_margin_all_order_list.__doc__ = Client.margin_v1_get_margin_all_order_list.__doc__
-            
+
     async def margin_v1_post_eth_staking_eth_redeem(self, **params):
         return await self._request_margin_api("post", "eth-staking/eth/redeem", signed=True, data=params, version=1)
-        
+
     margin_v1_post_eth_staking_eth_redeem.__doc__ = Client.margin_v1_post_eth_staking_eth_redeem.__doc__
-            
+
     async def margin_v1_get_broker_rebate_historical_record(self, **params):
         return await self._request_margin_api("get", "broker/rebate/historicalRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_rebate_historical_record.__doc__ = Client.margin_v1_get_broker_rebate_historical_record.__doc__
-            
+
     async def margin_v1_get_simple_earn_locked_history_subscription_record(self, **params):
         return await self._request_margin_api("get", "simple-earn/locked/history/subscriptionRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_simple_earn_locked_history_subscription_record.__doc__ = Client.margin_v1_get_simple_earn_locked_history_subscription_record.__doc__
-            
+
     async def futures_coin_v1_put_order(self, **params):
         return await self._request_futures_coin_api("put", "order", signed=True, data=params, version=1)
-        
+
     futures_coin_v1_put_order.__doc__ = Client.futures_coin_v1_put_order.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_asset(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/asset", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_asset.__doc__ = Client.margin_v1_get_managed_subaccount_asset.__doc__
-            
+
     async def margin_v1_get_sol_staking_sol_quota(self, **params):
         return await self._request_margin_api("get", "sol-staking/sol/quota", signed=True, data=params, version=1)
-        
+
     margin_v1_get_sol_staking_sol_quota.__doc__ = Client.margin_v1_get_sol_staking_sol_quota.__doc__
-            
+
     async def margin_v1_post_loan_vip_renew(self, **params):
         return await self._request_margin_api("post", "loan/vip/renew", signed=True, data=params, version=1)
-        
+
     margin_v1_post_loan_vip_renew.__doc__ = Client.margin_v1_post_loan_vip_renew.__doc__
-            
+
     async def margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent(self, **params):
         return await self._request_margin_api("get", "managed-subaccount/queryTransLogForTradeParent", signed=True, data=params, version=1)
-        
+
     margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent.__doc__ = Client.margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent.__doc__
-            
+
     async def margin_v1_post_sub_account_sub_account_api_ip_restriction(self, **params):
         return await self._request_margin_api("post", "sub-account/subAccountApi/ipRestriction", signed=True, data=params, version=1)
-        
+
     margin_v1_post_sub_account_sub_account_api_ip_restriction.__doc__ = Client.margin_v1_post_sub_account_sub_account_api_ip_restriction.__doc__
-            
+
     async def margin_v1_get_simple_earn_flexible_history_redemption_record(self, **params):
         return await self._request_margin_api("get", "simple-earn/flexible/history/redemptionRecord", signed=True, data=params, version=1)
-        
+
     margin_v1_get_simple_earn_flexible_history_redemption_record.__doc__ = Client.margin_v1_get_simple_earn_flexible_history_redemption_record.__doc__
-            
+
     async def margin_v1_get_broker_sub_account_api(self, **params):
         return await self._request_margin_api("get", "broker/subAccountApi", signed=True, data=params, version=1)
-        
+
     margin_v1_get_broker_sub_account_api.__doc__ = Client.margin_v1_get_broker_sub_account_api.__doc__
-            
+
     async def options_v1_get_exercise_history(self, **params):
         return await self._request_options_api("get", "exerciseHistory", signed=False, data=params)
-        
+
     options_v1_get_exercise_history.__doc__ = Client.options_v1_get_exercise_history.__doc__
-            
+
     async def margin_v1_get_convert_exchange_info(self, **params):
         return await self._request_margin_api("get", "convert/exchangeInfo", signed=False, data=params, version=1)
-        
+
     margin_v1_get_convert_exchange_info.__doc__ = Client.margin_v1_get_convert_exchange_info.__doc__
-            
+
     async def futures_v1_delete_batch_order(self, **params):
         return await self._request_futures_api("delete", "batchOrder", signed=True, data=params, version=1)
-        
+
     futures_v1_delete_batch_order.__doc__ = Client.futures_v1_delete_batch_order.__doc__
-            
+
     async def margin_v1_get_eth_staking_eth_history_wbeth_rewards_history(self, **params):
         return await self._request_margin_api("get", "eth-staking/eth/history/wbethRewardsHistory", signed=True, data=params, version=1)
-        
+
     margin_v1_get_eth_staking_eth_history_wbeth_rewards_history.__doc__ = Client.margin_v1_get_eth_staking_eth_history_wbeth_rewards_history.__doc__
-            
+
     async def margin_v1_get_mining_pub_algo_list(self, **params):
         return await self._request_margin_api("get", "mining/pub/algoList", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_pub_algo_list.__doc__ = Client.margin_v1_get_mining_pub_algo_list.__doc__
-            
+
     async def options_v1_get_block_trades(self, **params):
         return await self._request_options_api("get", "blockTrades", signed=False, data=params)
-        
+
     options_v1_get_block_trades.__doc__ = Client.options_v1_get_block_trades.__doc__
-            
+
     async def margin_v1_get_copy_trading_futures_lead_symbol(self, **params):
         return await self._request_margin_api("get", "copyTrading/futures/leadSymbol", signed=True, data=params, version=1)
-        
+
     margin_v1_get_copy_trading_futures_lead_symbol.__doc__ = Client.margin_v1_get_copy_trading_futures_lead_symbol.__doc__
-            
+
     async def margin_v1_get_mining_worker_list(self, **params):
         return await self._request_margin_api("get", "mining/worker/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_mining_worker_list.__doc__ = Client.margin_v1_get_mining_worker_list.__doc__
-            
+
     async def margin_v1_get_dci_product_list(self, **params):
         return await self._request_margin_api("get", "dci/product/list", signed=True, data=params, version=1)
-        
+
     margin_v1_get_dci_product_list.__doc__ = Client.margin_v1_get_dci_product_list.__doc__
-            
+
     async def futures_v1_get_convert_order_status(self, **params):
         return await self._request_futures_api("get", "convert/orderStatus", signed=True, data=params, version=1)
-        
+
     futures_v1_get_convert_order_status.__doc__ = Client.futures_v1_get_convert_order_status.__doc__
-            
+
+    async def get_isolated_margin_tranfer_history(self, **params):
+        return await self._request_margin_api("get", "margin/isolated/transfer", signed=True, data=params)
+
+    get_isolated_margin_tranfer_history.__doc__ = Client.get_isolated_margin_tranfer_history.__doc__
+
+    async def futures_basis(self, **params):
+        return await self._request_futures_data_api("get", "basis", data=params)
+
+    futures_basis.__doc__ = Client.futures_basis.__doc__
+
+    async def futures_delivery_price(self, **params):
+        return await self._request_futures_data_api("get", "delivery-price", data=params)
+
+    futures_delivery_price.__doc__ = Client.futures_delivery_price.__doc__
+
+    async def futures_insurance_fund_balance_snapshot(self, **params):
+        return await self._request_futures_api("get", "insuranceBalance", data=params)
+
+    futures_insurance_fund_balance_snapshot.__doc__ = Client.futures_insurance_fund_balance_snapshot.__doc__
+
+    async def futures_coin_top_longshort_position_ratio(self, **params):
+        return await self._request_futures_coin_data_api("get", "topLongShortPositionRatio", data=params)
+
+    futures_coin_top_longshort_position_ratio.__doc__ = Client.futures_coin_top_longshort_position_ratio.__doc__
+
+    async def futures_coin_top_longshort_account_ratio(self, **params):
+        return await self._request_futures_coin_data_api("get", "topLongShortAccountRatio", data=params)
+
+    futures_coin_top_longshort_account_ratio.__doc__ = Client.futures_coin_top_longshort_account_ratio.__doc__
+
+    async def futures_coin_global_longshort_ratio(self, **params):
+        return await self._request_futures_coin_data_api("get", "globalLongShortAccountRatio", data=params)
+
+    futures_coin_global_longshort_ratio.__doc__ = Client.futures_coin_global_longshort_ratio.__doc__
+
+    async def futures_coin_taker_buy_sell_volume(self, **params):
+        return await self._request_futures_coin_data_api("get", "takerBuySellVol", data=params)
+
+    futures_coin_taker_buy_sell_volume.__doc__ = Client.futures_coin_taker_buy_sell_volume.__doc__
+
+    async def futures_coin_basis(self, **params):
+        return await self._request_futures_coin_data_api("get", "basis", data=params)
+
+    futures_coin_basis.__doc__ = Client.futures_coin_basis.__doc__
+
+    async def futures_coin_modify_order(self, **params):
+        return await self._request_futures_coin_api("put", "order", True, data=params)
+
+    futures_coin_modify_order.__doc__ = Client.futures_coin_modify_order.__doc__
+
+    async def futures_coin_get_open_order(self, **params):
+        return await self._request_futures_coin_api("get", "openOrders", True, data=params)
+
+    futures_coin_get_open_order.__doc__ = Client.futures_coin_get_open_order.__doc__
+
+    async def futures_coin_countdown_cancel_all(self, **params):
+        return await self._request_futures_coin_api("post", "countdownCancelAll", True, data=params)
+
+    futures_coin_countdown_cancel_all.__doc__ = Client.futures_coin_countdown_cancel_all.__doc__
+
+    async def futures_coin_accout_order_history_download_link(self, **params):
+        return await self._request_futures_coin_api("get", "order/asyn/id", True, data=params)
+
+    futures_coin_accout_order_history_download_link.__doc__ = Client.futures_coin_accout_order_history_download_link.__doc__
+
+    async def options_get_bill(self, **params):
+        return await self._request_options_api("get", "bill", signed=True, data=params)
+
+    options_get_bill.__doc__ = Client.options_get_bill.__doc__
+
+    async def options_exercise_record(self, **params):
+        return await self._request_options_api("get", "exerciseRecord", signed=True, data=params)
+
+    options_exercise_record.__doc__ = Client.options_exercise_record.__doc__
+
+    async def papi_change_cm_position_side_dual(self, **params):
+        return await self._request_papi_api("post", "cm/positionSide/dual", signed=True, data=params)
+
+    papi_change_cm_position_side_dual.__doc__ = Client.papi_change_cm_position_side_dual.__doc__
+
+    async def options_get_market_maker_protection_config(self, **params):
+        return await self._request_options_api("get", "mmp", signed=True, data=params)
+
+    options_get_market_maker_protection_config.__doc__ = Client.options_get_market_maker_protection_config.__doc__
+
+    async def options_post_market_maker_protection_config(self, **params):
+        return await self._request_options_api("post", "mmpSet", signed=True, data=params)
+
+    options_post_market_maker_protection_config.__doc__ = Client.options_post_market_maker_protection_config.__doc__
+
+    async def options_reset_market_maker_protection_config(self, **params):
+        return await self._request_options_api("post", "mmpReset", signed=True, data=params)
+
+    options_reset_market_maker_protection_config.__doc__ = Client.options_reset_market_maker_protection_config.__doc__
+
+    async def margin_v1_get_margin_delist_schedule(self, **params):
+        return await self._request_margin_api("get", "margin/delist-schedule", signed=True, data=params, version=1)
+
+    margin_v1_get_margin_delist_schedule.__doc__ = Client.margin_v1_get_margin_delist_schedule.__doc__
+
+    async def options_open_interest(self, **params):
+        return await self._request_options_api("get", "openInterest", data=params)
+
+    options_open_interest.__doc__ = Client.options_open_interest.__doc__
+
+    async def sapi_v1_post_margin_order_oto(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/order/oto", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_order_oto.__doc__ = Client.sapi_v1_post_margin_order_oto.__doc__
+
+    async def sapi_v1_post_margin_order_otoco(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/order/otoco", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_order_otoco.__doc__ = Client.sapi_v1_post_margin_order_otoco.__doc__
+
+    async def sapi_v1_post_margin_api_key(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_api_key.__doc__ = Client.sapi_v1_post_margin_api_key.__doc__
+
+    async def sapi_v1_delete_margin_api_key(self, **params):
+        return await self._request_margin_api("delete", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    sapi_v1_delete_margin_api_key.__doc__ = Client.sapi_v1_delete_margin_api_key.__doc__
+
+    async def sapi_v1_put_margin_api_key_ip(self, **params):
+        return await self._request_margin_api("put", "sapi/v1/margin/apiKey/ip", signed=True, data=params, version=1)
+
+    sapi_v1_put_margin_api_key_ip.__doc__ = Client.sapi_v1_put_margin_api_key_ip.__doc__
+
+    async def sapi_v1_get_margin_api_key_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/api-key-list", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_api_key_list.__doc__ = Client.sapi_v1_get_margin_api_key_list.__doc__
+
+    async def sapi_v1_get_margin_api_key(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_api_key.__doc__ = Client.sapi_v1_get_margin_api_key.__doc__
+
+    async def sapi_v1_post_margin_listen_key(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_listen_key.__doc__ = Client.sapi_v1_post_margin_listen_key.__doc__
+
+    async def sapi_v1_put_margin_listen_key(self, **params):
+        return await self._request_margin_api("put", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    sapi_v1_put_margin_listen_key.__doc__ = Client.sapi_v1_put_margin_listen_key.__doc__
+
+    async def sapi_v1_delete_margin_listen_key(self, **params):
+        return await self._request_margin_api("delete", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+
+    sapi_v1_delete_margin_listen_key.__doc__ = Client.sapi_v1_delete_margin_listen_key.__doc__
+
+    async def sapi_v1_get_portfolio_account(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/account", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_account.__doc__ = Client.sapi_v1_get_portfolio_account.__doc__
+
+    async def sapi_v1_get_portfolio_margin_asset_leverage(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/margin-asset-leverage", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_margin_asset_leverage.__doc__ = Client.sapi_v1_get_portfolio_margin_asset_leverage.__doc__
+
+    async def sapi_v1_post_portfolio_repay(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/repay", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_repay.__doc__ = Client.sapi_v1_post_portfolio_repay.__doc__
+
+    async def sapi_v1_post_portfolio_bnb_transfer(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/bnb-transfer", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_bnb_transfer.__doc__ = Client.sapi_v1_post_portfolio_bnb_transfer.__doc__
+
+    async def sapi_v1_post_portfolio_auto_collection(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/auto-collection", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_auto_collection.__doc__ = Client.sapi_v1_post_portfolio_auto_collection.__doc__
+
+    async def sapi_v1_post_portfolio_asset_collection(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/asset-collection", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_asset_collection.__doc__ = Client.sapi_v1_post_portfolio_asset_collection.__doc__
+
+    async def sapi_v1_get_portfolio_pm_loan(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/pmLoan", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_pm_loan.__doc__ = Client.sapi_v1_get_portfolio_pm_loan.__doc__
+
+    async def sapi_v1_post_portfolio_repay_futures_negative_balance(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/repay-futures-negative-balance", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_repay_futures_negative_balance.__doc__ = Client.sapi_v1_post_portfolio_repay_futures_negative_balance.__doc__
+
+    async def sapi_v1_get_portfolio_repay_futures_switch(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/repay-futures-switch", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_repay_futures_switch.__doc__ = Client.sapi_v1_get_portfolio_repay_futures_switch.__doc__
+
+    async def sapi_v1_get_portfolio_interest_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/interest-history", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_interest_history.__doc__ = Client.sapi_v1_get_portfolio_interest_history.__doc__
+
+    async def sapi_v1_get_portfolio_pmloan_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/pmloan-history", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_pmloan_history.__doc__ = Client.sapi_v1_get_portfolio_pmloan_history.__doc__
+
+    async def sapi_v1_post_portfolio_earn_asset_transfer(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/portfolio/earn-asset-transfer", signed=True, data=params, version=1)
+
+    sapi_v1_post_portfolio_earn_asset_transfer.__doc__ = Client.sapi_v1_post_portfolio_earn_asset_transfer.__doc__
+
+    async def sapi_v1_get_portfolio_earn_asset_balance(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/earn-asset-balance", signed=True, data=params, version=1)
+
+    sapi_v1_get_portfolio_earn_asset_balance.__doc__ = Client.sapi_v1_get_portfolio_earn_asset_balance.__doc__
+
+    async def sapi_v1_get_futures_hist_data_link(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/futures/histDataLink", signed=True, data=params, version=1)
+
+    sapi_v1_get_futures_hist_data_link.__doc__ = Client.sapi_v1_get_futures_hist_data_link.__doc__
+
+    async def sapi_v1_delete_algo_futures_order(self, **params):
+        return await self._request_margin_api("delete", "sapi/v1/algo/futures/order", signed=True, data=params, version=1)
+
+    sapi_v1_delete_algo_futures_order.__doc__ = Client.sapi_v1_delete_algo_futures_order.__doc__
+
+    async def sapi_v1_get_algo_futures_sub_orders(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/algo/futures/subOrders", signed=True, data=params, version=1)
+
+    sapi_v1_get_algo_futures_sub_orders.__doc__ = Client.sapi_v1_get_algo_futures_sub_orders.__doc__
+
+    async def sapi_v1_get_algo_futures_open_orders(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/algo/futures/openOrders", signed=True, data=params, version=1)
+
+    sapi_v1_get_algo_futures_open_orders.__doc__ = Client.sapi_v1_get_algo_futures_open_orders.__doc__
+
+    async def sapi_v1_get_algo_futures_historical_orders(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/algo/futures/historicalOrders", signed=True, data=params, version=1)
+
+    sapi_v1_get_algo_futures_historical_orders.__doc__ = Client.sapi_v1_get_algo_futures_historical_orders.__doc__
+
+    async def sapi_v1_get_capital_withdraw_address_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/capital/withdraw/address/list", signed=True, data=params, version=1)
+
+    sapi_v1_get_capital_withdraw_address_list.__doc__ = Client.sapi_v1_get_capital_withdraw_address_list.__doc__
+
+    async def sapi_v1_get_capital_withdraw_quota(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/capital/withdraw/quota", signed=True, data=params, version=1)
+
+    sapi_v1_get_capital_withdraw_quota.__doc__ = Client.sapi_v1_get_capital_withdraw_quota.__doc__
+
+    async def sapi_v1_get_address_verify_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/addressVerify/list", signed=True, data=params, version=1)
+
+    sapi_v1_get_address_verify_list.__doc__ = Client.sapi_v1_get_address_verify_list.__doc__
+
+    async def sapi_v1_post_localentity_broker_withdraw_apply(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/localentity/broker/withdraw/apply", signed=True, data=params, version=1)
+
+    sapi_v1_post_localentity_broker_withdraw_apply.__doc__ = Client.sapi_v1_post_localentity_broker_withdraw_apply.__doc__
+
+    async def sapi_v1_put_localentity_broker_deposit_provide_info(self, **params):
+        return await self._request_margin_api("put", "sapi/v1/localentity/broker/deposit/provide-info", signed=True, data=params, version=1)
+
+    sapi_v1_put_localentity_broker_deposit_provide_info.__doc__ = Client.sapi_v1_put_localentity_broker_deposit_provide_info.__doc__
+
+    async def sapi_v1_get_localentity_questionnaire_requirements(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/localentity/questionnaire-requirements", signed=True, data=params, version=1)
+
+    sapi_v1_get_localentity_questionnaire_requirements.__doc__ = Client.sapi_v1_get_localentity_questionnaire_requirements.__doc__
+
+    async def sapi_v1_get_margin_loan_group_ltv_details(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/loan-group/ltv-details", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_loan_group_ltv_details.__doc__ = Client.sapi_v1_get_margin_loan_group_ltv_details.__doc__
+
+    async def sapi_v1_delete_margin_loan_group(self, **params):
+        return await self._request_margin_api("delete", "sapi/v1/margin/loan-group", signed=True, data=params, version=1)
+
+    sapi_v1_delete_margin_loan_group.__doc__ = Client.sapi_v1_delete_margin_loan_group.__doc__
+
+    async def sapi_v1_post_margin_loan_group_edit_member(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/loan-group/edit-member", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_loan_group_edit_member.__doc__ = Client.sapi_v1_post_margin_loan_group_edit_member.__doc__
+
+    async def sapi_v1_get_margin_loan_groups_activated(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/loan-groups/activated", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_loan_groups_activated.__doc__ = Client.sapi_v1_get_margin_loan_groups_activated.__doc__
+
+    async def sapi_v1_get_margin_loan_group_force_liquidation(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/loan-group/force-liquidation", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_loan_group_force_liquidation.__doc__ = Client.sapi_v1_get_margin_loan_group_force_liquidation.__doc__
+
+    async def sapi_v1_post_margin_loan_group_transfer_out(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/loan-group/transfer-out", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_loan_group_transfer_out.__doc__ = Client.sapi_v1_post_margin_loan_group_transfer_out.__doc__
+
+    async def sapi_v1_post_margin_loan_group_borrow(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/loan-group/borrow", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_loan_group_borrow.__doc__ = Client.sapi_v1_post_margin_loan_group_borrow.__doc__
+
+    async def sapi_v1_get_margin_loan_group_interest_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/loan-group/interest-history", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_loan_group_interest_history.__doc__ = Client.sapi_v1_get_margin_loan_group_interest_history.__doc__
+
+    async def sapi_v1_post_margin_loan_group_repay(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/margin/loan-group/repay", signed=True, data=params, version=1)
+
+    sapi_v1_post_margin_loan_group_repay.__doc__ = Client.sapi_v1_post_margin_loan_group_repay.__doc__
+
+    async def sapi_v1_get_margin_loan_group_borrow_repay(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/margin/loan-group/borrow-repay", signed=True, data=params, version=1)
+
+    sapi_v1_get_margin_loan_group_borrow_repay.__doc__ = Client.sapi_v1_get_margin_loan_group_borrow_repay.__doc__
+
+    async def sapi_v1_post_sub_account_futures_move_position(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+
+    sapi_v1_post_sub_account_futures_move_position.__doc__ = Client.sapi_v1_post_sub_account_futures_move_position.__doc__
+
+    async def sapi_v1_get_sub_account_futures_move_position(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+
+    sapi_v1_get_sub_account_futures_move_position.__doc__ = Client.sapi_v1_get_sub_account_futures_move_position.__doc__
+
+    async def sapi_v1_post_broker_sub_account_futures(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/broker/subAccount/futures", signed=True, data=params, version=1)
+
+    sapi_v1_post_broker_sub_account_futures.__doc__ = Client.sapi_v1_post_broker_sub_account_futures.__doc__
+
+    async def sapi_v1_get_broker_info(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/broker/info", signed=True, data=params, version=1)
+
+    sapi_v1_get_broker_info.__doc__ = Client.sapi_v1_get_broker_info.__doc__
+
+    async def sapi_v1_delete_broker_sub_account(self, **params):
+        return await self._request_margin_api("delete", "sapi/v1/broker/subAccount", signed=True, data=params, version=1)
+
+    sapi_v1_delete_broker_sub_account.__doc__ = Client.sapi_v1_delete_broker_sub_account.__doc__
+
+    async def sapi_v2_get_broker_sub_account_deposit_hist(self, **params):
+        return await self._request_margin_api("get", "sapi/v2/broker/subAccount/depositHist", signed=True, data=params, version=2)
+
+    sapi_v2_get_broker_sub_account_deposit_hist.__doc__ = Client.sapi_v2_get_broker_sub_account_deposit_hist.__doc__
+
+    async def sapi_v1_get_api_referral_if_new_user(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    sapi_v1_get_api_referral_if_new_user.__doc__ = Client.sapi_v1_get_api_referral_if_new_user.__doc__
+
+    async def sapi_v1_post_api_referral_customization(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    sapi_v1_post_api_referral_customization.__doc__ = Client.sapi_v1_post_api_referral_customization.__doc__
+
+    async def sapi_v1_get_api_referral_customization(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    sapi_v1_get_api_referral_customization.__doc__ = Client.sapi_v1_get_api_referral_customization.__doc__
+
+    async def sapi_v1_post_api_referral_user_customization(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    sapi_v1_post_api_referral_user_customization.__doc__ = Client.sapi_v1_post_api_referral_user_customization.__doc__
+
+    async def sapi_v1_get_api_referral_user_customization(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    sapi_v1_get_api_referral_user_customization.__doc__ = Client.sapi_v1_get_api_referral_user_customization.__doc__
+
+    async def sapi_v1_get_api_referral_rebate_recent_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/apiReferral/rebate/recentRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_api_referral_rebate_recent_record.__doc__ = Client.sapi_v1_get_api_referral_rebate_recent_record.__doc__
+
+    async def sapi_v1_get_api_referral_kickback_recent_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/apiReferral/kickback/recentRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_api_referral_kickback_recent_record.__doc__ = Client.sapi_v1_get_api_referral_kickback_recent_record.__doc__
+
+    async def fapi_v1_get_api_referral_if_new_user(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_if_new_user.__doc__ = Client.fapi_v1_get_api_referral_if_new_user.__doc__
+
+    async def fapi_v1_post_api_referral_customization(self, **params):
+        return await self._request_futures_api("post", "fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    fapi_v1_post_api_referral_customization.__doc__ = Client.fapi_v1_post_api_referral_customization.__doc__
+
+    async def fapi_v1_get_api_referral_customization(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_customization.__doc__ = Client.fapi_v1_get_api_referral_customization.__doc__
+
+    async def fapi_v1_post_api_referral_user_customization(self, **params):
+        return await self._request_futures_api("post", "fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    fapi_v1_post_api_referral_user_customization.__doc__ = Client.fapi_v1_post_api_referral_user_customization.__doc__
+
+    async def fapi_v1_get_api_referral_user_customization(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_user_customization.__doc__ = Client.fapi_v1_get_api_referral_user_customization.__doc__
+
+    async def fapi_v1_get_income(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/income", signed=True, data=params, version=1)
+
+    fapi_v1_get_income.__doc__ = Client.fapi_v1_get_income.__doc__
+
+    async def fapi_v1_get_api_referral_trader_num(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/traderNum", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_trader_num.__doc__ = Client.fapi_v1_get_api_referral_trader_num.__doc__
+
+    async def fapi_v1_get_api_referral_overview(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/overview", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_overview.__doc__ = Client.fapi_v1_get_api_referral_overview.__doc__
+
+    async def fapi_v1_get_api_referral_trade_vol(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/tradeVol", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_trade_vol.__doc__ = Client.fapi_v1_get_api_referral_trade_vol.__doc__
+
+    async def fapi_v1_get_api_referral_rebate_vol(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/rebateVol", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_rebate_vol.__doc__ = Client.fapi_v1_get_api_referral_rebate_vol.__doc__
+
+    async def fapi_v1_get_api_referral_trader_summary(self, **params):
+        return await self._request_futures_api("get", "fapi/v1/apiReferral/traderSummary", signed=True, data=params, version=1)
+
+    fapi_v1_get_api_referral_trader_summary.__doc__ = Client.fapi_v1_get_api_referral_trader_summary.__doc__
+
+    async def papi_v1_get_api_referral_if_new_user(self, **params):
+        return await self._request_papi_api("get", "papi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+
+    papi_v1_get_api_referral_if_new_user.__doc__ = Client.papi_v1_get_api_referral_if_new_user.__doc__
+
+    async def papi_v1_post_api_referral_user_customization(self, **params):
+        return await self._request_papi_api("post", "papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    papi_v1_post_api_referral_user_customization.__doc__ = Client.papi_v1_post_api_referral_user_customization.__doc__
+
+    async def papi_v1_get_api_referral_user_customization(self, **params):
+        return await self._request_papi_api("get", "papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+
+    papi_v1_get_api_referral_user_customization.__doc__ = Client.papi_v1_get_api_referral_user_customization.__doc__
+
+    async def v1_get_api_key_user_status(self, **params):
+        return await self._request_website("get", "v1/api-key/user-status", signed=True, data=params)
+
+    v1_get_api_key_user_status.__doc__ = Client.v1_get_api_key_user_status.__doc__
+
+    async def sapi_v1_post_block_match_order_place(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/place", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_place.__doc__ = Client.sapi_v1_post_block_match_order_place.__doc__
+
+    async def sapi_v1_post_block_match_order_take(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/take", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_take.__doc__ = Client.sapi_v1_post_block_match_order_take.__doc__
+
+    async def sapi_v1_post_block_match_order_cancel(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/cancel", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_cancel.__doc__ = Client.sapi_v1_post_block_match_order_cancel.__doc__
+
+    async def sapi_v1_post_block_match_order_extend(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/extend", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_extend.__doc__ = Client.sapi_v1_post_block_match_order_extend.__doc__
+
+    async def sapi_v1_post_block_match_order_query_order_history(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/query-order-history", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_query_order_history.__doc__ = Client.sapi_v1_post_block_match_order_query_order_history.__doc__
+
+    async def sapi_v1_post_block_match_order_query_open_order(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/order/query-open-order", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_order_query_open_order.__doc__ = Client.sapi_v1_post_block_match_order_query_open_order.__doc__
+
+    async def sapi_v1_post_block_match_symbols(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/block-match/symbols", signed=True, data=params, version=1)
+
+    sapi_v1_post_block_match_symbols.__doc__ = Client.sapi_v1_post_block_match_symbols.__doc__
+
+    async def sapi_v1_get_eth_staking_eth_quota(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/eth-staking/eth/quota", signed=True, data=params, version=1)
+
+    sapi_v1_get_eth_staking_eth_quota.__doc__ = Client.sapi_v1_get_eth_staking_eth_quota.__doc__
+
+    async def sapi_v1_get_eth_staking_eth_history_rewards_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/eth-staking/eth/history/rewardsHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_eth_staking_eth_history_rewards_history.__doc__ = Client.sapi_v1_get_eth_staking_eth_history_rewards_history.__doc__
+
+    async def sapi_v1_get_eth_staking_eth_history_rate_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/eth-staking/eth/history/rateHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_eth_staking_eth_history_rate_history.__doc__ = Client.sapi_v1_get_eth_staking_eth_history_rate_history.__doc__
+
+    async def sapi_v1_get_eth_staking_wbeth_history_wrap_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/eth-staking/wbeth/history/wrapHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_eth_staking_wbeth_history_wrap_history.__doc__ = Client.sapi_v1_get_eth_staking_wbeth_history_wrap_history.__doc__
+
+    async def sapi_v1_get_eth_staking_wbeth_history_unwrap_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/eth-staking/wbeth/history/unwrapHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_eth_staking_wbeth_history_unwrap_history.__doc__ = Client.sapi_v1_get_eth_staking_wbeth_history_unwrap_history.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/list", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_list.__doc__ = Client.sapi_v1_get_onchain_yields_locked_list.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_personal_left_quota(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/personalLeftQuota", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_personal_left_quota.__doc__ = Client.sapi_v1_get_onchain_yields_locked_personal_left_quota.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_position(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/position", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_position.__doc__ = Client.sapi_v1_get_onchain_yields_locked_position.__doc__
+
+    async def sapi_v1_get_onchain_yields_account(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/account", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_account.__doc__ = Client.sapi_v1_get_onchain_yields_account.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_subscription_preview(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/subscriptionPreview", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_subscription_preview.__doc__ = Client.sapi_v1_get_onchain_yields_locked_subscription_preview.__doc__
+
+    async def sapi_v1_post_onchain_yields_locked_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/onchain-yields/locked/subscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_onchain_yields_locked_subscribe.__doc__ = Client.sapi_v1_post_onchain_yields_locked_subscribe.__doc__
+
+    async def sapi_v1_post_onchain_yields_locked_set_auto_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/onchain-yields/locked/setAutoSubscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_onchain_yields_locked_set_auto_subscribe.__doc__ = Client.sapi_v1_post_onchain_yields_locked_set_auto_subscribe.__doc__
+
+    async def sapi_v1_post_onchain_yields_locked_set_redeem_option(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/onchain-yields/locked/setRedeemOption", signed=True, data=params, version=1)
+
+    sapi_v1_post_onchain_yields_locked_set_redeem_option.__doc__ = Client.sapi_v1_post_onchain_yields_locked_set_redeem_option.__doc__
+
+    async def sapi_v1_post_onchain_yields_locked_redeem(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/onchain-yields/locked/redeem", signed=True, data=params, version=1)
+
+    sapi_v1_post_onchain_yields_locked_redeem.__doc__ = Client.sapi_v1_post_onchain_yields_locked_redeem.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_history_subscription_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/subscriptionRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_history_subscription_record.__doc__ = Client.sapi_v1_get_onchain_yields_locked_history_subscription_record.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_history_rewards_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/rewardsRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_history_rewards_record.__doc__ = Client.sapi_v1_get_onchain_yields_locked_history_rewards_record.__doc__
+
+    async def sapi_v1_get_onchain_yields_locked_history_redemption_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/redemptionRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_onchain_yields_locked_history_redemption_record.__doc__ = Client.sapi_v1_get_onchain_yields_locked_history_redemption_record.__doc__
+
+    async def sapi_v2_get_loan_interest_rate_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v2/loan/interestRateHistory", signed=True, data=params, version=2)
+
+    sapi_v2_get_loan_interest_rate_history.__doc__ = Client.sapi_v2_get_loan_interest_rate_history.__doc__
+
+    async def sapi_v2_get_loan_flexible_liquidation_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v2/loan/flexible/liquidation/history", signed=True, data=params, version=2)
+
+    sapi_v2_get_loan_flexible_liquidation_history.__doc__ = Client.sapi_v2_get_loan_flexible_liquidation_history.__doc__
+
+    async def sapi_v1_get_loan_vip_interest_rate_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/loan/vip/interestRateHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_loan_vip_interest_rate_history.__doc__ = Client.sapi_v1_get_loan_vip_interest_rate_history.__doc__
+
+    async def sapi_v1_get_loan_vip_collateral_data(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/loan/vip/collateral/data", signed=True, data=params, version=1)
+
+    sapi_v1_get_loan_vip_collateral_data.__doc__ = Client.sapi_v1_get_loan_vip_collateral_data.__doc__
+
+    async def sapi_v1_get_loan_vip_accrued_interest(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/loan/vip/accruedInterest", signed=True, data=params, version=1)
+
+    sapi_v1_get_loan_vip_accrued_interest.__doc__ = Client.sapi_v1_get_loan_vip_accrued_interest.__doc__
+
+    async def sapi_v1_get_loan_vip_request_data(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/loan/vip/request/data", signed=True, data=params, version=1)
+
+    sapi_v1_get_loan_vip_request_data.__doc__ = Client.sapi_v1_get_loan_vip_request_data.__doc__
+
+    async def sapi_v1_post_loan_vip_renew(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/loan/vip/renew", signed=True, data=params, version=1)
+
+    sapi_v1_post_loan_vip_renew.__doc__ = Client.sapi_v1_post_loan_vip_renew.__doc__
+
+    async def sapi_v1_post_loan_vip_borrow(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/loan/vip/borrow", signed=True, data=params, version=1)
+
+    sapi_v1_post_loan_vip_borrow.__doc__ = Client.sapi_v1_post_loan_vip_borrow.__doc__
+
+    async def sapi_v1_get_c2c_order_match_list_user_order_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/c2c/orderMatch/listUserOrderHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_c2c_order_match_list_user_order_history.__doc__ = Client.sapi_v1_get_c2c_order_match_list_user_order_history.__doc__
+
+    async def sapi_v1_get_fiat_orders(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/fiat/orders", signed=True, data=params, version=1)
+
+    sapi_v1_get_fiat_orders.__doc__ = Client.sapi_v1_get_fiat_orders.__doc__
+
+    async def sapi_v1_get_fiat_payments(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/fiat/payments", signed=True, data=params, version=1)
+
+    sapi_v1_get_fiat_payments.__doc__ = Client.sapi_v1_get_fiat_payments.__doc__
+
+    async def sapi_v1_get_nft_history_deposit(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/nft/history/deposit", signed=True, data=params, version=1)
+
+    sapi_v1_get_nft_history_deposit.__doc__ = Client.sapi_v1_get_nft_history_deposit.__doc__
+
+    async def sapi_v1_get_nft_history_withdraw(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/nft/history/withdraw", signed=True, data=params, version=1)
+
+    sapi_v1_get_nft_history_withdraw.__doc__ = Client.sapi_v1_get_nft_history_withdraw.__doc__
+
+    async def sapi_v1_get_nft_history_transactions(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/nft/history/transactions", signed=True, data=params, version=1)
+
+    sapi_v1_get_nft_history_transactions.__doc__ = Client.sapi_v1_get_nft_history_transactions.__doc__
+
+    async def sapi_v1_get_nft_user_get_asset(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/nft/user/getAsset", signed=True, data=params, version=1)
+
+    sapi_v1_get_nft_user_get_asset.__doc__ = Client.sapi_v1_get_nft_user_get_asset.__doc__
+
+    async def sapi_v1_post_giftcard_create_code(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/giftcard/createCode", signed=True, data=params, version=1)
+
+    sapi_v1_post_giftcard_create_code.__doc__ = Client.sapi_v1_post_giftcard_create_code.__doc__
+
+    async def sapi_v1_post_giftcard_buy_code(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/giftcard/buyCode", signed=True, data=params, version=1)
+
+    sapi_v1_post_giftcard_buy_code.__doc__ = Client.sapi_v1_post_giftcard_buy_code.__doc__
+
+    async def sapi_v1_post_giftcard_redeem_code(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/giftcard/redeemCode", signed=True, data=params, version=1)
+
+    sapi_v1_post_giftcard_redeem_code.__doc__ = Client.sapi_v1_post_giftcard_redeem_code.__doc__
+
+    async def sapi_v1_get_giftcard_verify(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/giftcard/verify", signed=True, data=params, version=1)
+
+    sapi_v1_get_giftcard_verify.__doc__ = Client.sapi_v1_get_giftcard_verify.__doc__
+
+    async def sapi_v1_get_giftcard_buy_code_token_limit(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/giftcard/buyCode/token-limit", signed=True, data=params, version=1)
+
+    sapi_v1_get_giftcard_buy_code_token_limit.__doc__ = Client.sapi_v1_get_giftcard_buy_code_token_limit.__doc__
+
+    async def sapi_v1_get_giftcard_cryptography_rsa_public_key(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/giftcard/cryptography/rsa-public-key", signed=True, data=params, version=1)
+
+    sapi_v1_get_giftcard_cryptography_rsa_public_key.__doc__ = Client.sapi_v1_get_giftcard_cryptography_rsa_public_key.__doc__
+
+    async def sapi_v1_get_rebate_tax_query(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/rebate/taxQuery", signed=True, data=params, version=1)
+
+    sapi_v1_get_rebate_tax_query.__doc__ = Client.sapi_v1_get_rebate_tax_query.__doc__
+
+    async def sapi_v1_get_simple_earn_account(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/account", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_account.__doc__ = Client.sapi_v1_get_simple_earn_account.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/list", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_list.__doc__ = Client.sapi_v1_get_simple_earn_flexible_list.__doc__
+
+    async def sapi_v1_get_simple_earn_locked_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/locked/list", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_locked_list.__doc__ = Client.sapi_v1_get_simple_earn_locked_list.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_position(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/position", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_position.__doc__ = Client.sapi_v1_get_simple_earn_flexible_position.__doc__
+
+    async def sapi_v1_get_simple_earn_locked_position(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/locked/position", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_locked_position.__doc__ = Client.sapi_v1_get_simple_earn_locked_position.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_personal_left_quota(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/personalLeftQuota", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_personal_left_quota.__doc__ = Client.sapi_v1_get_simple_earn_flexible_personal_left_quota.__doc__
+
+    async def sapi_v1_get_simple_earn_locked_personal_left_quota(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/locked/personalLeftQuota", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_locked_personal_left_quota.__doc__ = Client.sapi_v1_get_simple_earn_locked_personal_left_quota.__doc__
+
+    async def sapi_v1_post_simple_earn_flexible_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/flexible/subscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_flexible_subscribe.__doc__ = Client.sapi_v1_post_simple_earn_flexible_subscribe.__doc__
+
+    async def sapi_v1_post_simple_earn_locked_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/locked/subscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_locked_subscribe.__doc__ = Client.sapi_v1_post_simple_earn_locked_subscribe.__doc__
+
+    async def sapi_v1_post_simple_earn_flexible_redeem(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/flexible/redeem", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_flexible_redeem.__doc__ = Client.sapi_v1_post_simple_earn_flexible_redeem.__doc__
+
+    async def sapi_v1_post_simple_earn_locked_redeem(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/locked/redeem", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_locked_redeem.__doc__ = Client.sapi_v1_post_simple_earn_locked_redeem.__doc__
+
+    async def sapi_v1_post_simple_earn_flexible_set_auto_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/flexible/setAutoSubscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_flexible_set_auto_subscribe.__doc__ = Client.sapi_v1_post_simple_earn_flexible_set_auto_subscribe.__doc__
+
+    async def sapi_v1_post_simple_earn_locked_set_auto_subscribe(self, **params):
+        return await self._request_margin_api("post", "sapi/v1/simple-earn/locked/setAutoSubscribe", signed=True, data=params, version=1)
+
+    sapi_v1_post_simple_earn_locked_set_auto_subscribe.__doc__ = Client.sapi_v1_post_simple_earn_locked_set_auto_subscribe.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_subscription_preview(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/subscriptionPreview", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_subscription_preview.__doc__ = Client.sapi_v1_get_simple_earn_flexible_subscription_preview.__doc__
+
+    async def sapi_v1_get_simple_earn_locked_subscription_preview(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/locked/subscriptionPreview", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_locked_subscription_preview.__doc__ = Client.sapi_v1_get_simple_earn_locked_subscription_preview.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_history_rewards_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/rewardsRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_history_rewards_record.__doc__ = Client.sapi_v1_get_simple_earn_flexible_history_rewards_record.__doc__
+
+    async def sapi_v1_get_simple_earn_locked_history_rewards_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/locked/history/rewardsRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_locked_history_rewards_record.__doc__ = Client.sapi_v1_get_simple_earn_locked_history_rewards_record.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_history_collateral_record(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/collateralRecord", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_history_collateral_record.__doc__ = Client.sapi_v1_get_simple_earn_flexible_history_collateral_record.__doc__
+
+    async def sapi_v1_get_simple_earn_flexible_history_rate_history(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/rateHistory", signed=True, data=params, version=1)
+
+    sapi_v1_get_simple_earn_flexible_history_rate_history.__doc__ = Client.sapi_v1_get_simple_earn_flexible_history_rate_history.__doc__
+
+    async def sapi_v1_get_pay_transactions(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/pay/transactions", signed=True, data=params, version=1)
+
+    sapi_v1_get_pay_transactions.__doc__ = Client.sapi_v1_get_pay_transactions.__doc__
+
+    async def sapi_v1_get_portfolio_asset_index_price(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/asset-index-price", data=params, version=1)
+
+    sapi_v1_get_portfolio_asset_index_price.__doc__ = Client.sapi_v1_get_portfolio_asset_index_price.__doc__
+
+    async def sapi_v1_get_portfolio_collateral_rate(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/portfolio/collateralRate", data=params, version=1)
+
+    sapi_v1_get_portfolio_collateral_rate.__doc__ = Client.sapi_v1_get_portfolio_collateral_rate.__doc__
+
+    async def sapi_v1_get_spot_open_symbol_list(self, **params):
+        return await self._request_margin_api("get", "sapi/v1/spot/open-symbol-list", data=params, version=1)
+
+    sapi_v1_get_spot_open_symbol_list.__doc__ = Client.sapi_v1_get_spot_open_symbol_list.__doc__
+
+    async def bapi_defi_v1_get_public_wallet_direct_buw_wallet_cex_alpha_all_token_list(self, **params):
+        return await self._request_website("get", "bapi/defi/v1/public/wallet-direct/buw/wallet/cex/alpha/all/token/list", data=params)
+
+    bapi_defi_v1_get_public_wallet_direct_buw_wallet_cex_alpha_all_token_list.__doc__ = Client.bapi_defi_v1_get_public_wallet_direct_buw_wallet_cex_alpha_all_token_list.__doc__
+
+    async def bapi_defi_v1_get_public_alpha_trade_get_exchange_info(self, **params):
+        return await self._request_website("get", "bapi/defi/v1/public/alpha-trade/get-exchange-info", data=params)
+
+    bapi_defi_v1_get_public_alpha_trade_get_exchange_info.__doc__ = Client.bapi_defi_v1_get_public_alpha_trade_get_exchange_info.__doc__
+
+    async def bapi_defi_v1_get_public_alpha_trade_agg_trades(self, **params):
+        return await self._request_website("get", "bapi/defi/v1/public/alpha-trade/agg-trades", data=params)
+
+    bapi_defi_v1_get_public_alpha_trade_agg_trades.__doc__ = Client.bapi_defi_v1_get_public_alpha_trade_agg_trades.__doc__
+
+    async def bapi_defi_v1_get_public_alpha_trade_klines(self, **params):
+        return await self._request_website("get", "bapi/defi/v1/public/alpha-trade/klines", data=params)
+
+    bapi_defi_v1_get_public_alpha_trade_klines.__doc__ = Client.bapi_defi_v1_get_public_alpha_trade_klines.__doc__
+
+    async def bapi_defi_v1_get_public_alpha_trade_ticker(self, **params):
+        return await self._request_website("get", "bapi/defi/v1/public/alpha-trade/ticker", data=params)
+
+    bapi_defi_v1_get_public_alpha_trade_ticker.__doc__ = Client.bapi_defi_v1_get_public_alpha_trade_ticker.__doc__
+
+    async def bapi_ekyc_v2_post_public_ekyc_customer_share_kyc_data(self, **params):
+        return await self._request_website("post", "bapi/ekyc/v2/public/ekyc/customer/share-kyc-data", data=params)
+
+    bapi_ekyc_v2_post_public_ekyc_customer_share_kyc_data.__doc__ = Client.bapi_ekyc_v2_post_public_ekyc_customer_share_kyc_data.__doc__
+
