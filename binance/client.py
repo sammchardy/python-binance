@@ -5311,7 +5311,7 @@ class Client(BaseClient):
             ]
         """
         return self._request_margin_api(
-            "get", "/margin/delist-schedule", signed=True, data=params
+            "get", "margin/delist-schedule", signed=True, data=params
         )
 
     # Margin OCO
@@ -17470,7 +17470,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/order/oto", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/order/oto", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_order_otoco(self, **params):
         """
@@ -17482,7 +17482,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/order/otoco", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/order/otoco", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_api_key(self, **params):
         """
@@ -17494,7 +17494,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
 
     def sapi_v1_delete_margin_api_key(self, **params):
         """
@@ -17506,7 +17506,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("delete", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+        return self._request_margin_api("delete", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
 
     def sapi_v1_put_margin_api_key_ip(self, **params):
         """
@@ -17518,7 +17518,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("put", "/sapi/v1/margin/apiKey/ip", signed=True, data=params, version=1)
+        return self._request_margin_api("put", "sapi/v1/margin/apiKey/ip", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_api_key_list(self, **params):
         """
@@ -17530,7 +17530,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/api-key-list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/api-key-list", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_api_key(self, **params):
         """
@@ -17542,7 +17542,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/apiKey", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/apiKey", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_listen_key(self, **params):
         """
@@ -17554,7 +17554,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
 
     def sapi_v1_put_margin_listen_key(self, **params):
         """
@@ -17566,7 +17566,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("put", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+        return self._request_margin_api("put", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
 
     def sapi_v1_delete_margin_listen_key(self, **params):
         """
@@ -17578,7 +17578,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("delete", "/sapi/v1/margin/listen-key", signed=True, data=params, version=1)
+        return self._request_margin_api("delete", "sapi/v1/margin/listen-key", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_account(self, **params):
         """
@@ -17590,7 +17590,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/account", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/account", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_margin_asset_leverage(self, **params):
         """
@@ -17602,7 +17602,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/margin-asset-leverage", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/margin-asset-leverage", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_repay(self, **params):
         """
@@ -17614,7 +17614,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/repay", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/repay", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_bnb_transfer(self, **params):
         """
@@ -17626,7 +17626,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/bnb-transfer", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/bnb-transfer", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_auto_collection(self, **params):
         """
@@ -17638,7 +17638,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/auto-collection", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/auto-collection", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_asset_collection(self, **params):
         """
@@ -17650,7 +17650,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/asset-collection", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/asset-collection", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_pm_loan(self, **params):
         """
@@ -17662,7 +17662,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/pmLoan", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/pmLoan", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_repay_futures_negative_balance(self, **params):
         """
@@ -17674,7 +17674,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/repay-futures-negative-balance", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/repay-futures-negative-balance", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_repay_futures_switch(self, **params):
         """
@@ -17686,7 +17686,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/repay-futures-switch", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/repay-futures-switch", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_interest_history(self, **params):
         """
@@ -17698,7 +17698,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/interest-history", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/interest-history", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_pmloan_history(self, **params):
         """
@@ -17710,7 +17710,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/pmloan-history", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/pmloan-history", signed=True, data=params, version=1)
 
     def sapi_v1_post_portfolio_earn_asset_transfer(self, **params):
         """
@@ -17722,7 +17722,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/portfolio/earn-asset-transfer", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/portfolio/earn-asset-transfer", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_earn_asset_balance(self, **params):
         """
@@ -17734,7 +17734,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/earn-asset-balance", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/earn-asset-balance", signed=True, data=params, version=1)
 
     def sapi_v1_get_futures_hist_data_link(self, **params):
         """
@@ -17746,7 +17746,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/futures/histDataLink", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/futures/histDataLink", signed=True, data=params, version=1)
 
     def sapi_v1_delete_algo_futures_order(self, **params):
         """
@@ -17758,7 +17758,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("delete", "/sapi/v1/algo/futures/order", signed=True, data=params, version=1)
+        return self._request_margin_api("delete", "sapi/v1/algo/futures/order", signed=True, data=params, version=1)
 
     def sapi_v1_get_algo_futures_sub_orders(self, **params):
         """
@@ -17770,7 +17770,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/algo/futures/subOrders", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/algo/futures/subOrders", signed=True, data=params, version=1)
 
     def sapi_v1_get_algo_futures_open_orders(self, **params):
         """
@@ -17782,7 +17782,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/algo/futures/openOrders", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/algo/futures/openOrders", signed=True, data=params, version=1)
 
     def sapi_v1_get_algo_futures_historical_orders(self, **params):
         """
@@ -17794,7 +17794,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/algo/futures/historicalOrders", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/algo/futures/historicalOrders", signed=True, data=params, version=1)
 
     def sapi_v1_get_capital_withdraw_address_list(self, **params):
         """
@@ -17806,7 +17806,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/capital/withdraw/address/list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/capital/withdraw/address/list", signed=True, data=params, version=1)
 
     def sapi_v1_get_capital_withdraw_quota(self, **params):
         """
@@ -17818,7 +17818,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/capital/withdraw/quota", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/capital/withdraw/quota", signed=True, data=params, version=1)
 
     def sapi_v1_get_address_verify_list(self, **params):
         """
@@ -17830,7 +17830,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/addressVerify/list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/addressVerify/list", signed=True, data=params, version=1)
 
     def sapi_v1_post_localentity_broker_withdraw_apply(self, **params):
         """
@@ -17842,7 +17842,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/localentity/broker/withdraw/apply", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/localentity/broker/withdraw/apply", signed=True, data=params, version=1)
 
     def sapi_v1_put_localentity_broker_deposit_provide_info(self, **params):
         """
@@ -17854,7 +17854,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("put", "/sapi/v1/localentity/broker/deposit/provide-info", signed=True, data=params, version=1)
+        return self._request_margin_api("put", "sapi/v1/localentity/broker/deposit/provide-info", signed=True, data=params, version=1)
 
     def sapi_v1_get_localentity_questionnaire_requirements(self, **params):
         """
@@ -17866,7 +17866,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/localentity/questionnaire-requirements", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/localentity/questionnaire-requirements", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_loan_group_ltv_details(self, **params):
         """
@@ -17878,7 +17878,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/ltv-details", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/loan-group/ltv-details", signed=True, data=params, version=1)
 
     def sapi_v1_delete_margin_loan_group(self, **params):
         """
@@ -17890,7 +17890,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("delete", "/sapi/v1/margin/loan-group", signed=True, data=params, version=1)
+        return self._request_margin_api("delete", "sapi/v1/margin/loan-group", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_loan_group_edit_member(self, **params):
         """
@@ -17902,7 +17902,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/edit-member", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/loan-group/edit-member", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_loan_groups_activated(self, **params):
         """
@@ -17914,7 +17914,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/loan-groups/activated", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/loan-groups/activated", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_loan_group_force_liquidation(self, **params):
         """
@@ -17926,7 +17926,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/force-liquidation", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/loan-group/force-liquidation", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_loan_group_transfer_out(self, **params):
         """
@@ -17938,7 +17938,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/transfer-out", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/loan-group/transfer-out", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_loan_group_borrow(self, **params):
         """
@@ -17950,7 +17950,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/borrow", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/loan-group/borrow", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_loan_group_interest_history(self, **params):
         """
@@ -17962,7 +17962,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/interest-history", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/loan-group/interest-history", signed=True, data=params, version=1)
 
     def sapi_v1_post_margin_loan_group_repay(self, **params):
         """
@@ -17974,7 +17974,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/margin/loan-group/repay", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/margin/loan-group/repay", signed=True, data=params, version=1)
 
     def sapi_v1_get_margin_loan_group_borrow_repay(self, **params):
         """
@@ -17986,7 +17986,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/margin/loan-group/borrow-repay", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/margin/loan-group/borrow-repay", signed=True, data=params, version=1)
 
     def sapi_v1_post_sub_account_futures_move_position(self, **params):
         """
@@ -17998,7 +17998,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
 
     def sapi_v1_get_sub_account_futures_move_position(self, **params):
         """
@@ -18010,7 +18010,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/sub-account/futures/move-position", signed=True, data=params, version=1)
 
     def sapi_v1_post_broker_sub_account_futures(self, **params):
         """
@@ -18022,7 +18022,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/broker/subAccount/futures", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/broker/subAccount/futures", signed=True, data=params, version=1)
 
     def sapi_v1_get_broker_info(self, **params):
         """
@@ -18034,7 +18034,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/broker/info", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/broker/info", signed=True, data=params, version=1)
 
     def sapi_v1_delete_broker_sub_account(self, **params):
         """
@@ -18046,7 +18046,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("delete", "/sapi/v1/broker/subAccount", signed=True, data=params, version=1)
+        return self._request_margin_api("delete", "sapi/v1/broker/subAccount", signed=True, data=params, version=1)
 
     def sapi_v2_get_broker_sub_account_deposit_hist(self, **params):
         """
@@ -18058,7 +18058,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v2/broker/subAccount/depositHist", signed=True, data=params, version=2)
+        return self._request_margin_api("get", "sapi/v2/broker/subAccount/depositHist", signed=True, data=params, version=2)
 
     def sapi_v1_get_api_referral_if_new_user(self, **params):
         """
@@ -18070,7 +18070,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
 
     def sapi_v1_post_api_referral_customization(self, **params):
         """
@@ -18082,7 +18082,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
 
     def sapi_v1_get_api_referral_customization(self, **params):
         """
@@ -18094,7 +18094,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/apiReferral/customization", signed=True, data=params, version=1)
 
     def sapi_v1_post_api_referral_user_customization(self, **params):
         """
@@ -18106,7 +18106,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def sapi_v1_get_api_referral_user_customization(self, **params):
         """
@@ -18118,7 +18118,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def sapi_v1_get_api_referral_rebate_recent_record(self, **params):
         """
@@ -18130,7 +18130,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/apiReferral/rebate/recentRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/apiReferral/rebate/recentRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_api_referral_kickback_recent_record(self, **params):
         """
@@ -18142,7 +18142,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/apiReferral/kickback/recentRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/apiReferral/kickback/recentRecord", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_if_new_user(self, **params):
         """
@@ -18154,7 +18154,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
 
     def fapi_v1_post_api_referral_customization(self, **params):
         """
@@ -18166,7 +18166,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("post", "/fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+        return self._request_futures_api("post", "fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_customization(self, **params):
         """
@@ -18178,7 +18178,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/customization", signed=True, data=params, version=1)
 
     def fapi_v1_post_api_referral_user_customization(self, **params):
         """
@@ -18190,7 +18190,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("post", "/fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_futures_api("post", "fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_user_customization(self, **params):
         """
@@ -18202,7 +18202,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def fapi_v1_get_income(self, **params):
         """
@@ -18214,7 +18214,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/income", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/income", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_trader_num(self, **params):
         """
@@ -18226,7 +18226,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/traderNum", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/traderNum", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_overview(self, **params):
         """
@@ -18238,7 +18238,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/overview", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/overview", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_trade_vol(self, **params):
         """
@@ -18250,7 +18250,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/tradeVol", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/tradeVol", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_rebate_vol(self, **params):
         """
@@ -18262,7 +18262,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/rebateVol", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/rebateVol", signed=True, data=params, version=1)
 
     def fapi_v1_get_api_referral_trader_summary(self, **params):
         """
@@ -18274,7 +18274,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_futures_api("get", "/fapi/v1/apiReferral/traderSummary", signed=True, data=params, version=1)
+        return self._request_futures_api("get", "fapi/v1/apiReferral/traderSummary", signed=True, data=params, version=1)
 
     def papi_v1_get_api_referral_if_new_user(self, **params):
         """
@@ -18286,7 +18286,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_papi_api("get", "/papi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
+        return self._request_papi_api("get", "papi/v1/apiReferral/ifNewUser", signed=True, data=params, version=1)
 
     def papi_v1_post_api_referral_user_customization(self, **params):
         """
@@ -18298,7 +18298,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_papi_api("post", "/papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_papi_api("post", "papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def papi_v1_get_api_referral_user_customization(self, **params):
         """
@@ -18310,7 +18310,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_papi_api("get", "/papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
+        return self._request_papi_api("get", "papi/v1/apiReferral/userCustomization", signed=True, data=params, version=1)
 
     def v1_get_api_key_user_status(self, **params):
         """
@@ -18322,7 +18322,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/v1/api-key/user-status", signed=True, data=params)
+        return self._request_website("get", "v1/api-key/user-status", signed=True, data=params)
 
     def sapi_v1_post_block_match_order_place(self, **params):
         """
@@ -18334,7 +18334,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/place", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/place", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_order_take(self, **params):
         """
@@ -18346,7 +18346,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/take", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/take", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_order_cancel(self, **params):
         """
@@ -18358,7 +18358,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/cancel", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/cancel", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_order_extend(self, **params):
         """
@@ -18370,7 +18370,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/extend", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/extend", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_order_query_order_history(self, **params):
         """
@@ -18382,7 +18382,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/query-order-history", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/query-order-history", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_order_query_open_order(self, **params):
         """
@@ -18394,7 +18394,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/order/query-open-order", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/order/query-open-order", signed=True, data=params, version=1)
 
     def sapi_v1_post_block_match_symbols(self, **params):
         """
@@ -18406,7 +18406,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/block-match/symbols", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/block-match/symbols", signed=True, data=params, version=1)
 
     def sapi_v1_get_eth_staking_eth_quota(self, **params):
         """
@@ -18418,7 +18418,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/quota", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/eth-staking/eth/quota", signed=True, data=params, version=1)
 
     def sapi_v1_get_eth_staking_eth_history_rewards_history(self, **params):
         """
@@ -18430,7 +18430,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/history/rewardsHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/eth-staking/eth/history/rewardsHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_eth_staking_eth_history_rate_history(self, **params):
         """
@@ -18442,7 +18442,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/eth-staking/eth/history/rateHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/eth-staking/eth/history/rateHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_eth_staking_wbeth_history_wrap_history(self, **params):
         """
@@ -18454,7 +18454,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/eth-staking/wbeth/history/wrapHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/eth-staking/wbeth/history/wrapHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_eth_staking_wbeth_history_unwrap_history(self, **params):
         """
@@ -18466,7 +18466,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/eth-staking/wbeth/history/unwrapHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/eth-staking/wbeth/history/unwrapHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_list(self, **params):
         """
@@ -18478,7 +18478,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/list", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_personal_left_quota(self, **params):
         """
@@ -18490,7 +18490,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/personalLeftQuota", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/personalLeftQuota", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_position(self, **params):
         """
@@ -18502,7 +18502,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/position", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/position", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_account(self, **params):
         """
@@ -18514,7 +18514,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/account", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/account", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_subscription_preview(self, **params):
         """
@@ -18526,7 +18526,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/subscriptionPreview", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/subscriptionPreview", signed=True, data=params, version=1)
 
     def sapi_v1_post_onchain_yields_locked_subscribe(self, **params):
         """
@@ -18538,7 +18538,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/subscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/onchain-yields/locked/subscribe", signed=True, data=params, version=1)
 
     def sapi_v1_post_onchain_yields_locked_set_auto_subscribe(self, **params):
         """
@@ -18550,7 +18550,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/setAutoSubscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/onchain-yields/locked/setAutoSubscribe", signed=True, data=params, version=1)
 
     def sapi_v1_post_onchain_yields_locked_set_redeem_option(self, **params):
         """
@@ -18562,7 +18562,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/setRedeemOption", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/onchain-yields/locked/setRedeemOption", signed=True, data=params, version=1)
 
     def sapi_v1_post_onchain_yields_locked_redeem(self, **params):
         """
@@ -18574,7 +18574,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/onchain-yields/locked/redeem", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/onchain-yields/locked/redeem", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_history_subscription_record(self, **params):
         """
@@ -18586,7 +18586,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/subscriptionRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/subscriptionRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_history_rewards_record(self, **params):
         """
@@ -18598,7 +18598,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/rewardsRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/rewardsRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_onchain_yields_locked_history_redemption_record(self, **params):
         """
@@ -18610,7 +18610,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/onchain-yields/locked/history/redemptionRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/onchain-yields/locked/history/redemptionRecord", signed=True, data=params, version=1)
 
     def sapi_v2_get_loan_interest_rate_history(self, **params):
         """
@@ -18622,7 +18622,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v2/loan/interestRateHistory", signed=True, data=params, version=2)
+        return self._request_margin_api("get", "sapi/v2/loan/interestRateHistory", signed=True, data=params, version=2)
 
     def sapi_v2_get_loan_flexible_liquidation_history(self, **params):
         """
@@ -18634,7 +18634,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v2/loan/flexible/liquidation/history", signed=True, data=params, version=2)
+        return self._request_margin_api("get", "sapi/v2/loan/flexible/liquidation/history", signed=True, data=params, version=2)
 
     def sapi_v1_get_loan_vip_interest_rate_history(self, **params):
         """
@@ -18646,7 +18646,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/loan/vip/interestRateHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/loan/vip/interestRateHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_loan_vip_collateral_data(self, **params):
         """
@@ -18658,7 +18658,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/loan/vip/collateral/data", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/loan/vip/collateral/data", signed=True, data=params, version=1)
 
     def sapi_v1_get_loan_vip_accrued_interest(self, **params):
         """
@@ -18670,7 +18670,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/loan/vip/accruedInterest", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/loan/vip/accruedInterest", signed=True, data=params, version=1)
 
     def sapi_v1_get_loan_vip_request_data(self, **params):
         """
@@ -18682,7 +18682,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/loan/vip/request/data", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/loan/vip/request/data", signed=True, data=params, version=1)
 
     def sapi_v1_post_loan_vip_renew(self, **params):
         """
@@ -18694,7 +18694,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/loan/vip/renew", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/loan/vip/renew", signed=True, data=params, version=1)
 
     def sapi_v1_post_loan_vip_borrow(self, **params):
         """
@@ -18706,7 +18706,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/loan/vip/borrow", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/loan/vip/borrow", signed=True, data=params, version=1)
 
     def sapi_v1_get_c2c_order_match_list_user_order_history(self, **params):
         """
@@ -18718,7 +18718,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/c2c/orderMatch/listUserOrderHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/c2c/orderMatch/listUserOrderHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_fiat_orders(self, **params):
         """
@@ -18730,7 +18730,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/fiat/orders", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/fiat/orders", signed=True, data=params, version=1)
 
     def sapi_v1_get_fiat_payments(self, **params):
         """
@@ -18742,7 +18742,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/fiat/payments", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/fiat/payments", signed=True, data=params, version=1)
 
     def sapi_v1_get_nft_history_deposit(self, **params):
         """
@@ -18754,7 +18754,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/nft/history/deposit", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/nft/history/deposit", signed=True, data=params, version=1)
 
     def sapi_v1_get_nft_history_withdraw(self, **params):
         """
@@ -18766,7 +18766,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/nft/history/withdraw", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/nft/history/withdraw", signed=True, data=params, version=1)
 
     def sapi_v1_get_nft_history_transactions(self, **params):
         """
@@ -18778,7 +18778,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/nft/history/transactions", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/nft/history/transactions", signed=True, data=params, version=1)
 
     def sapi_v1_get_nft_user_get_asset(self, **params):
         """
@@ -18790,7 +18790,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/nft/user/getAsset", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/nft/user/getAsset", signed=True, data=params, version=1)
 
     def sapi_v1_post_giftcard_create_code(self, **params):
         """
@@ -18802,7 +18802,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/giftcard/createCode", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/giftcard/createCode", signed=True, data=params, version=1)
 
     def sapi_v1_post_giftcard_buy_code(self, **params):
         """
@@ -18814,7 +18814,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/giftcard/buyCode", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/giftcard/buyCode", signed=True, data=params, version=1)
 
     def sapi_v1_post_giftcard_redeem_code(self, **params):
         """
@@ -18826,7 +18826,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/giftcard/redeemCode", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/giftcard/redeemCode", signed=True, data=params, version=1)
 
     def sapi_v1_get_giftcard_verify(self, **params):
         """
@@ -18838,7 +18838,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/giftcard/verify", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/giftcard/verify", signed=True, data=params, version=1)
 
     def sapi_v1_get_giftcard_buy_code_token_limit(self, **params):
         """
@@ -18850,7 +18850,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/giftcard/buyCode/token-limit", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/giftcard/buyCode/token-limit", signed=True, data=params, version=1)
 
     def sapi_v1_get_giftcard_cryptography_rsa_public_key(self, **params):
         """
@@ -18862,7 +18862,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/giftcard/cryptography/rsa-public-key", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/giftcard/cryptography/rsa-public-key", signed=True, data=params, version=1)
 
     def sapi_v1_get_rebate_tax_query(self, **params):
         """
@@ -18874,7 +18874,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/rebate/taxQuery", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/rebate/taxQuery", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_account(self, **params):
         """
@@ -18886,7 +18886,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/account", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/account", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_list(self, **params):
         """
@@ -18898,7 +18898,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/list", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_locked_list(self, **params):
         """
@@ -18910,7 +18910,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/list", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/locked/list", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_position(self, **params):
         """
@@ -18922,7 +18922,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/position", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/position", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_locked_position(self, **params):
         """
@@ -18934,7 +18934,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/position", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/locked/position", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_personal_left_quota(self, **params):
         """
@@ -18946,7 +18946,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/personalLeftQuota", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/personalLeftQuota", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_locked_personal_left_quota(self, **params):
         """
@@ -18958,7 +18958,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/personalLeftQuota", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/locked/personalLeftQuota", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_flexible_subscribe(self, **params):
         """
@@ -18970,7 +18970,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/subscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/flexible/subscribe", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_locked_subscribe(self, **params):
         """
@@ -18982,7 +18982,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/subscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/locked/subscribe", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_flexible_redeem(self, **params):
         """
@@ -18994,7 +18994,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/redeem", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/flexible/redeem", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_locked_redeem(self, **params):
         """
@@ -19006,7 +19006,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/redeem", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/locked/redeem", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_flexible_set_auto_subscribe(self, **params):
         """
@@ -19018,7 +19018,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/flexible/setAutoSubscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/flexible/setAutoSubscribe", signed=True, data=params, version=1)
 
     def sapi_v1_post_simple_earn_locked_set_auto_subscribe(self, **params):
         """
@@ -19030,7 +19030,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("post", "/sapi/v1/simple-earn/locked/setAutoSubscribe", signed=True, data=params, version=1)
+        return self._request_margin_api("post", "sapi/v1/simple-earn/locked/setAutoSubscribe", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_subscription_preview(self, **params):
         """
@@ -19042,7 +19042,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/subscriptionPreview", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/subscriptionPreview", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_locked_subscription_preview(self, **params):
         """
@@ -19054,7 +19054,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/subscriptionPreview", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/locked/subscriptionPreview", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_history_rewards_record(self, **params):
         """
@@ -19066,7 +19066,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/rewardsRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/rewardsRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_locked_history_rewards_record(self, **params):
         """
@@ -19078,7 +19078,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/locked/history/rewardsRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/locked/history/rewardsRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_history_collateral_record(self, **params):
         """
@@ -19090,7 +19090,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/collateralRecord", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/collateralRecord", signed=True, data=params, version=1)
 
     def sapi_v1_get_simple_earn_flexible_history_rate_history(self, **params):
         """
@@ -19102,7 +19102,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/simple-earn/flexible/history/rateHistory", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/simple-earn/flexible/history/rateHistory", signed=True, data=params, version=1)
 
     def sapi_v1_get_pay_transactions(self, **params):
         """
@@ -19114,7 +19114,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/pay/transactions", signed=True, data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/pay/transactions", signed=True, data=params, version=1)
 
     def sapi_v1_get_portfolio_asset_index_price(self, **params):
         """
@@ -19126,7 +19126,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/asset-index-price", data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/asset-index-price", data=params, version=1)
 
     def sapi_v1_get_portfolio_collateral_rate(self, **params):
         """
@@ -19138,7 +19138,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/portfolio/collateralRate", data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/portfolio/collateralRate", data=params, version=1)
 
     def sapi_v1_get_spot_open_symbol_list(self, **params):
         """
@@ -19150,7 +19150,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_margin_api("get", "/sapi/v1/spot/open-symbol-list", data=params, version=1)
+        return self._request_margin_api("get", "sapi/v1/spot/open-symbol-list", data=params, version=1)
 
     def bapi_defi_v1_get_public_wallet_direct_buw_wallet_cex_alpha_all_token_list(self, **params):
         """
@@ -19162,7 +19162,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/bapi/defi/v1/public/wallet-direct/buw/wallet/cex/alpha/all/token/list", data=params)
+        return self._request_website("get", "bapi/defi/v1/public/wallet-direct/buw/wallet/cex/alpha/all/token/list", data=params)
 
     def bapi_defi_v1_get_public_alpha_trade_get_exchange_info(self, **params):
         """
@@ -19174,7 +19174,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/get-exchange-info", data=params)
+        return self._request_website("get", "bapi/defi/v1/public/alpha-trade/get-exchange-info", data=params)
 
     def bapi_defi_v1_get_public_alpha_trade_agg_trades(self, **params):
         """
@@ -19186,7 +19186,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/agg-trades", data=params)
+        return self._request_website("get", "bapi/defi/v1/public/alpha-trade/agg-trades", data=params)
 
     def bapi_defi_v1_get_public_alpha_trade_klines(self, **params):
         """
@@ -19198,7 +19198,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/klines", data=params)
+        return self._request_website("get", "bapi/defi/v1/public/alpha-trade/klines", data=params)
 
     def bapi_defi_v1_get_public_alpha_trade_ticker(self, **params):
         """
@@ -19210,7 +19210,7 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("get", "/bapi/defi/v1/public/alpha-trade/ticker", data=params)
+        return self._request_website("get", "bapi/defi/v1/public/alpha-trade/ticker", data=params)
 
     def bapi_ekyc_v2_post_public_ekyc_customer_share_kyc_data(self, **params):
         """
@@ -19222,5 +19222,5 @@ class Client(BaseClient):
         :param params: parameters required by the endpoint
         :type params: dict
         """
-        return self._request_website("post", "/bapi/ekyc/v2/public/ekyc/customer/share-kyc-data", data=params)
+        return self._request_website("post", "bapi/ekyc/v2/public/ekyc/customer/share-kyc-data", data=params)
 
