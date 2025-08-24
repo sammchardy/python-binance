@@ -1727,7 +1727,7 @@ class AsyncClient(BaseClient):
 
     futures_premium_index_klines.__doc__ = Client.futures_index_price_klines.__doc__
 
-    async def futures_continous_klines(self, **params):
+    async def futures_continuous_klines(self, **params):
         return await self._request_futures_api("get", "continuousKlines", data=params)
 
     async def futures_historical_klines(
