@@ -1731,7 +1731,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api("get", "continuousKlines", data=params)
 
     async def futures_historical_klines(
-        self, symbol, interval, start_str, end_str=None, limit=500
+        self, symbol: str, interval: str, start_str, end_str=None, limit=None
     ):
         return await self._historical_klines(
             symbol,

@@ -7373,7 +7373,7 @@ class Client(BaseClient):
         return self._request_futures_api("get", "continuousKlines", data=params)
 
     def futures_historical_klines(
-        self, symbol, interval, start_str, end_str=None, limit=500
+        self, symbol: str, interval :str, start_str, end_str=None, limit=None
     ):
         """Get historical futures klines from Binance
 
@@ -7385,7 +7385,7 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
-        :param limit: Default 500; max 1000.
+        :param limit: Default None (fetches full range in batches of max 1000 per request). To limit the number of rows, pass an integer.
         :type limit: int
 
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
@@ -7401,7 +7401,7 @@ class Client(BaseClient):
         )
 
     def futures_historical_mark_price_klines(
-        self, symbol, interval, start_str, end_str=None, limit=500
+        self, symbol: str, interval: str, start_str, end_str=None, limit=None
     ):
         """Get historical futures mark price klines from Binance
 
@@ -7413,7 +7413,7 @@ class Client(BaseClient):
         :type start_str: str|int
         :param end_str: optional - end date string in UTC format or timestamp in milliseconds (default will fetch everything up to now)
         :type end_str: str|int
-        :param limit: Default 500; max 1000.
+        :param limit: Default None (fetches full range in batches of max 1000 per request). To limit the number of rows, pass an integer.
         :type limit: int
 
         :return: list of OHLCV values (Open time, Open, High, Low, Close, Volume, Close time, Quote asset volume, Number of trades, Taker buy base asset volume, Taker buy quote asset volume, Ignore)
