@@ -1,7 +1,7 @@
 import pytest
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
-from .conftest import proxies, api_key, api_secret, testnet
+from .conftest import proxies, api_key, api_secret, testnet, call_method_and_assert_uri_contains
 
 
 def test_client_initialization(client):
@@ -23,7 +23,8 @@ def test_get_symbol_info(client):
 
 
 def test_ping(client):
-    client.ping()
+    call_method_and_assert_uri_contains(client, 'ping', '/v3/')
+
 
 
 def test_get_server_time(client):
@@ -73,7 +74,7 @@ def test_get_symbol_ticker(client):
 
 
 def test_get_orderbook_ticker(client):
-    client.get_orderbook_ticker(symbol="BTCUSDT")
+    call_method_and_assert_uri_contains(client, 'get_orderbook_ticker', '/v3/', symbol="BTCUSDT")
 
 
 def test_get_account(client):

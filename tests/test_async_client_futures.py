@@ -30,8 +30,8 @@ async def test_futures_aggregate_trades(futuresClientAsync):
 async def test_futures_klines(futuresClientAsync):
     await futuresClientAsync.futures_klines(symbol="BTCUSDT", interval="1h")
 
-async def test_futures_continous_klines(futuresClientAsync):
-    await futuresClientAsync.futures_continous_klines(
+async def test_futures_continuous_klines(futuresClientAsync):
+    await futuresClientAsync.futures_continuous_klines(
         pair="BTCUSDT", contractType="PERPETUAL", interval="1h"
     )
 
