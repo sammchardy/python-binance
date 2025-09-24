@@ -11,7 +11,7 @@ from binance.ws.streams import ThreadedWebsocketManager
 proxies = {}
 proxy = os.getenv("PROXY")
 
-proxy = "http://51.83.140.52:16301"
+proxy = "http://188.245.226.105:3128"
 if proxy:
     proxies = {"http": proxy, "https": proxy}  # tmp: improve this in the future
 else:
@@ -24,9 +24,10 @@ futures_api_secret = os.getenv("TEST_FUTURES_API_SECRET")
 testnet = os.getenv("TEST_TESTNET", "true").lower() == "true"
 api_key = "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
 api_secret = "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
-testnet = True
-futures_api_key = "227719da8d8499e8d3461587d19f259c0b39c2b462a77c9b748a6119abd74401"
-futures_api_secret = "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
+testnet = True # only for spot now
+demo = True # spot and swap
+futures_api_key = "HjhMFvuF1veWQVdUbLIy7TiCYe9fj4W6sEukmddD8TM9kPVRHMK6nS2SdV5mwE5u"
+futures_api_secret = "Suu9pWcO9zbvVuc6cSQsVuiiw2DmmA8DgHrUfePF9s2RtaHa0zxK3eAF4MfIk7Pd"
 
 
 # Configure logging for all tests
@@ -58,7 +59,7 @@ def liveClient():
 @pytest.fixture(scope="function")
 def futuresClient():
     return Client(
-        futures_api_key, futures_api_secret, {"proxies": proxies}, testnet=testnet
+        futures_api_key, futures_api_secret, {"proxies": proxies}, demo=demo
     )
 
 
@@ -72,7 +73,7 @@ async def clientAsync():
 @pytest_asyncio.fixture(scope="function")
 async def futuresClientAsync():
     client = AsyncClient(
-        futures_api_key, futures_api_secret, https_proxy=proxy, testnet=testnet
+        futures_api_key, futures_api_secret, https_proxy=proxy, demo=demo
     )
     yield client
     await client.close_connection()
