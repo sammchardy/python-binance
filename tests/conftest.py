@@ -12,7 +12,6 @@ proxies = {}
 proxy = os.getenv("PROXY")
 
 proxy = "http://188.245.226.105:8911"
-proxy = None
 if proxy:
     proxies = {"http": proxy, "https": proxy}  # tmp: improve this in the future
 else:
