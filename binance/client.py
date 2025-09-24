@@ -7781,6 +7781,77 @@ class Client(BaseClient):
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_futures_api("post", "order", True, data=params)
 
+    def futures_limit_order(self, **params):
+        """Send in a new futures limit order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_order(self, **params):
+        """Send in a new futures market order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "MARKET"
+        return self._request_futures_api("post", "order", True, data=params)
+
+
+    def futures_limit_buy_order(self, **params):
+        """Send in a new futures limit buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_limit_sell_order(self, **params):
+        """Send in a new futures limit sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_buy_order(self, **params):
+        """Send in a new futures market buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "MARKET"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_sell_order(self, **params):
+        """Send in a new futures market sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "MARKET"
+        return self._request_futures_api("post", "order", True, data=params)
+
     def futures_modify_order(self, **params):
         """Modify an existing order. Currently only LIMIT order modification is supported.
 
