@@ -209,13 +209,19 @@ class BaseClient:
         self.testnet = testnet
         self.demo = demo
         self.timestamp_offset = 0
-        ws_api_url = self.WS_API_TESTNET_URL if testnet else self.WS_API_URL.format(tld)
+        ws_api_url = self.WS_API_URL.format(tld)
+        if testnet:
+            ws_api_url = self.WS_API_TESTNET_URL
+        elif demo:
+            ws_api_url = self.WS_API_DEMO_URL
         if self.TIME_UNIT:
             ws_api_url += f"?timeUnit={self.TIME_UNIT}"
         self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
-        ws_future_url = (
-            self.WS_FUTURES_TESTNET_URL if testnet else self.WS_FUTURES_URL.format(tld)
-        )
+        ws_future_url = self.WS_FUTURES_URL.format(tld)
+        if testnet:
+            ws_future_url = self.WS_FUTURES_TESTNET_URL
+        elif demo:
+            ws_future_url = self.WS_FUTURES_DEMO_URL
         self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld)
         self.loop = loop or get_loop()
 
