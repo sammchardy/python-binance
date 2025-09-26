@@ -43,7 +43,7 @@ class BaseClient:
     WS_API_DEMO_URL = "wss://demo-ws-api.binance.com/ws-api/v3"
     WS_FUTURES_URL = "wss://ws-fapi.binance.{}/ws-fapi/v1"
     WS_FUTURES_TESTNET_URL = "wss://testnet.binancefuture.com/ws-fapi/v1"
-    WS_FUTURES_DEMO_URL = "wss://demo-ws-fapi.binance.com/ws-fapi/v1"
+    WS_FUTURES_DEMO_URL = "wss://testnet.binancefuture.com/ws-fapi/v1"
     PUBLIC_API_VERSION = "v3"
     PRIVATE_API_VERSION = "v3"
     MARGIN_API_VERSION = "v1"
