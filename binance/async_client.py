@@ -31,6 +31,7 @@ class AsyncClient(BaseClient):
         tld: str = "com",
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         loop=None,
         session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None,
@@ -48,6 +49,7 @@ class AsyncClient(BaseClient):
             tld,
             base_endpoint,
             testnet,
+            demo,
             private_key,
             private_key_pass,
             time_unit=time_unit,
@@ -62,6 +64,7 @@ class AsyncClient(BaseClient):
         tld: str = "com",
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         loop=None,
         session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None,
@@ -76,6 +79,7 @@ class AsyncClient(BaseClient):
             tld,
             base_endpoint,
             testnet,
+            demo,
             loop,
             session_params,
             private_key,
@@ -1874,6 +1878,77 @@ class AsyncClient(BaseClient):
     async def futures_create_order(self, **params):
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_limit_order(self, **params):
+        """Send in a new futures limit order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_order(self, **params):
+        """Send in a new futures market order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "MARKET"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+
+    async def futures_limit_buy_order(self, **params):
+        """Send in a new futures limit buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_limit_sell_order(self, **params):
+        """Send in a new futures limit sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_buy_order(self, **params):
+        """Send in a new futures market buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "MARKET"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_sell_order(self, **params):
+        """Send in a new futures market sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "MARKET"
         return await self._request_futures_api("post", "order", True, data=params)
 
     async def futures_modify_order(self, **params):

@@ -63,7 +63,8 @@ Features
 
 - Implementation of all General, Market Data and Account endpoints.
 - Asyncio implementation
-- Testnet support for Spot, Futures and Vanilla Options
+- Demo trading support (by providing demo=True)
+- Testnet support for Spot, Futures and Vanilla Options (deprecated)
 - Simple handling of authentication include RSA and EDDSA keys
 - No need to generate timestamps yourself, the wrapper does it for you
 - RecvWindow sent by default

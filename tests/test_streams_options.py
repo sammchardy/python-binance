@@ -12,9 +12,9 @@ pytestmark = [
 logger = logging.getLogger(__name__)
 
 # Test constants
-OPTION_SYMBOL = "BTC-250926-40000-P"
+OPTION_SYMBOL = "BTC-251226-60000-P"
 UNDERLYING_SYMBOL = "BTC"
-EXPIRATION_DATE = "250926"
+EXPIRATION_DATE = "251226"
 INTERVAL = "1m"
 DEPTH = "20"
 
