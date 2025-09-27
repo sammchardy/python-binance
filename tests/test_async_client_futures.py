@@ -90,6 +90,7 @@ async def test_futures_index_index_price_constituents(futuresClientAsync):
 async def test_futures_liquidation_orders(futuresClientAsync):
     await futuresClientAsync.futures_liquidation_orders()
 
+@pytest.mark.skip(reason="Temporary skip due to issues with api")
 async def test_futures_api_trading_status(futuresClientAsync):
     await futuresClientAsync.futures_api_trading_status()
 
