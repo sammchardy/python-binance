@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.9'
     - name: Install Ruff
@@ -42,20 +42,16 @@ jobs:
       TEST_API_SECRET: "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
       TEST_FUTURES_API_KEY: "227719da8d8499e8d3461587d19f259c0b39c2b462a77c9b748a6119abd74401"
       TEST_FUTURES_API_SECRET: "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
-    strategy:
-      max-parallel: 1
-      matrix:
-        python: ["3.12"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Checking env
       run: |
         echo "PROXY: $PROXY"
         env
-    - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v5
+    - name: Set up Python
+      uses: actions/setup-python@v6
       with:
-        python-version: ${{ matrix.python }}
+        python-version: '3.12'
         cache: 'pip'
     - name: Install dependencies
       run: |
@@ -70,7 +66,6 @@ jobs:
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:
-        flag-name: run-${{ join(matrix.*, '-') }}
         parallel: true
   finish:
     needs: build

@@ -66,24 +66,30 @@ def futuresClient():
 @pytest_asyncio.fixture(scope="function")
 async def clientAsync():
     client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet)
-    yield client
-    await client.close_connection()
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 
 @pytest_asyncio.fixture(scope="function")
 async def futuresClientAsync():
     client = AsyncClient(
-        futures_api_key, futures_api_secret, https_proxy=proxy, demo=demo
+        futures_api_key, futures_api_secret, https_proxy=proxy, testnet=testnet
     )
-    yield client
-    await client.close_connection()
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 
 @pytest_asyncio.fixture(scope="function")
 async def liveClientAsync():
     client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=False)
-    yield client
-    await client.close_connection()
+    try:
+        yield client
+    finally:
+        await client.close_connection()
 
 @pytest.fixture(scope="function")
 def manager():
@@ -94,14 +100,23 @@ def manager():
 @pytest.fixture(autouse=True, scope="function")
 def event_loop():
     """Create new event loop for each test"""
-    loop = asyncio.new_event_loop()
-    yield loop
-    # Clean up pending tasks
-    pending = asyncio.all_tasks(loop)
-    for task in pending:
-        task.cancel()
-    loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
-    loop.close()
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        yield loop
+    finally:
+        # Clean up pending tasks
+        try:
+            pending = asyncio.all_tasks(loop)
+            for task in pending:
+                task.cancel()
+            if pending:
+                loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+        except Exception:
+            pass  # Ignore cleanup errors
+        finally:
+            loop.close()
+            asyncio.set_event_loop(None)
 
 
 def pytest_addoption(parser):
