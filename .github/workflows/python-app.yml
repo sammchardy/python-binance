@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 40
     env:
-      PROXY: "http://51.83.140.52:16301"
+      PROXY: "http://188.245.226.105:8911"
       TEST_TESTNET: "true"
       TEST_API_KEY: "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
       TEST_API_SECRET: "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
