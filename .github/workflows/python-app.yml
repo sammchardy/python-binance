@@ -62,7 +62,7 @@ jobs:
     - name: Type check with pyright
       run: pyright
     - name: Test with tox
-      run: tox -e py
+      run: tox -v
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:
