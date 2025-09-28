@@ -164,6 +164,9 @@ class AsyncClient(BaseClient):
             url_encoded_data = urlencode(dict_data)
             data = f"{url_encoded_data}&signature={signature}"
 
+        # Remove proxies from kwargs since aiohttp uses 'proxy' parameter instead
+        kwargs.pop('proxies', None)
+        
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True),
             proxy=self.https_proxy,
