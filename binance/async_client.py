@@ -42,6 +42,15 @@ class AsyncClient(BaseClient):
         self.https_proxy = https_proxy
         self.loop = loop or get_loop()
         self._session_params: Dict[str, Any] = session_params or {}
+        
+        # Convert https_proxy to requests_params format for BaseClient
+        if https_proxy and requests_params is None:
+            requests_params = {'proxies': {'http': https_proxy, 'https': https_proxy}}
+        elif https_proxy and requests_params is not None:
+            if 'proxies' not in requests_params:
+                requests_params['proxies'] = {}
+            requests_params['proxies'].update({'http': https_proxy, 'https': https_proxy})
+        
         super().__init__(
             api_key,
             api_secret,
