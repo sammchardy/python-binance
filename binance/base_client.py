@@ -216,13 +216,18 @@ class BaseClient:
             ws_api_url = self.WS_API_DEMO_URL
         if self.TIME_UNIT:
             ws_api_url += f"?timeUnit={self.TIME_UNIT}"
-        self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
+        # Extract proxy from requests_params for WebSocket connections
+        https_proxy = None
+        if requests_params and 'proxies' in requests_params:
+            https_proxy = requests_params['proxies'].get('https') or requests_params['proxies'].get('http')
+        
+        self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld, https_proxy=https_proxy)
         ws_future_url = self.WS_FUTURES_URL.format(tld)
         if testnet:
             ws_future_url = self.WS_FUTURES_TESTNET_URL
         elif demo:
             ws_future_url = self.WS_FUTURES_DEMO_URL
-        self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld)
+        self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld, https_proxy=https_proxy)
         self.loop = loop or get_loop()
 
     def _get_headers(self) -> Dict:

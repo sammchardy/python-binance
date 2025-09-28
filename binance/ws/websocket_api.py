@@ -9,12 +9,12 @@ from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConn
 
 
 class WebsocketAPI(ReconnectingWebsocket):
-    def __init__(self, url: str, tld: str = "com", testnet: bool = False):
+    def __init__(self, url: str, tld: str = "com", testnet: bool = False, https_proxy: Optional[str] = None):
         self._tld = tld
         self._testnet = testnet
         self._responses: Dict[str, asyncio.Future] = {}
         self._connection_lock: Optional[asyncio.Lock] = None
-        super().__init__(url=url, prefix="", path="", is_binary=False)
+        super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
 
     @property
     def connection_lock(self) -> asyncio.Lock:
