@@ -7366,7 +7366,7 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "premiumIndexKlines", data=params)
 
-    def futures_continous_klines(self, **params):
+    def futures_continuous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data
