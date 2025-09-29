@@ -12,12 +12,14 @@ except ImportError:
     from asynctest import patch  # Python 3.7
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_order_book(futuresClientAsync):
     orderbook = await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
     assert_ob(orderbook)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_concurrent_ws_futures_get_order_book(futuresClientAsync):
     symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT"]
@@ -42,16 +44,19 @@ async def test_bad_request(futuresClientAsync):
         await futuresClientAsync.ws_futures_get_order_book()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_all_tickers(futuresClientAsync):
     await futuresClientAsync.ws_futures_get_all_tickers()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_order_book_ticker(futuresClientAsync):
     await futuresClientAsync.ws_futures_get_order_book_ticker()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClientAsync):
     if 'orjson' not in sys.modules:
@@ -87,6 +92,7 @@ async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClient
         orderid=order["orderId"], symbol=order["symbol"]
     )
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresClientAsync):
     with patch.dict('sys.modules', {'orjson': None}):
@@ -121,36 +127,43 @@ async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresCli
         )
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_position(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_position()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_position(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_position()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_balance(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_balance()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_balance(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_balance()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_status(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_status()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_status(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_status()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_futures_fail_to_connect(futuresClientAsync):
     # Close any existing connection first

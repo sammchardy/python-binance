@@ -11,6 +11,7 @@ from .test_get_order_book import assert_ob
 from .conftest import proxy
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_api_public_endpoint(clientAsync):
     """Test normal order book request"""
@@ -18,12 +19,14 @@ async def test_ws_api_public_endpoint(clientAsync):
     assert_ob(order_book)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_api_private_endpoint(clientAsync):
     """Test normal order book request"""
     orders = await clientAsync.ws_get_all_orders(symbol="BTCUSDT")
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_futures_public_endpoint(futuresClientAsync):
     """Test normal order book request"""
@@ -31,12 +34,14 @@ async def test_ws_futures_public_endpoint(futuresClientAsync):
     assert_ob(order_book)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_futures_private_endpoint(futuresClientAsync):
     """Test normal order book request"""
     await futuresClientAsync.ws_futures_v2_account_position(symbol="BTCUSDT")
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_get_symbol_ticker(clientAsync):
     """Test symbol ticker request"""
@@ -189,6 +194,7 @@ async def test_cleanup_on_exit(clientAsync):
     assert future.exception() is not None
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_queue_overflow(clientAsync):
     """WebSocket API should not overflow queue"""
