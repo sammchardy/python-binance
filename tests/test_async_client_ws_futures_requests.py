@@ -153,7 +153,10 @@ async def test_ws_futures_account_status(futuresClientAsync):
 
 @pytest.mark.asyncio
 async def test_ws_futures_fail_to_connect(futuresClientAsync):
-    # Simulate WebSocket connection being closed during the request
-    with patch("websockets.connect", new_callable=AsyncMock):
+    # Close any existing connection first
+    await futuresClientAsync.close_connection()
+    
+    # Mock the WebSocket API's connect method to raise an exception
+    with patch.object(futuresClientAsync.ws_future, 'connect', side_effect=ConnectionError("Simulated connection failure")):
         with pytest.raises(BinanceWebsocketUnableToConnect):
             await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")

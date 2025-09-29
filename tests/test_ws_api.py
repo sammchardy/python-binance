@@ -8,6 +8,7 @@ from binance import AsyncClient
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
 from binance.ws.constants import WSListenerState
 from .test_get_order_book import assert_ob
+from .conftest import proxy
 
 
 @pytest.mark.asyncio
@@ -102,7 +103,7 @@ async def test_multiple_requests(clientAsync):
 @pytest.mark.asyncio
 async def test_testnet_url():
     """Test testnet URL configuration"""
-    testnet_client = AsyncClient(testnet=True)
+    testnet_client = AsyncClient(testnet=True, https_proxy=proxy)
     try:
         assert testnet_client.ws_api._url == testnet_client.WS_API_TESTNET_URL
         order_book = await testnet_client.ws_get_order_book(symbol="BTCUSDT")
@@ -124,7 +125,7 @@ async def test_message_handling(clientAsync):
         assert result == valid_msg
     finally:
         await clientAsync.close_connection()
-    
+
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception(clientAsync):
     try:
@@ -136,6 +137,7 @@ async def test_message_handling_raise_exception(clientAsync):
             await future
     finally:
         await clientAsync.close_connection()
+
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception_without_id(clientAsync):
     try:
@@ -147,7 +149,8 @@ async def test_message_handling_raise_exception_without_id(clientAsync):
             await future
     finally:
         await clientAsync.close_connection()
-    
+
+
 @pytest.mark.asyncio
 async def test_message_handling_invalid_json(clientAsync):
     try:
@@ -189,7 +192,7 @@ async def test_cleanup_on_exit(clientAsync):
 @pytest.mark.asyncio
 async def test_ws_queue_overflow(clientAsync):
     """WebSocket API should not overflow queue"""
-    # 
+    #
     original_size = clientAsync.ws_api.max_queue_size
     clientAsync.ws_api.max_queue_size = 1
 
@@ -197,36 +200,37 @@ async def test_ws_queue_overflow(clientAsync):
         # Request multiple order books concurrently
         symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
         tasks = [clientAsync.ws_get_order_book(symbol=symbol) for symbol in symbols]
-        
+
         # Execute all requests concurrently and wait for results
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Check that we got valid responses or expected overflow errors
         valid_responses = [r for r in results if not isinstance(r, Exception)]
         assert len(valid_responses) == len(symbols), "Should get at least one valid response"
-        
+
         for result in valid_responses:
             assert_ob(result)
-            
+
     finally:
         # Restore original queue size
         clientAsync.ws_api.MAX_QUEUE_SIZE = original_size
+
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_api_with_stream(clientAsync):
     """Test combining WebSocket API requests with stream listening"""
     from binance import BinanceSocketManager
-    
+
     # Create socket manager and trade socket
     bm = BinanceSocketManager(clientAsync)
     ts = bm.trade_socket("BTCUSDT")
-    
+
     async with ts:
         # Make WS API request while stream is active
         order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")
         assert_ob(order_book)
-        
+
         # Verify we can still receive stream data
         trade = await ts.recv()
         assert "s" in trade  # Symbol
