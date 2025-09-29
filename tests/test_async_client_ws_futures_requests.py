@@ -7,9 +7,9 @@ from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 
 try:
-    from unittest.mock import AsyncMock, patch  # Python 3.8+
+    from unittest.mock import patch  # Python 3.8+
 except ImportError:
-    from asynctest import CoroutineMock as AsyncMock, patch  # Python 3.7
+    from asynctest import patch  # Python 3.7
 
 
 @pytest.mark.asyncio()
