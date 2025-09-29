@@ -31,10 +31,13 @@ jobs:
       run: ruff format --check .
       continue-on-error: true
 
-  build:
+  test:
     needs: lint
     runs-on: ubuntu-22.04
     timeout-minutes: 40
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
     env:
       PROXY: "http://188.245.226.105:8911"
       TEST_TESTNET: "true"
@@ -47,11 +50,11 @@ jobs:
     - name: Checking env
       run: |
         echo "PROXY: $PROXY"
-        env
-    - name: Set up Python
+        echo "Python version: ${{ matrix.python-version }}"
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v6
       with:
-        python-version: '3.12'
+        python-version: ${{ matrix.python-version }}
         cache: 'pip'
     - name: Install dependencies
       run: |
@@ -59,16 +62,17 @@ jobs:
         pip install pytest pytest-cov pyright tox
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-    - name: Type check with pyright
+    - name: Type check with pyright (Python 3.12 only)
+      if: matrix.python-version == '3.12'
       run: pyright
     - name: Test with tox
-      run: tox -v
+      run: tox -e py
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:
         parallel: true
   finish:
-    needs: build
+    needs: test
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
