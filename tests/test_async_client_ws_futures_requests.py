@@ -7,17 +7,19 @@ from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 
 try:
-    from unittest.mock import AsyncMock, patch  # Python 3.8+
+    from unittest.mock import patch  # Python 3.8+
 except ImportError:
-    from asynctest import CoroutineMock as AsyncMock, patch  # Python 3.7
+    from asynctest import patch  # Python 3.7
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_order_book(futuresClientAsync):
     orderbook = await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
     assert_ob(orderbook)
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_concurrent_ws_futures_get_order_book(futuresClientAsync):
     symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "ADAUSDT"]
@@ -42,16 +44,19 @@ async def test_bad_request(futuresClientAsync):
         await futuresClientAsync.ws_futures_get_order_book()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_all_tickers(futuresClientAsync):
     await futuresClientAsync.ws_futures_get_all_tickers()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_get_order_book_ticker(futuresClientAsync):
     await futuresClientAsync.ws_futures_get_order_book_ticker()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClientAsync):
     if 'orjson' not in sys.modules:
@@ -87,6 +92,7 @@ async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClient
         orderid=order["orderId"], symbol=order["symbol"]
     )
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresClientAsync):
     with patch.dict('sys.modules', {'orjson': None}):
@@ -121,39 +127,49 @@ async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresCli
         )
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_position(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_position()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_position(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_position()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_balance(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_balance()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_balance(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_balance()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_v2_account_status(futuresClientAsync):
     await futuresClientAsync.ws_futures_v2_account_status()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_account_status(futuresClientAsync):
     await futuresClientAsync.ws_futures_account_status()
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio
 async def test_ws_futures_fail_to_connect(futuresClientAsync):
-    # Simulate WebSocket connection being closed during the request
-    with patch("websockets.connect", new_callable=AsyncMock):
+    # Close any existing connection first
+    await futuresClientAsync.close_connection()
+    
+    # Mock the WebSocket API's connect method to raise an exception
+    with patch.object(futuresClientAsync.ws_future, 'connect', side_effect=ConnectionError("Simulated connection failure")):
         with pytest.raises(BinanceWebsocketUnableToConnect):
             await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")

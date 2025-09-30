@@ -1,5 +1,6 @@
 from binance import BinanceSocketManager, AsyncClient
 import pytest
+from .conftest import proxy
 
 
 def assert_message(msg):
@@ -9,7 +10,7 @@ def assert_message(msg):
 
 @pytest.mark.asyncio()
 async def test_ticker_socket():
-    client = await AsyncClient.create(testnet=True)
+    client = await AsyncClient.create(testnet=True, https_proxy=proxy)
     bm = BinanceSocketManager(client)
 
     ts = bm.futures_ticker_socket()

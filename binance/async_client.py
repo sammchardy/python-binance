@@ -31,6 +31,7 @@ class AsyncClient(BaseClient):
         tld: str = "com",
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         loop=None,
         session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None,
@@ -41,6 +42,15 @@ class AsyncClient(BaseClient):
         self.https_proxy = https_proxy
         self.loop = loop or get_loop()
         self._session_params: Dict[str, Any] = session_params or {}
+        
+        # Convert https_proxy to requests_params format for BaseClient
+        if https_proxy and requests_params is None:
+            requests_params = {'proxies': {'http': https_proxy, 'https': https_proxy}}
+        elif https_proxy and requests_params is not None:
+            if 'proxies' not in requests_params:
+                requests_params['proxies'] = {}
+            requests_params['proxies'].update({'http': https_proxy, 'https': https_proxy})
+        
         super().__init__(
             api_key,
             api_secret,
@@ -48,6 +58,7 @@ class AsyncClient(BaseClient):
             tld,
             base_endpoint,
             testnet,
+            demo,
             private_key,
             private_key_pass,
             time_unit=time_unit,
@@ -62,6 +73,7 @@ class AsyncClient(BaseClient):
         tld: str = "com",
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         loop=None,
         session_params: Optional[Dict[str, Any]] = None,
         private_key: Optional[Union[str, Path]] = None,
@@ -76,6 +88,7 @@ class AsyncClient(BaseClient):
             tld,
             base_endpoint,
             testnet,
+            demo,
             loop,
             session_params,
             private_key,
@@ -151,6 +164,9 @@ class AsyncClient(BaseClient):
             url_encoded_data = urlencode(dict_data)
             data = f"{url_encoded_data}&signature={signature}"
 
+        # Remove proxies from kwargs since aiohttp uses 'proxy' parameter instead
+        kwargs.pop('proxies', None)
+        
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True),
             proxy=self.https_proxy,
@@ -1874,6 +1890,77 @@ class AsyncClient(BaseClient):
     async def futures_create_order(self, **params):
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_limit_order(self, **params):
+        """Send in a new futures limit order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_order(self, **params):
+        """Send in a new futures market order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "MARKET"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+
+    async def futures_limit_buy_order(self, **params):
+        """Send in a new futures limit buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_limit_sell_order(self, **params):
+        """Send in a new futures limit sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "LIMIT"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_buy_order(self, **params):
+        """Send in a new futures market buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "MARKET"
+        return await self._request_futures_api("post", "order", True, data=params)
+
+    async def futures_market_sell_order(self, **params):
+        """Send in a new futures market sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "MARKET"
         return await self._request_futures_api("post", "order", True, data=params)
 
     async def futures_modify_order(self, **params):

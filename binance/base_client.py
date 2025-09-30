@@ -22,14 +22,17 @@ from .helpers import get_loop
 class BaseClient:
     API_URL = "https://api{}.binance.{}/api"
     API_TESTNET_URL = "https://testnet.binance.vision/api"
+    API_DEMO_URL = "https://demo-api.binance.com/api"
     MARGIN_API_URL = "https://api{}.binance.{}/sapi"
     WEBSITE_URL = "https://www.binance.{}"
     FUTURES_URL = "https://fapi.binance.{}/fapi"
     FUTURES_TESTNET_URL = "https://testnet.binancefuture.com/fapi"
+    FUTURES_DEMO_URL = "https://demo-fapi.binance.com/fapi"
     FUTURES_DATA_URL = "https://fapi.binance.{}/futures/data"
     FUTURES_DATA_TESTNET_URL = "https://testnet.binancefuture.com/futures/data"
     FUTURES_COIN_URL = "https://dapi.binance.{}/dapi"
     FUTURES_COIN_TESTNET_URL = "https://testnet.binancefuture.com/dapi"
+    FUTURES_COIN_DEMO_URL = "https://demo-dapi.binance.com/dapi"
     FUTURES_COIN_DATA_URL = "https://dapi.binance.{}/futures/data"
     FUTURES_COIN_DATA_TESTNET_URL = "https://testnet.binancefuture.com/futures/data"
     OPTIONS_URL = "https://eapi.binance.{}/eapi"
@@ -37,8 +40,10 @@ class BaseClient:
     PAPI_URL = "https://papi.binance.{}/papi"
     WS_API_URL = "wss://ws-api.binance.{}/ws-api/v3"
     WS_API_TESTNET_URL = "wss://ws-api.testnet.binance.vision/ws-api/v3"
+    WS_API_DEMO_URL = "wss://demo-ws-api.binance.com/ws-api/v3"
     WS_FUTURES_URL = "wss://ws-fapi.binance.{}/ws-fapi/v1"
     WS_FUTURES_TESTNET_URL = "wss://testnet.binancefuture.com/ws-fapi/v1"
+    WS_FUTURES_DEMO_URL = "wss://testnet.binancefuture.com/ws-fapi/v1"
     PUBLIC_API_VERSION = "v3"
     PRIVATE_API_VERSION = "v3"
     MARGIN_API_VERSION = "v1"
@@ -157,6 +162,7 @@ class BaseClient:
         tld: str = "com",
         base_endpoint: str = BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
@@ -201,15 +207,27 @@ class BaseClient:
         self._requests_params = requests_params
         self.response = None
         self.testnet = testnet
+        self.demo = demo
         self.timestamp_offset = 0
-        ws_api_url = self.WS_API_TESTNET_URL if testnet else self.WS_API_URL.format(tld)
+        ws_api_url = self.WS_API_URL.format(tld)
+        if testnet:
+            ws_api_url = self.WS_API_TESTNET_URL
+        elif demo:
+            ws_api_url = self.WS_API_DEMO_URL
         if self.TIME_UNIT:
             ws_api_url += f"?timeUnit={self.TIME_UNIT}"
-        self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld)
-        ws_future_url = (
-            self.WS_FUTURES_TESTNET_URL if testnet else self.WS_FUTURES_URL.format(tld)
-        )
-        self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld)
+        # Extract proxy from requests_params for WebSocket connections
+        https_proxy = None
+        if requests_params and 'proxies' in requests_params:
+            https_proxy = requests_params['proxies'].get('https') or requests_params['proxies'].get('http')
+        
+        self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld, https_proxy=https_proxy)
+        ws_future_url = self.WS_FUTURES_URL.format(tld)
+        if testnet:
+            ws_future_url = self.WS_FUTURES_TESTNET_URL
+        elif demo:
+            ws_future_url = self.WS_FUTURES_DEMO_URL
+        self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld, https_proxy=https_proxy)
         self.loop = loop or get_loop()
 
     def _get_headers(self) -> Dict:
@@ -250,6 +268,8 @@ class BaseClient:
         url = self.API_URL
         if self.testnet:
             url = self.API_TESTNET_URL
+        elif self.demo:
+            url = self.API_DEMO_URL
         v = self.PRIVATE_API_VERSION if signed else version
         return url + "/" + v + "/" + path
 
@@ -273,6 +293,8 @@ class BaseClient:
         url = self.FUTURES_URL
         if self.testnet:
             url = self.FUTURES_TESTNET_URL
+        elif self.demo:
+            url = self.FUTURES_DEMO_URL
         options = {
             1: self.FUTURES_API_VERSION,
             2: self.FUTURES_API_VERSION2,
@@ -290,6 +312,8 @@ class BaseClient:
         url = self.FUTURES_COIN_URL
         if self.testnet:
             url = self.FUTURES_COIN_TESTNET_URL
+        elif self.demo:
+            url = self.FUTURES_COIN_DEMO_URL
         options = {
             1: self.FUTURES_API_VERSION,
             2: self.FUTURES_API_VERSION2,

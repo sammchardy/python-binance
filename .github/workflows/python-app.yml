@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.9'
     - name: Install Ruff
@@ -31,31 +31,31 @@ jobs:
       run: ruff format --check .
       continue-on-error: true
 
-  build:
+  test:
     needs: lint
     runs-on: ubuntu-22.04
     timeout-minutes: 40
+    strategy:
+      max-parallel: 2
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
     env:
-      PROXY: "http://51.83.140.52:16301"
+      PROXY: "http://188.245.226.105:8911"
       TEST_TESTNET: "true"
       TEST_API_KEY: "u4L8MG2DbshTfTzkx2Xm7NfsHHigvafxeC29HrExEmah1P8JhxXkoOu6KntLICUc"
       TEST_API_SECRET: "hBZEqhZUUS6YZkk7AIckjJ3iLjrgEFr5CRtFPp5gjzkrHKKC9DAv4OH25PlT6yq5"
       TEST_FUTURES_API_KEY: "227719da8d8499e8d3461587d19f259c0b39c2b462a77c9b748a6119abd74401"
       TEST_FUTURES_API_SECRET: "b14b935f9cfacc5dec829008733c40da0588051f29a44625c34967b45c11d73c"
-    strategy:
-      max-parallel: 1
-      matrix:
-        python: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Checking env
       run: |
         echo "PROXY: $PROXY"
-        env
-    - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v5
+        echo "Python version: ${{ matrix.python-version }}"
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
       with:
-        python-version: ${{ matrix.python }}
+        python-version: ${{ matrix.python-version }}
         cache: 'pip'
     - name: Install dependencies
       run: |
@@ -63,17 +63,17 @@ jobs:
         pip install pytest pytest-cov pyright tox
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-    - name: Type check with pyright
+    - name: Type check with pyright (Python 3.12 only)
+      if: matrix.python-version == '3.12'
       run: pyright
     - name: Test with tox
       run: tox -e py
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v2
       with:
-        flag-name: run-${{ join(matrix.*, '-') }}
         parallel: true
   finish:
-    needs: build
+    needs: test
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

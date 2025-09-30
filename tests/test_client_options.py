@@ -1,7 +1,8 @@
 import pytest
+import sys
 
 
-pytestmark = pytest.mark.options
+pytestmark = [pytest.mark.options, pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")]
 
 
 @pytest.fixture
