@@ -52,6 +52,10 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
     async def _before_connect(self):
         if self._keepalive_type == "user":
             self._subscription_id = await self._subscribe_to_user_data_stream()
+            # Reuse the ws_api connection that's already established
+            self.ws = self._client.ws_api.ws
+            self.ws_state = self._client.ws_api.ws_state
+            self._queue = self._client.ws_api._queue
             return
         if not self._listen_key:
             self._listen_key = await self._get_listen_key()

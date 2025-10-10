@@ -29,6 +29,12 @@ class WebsocketAPI(ReconnectingWebsocket):
         self._log.debug(f"Received message: {parsed_msg}")
         if parsed_msg is None:
             return None
+
+        # Check if this is a subscription event (user data stream, etc.)
+        # These have 'subscriptionId' and 'event' fields instead of 'id'
+        if "subscriptionId" in parsed_msg and "event" in parsed_msg:
+            return parsed_msg["event"]
+
         req_id, exception = None, None
         if "id" in parsed_msg:
             req_id = parsed_msg["id"]
@@ -42,10 +48,12 @@ class WebsocketAPI(ReconnectingWebsocket):
                 self._responses[req_id].set_exception(exception)
             else:
                 self._responses[req_id].set_result(parsed_msg)
+            return None  # Don't queue request-response messages
         elif exception is not None:
             raise exception
         else:
             self._log.warning(f"WS api receieved unknown message: {parsed_msg}")
+            return None
 
     async def _ensure_ws_connection(self) -> None:
         """Ensure WebSocket connection is established and ready
