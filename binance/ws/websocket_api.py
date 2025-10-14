@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 import asyncio
 
 from websockets import WebSocketClientProtocol  # type: ignore
@@ -9,14 +9,19 @@ from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConn
 
 
 class WebsocketAPI(ReconnectingWebsocket):
-    def __init__(self, url: str, tld: str = "com", testnet: bool = False):
+    def __init__(self, url: str, tld: str = "com", testnet: bool = False, https_proxy: Optional[str] = None):
         self._tld = tld
         self._testnet = testnet
         self._responses: Dict[str, asyncio.Future] = {}
-        self._connection_lock = (
-            asyncio.Lock()
-        )  # used to ensure only one connection is established at a time
-        super().__init__(url=url, prefix="", path="", is_binary=False)
+        self._connection_lock: Optional[asyncio.Lock] = None
+        super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
+
+    @property
+    def connection_lock(self) -> asyncio.Lock:
+        if self._connection_lock is None:
+            loop = asyncio.get_event_loop()
+            self._connection_lock = asyncio.Lock()
+        return self._connection_lock
 
     def _handle_message(self, msg):
         """Override message handling to support request-response"""
@@ -24,6 +29,12 @@ class WebsocketAPI(ReconnectingWebsocket):
         self._log.debug(f"Received message: {parsed_msg}")
         if parsed_msg is None:
             return None
+
+        # Check if this is a subscription event (user data stream, etc.)
+        # These have 'subscriptionId' and 'event' fields instead of 'id'
+        if "subscriptionId" in parsed_msg and "event" in parsed_msg:
+            return parsed_msg["event"]
+
         req_id, exception = None, None
         if "id" in parsed_msg:
             req_id = parsed_msg["id"]
@@ -37,10 +48,12 @@ class WebsocketAPI(ReconnectingWebsocket):
                 self._responses[req_id].set_exception(exception)
             else:
                 self._responses[req_id].set_result(parsed_msg)
+            return None  # Don't queue request-response messages
         elif exception is not None:
             raise exception
         else:
             self._log.warning(f"WS api receieved unknown message: {parsed_msg}")
+            return None
 
     async def _ensure_ws_connection(self) -> None:
         """Ensure WebSocket connection is established and ready
@@ -51,7 +64,7 @@ class WebsocketAPI(ReconnectingWebsocket):
         3. Wait for connection to be ready
         4. Handle reconnection if needed
         """
-        async with self._connection_lock:
+        async with self.connection_lock:
             try:
                 if (
                     self.ws is None

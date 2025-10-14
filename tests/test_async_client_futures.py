@@ -90,6 +90,7 @@ async def test_futures_index_index_price_constituents(futuresClientAsync):
 async def test_futures_liquidation_orders(futuresClientAsync):
     await futuresClientAsync.futures_liquidation_orders()
 
+@pytest.mark.skip(reason="Temporary skip due to issues with api")
 async def test_futures_api_trading_status(futuresClientAsync):
     await futuresClientAsync.futures_api_trading_status()
 
@@ -371,6 +372,7 @@ async def test_futures_coin_mark_price_klines(futuresClientAsync):
 async def test_futures_coin_mark_price(futuresClientAsync):
     await futuresClientAsync.futures_coin_mark_price()
 
+@pytest.mark.skip(reason="Giving unknwon error from binance")
 async def test_futures_coin_funding_rate(futuresClientAsync):
     await futuresClientAsync.futures_coin_funding_rate(symbol="BTCUSD_PERP")
 

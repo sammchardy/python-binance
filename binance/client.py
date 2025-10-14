@@ -29,6 +29,7 @@ class Client(BaseClient):
         tld: str = "com",
         base_endpoint: str = BaseClient.BASE_ENDPOINT_DEFAULT,
         testnet: bool = False,
+        demo: bool = False,
         private_key: Optional[Union[str, Path]] = None,
         private_key_pass: Optional[str] = None,
         ping: Optional[bool] = True,
@@ -41,6 +42,7 @@ class Client(BaseClient):
             tld,
             base_endpoint,
             testnet,
+            demo,
             private_key,
             private_key_pass,
             time_unit=time_unit,
@@ -7364,7 +7366,7 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "premiumIndexKlines", data=params)
 
-    def futures_continous_klines(self, **params):
+    def futures_continuous_klines(self, **params):
         """Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Continuous-Contract-Kline-Candlestick-Data
@@ -7777,6 +7779,77 @@ class Client(BaseClient):
         """
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_limit_order(self, **params):
+        """Send in a new futures limit order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_order(self, **params):
+        """Send in a new futures market order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["type"] = "MARKET"
+        return self._request_futures_api("post", "order", True, data=params)
+
+
+    def futures_limit_buy_order(self, **params):
+        """Send in a new futures limit buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_limit_sell_order(self, **params):
+        """Send in a new futures limit sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "LIMIT"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_buy_order(self, **params):
+        """Send in a new futures market buy order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "BUY"
+        params["type"] = "MARKET"
+        return self._request_futures_api("post", "order", True, data=params)
+
+    def futures_market_sell_order(self, **params):
+        """Send in a new futures market sell order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api
+
+        """
+        if "newClientOrderId" not in params:
+            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        params["side"] = "SELL"
+        params["type"] = "MARKET"
         return self._request_futures_api("post", "order", True, data=params)
 
     def futures_modify_order(self, **params):
@@ -13999,7 +14072,7 @@ class Client(BaseClient):
                 "data": [
                     {
                         "day": "2023-06-30",
-                        "url": "https://bin-prod-user-rebate-bucket.s3.ap-northeast-1.amazonaws.com/future-data-symbol-update/2023-06-30/BTCUSDT_T_DEPTH_2023-06-30.tar.gz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230925T025710Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86399&X-Amz-Credential=AKIAVL364M5ZNFZ74IPP%2F20230925%2Fap-northeast-1%2Fs3%2Faws4_request&X-Amz-Signature=5fffcb390d10f34d71615726f81f99e42d80a11532edeac77b858c51a88cbf59"
+                        "url": ""
                     }
                 ]
             }

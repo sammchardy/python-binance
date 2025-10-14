@@ -26,10 +26,13 @@ class BinanceSocketType(str, Enum):
 class BinanceSocketManager:
     STREAM_URL = "wss://stream.binance.{}:9443/"
     STREAM_TESTNET_URL = "wss://stream.testnet.binance.vision/"
+    STREAM_DEMO_URL = "wss://demo-stream.binance.com/"
     FSTREAM_URL = "wss://fstream.binance.{}/"
     FSTREAM_TESTNET_URL = "wss://stream.binancefuture.com/"
+    FSTREAM_DEMO_URL = "wss://fstream.binancefuture.com/"
     DSTREAM_URL = "wss://dstream.binance.{}/"
     DSTREAM_TESTNET_URL = "wss://dstream.binancefuture.com/"
+    DSTREAM_DEMO_URL = "wss://dstream.binancefuture.com/"
     OPTIONS_URL = "wss://nbstream.binance.{}/eoptions/"
 
     WEBSOCKET_DEPTH_5 = "5"
@@ -60,6 +63,7 @@ class BinanceSocketManager:
         self._client = client
         self._user_timeout = user_timeout
         self.testnet = self._client.testnet
+        self.demo = self._client.demo
         self._max_queue_size = max_queue_size
         self.ws_kwargs = {}
 
@@ -69,6 +73,8 @@ class BinanceSocketManager:
         stream_url = self.STREAM_URL
         if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.STREAM_DEMO_URL
         return stream_url
 
     def _get_socket(
@@ -128,10 +134,14 @@ class BinanceSocketManager:
             stream_url = self.FSTREAM_URL
             if self.testnet:
                 stream_url = self.FSTREAM_TESTNET_URL
+            elif self.demo:
+                stream_url = self.FSTREAM_DEMO_URL
         else:
             stream_url = self.DSTREAM_URL
             if self.testnet:
                 stream_url = self.DSTREAM_TESTNET_URL
+            elif self.demo:
+                stream_url = self.DSTREAM_DEMO_URL
         return self._get_socket(path, stream_url, prefix, socket_type=socket_type)
 
     def _get_options_socket(self, path: str, prefix: str = "ws/"):
@@ -907,6 +917,8 @@ class BinanceSocketManager:
         stream_url = self.STREAM_URL
         if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.STREAM_DEMO_URL
         return self._get_account_socket("user", stream_url=stream_url)
 
     def futures_user_socket(self):
@@ -922,6 +934,8 @@ class BinanceSocketManager:
         stream_url = self.FSTREAM_URL
         if self.testnet:
             stream_url = self.FSTREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.FSTREAM_DEMO_URL
         return self._get_account_socket("futures", stream_url=stream_url)
 
     def coin_futures_user_socket(self):
@@ -948,7 +962,10 @@ class BinanceSocketManager:
         stream_url = self.STREAM_URL
         if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.STREAM_DEMO_URL
         return self._get_account_socket("margin", stream_url=stream_url)
+
 
     def futures_socket(self):
         """Start a websocket for futures data
@@ -962,6 +979,8 @@ class BinanceSocketManager:
         stream_url = self.FSTREAM_URL
         if self.testnet:
             stream_url = self.FSTREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.FSTREAM_DEMO_URL
         return self._get_account_socket("futures", stream_url=stream_url)
 
     def coin_futures_socket(self):
@@ -976,6 +995,8 @@ class BinanceSocketManager:
         stream_url = self.DSTREAM_URL
         if self.testnet:
             stream_url = self.DSTREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.DSTREAM_DEMO_URL
         return self._get_account_socket("coin_futures", stream_url=stream_url)
 
     def portfolio_margin_socket(self):
@@ -990,6 +1011,8 @@ class BinanceSocketManager:
         stream_url = self.FSTREAM_URL
         if self.testnet:
             stream_url = self.FSTREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.FSTREAM_DEMO_URL
         stream_url += "pm/"
         return self._get_account_socket("portfolio_margin", stream_url=stream_url)
 
@@ -1008,6 +1031,8 @@ class BinanceSocketManager:
         stream_url = self.STREAM_URL
         if self.testnet:
             stream_url = self.STREAM_TESTNET_URL
+        elif self.demo:
+            stream_url = self.STREAM_DEMO_URL
         return self._get_account_socket(symbol, stream_url=stream_url)
 
     def options_ticker_socket(self, symbol: str):
