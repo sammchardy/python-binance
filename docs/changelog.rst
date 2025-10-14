@@ -1,6 +1,34 @@
 Changelog
 =========
 
+v1.0.30 - 2025-10-14
+^^^^^^^^^^^^^^^^^^^^
+
+**Fixed**
+
+- Set default limit=None for futures_historical_klines* (fetch full range by default) (#1607)
+- fixed a typo in a method name (#1605)
+- all links updated (#1600)
+- throw readloopclosed error if trying to connect once read loop is already closed (#1593)
+- ensure spot v3 version (#1587
+
+
+**Added**
+- Demo trading
+- websocket userdatastream.signature support, deprecate listenkey for spot market
+
+
+v1.0.28 - 2025-02-27
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+
+- Add `papi_get_rate_limit`
+- Add docs for `create_oco_order`
+- Add `uiKlines` support
+- Add options websocket market streams
+- Add dozens of missing endpoints
+
 v1.0.29 - 2025-05-19
 ^^^^^^^^^^^^^^^^^^^^
 
