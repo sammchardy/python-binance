@@ -374,7 +374,7 @@ class BaseClient:
                 sig_func = self._rsa_signature
             else:
                 sig_func = self._ed25519_signature
-        query_string = "&".join([f"{d[0]}={d[1]}" for d in self._order_params(data)])
+        query_string = "&".join([f"{d[0]}={_urlencode.quote(d[1]) if d[0] == 'symbol' else d[1]}" for d in self._order_params(data)])
         res = sig_func(query_string)
         return self.encode_uri_component(res) if uri_encode else res
 
