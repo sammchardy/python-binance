@@ -142,14 +142,6 @@ class AsyncClient(BaseClient):
                     del kwargs["data"][key]
                     break
 
-        # handle public usecases
-        if not signed:
-            if "data" in kwargs and "symbol" in kwargs["data"]:
-                # ensure symbol is url encoded
-                kwargs["data"]["symbol"] = self.encode_uri_component(
-                    kwargs["data"]["symbol"]
-                )
-
         kwargs = self._get_request_kwargs(method, signed, force_params, **kwargs)
 
         if method == "get":
@@ -174,7 +166,7 @@ class AsyncClient(BaseClient):
 
         # Remove proxies from kwargs since aiohttp uses 'proxy' parameter instead
         kwargs.pop('proxies', None)
-        
+
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True),
             proxy=self.https_proxy,
