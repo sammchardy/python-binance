@@ -514,7 +514,7 @@ class BaseClient:
         # if get request assign data array to params value for requests lib
         if data and (method == "get" or force_params):
             kwargs["params"] = "&".join(
-                "%s=%s" % (data[0], data[1]) for data in kwargs["data"]
+                "%s=%s" % (data[0], _urlencode.quote(data[1]) if data[0] == 'symbol' else data[1]) for data in kwargs["data"]
             )
             del kwargs["data"]
 
