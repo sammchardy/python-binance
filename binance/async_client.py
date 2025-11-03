@@ -166,7 +166,7 @@ class AsyncClient(BaseClient):
 
         # Remove proxies from kwargs since aiohttp uses 'proxy' parameter instead
         kwargs.pop('proxies', None)
-        
+
         async with getattr(self.session, method)(
             yarl.URL(uri, encoded=True),
             proxy=self.https_proxy,
