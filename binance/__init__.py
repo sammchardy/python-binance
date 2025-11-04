@@ -13,7 +13,6 @@ from binance.ws.depthcache import (
     OptionsDepthCacheManager,  # noqa
     ThreadedDepthCacheManager,  # noqa
     FuturesDepthCacheManager,  # noqa
-    OptionsDepthCacheManager,  # noqa
 )
 from binance.ws.streams import (
     BinanceSocketManager,  # noqa
