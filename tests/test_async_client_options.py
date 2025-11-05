@@ -44,54 +44,54 @@ async def test_options_historical_trades(liveClientAsync, options_symbol):
 
 # Account and trading interface endpoints
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_account_info(liveClientAsync):
     await liveClientAsync.options_account_info()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_funds_transfer(liveClientAsync):
     await liveClientAsync.options_funds_transfer()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_positions(liveClientAsync):
     await liveClientAsync.options_positions()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_bill(liveClientAsync):
     await liveClientAsync.options_bill()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_place_order(liveClientAsync):
     await liveClientAsync.options_place_order()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_test_options_place_batch_order(liveClientAsync):
     await liveClientAsync.test_options_place_batch_order()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_cancel_order(liveClientAsync):
     await liveClientAsync.options_cancel_order()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_cancel_batch_order(liveClientAsync):
     await liveClientAsync.options_cancel_batch_order()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_cancel_all_orders(liveClientAsync):
     await liveClientAsync.options_cancel_all_orders()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_query_order(liveClientAsync):
     await liveClientAsync.options_query_order()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_query_pending_orders(liveClientAsync):
     await liveClientAsync.options_query_pending_orders()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_query_order_history(liveClientAsync):
     await liveClientAsync.options_query_order_history()
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 async def test_options_user_trades(liveClientAsync):
     await liveClientAsync.options_user_trades()
