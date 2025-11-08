@@ -440,7 +440,7 @@ def test_futures_coin_mark_price(futuresClient):
     futuresClient.futures_coin_mark_price()
 
 
-@pytest.mark.skip(reason="Giving unknwon error from binance")
+@pytest.mark.skip(reason="Giving unknown error from binance")
 def test_futures_coin_funding_rate(futuresClient):
     futuresClient.futures_coin_funding_rate(symbol="BTCUSD_PERP")
 
