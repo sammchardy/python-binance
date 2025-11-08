@@ -59,66 +59,66 @@ def test_options_historical_trades(liveClient, options_symbol):
 # Account and trading interface endpoints
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_account_info(liveClient):
     liveClient.options_account_info()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_funds_transfer(liveClient):
     liveClient.options_funds_transfer()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_positions(liveClient):
     liveClient.options_positions()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_bill(liveClient):
     liveClient.options_bill()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_place_order(liveClient):
     liveClient.options_place_order()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_test_options_place_batch_order(liveClient):
     liveClient.test_options_place_batch_order()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_cancel_order(liveClient):
     liveClient.options_cancel_order()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_cancel_batch_order(liveClient):
     liveClient.options_cancel_batch_order()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_cancel_all_orders(liveClient):
     liveClient.options_cancel_all_orders()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_query_order(liveClient):
     liveClient.options_query_order()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_query_pending_orders(liveClient):
     liveClient.options_query_pending_orders()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_query_order_history(liveClient):
     liveClient.options_query_order_history()
 
 
-@pytest.mark.skip(reason="No sandbox to environmnet to test")
+@pytest.mark.skip(reason="No sandbox to environment to test")
 def test_options_user_trades(liveClient):
     liveClient.options_user_trades()
