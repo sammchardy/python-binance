@@ -372,7 +372,7 @@ async def test_futures_coin_mark_price_klines(futuresClientAsync):
 async def test_futures_coin_mark_price(futuresClientAsync):
     await futuresClientAsync.futures_coin_mark_price()
 
-@pytest.mark.skip(reason="Giving unknwon error from binance")
+@pytest.mark.skip(reason="Giving unknown error from binance")
 async def test_futures_coin_funding_rate(futuresClientAsync):
     await futuresClientAsync.futures_coin_funding_rate(symbol="BTCUSD_PERP")
 
