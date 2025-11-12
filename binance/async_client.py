@@ -1892,6 +1892,9 @@ class AsyncClient(BaseClient):
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_api("post", "order", True, data=params)
 
+    async def futures_create_algo_order(self, **params):
+        return await self._request_futures_api('post', 'algoOrder', True, data=params)
+
     async def futures_limit_order(self, **params):
         """Send in a new futures limit order.
 
@@ -2002,6 +2005,21 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api(
             "delete", "allOpenOrders", True, data=params
         )
+
+    async def futures_get_algo_order(self, **params):
+        return await self._request_futures_api("get", "algoOrder", True, data=params)
+
+    async def futures_get_open_algo_orders(self, **params):
+        return await self._request_futures_api("get", "openAlgoOrders", True, data=params)
+
+    async def futures_get_all_algo_orders(self, **params):
+        return await self._request_futures_api("get", "allAlgoOrders", True, data=params)
+
+    async def futures_cancel_algo_order(self, **params):
+        return await self._request_futures_api("delete", "algoOrder", True, data=params)
+
+    async def futures_cancel_all_open_algo_orders(self, **params):
+        return await self._request_futures_api("delete", "algoOpenOrders", True, data=params)
 
     async def futures_cancel_orders(self, **params):
         if params.get("orderidlist"):
