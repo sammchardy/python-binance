@@ -7781,6 +7781,14 @@ class Client(BaseClient):
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return self._request_futures_api("post", "order", True, data=params)
 
+    def futures_create_algo_order(self, **params):
+        """Send in a new futures Algo order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Algo-Order
+
+        """
+        return self._request_futures_api('post', 'algoOrder', True, data=params)
+
     def futures_limit_order(self, **params):
         """Send in a new futures limit order.
 
@@ -7944,6 +7952,46 @@ class Client(BaseClient):
         return self._request_futures_api(
             "delete", "batchOrders", True, force_params=True, data=params
         )
+
+    def futures_get_algo_order(self, **params):
+        """Check an algo order's status.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Algo-Order
+
+        """
+        return self._request_futures_api("get", "algoOrder", True, data=params)
+
+    def futures_get_open_algo_orders(self, **params):
+        """Get all algo open orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Algo-Open-Orders
+
+        """
+        return self._request_futures_api("get", "openAlgoOrders", True, data=params)
+
+    def futures_get_all_algo_orders(self, **params):
+        """Get all algo orders; active, CANCELED, TRIGGERED or FINISHED.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-All-Algo-Orders
+
+        """
+        return self._request_futures_api("get", "allAlgoOrders", True, data=params)
+
+    def futures_cancel_algo_order(self, **params):
+        """Cancel an active futures algo order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Algo-Order
+
+        """
+        return self._request_futures_api("delete", "algoOrder", True, data=params)
+
+    def futures_cancel_all_open_algo_orders(self, **params):
+        """Cancel all open futures algo orders
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Algo-Open-Orders
+
+        """
+        return self._request_futures_api("delete", "algoOpenOrders", True, data=params)
 
     def futures_countdown_cancel_all(self, **params):
         """Cancel all open orders of the specified symbol at the end of the specified countdown.
