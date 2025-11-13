@@ -1893,7 +1893,7 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api("post", "order", True, data=params)
 
     async def futures_create_algo_order(self, **params):
-        return await self._request_futures_api('post', 'algoOrder', True, data=params)
+        return await self._request_futures_api("post", "algoOrder", True, data=params)
 
     async def futures_limit_order(self, **params):
         """Send in a new futures limit order.

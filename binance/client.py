@@ -7970,7 +7970,7 @@ class Client(BaseClient):
         return self._request_futures_api("get", "openAlgoOrders", True, data=params)
 
     def futures_get_all_algo_orders(self, **params):
-        """Get all algo orders; active, CANCELED, TRIGGERED or FINISHED
+        """Get all algo orders; active, CANCELED, TRIGGERED or FINISHED.
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-All-Algo-Orders
 
