@@ -2,10 +2,10 @@ import sys
 import pytest
 import gzip
 import json
-from unittest.mock import patch, create_autospec
+from unittest.mock import patch, create_autospec, Mock
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.constants import WSListenerState
-from binance.exceptions import BinanceWebsocketUnableToConnect
+from binance.exceptions import BinanceWebsocketUnableToConnect, ReadLoopClosed
 from websockets import WebSocketClientProtocol  # type: ignore
 from websockets.protocol import State
 import asyncio
@@ -77,6 +77,8 @@ async def test_handle_message_invalid_json():
 async def test_recv_message():
     ws = ReconnectingWebsocket(url="wss://test.url")
     await ws._queue.put({"test": "data"})
+    # Simulate the read loop being active
+    ws._handle_read_loop = Mock()
     result = await ws.recv()
     assert result == {"test": "data"}
 
@@ -105,7 +107,7 @@ def test_get_reconnect_wait():
 async def test_connect_max_reconnects_exceeded():
     """Test ws.connect exceeds maximum reconnect attempts."""
     ws = ReconnectingWebsocket(url="wss://test.url")
-    ws.MAX_RECONNECTS = 2  # Set max reconnects to a low number for testing
+    ws.MAX_RECONNECTS = 2  # type: ignore # Set max reconnects to a low number for testing
     ws._before_connect = AsyncMock()
     ws._after_connect = AsyncMock()
     ws._conn = AsyncMock()
@@ -206,3 +208,19 @@ async def test_connect_fails_to_connect_after_disconnect():
 async def delayed_return():
     await asyncio.sleep(0.1)  # 100 ms delay
     return '{"e": "value"}'
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")
+@pytest.mark.asyncio
+async def test_recv_read_loop_closed():
+    """Test that recv() raises ReadLoopClosed when read loop is closed."""
+    ws = ReconnectingWebsocket(url="wss://test.url")
+    
+    # Simulate read loop being closed by setting _handle_read_loop to None
+    ws._handle_read_loop = None
+    
+    with pytest.raises(ReadLoopClosed) as exc_info:
+        await ws.recv()
+    
+    assert "Read loop has been closed" in str(exc_info.value)
+    assert "please reset the websocket connection" in str(exc_info.value)

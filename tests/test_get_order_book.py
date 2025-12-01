@@ -1,4 +1,5 @@
 import pytest
+import sys
 from binance.exceptions import BinanceAPIException
 
 
@@ -67,6 +68,7 @@ async def test_futures_get_order_book_async(clientAsync):
         pytest.fail(f"API request failed: {str(e)}")
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_get_order_book(clientAsync):
     order_book = await clientAsync.ws_get_order_book(symbol="BTCUSDT")

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 from typing import Optional, Dict, Any
 
@@ -24,6 +25,7 @@ class ThreadedApiManager(threading.Thread):
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
+        self._log = logging.getLogger(__name__)
         self._client_params = {
             "api_key": api_key,
             "api_secret": api_secret,
@@ -37,12 +39,17 @@ class ThreadedApiManager(threading.Thread):
     async def _before_socket_listener_start(self): ...
 
     async def socket_listener(self):
-        self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
-        await self._before_socket_listener_start()
+        try:
+            self._client = await AsyncClient.create(loop=self._loop, **self._client_params)
+            await self._before_socket_listener_start()
+        except Exception as e:
+            self._log.error(f"Failed to create client: {e}")
+            self.stop()
         while self._running:
             await asyncio.sleep(0.2)
         while self._socket_running:
             await asyncio.sleep(0.2)
+        self._log.info("Socket listener stopped")
 
     async def start_listener(self, socket, path: str, callback):
         async with socket as s:
@@ -52,13 +59,19 @@ class ThreadedApiManager(threading.Thread):
                 except asyncio.TimeoutError:
                     ...
                     continue
+                except Exception as e:
+                    self._log.error(f"Error receiving message: {e}")
+                    msg = {
+                        "e": "error",
+                        "type": e.__class__.__name__,
+                        "m": f"{e}",
+                    }
+                if not msg:
+                    continue  # Handle both async and sync callbacks
+                if asyncio.iscoroutinefunction(callback):
+                    asyncio.create_task(callback(msg))
                 else:
-                    if not msg:
-                        continue  # Handle both async and sync callbacks
-                    if asyncio.iscoroutinefunction(callback):
-                        await callback(msg)
-                    else:
-                        callback(msg)
+                    callback(msg)
         del self._socket_running[path]
 
     def run(self):
@@ -74,6 +87,7 @@ class ThreadedApiManager(threading.Thread):
         await self._client.close_connection()
 
     def stop(self):
+        self._log.debug("Stopping ThreadedApiManager")
         if not self._running:
             return
         self._running = False
@@ -85,6 +99,6 @@ class ThreadedApiManager(threading.Thread):
                 future.result(timeout=5)  # Add timeout to prevent hanging
             except Exception as e:
                 # Log the error but don't raise it
-                print(f"Error stopping client: {e}")
+                self._log.error(f"Error stopping client: {e}")
         for socket_name in self._socket_running.keys():
             self._socket_running[socket_name] = False

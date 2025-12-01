@@ -36,6 +36,7 @@ from binance.exceptions import (
     BinanceWebsocketClosed,
     BinanceWebsocketUnableToConnect,
     BinanceWebsocketQueueOverflow,
+    ReadLoopClosed,
 )
 from binance.helpers import get_loop
 from binance.ws.constants import WSListenerState
@@ -47,7 +48,6 @@ class ReconnectingWebsocket:
     MIN_RECONNECT_WAIT = 0.1
     TIMEOUT = 10
     NO_MESSAGE_RECONNECT_TIMEOUT = 60
-    MAX_QUEUE_SIZE = 100
 
     def __init__(
         self,
@@ -57,6 +57,7 @@ class ReconnectingWebsocket:
         is_binary: bool = False,
         exit_coro=None,
         https_proxy: Optional[str] = None,
+        max_queue_size: int = 100,
         **kwargs,
     ):
         self._loop = get_loop()
@@ -75,10 +76,11 @@ class ReconnectingWebsocket:
         self._handle_read_loop = None
         self._https_proxy = https_proxy
         self._ws_kwargs = kwargs
+        self.max_queue_size = max_queue_size
 
-    def json_dumps(self, msg):
+    def json_dumps(self, msg) -> str:
         if orjson:
-            return orjson.dumps(msg)
+            return orjson.dumps(msg).decode("utf-8")
         return json.dumps(msg)
 
     def json_loads(self, msg):
@@ -203,17 +205,22 @@ class ReconnectingWebsocket:
                         res = self._handle_message(res)
                         self._log.debug(f"Received message: {res}")
                         if res:
-                            if self._queue.qsize() < self.MAX_QUEUE_SIZE:
+                            if self._queue.qsize() < self.max_queue_size:
                                 await self._queue.put(res)
                             else:
                                 raise BinanceWebsocketQueueOverflow(
-                                    f"Message queue size {self._queue.qsize()} exceeded maximum {self.MAX_QUEUE_SIZE}"
+                                    f"Message queue size {self._queue.qsize()} exceeded maximum {self.max_queue_size}"
                                 )
                 except asyncio.TimeoutError:
                     self._log.debug(f"no message in {self.TIMEOUT} seconds")
                     # _no_message_received_reconnect
                 except asyncio.CancelledError as e:
                     self._log.debug(f"_read_loop cancelled error {e}")
+                    await self._queue.put({
+                        "e": "error",
+                        "type": f"{e.__class__.__name__}",
+                        "m": f"{e}",
+                    })
                     break
                 except (
                     asyncio.IncompleteReadError,
@@ -234,13 +241,15 @@ class ReconnectingWebsocket:
                     Exception,
                 ) as e:
                     # reports errors and break the loop
-                    self._log.error(f"Unknown exception ({e})")
+                    self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
                     await self._queue.put({
                         "e": "error",
                         "type": e.__class__.__name__,
                         "m": f"{e}",
                     })
                     break
+        except Exception as e:
+            self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
         finally:
             self._handle_read_loop = None  # Signal the coro is stopped
             self._reconnects = 0
@@ -266,6 +275,10 @@ class ReconnectingWebsocket:
     async def recv(self):
         res = None
         while not res:
+            if not self._handle_read_loop:
+                raise ReadLoopClosed(
+                    "Read loop has been closed, please reset the websocket connection and listen to the message error."
+                )
             try:
                 res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
             except asyncio.TimeoutError:
