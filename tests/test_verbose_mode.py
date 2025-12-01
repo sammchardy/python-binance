@@ -1,4 +1,5 @@
 """Tests for verbose mode functionality"""
+
 import pytest
 import logging
 from binance.client import Client

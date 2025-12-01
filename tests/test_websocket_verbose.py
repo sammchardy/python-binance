@@ -1,4 +1,5 @@
 """Tests for WebSocket verbose logging"""
+
 import logging
 import pytest
 
@@ -6,25 +7,25 @@ import pytest
 def test_websocket_logger_exists():
     """Test that WebSocket loggers can be configured"""
     # Test main WebSocket logger
-    ws_logger = logging.getLogger('binance.ws')
+    ws_logger = logging.getLogger("binance.ws")
     assert ws_logger is not None
 
     # Test WebSocket API logger
-    ws_api_logger = logging.getLogger('binance.ws.websocket_api')
+    ws_api_logger = logging.getLogger("binance.ws.websocket_api")
     assert ws_api_logger is not None
 
     # Test reconnecting WebSocket logger
-    ws_reconnect_logger = logging.getLogger('binance.ws.reconnecting_websocket')
+    ws_reconnect_logger = logging.getLogger("binance.ws.reconnecting_websocket")
     assert ws_reconnect_logger is not None
 
     # Test streams logger
-    ws_streams_logger = logging.getLogger('binance.ws.streams')
+    ws_streams_logger = logging.getLogger("binance.ws.streams")
     assert ws_streams_logger is not None
 
 
 def test_websocket_logger_level_configuration():
     """Test that WebSocket logger levels can be set"""
-    ws_logger = logging.getLogger('binance.ws.test_config')
+    ws_logger = logging.getLogger("binance.ws.test_config")
 
     # Set to DEBUG
     ws_logger.setLevel(logging.DEBUG)
@@ -50,7 +51,7 @@ def test_combined_logging_configuration():
     assert client.logger is not None
 
     # Configure WebSocket logging
-    ws_logger = logging.getLogger('binance.ws')
+    ws_logger = logging.getLogger("binance.ws")
     ws_logger.setLevel(logging.DEBUG)
     assert ws_logger.level == logging.DEBUG
 
@@ -103,7 +104,7 @@ def test_websocket_manager_sets_logging_level():
     from binance.ws.threaded_stream import ThreadedApiManager
 
     # Get initial logging level
-    ws_logger = logging.getLogger('binance.ws')
+    ws_logger = logging.getLogger("binance.ws")
     initial_level = ws_logger.level
 
     # Create manager with verbose=True
