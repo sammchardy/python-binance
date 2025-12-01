@@ -8,7 +8,7 @@ from binance.async_client import AsyncClient
 
 def test_client_verbose_initialization():
     """Test that Client can be initialized with verbose mode"""
-    client = Client(verbose=True)
+    client = Client(verbose=True, ping=False)
     assert client.verbose is True
     assert client.logger is not None
     assert client.logger.level == logging.DEBUG
@@ -16,7 +16,7 @@ def test_client_verbose_initialization():
 
 def test_client_non_verbose_initialization():
     """Test that Client defaults to non-verbose mode"""
-    client = Client(verbose=False)
+    client = Client(verbose=False, ping=False)
     assert client.verbose is False
     assert client.logger is not None
     # When verbose=False, we don't set the logger level (respects external config)
@@ -24,7 +24,7 @@ def test_client_non_verbose_initialization():
 
 def test_client_default_verbose():
     """Test that Client defaults to verbose=False"""
-    client = Client()
+    client = Client(ping=False)
     assert client.verbose is False
 
 

@@ -46,7 +46,7 @@ def test_combined_logging_configuration():
     from binance.client import Client
 
     # This should work without errors
-    client = Client(verbose=True)
+    client = Client(verbose=True, ping=False)
     assert client.verbose is True
     assert client.logger is not None
 
