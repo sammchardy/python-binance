@@ -62,7 +62,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             self._build_path()
 
     async def _after_connect(self):
-        self._start_socket_timer()
+        if self._timer is None:
+            self._start_socket_timer()
 
     def _start_socket_timer(self):
         self._timer = self._loop.call_later(
@@ -141,4 +142,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         except Exception as e:
             self._log.error(f"error in keepalive_socket: {e}")
         finally:
-            self._start_socket_timer()
+            if self._timer is not None:
+                self._start_socket_timer()
+            else:
+                self._log.info('skip timer restart - web socket is exiting')
