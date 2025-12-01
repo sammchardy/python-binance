@@ -31,7 +31,7 @@ def test_client_default_verbose():
 @pytest.mark.asyncio()
 async def test_async_client_verbose_initialization():
     """Test that AsyncClient can be initialized with verbose mode"""
-    client = await AsyncClient.create(verbose=True)
+    client = AsyncClient(verbose=True)
     assert client.verbose is True
     assert client.logger is not None
     assert client.logger.level == logging.DEBUG
@@ -41,7 +41,7 @@ async def test_async_client_verbose_initialization():
 @pytest.mark.asyncio()
 async def test_async_client_non_verbose_initialization():
     """Test that AsyncClient defaults to non-verbose mode"""
-    client = await AsyncClient.create(verbose=False)
+    client = AsyncClient(verbose=False)
     assert client.verbose is False
     assert client.logger is not None
     # When verbose=False, we don't set the logger level (respects external config)
@@ -51,6 +51,6 @@ async def test_async_client_non_verbose_initialization():
 @pytest.mark.asyncio()
 async def test_async_client_default_verbose():
     """Test that AsyncClient defaults to verbose=False"""
-    client = await AsyncClient.create()
+    client = AsyncClient()
     assert client.verbose is False
     await client.close_connection()

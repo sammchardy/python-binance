@@ -65,7 +65,7 @@ async def test_binance_socket_manager_verbose():
     """Test that BinanceSocketManager can be initialized with verbose mode"""
     from binance import AsyncClient, BinanceSocketManager
 
-    client = await AsyncClient.create()
+    client = AsyncClient()
 
     # Test with verbose=True
     bm_verbose = BinanceSocketManager(client, verbose=True)
