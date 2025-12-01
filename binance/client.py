@@ -7604,10 +7604,37 @@ class Client(BaseClient):
 
         https://binance-docs.github.io/apidocs/futures/en/#new-order-trade
 
+        Note: After 2025-12-09, conditional order types (STOP, STOP_MARKET, TAKE_PROFIT,
+        TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET) are automatically routed to the algo
+        order endpoint.
+
         """
-        if "newClientOrderId" not in params:
-            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        return self._request_futures_api("post", "order", True, data=params)
+        # Check if this is a conditional order type that needs to use algo endpoint
+        order_type = params.get("type", "").upper()
+        conditional_types = [
+            "STOP",
+            "STOP_MARKET",
+            "TAKE_PROFIT",
+            "TAKE_PROFIT_MARKET",
+            "TRAILING_STOP_MARKET",
+        ]
+
+        if order_type in conditional_types:
+            # Route to algo order endpoint
+            if "clientAlgoId" not in params:
+                params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            # Remove newClientOrderId if it was added by default
+            params.pop("newClientOrderId", None)
+            params["algoType"] = "CONDITIONAL"
+            # Convert stopPrice to triggerPrice for algo orders
+            if "stopPrice" in params and "triggerPrice" not in params:
+                params["triggerPrice"] = params.pop("stopPrice")
+            return self._request_futures_api("post", "algoOrder", True, data=params)
+        else:
+            # Use regular order endpoint
+            if "newClientOrderId" not in params:
+                params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            return self._request_futures_api("post", "order", True, data=params)
 
     def futures_modify_order(self, **params):
         """Modify an existing order. Currently only LIMIT order modification is supported.
@@ -7649,40 +7676,98 @@ class Client(BaseClient):
 
         https://binance-docs.github.io/apidocs/futures/en/#query-order-user_data
 
+        :param conditional: optional - Set to True to query algo/conditional order
+        :type conditional: bool
+        :param algoId: optional - Algo order ID (for conditional orders)
+        :type algoId: int
+        :param clientAlgoId: optional - Client algo order ID (for conditional orders)
+        :type clientAlgoId: str
+
         """
-        return self._request_futures_api("get", "order", True, data=params)
+        # Check if this is a request for a conditional/algo order
+        is_conditional = params.pop("conditional", False)
+        # Also check if algoId or clientAlgoId is provided
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return self._request_futures_api("get", "algoOrder", True, data=params)
+        else:
+            return self._request_futures_api("get", "order", True, data=params)
 
     def futures_get_open_orders(self, **params):
         """Get all open orders on a symbol.
 
         https://binance-docs.github.io/apidocs/futures/en/#current-open-orders-user_data
 
+        :param conditional: optional - Set to True to query algo/conditional orders
+        :type conditional: bool
+
         """
-        return self._request_futures_api("get", "openOrders", True, data=params)
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return self._request_futures_api("get", "openAlgoOrders", True, data=params)
+        else:
+            return self._request_futures_api("get", "openOrders", True, data=params)
 
     def futures_get_all_orders(self, **params):
         """Get all futures account orders; active, canceled, or filled.
 
         https://binance-docs.github.io/apidocs/futures/en/#all-orders-user_data
 
+        :param conditional: optional - Set to True to query algo/conditional orders
+        :type conditional: bool
+
         """
-        return self._request_futures_api("get", "allOrders", True, data=params)
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return self._request_futures_api("get", "allAlgoOrders", True, data=params)
+        else:
+            return self._request_futures_api("get", "allOrders", True, data=params)
 
     def futures_cancel_order(self, **params):
         """Cancel an active futures order.
 
         https://binance-docs.github.io/apidocs/futures/en/#cancel-order-trade
 
+        :param conditional: optional - Set to True to cancel algo/conditional order
+        :type conditional: bool
+        :param algoId: optional - Algo order ID (for conditional orders)
+        :type algoId: int
+        :param clientAlgoId: optional - Client algo order ID (for conditional orders)
+        :type clientAlgoId: str
+
         """
-        return self._request_futures_api("delete", "order", True, data=params)
+        # Check if this is a request for a conditional/algo order
+        is_conditional = params.pop("conditional", False)
+        # Also check if algoId or clientAlgoId is provided
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return self._request_futures_api("delete", "algoOrder", True, data=params)
+        else:
+            return self._request_futures_api("delete", "order", True, data=params)
 
     def futures_cancel_all_open_orders(self, **params):
         """Cancel all open futures orders
 
         https://binance-docs.github.io/apidocs/futures/en/#cancel-all-open-orders-trade
 
+        :param conditional: optional - Set to True to cancel algo/conditional orders
+        :type conditional: bool
+
         """
-        return self._request_futures_api("delete", "allOpenOrders", True, data=params)
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return self._request_futures_api(
+                "delete", "algoOpenOrders", True, data=params
+            )
+        else:
+            return self._request_futures_api("delete", "allOpenOrders", True, data=params)
 
     def futures_cancel_orders(self, **params):
         """Cancel multiple futures orders
@@ -7726,6 +7811,128 @@ class Client(BaseClient):
         return self._request_futures_api(
             "post", "countdownCancelAll", True, data=params
         )
+
+    # Algo Orders (Conditional Orders)
+
+    def futures_create_algo_order(self, **params):
+        """Send in a new algo order (conditional order).
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Algo-Order
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param type: required - STOP, TAKE_PROFIT, STOP_MARKET, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET
+        :type type: str
+        :param quantity: optional
+        :type quantity: decimal
+        :param price: optional
+        :type price: decimal
+        :param triggerPrice: optional - Used with STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET
+        :type triggerPrice: decimal
+        :param algoType: required - CONDITIONAL
+        :type algoType: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        if "clientAlgoId" not in params:
+            params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._request_futures_api("post", "algoOrder", True, data=params)
+
+    def futures_cancel_algo_order(self, **params):
+        """Cancel an active algo order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Algo-Order
+
+        :param symbol: required
+        :type symbol: str
+        :param algoId: optional - Either algoId or clientAlgoId must be sent
+        :type algoId: int
+        :param clientAlgoId: optional - Either algoId or clientAlgoId must be sent
+        :type clientAlgoId: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_futures_api("delete", "algoOrder", True, data=params)
+
+    def futures_cancel_all_algo_open_orders(self, **params):
+        """Cancel all open algo orders
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Algo-Open-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_futures_api(
+            "delete", "algoOpenOrders", True, data=params
+        )
+
+    def futures_get_algo_order(self, **params):
+        """Check an algo order's status.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Algo-Order
+
+        :param symbol: required
+        :type symbol: str
+        :param algoId: optional - Either algoId or clientAlgoId must be sent
+        :type algoId: int
+        :param clientAlgoId: optional - Either algoId or clientAlgoId must be sent
+        :type clientAlgoId: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_futures_api("get", "algoOrder", True, data=params)
+
+    def futures_get_open_algo_orders(self, **params):
+        """Get all open algo orders on a symbol.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Algo-Open-Orders
+
+        :param symbol: optional
+        :type symbol: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_futures_api("get", "openAlgoOrders", True, data=params)
+
+    def futures_get_all_algo_orders(self, **params):
+        """Get all algo account orders; active, canceled, or filled.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-All-Algo-Orders
+
+        :param symbol: required
+        :type symbol: str
+        :param startTime: optional
+        :type startTime: int
+        :param endTime: optional
+        :type endTime: int
+        :param limit: optional - Default 100; max 100
+        :type limit: int
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: API response
+
+        """
+        return self._request_futures_api("get", "allAlgoOrders", True, data=params)
 
     def futures_account_balance(self, **params):
         """Get futures account balance
