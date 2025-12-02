@@ -168,8 +168,38 @@ async def test_ws_futures_account_status(futuresClientAsync):
 async def test_ws_futures_fail_to_connect(futuresClientAsync):
     # Close any existing connection first
     await futuresClientAsync.close_connection()
-    
+
     # Mock the WebSocket API's connect method to raise an exception
     with patch.object(futuresClientAsync.ws_future, 'connect', side_effect=ConnectionError("Simulated connection failure")):
         with pytest.raises(BinanceWebsocketUnableToConnect):
             await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
+@pytest.mark.asyncio()
+async def test_ws_futures_create_cancel_algo_order(futuresClientAsync):
+    """Test creating and canceling an algo order via websocket async"""
+    ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.ws_futures_v2_account_position(symbol="LTCUSDT")
+
+    # Create an algo order
+    order = await futuresClientAsync.ws_futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["algoType"] == "CONDITIONAL"
+
+    # Cancel the algo order
+    cancel_result = await futuresClientAsync.ws_futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+    assert cancel_result["algoId"] == order["algoId"]

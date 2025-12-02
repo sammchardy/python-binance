@@ -13849,6 +13849,82 @@ class Client(BaseClient):
         """
         return self._ws_futures_api_request_sync("account.status", True, params)
 
+    def ws_futures_create_algo_order(self, **params):
+        """
+        Send in a new algo order (conditional order).
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api
+
+        :param symbol: required
+        :type symbol: str
+        :param side: required - BUY or SELL
+        :type side: str
+        :param type: required - STOP, TAKE_PROFIT, STOP_MARKET, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET
+        :type type: str
+        :param algoType: required - Only support CONDITIONAL
+        :type algoType: str
+        :param positionSide: optional - Default BOTH for One-way Mode; LONG or SHORT for Hedge Mode
+        :type positionSide: str
+        :param timeInForce: optional - IOC or GTC or FOK, default GTC
+        :type timeInForce: str
+        :param quantity: optional - Cannot be sent with closePosition=true
+        :type quantity: decimal
+        :param price: optional
+        :type price: decimal
+        :param triggerPrice: optional - Used with STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET
+        :type triggerPrice: decimal
+        :param workingType: optional - triggerPrice triggered by: MARK_PRICE, CONTRACT_PRICE. Default CONTRACT_PRICE
+        :type workingType: str
+        :param priceMatch: optional - only available for LIMIT/STOP/TAKE_PROFIT order
+        :type priceMatch: str
+        :param closePosition: optional - true or false; Close-All, used with STOP_MARKET or TAKE_PROFIT_MARKET
+        :type closePosition: bool
+        :param priceProtect: optional - "TRUE" or "FALSE", default "FALSE"
+        :type priceProtect: str
+        :param reduceOnly: optional - "true" or "false", default "false"
+        :type reduceOnly: str
+        :param activationPrice: optional - Used with TRAILING_STOP_MARKET orders
+        :type activationPrice: decimal
+        :param callbackRate: optional - Used with TRAILING_STOP_MARKET orders, min 0.1, max 10
+        :type callbackRate: decimal
+        :param clientAlgoId: optional - A unique id among open orders
+        :type clientAlgoId: str
+        :param selfTradePreventionMode: optional - EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH; default NONE
+        :type selfTradePreventionMode: str
+        :param goodTillDate: optional - order cancel time for timeInForce GTD
+        :type goodTillDate: int
+        :param newOrderRespType: optional - "ACK", "RESULT", default "ACK"
+        :type newOrderRespType: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        """
+        if "clientAlgoId" not in params:
+            params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return self._ws_futures_api_request_sync("algoOrder.place", True, params)
+
+    def ws_futures_cancel_algo_order(self, **params):
+        """
+        Cancel an active algo order.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api
+
+        :param symbol: required
+        :type symbol: str
+        :param algoId: optional - Either algoId or clientAlgoId must be sent
+        :type algoId: int
+        :param clientAlgoId: optional - Either algoId or clientAlgoId must be sent
+        :type clientAlgoId: str
+        :param recvWindow: optional - the number of milliseconds the request is valid for
+        :type recvWindow: int
+
+        :returns: WS response
+
+        """
+        return self._ws_futures_api_request_sync("algoOrder.cancel", True, params)
+
     ###############################################
     ### Gift card api
     ###############################################
