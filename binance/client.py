@@ -7798,9 +7798,12 @@ class Client(BaseClient):
             # Remove newClientOrderId if it was added by default
             params.pop("newClientOrderId", None)
             params["algoType"] = "CONDITIONAL"
-            # Convert stopPrice to triggerPrice for algo orders
-            if "stopPrice" in params and "triggerPrice" not in params:
-                params["triggerPrice"] = params.pop("stopPrice")
+            # Convert stopPrice to triggerprice for algo orders (note: lowercase!)
+            if "stopPrice" in params and "triggerprice" not in params:
+                params["triggerprice"] = params.pop("stopPrice")
+            # Also handle if triggerPrice (camelCase) was passed
+            if "triggerPrice" in params and "triggerprice" not in params:
+                params["triggerprice"] = params.pop("triggerPrice")
             return self._request_futures_api("post", "algoOrder", True, data=params)
         else:
             # Use regular order endpoint
