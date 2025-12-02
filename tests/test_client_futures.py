@@ -718,7 +718,7 @@ def test_futures_create_algo_order(futuresClient):
         type="STOP_MARKET",
         algoType="CONDITIONAL",
         quantity=0.1,
-        triggerprice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+        triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
     )
     assert order["symbol"] == ticker["symbol"]
     assert "algoId" in order
@@ -762,7 +762,7 @@ def test_futures_get_algo_order(futuresClient):
         type="STOP_MARKET",
         algoType="CONDITIONAL",
         quantity=0.1,
-        triggerprice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+        triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
     )
     algo_id = order["algoId"]
     # Get the order
@@ -787,7 +787,7 @@ def test_futures_get_order_with_conditional_param(futuresClient):
         type="STOP_MARKET",
         algoType="CONDITIONAL",
         quantity=0.1,
-        triggerprice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+        triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
     )
     algo_id = order["algoId"]
     # Get the order using futures_get_order with conditional=True
@@ -835,7 +835,7 @@ def test_futures_cancel_algo_order(futuresClient):
         type="STOP_MARKET",
         algoType="CONDITIONAL",
         quantity=0.1,
-        triggerprice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+        triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
     )
     algo_id = order["algoId"]
     # Cancel the order
@@ -857,7 +857,7 @@ def test_futures_cancel_order_with_conditional_param(futuresClient):
         type="STOP_MARKET",
         algoType="CONDITIONAL",
         quantity=0.1,
-        triggerprice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+        triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
     )
     algo_id = order["algoId"]
     # Cancel using futures_cancel_order with conditional=True
