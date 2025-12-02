@@ -534,8 +534,8 @@ async def test_futures_create_algo_order_async(futuresClientAsync):
             positionSide=positions[0]["positionSide"],
             type="STOP_MARKET",
             algoType="CONDITIONAL",
-            quantity=0.1,
-            triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+            quantity=1,
+            triggerPrice=1000,
         )
         assert order["symbol"] == ticker["symbol"]
         assert "algoId" in order
@@ -577,8 +577,8 @@ async def test_futures_get_algo_order_async(futuresClientAsync):
             positionSide=positions[0]["positionSide"],
             type="STOP_MARKET",
             algoType="CONDITIONAL",
-            quantity=0.1,
-            triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+            quantity=1,
+            triggerPrice=1000,
         )
         algo_id = order["algoId"]
         fetched_order = await futuresClientAsync.futures_get_algo_order(
@@ -614,8 +614,8 @@ async def test_futures_cancel_algo_order_async(futuresClientAsync):
             positionSide=positions[0]["positionSide"],
             type="STOP_MARKET",
             algoType="CONDITIONAL",
-            quantity=0.1,
-            triggerPrice=str(round(float(ticker["lastPrice"]) - 100, 0)),
+            quantity=1,
+            triggerPrice=1000,
         )
         algo_id = order["algoId"]
         result = await futuresClientAsync.futures_cancel_algo_order(
