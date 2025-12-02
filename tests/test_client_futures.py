@@ -738,8 +738,8 @@ def test_futures_create_order_auto_routes_conditional(futuresClient):
         side="BUY",
         positionSide=positions[0]["positionSide"],
         type="TAKE_PROFIT_MARKET",
-        quantity=0.1,
-        stopPrice=str(round(float(ticker["lastPrice"]) + 100, 0)),
+        quantity=1,
+        stopPrice=10,
     )
     # Verify it was created as an algo order
     assert order["symbol"] == ticker["symbol"]
