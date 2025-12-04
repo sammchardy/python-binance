@@ -219,6 +219,46 @@ async def test_swap_id_async():
         )
         await clientAsync.close_connection()
 
+@pytest.mark.asyncio()
+async def test_swap_trigger_id_async():
+    clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            assert "x-Cb7ytekJ" in kwargs["data"][1][1]
+
+        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/algoOrder")
+        m.post(
+            url_pattern,
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.futures_create_order(
+            symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
+
+@pytest.mark.asyncio()
+async def test_swap_trigger_endpoint_id_async():
+    clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
+    with aioresponses() as m:
+
+        def handler(url, **kwargs):
+            print(kwargs["data"])
+            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+
+        url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/algoOrder")
+        m.post(
+            url_pattern,
+            payload={"id": 1},
+            status=200,
+            callback=handler,
+        )
+        await clientAsync.futures_create_algo_order(
+            symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1
+        )
+        await clientAsync.close_connection()
 
 @pytest.mark.asyncio()
 async def test_papi_um_id_async():
