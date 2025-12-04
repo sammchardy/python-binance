@@ -8084,6 +8084,8 @@ class Client(BaseClient):
         """
         if "clientAlgoId" not in params:
             params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        if "algoType" not in params:
+            params["algoType"] = "CONDITIONAL"
         return self._request_futures_api("post", "algoOrder", True, data=params)
 
     def futures_cancel_algo_order(self, **params):

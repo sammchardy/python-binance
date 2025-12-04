@@ -2096,6 +2096,8 @@ class AsyncClient(BaseClient):
     async def futures_create_algo_order(self, **params):
         if "clientAlgoId" not in params:
             params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        if "algoType" not in params:
+            params["algoType"] = "CONDITIONAL"
         return await self._request_futures_api("post", "algoOrder", True, data=params)
 
     futures_create_algo_order.__doc__ = Client.futures_create_algo_order.__doc__
