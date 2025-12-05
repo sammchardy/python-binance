@@ -245,8 +245,8 @@ async def test_swap_trigger_endpoint_id_async():
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            print(kwargs["data"])
-            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+            # print(kwargs["data"])
+            assert "x-Cb7ytekJ" in kwargs["data"][1][1]
 
         url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/algoOrder")
         m.post(
