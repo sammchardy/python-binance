@@ -1906,9 +1906,32 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_create_order(self, **params):
-        if "newClientOrderId" not in params:
-            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        return await self._request_futures_api("post", "order", True, data=params)
+        # Check if this is a conditional order type that needs to use algo endpoint
+        order_type = params.get("type", "").upper()
+        conditional_types = [
+            "STOP",
+            "STOP_MARKET",
+            "TAKE_PROFIT",
+            "TAKE_PROFIT_MARKET",
+            "TRAILING_STOP_MARKET",
+        ]
+
+        if order_type in conditional_types:
+            # Route to algo order endpoint
+            if "clientAlgoId" not in params:
+                params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            # Remove newClientOrderId if it was added by default
+            params.pop("newClientOrderId", None)
+            params["algoType"] = "CONDITIONAL"
+            # Convert stopPrice to triggerPrice for algo orders (camelCase per API docs)
+            if "stopPrice" in params and "triggerPrice" not in params:
+                params["triggerPrice"] = params.pop("stopPrice")
+            return await self._request_futures_api("post", "algoOrder", True, data=params)
+        else:
+            # Use regular order endpoint
+            if "newClientOrderId" not in params:
+                params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            return await self._request_futures_api("post", "order", True, data=params)
 
     async def futures_limit_order(self, **params):
         """Send in a new futures limit order.
@@ -1989,6 +2012,8 @@ class AsyncClient(BaseClient):
         """
         return await self._request_futures_api("put", "order", True, data=params)
 
+    futures_modify_order.__doc__ = Client.futures_modify_order.__doc__
+
     async def futures_create_test_order(self, **params):
         return await self._request_futures_api("post", "order/test", True, data=params)
 
@@ -2005,21 +2030,66 @@ class AsyncClient(BaseClient):
         )
 
     async def futures_get_order(self, **params):
-        return await self._request_futures_api("get", "order", True, data=params)
+        # Check if this is a request for a conditional/algo order
+        is_conditional = params.pop("conditional", False)
+        # Also check if algoId or clientAlgoId is provided
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return await self._request_futures_api("get", "algoOrder", True, data=params)
+        else:
+            return await self._request_futures_api("get", "order", True, data=params)
+
+    futures_get_order.__doc__ = Client.futures_get_order.__doc__
 
     async def futures_get_open_orders(self, **params):
-        return await self._request_futures_api("get", "openOrders", True, data=params)
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return await self._request_futures_api("get", "openAlgoOrders", True, data=params)
+        else:
+            return await self._request_futures_api("get", "openOrders", True, data=params)
+
+    futures_get_open_orders.__doc__ = Client.futures_get_open_orders.__doc__
 
     async def futures_get_all_orders(self, **params):
-        return await self._request_futures_api("get", "allOrders", True, data=params)
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return await self._request_futures_api("get", "allAlgoOrders", True, data=params)
+        else:
+            return await self._request_futures_api("get", "allOrders", True, data=params)
+
+    futures_get_all_orders.__doc__ = Client.futures_get_all_orders.__doc__
 
     async def futures_cancel_order(self, **params):
-        return await self._request_futures_api("delete", "order", True, data=params)
+        # Check if this is a request for a conditional/algo order
+        is_conditional = params.pop("conditional", False)
+        # Also check if algoId or clientAlgoId is provided
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return await self._request_futures_api("delete", "algoOrder", True, data=params)
+        else:
+            return await self._request_futures_api("delete", "order", True, data=params)
+
+    futures_cancel_order.__doc__ = Client.futures_cancel_order.__doc__
 
     async def futures_cancel_all_open_orders(self, **params):
-        return await self._request_futures_api(
-            "delete", "allOpenOrders", True, data=params
-        )
+        is_conditional = params.pop("conditional", False)
+
+        if is_conditional:
+            return await self._request_futures_api(
+                "delete", "algoOpenOrders", True, data=params
+            )
+        else:
+            return await self._request_futures_api(
+                "delete", "allOpenOrders", True, data=params
+            )
+            
+    futures_cancel_all_open_orders.__doc__ = Client.futures_cancel_all_open_orders.__doc__
 
     async def futures_cancel_orders(self, **params):
         if params.get("orderidlist"):
@@ -2038,6 +2108,44 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api(
             "post", "countdownCancelAll", True, data=params
         )
+
+    # Algo Orders (Conditional Orders)
+
+    async def futures_create_algo_order(self, **params):
+        if "clientAlgoId" not in params:
+            params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        if "algoType" not in params:
+            params["algoType"] = "CONDITIONAL"
+        return await self._request_futures_api("post", "algoOrder", True, data=params)
+
+    futures_create_algo_order.__doc__ = Client.futures_create_algo_order.__doc__
+
+    async def futures_cancel_algo_order(self, **params):
+        return await self._request_futures_api("delete", "algoOrder", True, data=params)
+
+    futures_cancel_algo_order.__doc__ = Client.futures_cancel_algo_order.__doc__
+
+    async def futures_cancel_all_algo_open_orders(self, **params):
+        return await self._request_futures_api(
+            "delete", "algoOpenOrders", True, data=params
+        )
+    
+    futures_cancel_all_algo_open_orders.__doc__ = Client.futures_cancel_all_algo_open_orders.__doc__
+
+    async def futures_get_algo_order(self, **params):
+        return await self._request_futures_api("get", "algoOrder", True, data=params)
+
+    futures_get_algo_order.__doc__ = Client.futures_get_algo_order.__doc__
+
+    async def futures_get_open_algo_orders(self, **params):
+        return await self._request_futures_api("get", "openAlgoOrders", True, data=params)
+    
+    futures_get_open_algo_orders.__doc__ = Client.futures_get_open_algo_orders.__doc__
+
+    async def futures_get_all_algo_orders(self, **params):
+        return await self._request_futures_api("get", "allAlgoOrders", True, data=params)
+
+    futures_get_all_algo_orders.__doc__ = Client.futures_get_all_algo_orders.__doc__
 
     async def futures_account_balance(self, **params):
         return await self._request_futures_api(
@@ -3990,6 +4098,17 @@ class AsyncClient(BaseClient):
         https://developers.binance.com/docs/derivatives/usds-margined-futures/account/websocket-api/Account-Information
         """
         return await self._ws_futures_api_request("account.status", True, params)
+
+    async def ws_futures_create_algo_order(self, **params):
+        if "clientAlgoId" not in params:
+            params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+        return await self._ws_futures_api_request("algoOrder.place", True, params)
+    ws_futures_create_algo_order.__doc__ = Client.ws_futures_create_algo_order.__doc__
+
+    async def ws_futures_cancel_algo_order(self, **params):
+        return await self._ws_futures_api_request("algoOrder.cancel", True, params)
+
+    ws_futures_cancel_algo_order.__doc__ = Client.ws_futures_cancel_algo_order.__doc__
 
     ####################################################
     # Gift Card API Endpoints
