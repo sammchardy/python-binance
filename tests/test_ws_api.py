@@ -1,6 +1,5 @@
 import json
 import sys
-import re
 import pytest
 import asyncio
 from binance import AsyncClient
