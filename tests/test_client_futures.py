@@ -702,3 +702,183 @@ def test_futures_coin_account_trade_history_download_link_mock(futuresClient):
             downloadId="123"
         )
         assert response == expected_response
+
+
+# Algo Orders (Conditional Orders) Tests
+
+
+def test_futures_create_algo_order(futuresClient):
+    """Test creating an algo/conditional order"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    order = futuresClient.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    # Clean up - cancel the algo order
+    futuresClient.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+def test_futures_create_order_auto_routes_conditional(futuresClient):
+    """Test that futures_create_order automatically routes conditional orders to algo endpoint"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    # Create a conditional order using the regular create_order method
+    order = futuresClient.futures_create_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="TAKE_PROFIT_MARKET",
+        quantity=1,
+        stopPrice=10,
+    )
+    # Verify it was created as an algo order
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    # Clean up
+    futuresClient.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+def test_futures_get_algo_order(futuresClient):
+    """Test getting a specific algo order"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    # Create an algo order first
+    order = futuresClient.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+    algo_id = order["algoId"]
+    # Get the order
+    fetched_order = futuresClient.futures_get_algo_order(
+        symbol=ticker["symbol"], algoId=algo_id
+    )
+    assert fetched_order["algoId"] == algo_id
+    assert fetched_order["symbol"] == ticker["symbol"]
+    # Clean up
+    futuresClient.futures_cancel_algo_order(symbol=ticker["symbol"], algoId=algo_id)
+
+
+def test_futures_get_order_with_conditional_param(futuresClient):
+    """Test getting algo order using futures_get_order with conditional=True"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    # Create an algo order
+    order = futuresClient.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+    algo_id = order["algoId"]
+    # Get the order using futures_get_order with conditional=True
+    fetched_order = futuresClient.futures_get_order(
+        symbol=ticker["symbol"], algoId=algo_id, conditional=True
+    )
+    assert fetched_order["algoId"] == algo_id
+    # Clean up
+    futuresClient.futures_cancel_algo_order(symbol=ticker["symbol"], algoId=algo_id)
+
+
+def test_futures_get_all_algo_orders(futuresClient):
+    """Test getting all algo orders history"""
+    orders = futuresClient.futures_get_all_algo_orders(symbol="LTCUSDT")
+    assert isinstance(orders, list)
+
+
+def test_futures_get_all_orders_with_conditional_param(futuresClient):
+    """Test getting all algo orders using futures_get_all_orders with conditional=True"""
+    orders = futuresClient.futures_get_all_orders(symbol="LTCUSDT", conditional=True)
+    assert isinstance(orders, list)
+
+
+def test_futures_get_open_algo_orders(futuresClient):
+    """Test getting open algo orders"""
+    orders = futuresClient.futures_get_open_algo_orders(symbol="LTCUSDT")
+    assert isinstance(orders, list)
+
+
+def test_futures_get_open_orders_with_conditional_param(futuresClient):
+    """Test getting open algo orders using futures_get_open_orders with conditional=True"""
+    orders = futuresClient.futures_get_open_orders(symbol="LTCUSDT", conditional=True)
+    assert isinstance(orders, list)
+
+
+def test_futures_cancel_algo_order(futuresClient):
+    """Test canceling an algo order"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    # Create an algo order
+    order = futuresClient.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+    algo_id = order["algoId"]
+    # Cancel the order
+    result = futuresClient.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=algo_id
+    )
+    assert result["algoId"] == algo_id
+
+
+def test_futures_cancel_order_with_conditional_param(futuresClient):
+    """Test canceling algo order using futures_cancel_order with conditional=True"""
+    ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
+    positions = futuresClient.futures_position_information(symbol="LTCUSDT")
+    # Create an algo order
+    order = futuresClient.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+    algo_id = order["algoId"]
+    # Cancel using futures_cancel_order with conditional=True
+    result = futuresClient.futures_cancel_order(
+        symbol=ticker["symbol"], algoId=algo_id, conditional=True
+    )
+    assert result["algoId"] == algo_id
+
+
+def test_futures_cancel_all_algo_open_orders(futuresClient):
+    """Test canceling all open algo orders"""
+    result = futuresClient.futures_cancel_all_algo_open_orders(symbol="LTCUSDT")
+    # Should return success response
+    assert "code" in result or "msg" in result
+
+
+def test_futures_cancel_all_open_orders_with_conditional_param(futuresClient):
+    """Test canceling all algo orders using futures_cancel_all_open_orders with conditional=True"""
+    result = futuresClient.futures_cancel_all_open_orders(
+        symbol="LTCUSDT", conditional=True
+    )
+    # Should return success response
+    assert "code" in result or "msg" in result
+
