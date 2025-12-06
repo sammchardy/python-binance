@@ -18,14 +18,28 @@ class ThreadedApiManager(threading.Thread):
         session_params: Optional[Dict[str, Any]] = None,
         https_proxy: Optional[str] = None,
         _loop: Optional[asyncio.AbstractEventLoop] = None,
+        verbose: bool = False,
     ):
-        """Initialise the BinanceSocketManager"""
+        """Initialise the ThreadedApiManager
+
+        :param api_key: Binance API key
+        :param api_secret: Binance API secret
+        :param requests_params: optional - Dictionary of requests params
+        :param tld: optional - Top level domain, default is 'com'
+        :param testnet: optional - Use testnet endpoint
+        :param session_params: optional - Session params for aiohttp
+        :param https_proxy: optional - Proxy URL
+        :param _loop: optional - Event loop
+        :param verbose: Enable verbose logging for WebSocket connections
+        :type verbose: bool
+        """
         super().__init__()
         self._loop: asyncio.AbstractEventLoop = get_loop() if _loop is None else _loop
         self._client: Optional[AsyncClient] = None
         self._running: bool = True
         self._socket_running: Dict[str, bool] = {}
         self._log = logging.getLogger(__name__)
+        self.verbose = verbose
         self._client_params = {
             "api_key": api_key,
             "api_secret": api_secret,
@@ -34,7 +48,11 @@ class ThreadedApiManager(threading.Thread):
             "testnet": testnet,
             "session_params": session_params,
             "https_proxy": https_proxy,
+            "verbose": verbose,
         }
+
+        if verbose:
+            logging.getLogger('binance.ws').setLevel(logging.DEBUG)
 
     async def _before_socket_listener_start(self): ...
 
