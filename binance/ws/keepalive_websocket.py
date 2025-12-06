@@ -62,7 +62,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             self._build_path()
 
     async def _after_connect(self):
-        self._start_socket_timer()
+        if self._timer is None:
+            self._start_socket_timer()
 
     def _start_socket_timer(self):
         self._timer = self._loop.call_later(
@@ -75,9 +76,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             "id": str(uuid.uuid4()),
         }
         response = await self._client._ws_api_request(
-            "userDataStream.subscribe.signature", 
-            signed=True, 
-            params=params
+            "userDataStream.subscribe.signature", signed=True, params=params
         )
         return response.get("subscriptionId")
 
@@ -89,9 +88,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 "subscriptionId": self._subscription_id,
             }
             await self._client._ws_api_request(
-                "userDataStream.unsubscribe", 
-                signed=False, 
-                params=params
+                "userDataStream.unsubscribe", signed=False, params=params
             )
             self._subscription_id = None
 
@@ -130,7 +127,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
                 elif self._keepalive_type == "futures":
                     await self._client.futures_stream_keepalive(self._listen_key)
                 elif self._keepalive_type == "coin_futures":
-                        await self._client.futures_coin_stream_keepalive(self._listen_key)
+                    await self._client.futures_coin_stream_keepalive(self._listen_key)
                 elif self._keepalive_type == "portfolio_margin":
                     await self._client.papi_stream_keepalive(self._listen_key)
                 else:  # isolated margin
@@ -141,4 +138,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         except Exception as e:
             self._log.error(f"error in keepalive_socket: {e}")
         finally:
-            self._start_socket_timer()
+            if self._timer is not None:
+                self._start_socket_timer()
+            else:
+                self._log.info("skip timer restart - web socket is exiting")

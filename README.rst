@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v1.0.31
+Welcome to python-binance v1.0.32
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -166,6 +166,18 @@ pass `testnet=True` when creating the client.
     # fetch weekly klines since it listed
     klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
 
+    # create conditional order using the dedicated method
+    algo_order = client.futures_create_algo_order(symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1, triggerPrice = 120)
+
+    # create conditional order using the create_order method (will redirect to the algoOrder as well)
+    order2 = await client.futures_create_order(symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1, triggerPrice = 120)
+
+    # cancel algo/conditional order
+    cancel2 = await client.futures_cancel_algo_order(orderId=order2["orderId"], symbol="LTCUSDT")
+
+    # fetch open algo/conditional orders
+    open_orders = await client.futures_get_open_algo_orders(symbol="LTCUSDT")
+
     # create order through websockets
     order_ws = client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
 
@@ -253,6 +265,7 @@ for more information.
 
         # fetch weekly klines since it listed
         klines = await client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+
 
         # create order through websockets
         order_ws = await client.ws_create_order( symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1)
