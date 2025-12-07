@@ -1128,6 +1128,22 @@ class BinanceSocketManager:
             symbol.lower() + "@depth" + str(depth), futures_type=futures_type
         )
 
+    def futures_rpi_depth_socket(self, symbol: str, futures_type=FuturesType.USD_M):
+        """Subscribe to a futures RPI (Retail Price Improvement) depth data stream
+
+        RPI orders are included and aggregated in the stream. Crossed price levels are hidden.
+        Updates every 500ms.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/websocket-market-streams/RPI-Order-Book
+
+        :param symbol: required
+        :type symbol: str
+        :param futures_type: use USD-M or COIN-M futures default USD-M
+        """
+        return self._get_futures_socket(
+            symbol.lower() + "@rpiDepth@500ms", futures_type=futures_type
+        )
+
     def options_new_symbol_socket(self):
         """Subscribe to a new symbol listing information stream.
 
