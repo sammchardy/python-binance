@@ -85,3 +85,32 @@ def test_ws_futures_v2_account_status(futuresClient):
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 def test_ws_futures_account_status(futuresClient):
     futuresClient.ws_futures_account_status()
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
+def test_ws_futures_create_cancel_algo_order(futuresClient):
+    """Test creating and canceling an algo order via websocket"""
+    ticker = futuresClient.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+    positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
+
+    # Create an algo order
+    order = futuresClient.ws_futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+    )
+
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["algoType"] == "CONDITIONAL"
+
+    # Cancel the algo order
+    cancel_result = futuresClient.ws_futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+    assert cancel_result["algoId"] == order["algoId"]
