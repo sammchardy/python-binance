@@ -6261,8 +6261,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-asset-information
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_asset_us")
         return self._request_margin_api("get", "staking/asset", True, data=params)
 
     def stake_asset_us(self, **params):
@@ -6270,8 +6271,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#stake-asset
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "stake_asset_us")
         return self._request_margin_api("post", "staking/stake", True, data=params)
 
     def unstake_asset_us(self, **params):
@@ -6279,8 +6281,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#unstake-asset
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "unstake_asset_us")
         return self._request_margin_api("post", "staking/unstake", True, data=params)
 
     def get_staking_balance_us(self, **params):
@@ -6288,8 +6291,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-balance
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_balance_us")
         return self._request_margin_api(
             "get", "staking/stakingBalance", True, data=params
         )
@@ -6299,8 +6303,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-history
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_history_us")
         return self._request_margin_api("get", "staking/history", True, data=params)
 
     def get_staking_rewards_history_us(self, **params):
@@ -6308,8 +6313,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-rewards-history
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_rewards_history_us")
         return self._request_margin_api(
             "get", "staking/stakingRewardsHistory", True, data=params
         )

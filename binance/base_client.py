@@ -350,6 +350,18 @@ class BaseClient:
         dictionary = dict((key, value) for key, value in list_tuples)
         return dictionary
 
+    def _require_tld(self, required_tld: str, endpoint_name: str = "endpoint") -> None:
+        """Validate client is configured for required TLD.
+
+        :param required_tld: The required TLD (e.g., "us")
+        :param endpoint_name: Description of the endpoint for error messages
+        :raises BinanceRegionException: If the client TLD doesn't match
+        """
+        if self.tld != required_tld:
+            from binance.exceptions import BinanceRegionException
+
+            raise BinanceRegionException(required_tld, self.tld, endpoint_name)
+
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
         res = b64encode(
