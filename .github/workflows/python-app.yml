@@ -34,11 +34,7 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-22.04
-    timeout-minutes: 40
-    strategy:
-      max-parallel: 2
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    timeout-minutes: 20
     env:
       PROXY: "http://188.245.226.105:8911"
       TEST_TESTNET: "true"

@@ -1,0 +1,6 @@
+2025-07-05 16:14:10,059 - __main__ - INFO - ==================================================
+2025-07-05 16:14:10,059 - __main__ - INFO - BINANCE USER STREAM KEEP ALIVE TEST
+2025-07-05 16:14:10,059 - __main__ - INFO - ==================================================
+2025-07-05 16:14:10,059 - __main__ - INFO - Test started at: 2025-07-05 16:14:10.059620
+2025-07-05 16:14:10,059 - asyncio - DEBUG - Using selector: KqueueSelector
+2025-07-05 16:14:10,059 - __main__ - ERROR - Please set BINANCE_API_KEY and BINANCE_API_SECRET environment variables

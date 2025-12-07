@@ -1,0 +1,115 @@
+DEBUG:asyncio:Using selector: KqueueSelector
+DEBUG:binance.ws.depthcache:Initialising depth cache for BNBBTC
+DEBUG:binance.ws.reconnecting_websocket:Establishing new WebSocket connection
+DEBUG:websockets.client:= connection is CONNECTING
+DEBUG:websockets.client:> GET /ws/bnbbtc@depth HTTP/1.1
+DEBUG:websockets.client:> Host: stream.binance.com:9443
+DEBUG:websockets.client:> Upgrade: websocket
+DEBUG:websockets.client:> Connection: Upgrade
+DEBUG:websockets.client:> Sec-WebSocket-Key: D0BzMM8gWfO6gYpA+tHxnw==
+DEBUG:websockets.client:> Sec-WebSocket-Version: 13
+DEBUG:websockets.client:> Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+DEBUG:websockets.client:> User-Agent: Python/3.12 websockets/14.1
+DEBUG:websockets.client:< HTTP/1.1 101 Switching Protocols
+DEBUG:websockets.client:< Date: Sun, 20 Apr 2025 20:56:30 GMT
+DEBUG:websockets.client:< Connection: upgrade
+DEBUG:websockets.client:< Upgrade: websocket
+DEBUG:websockets.client:< Sec-WebSocket-Accept: dX2M+DFEc+RFNIJdxaaoTFsMGaI=
+DEBUG:websockets.client:< Sec-WebSocket-Extensions: permessage-deflate; server_no_context_takeover; client_max_window_bits=15
+DEBUG:websockets.client:= connection is OPEN
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182592002,"s":"BNBBT...,"5.82600000"]],"a":[]}' [150 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182592002, 's': 'BNBBTC', 'U': 3933593881, 'u': 3933593881, 'b': [['0.00685300', '41.16900000'], ['0.00685200', '5.82600000']], 'a': []}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182592002, 's': 'BNBBTC', 'U': 3933593881, 'u': 3933593881, 'b': [['0.00685300', '41.16900000'], ['0.00685200', '5.82600000']], 'a': []}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182592002, 's': 'BNBBTC', 'U': 3933593881, 'u': 3933593881, 'b': [['0.00685300', '41.16900000'], ['0.00685200', '5.82600000']], 'a': []}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182593002,"s":"BNBBT...693600","8.16600000"]]}' [235 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182593002, 's': 'BNBBTC', 'U': 3933593882, 'u': 3933593887, 'b': [['0.00693300', '14.55300000'], ['0.00693200', '16.09000000'], ['0.00691600', '10.01700000']], 'a': [['0.00693500', '1.28000000'], ['0.00693600', '8.16600000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182593002, 's': 'BNBBTC', 'U': 3933593882, 'u': 3933593887, 'b': [['0.00693300', '14.55300000'], ['0.00693200', '16.09000000'], ['0.00691600', '10.01700000']], 'a': [['0.00693500', '1.28000000'], ['0.00693600', '8.16600000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182593002, 's': 'BNBBTC', 'U': 3933593882, 'u': 3933593887, 'b': [['0.00693300', '14.55300000'], ['0.00693200', '16.09000000'], ['0.00691600', '10.01700000']], 'a': [['0.00693500', '1.28000000'], ['0.00693600', '8.16600000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182594002,"s":"BNBBT...95400","16.36800000"]]}' [234 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182594002, 's': 'BNBBTC', 'U': 3933593888, 'u': 3933593895, 'b': [['0.00691300', '10.79200000']], 'a': [['0.00693600', '8.16600000'], ['0.00693700', '5.58700000'], ['0.00693800', '8.85000000'], ['0.00695400', '16.36800000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182594002, 's': 'BNBBTC', 'U': 3933593888, 'u': 3933593895, 'b': [['0.00691300', '10.79200000']], 'a': [['0.00693600', '8.16600000'], ['0.00693700', '5.58700000'], ['0.00693800', '8.85000000'], ['0.00695400', '16.36800000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182594002, 's': 'BNBBTC', 'U': 3933593888, 'u': 3933593895, 'b': [['0.00691300', '10.79200000']], 'a': [['0.00693600', '8.16600000'], ['0.00693700', '5.58700000'], ['0.00693800', '8.85000000'], ['0.00695400', '16.36800000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182596002,"s":"BNBBT...94000","29.14300000"]]}' [377 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182596002, 's': 'BNBBTC', 'U': 3933593896, 'u': 3933593919, 'b': [['0.00693500', '4.30700000'], ['0.00693400', '14.43000000'], ['0.00693300', '13.44300000'], ['0.00692100', '49.56000000']], 'a': [['0.00693500', '0.00000000'], ['0.00693600', '9.04700000'], ['0.00693700', '7.96500000'], ['0.00693800', '7.84000000'], ['0.00693900', '14.81500000'], ['0.00694000', '29.14300000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182596002, 's': 'BNBBTC', 'U': 3933593896, 'u': 3933593919, 'b': [['0.00693500', '4.30700000'], ['0.00693400', '14.43000000'], ['0.00693300', '13.44300000'], ['0.00692100', '49.56000000']], 'a': [['0.00693500', '0.00000000'], ['0.00693600', '9.04700000'], ['0.00693700', '7.96500000'], ['0.00693800', '7.84000000'], ['0.00693900', '14.81500000'], ['0.00694000', '29.14300000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182596002, 's': 'BNBBTC', 'U': 3933593896, 'u': 3933593919, 'b': [['0.00693500', '4.30700000'], ['0.00693400', '14.43000000'], ['0.00693300', '13.44300000'], ['0.00692100', '49.56000000']], 'a': [['0.00693500', '0.00000000'], ['0.00693600', '9.04700000'], ['0.00693700', '7.96500000'], ['0.00693800', '7.84000000'], ['0.00693900', '14.81500000'], ['0.00694000', '29.14300000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182597002,"s":"BNBBT...94100","32.94900000"]]}' [178 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182597002, 's': 'BNBBTC', 'U': 3933593920, 'u': 3933593925, 'b': [['0.00693500', '1.08000000']], 'a': [['0.00693600', '11.42500000'], ['0.00694100', '32.94900000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182597002, 's': 'BNBBTC', 'U': 3933593920, 'u': 3933593925, 'b': [['0.00693500', '1.08000000']], 'a': [['0.00693600', '11.42500000'], ['0.00694100', '32.94900000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182597002, 's': 'BNBBTC', 'U': 3933593920, 'u': 3933593925, 'b': [['0.00693500', '1.08000000']], 'a': [['0.00693600', '11.42500000'], ['0.00694100', '32.94900000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182598002,"s":"BNBBT...743600","0.55600000"]]}' [348 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182598002, 's': 'BNBBTC', 'U': 3933593926, 'u': 3933593929, 'b': [['0.00693300', '10.80900000'], ['0.00693200', '5.99700000'], ['0.00692600', '18.81900000'], ['0.00691600', '20.10900000'], ['0.00662400', '1.29700000'], ['0.00613900', '0.68500000']], 'a': [['0.00694300', '10.27900000'], ['0.00718200', '0.31000000'], ['0.00743600', '0.55600000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182598002, 's': 'BNBBTC', 'U': 3933593926, 'u': 3933593929, 'b': [['0.00693300', '10.80900000'], ['0.00693200', '5.99700000'], ['0.00692600', '18.81900000'], ['0.00691600', '20.10900000'], ['0.00662400', '1.29700000'], ['0.00613900', '0.68500000']], 'a': [['0.00694300', '10.27900000'], ['0.00718200', '0.31000000'], ['0.00743600', '0.55600000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182598002, 's': 'BNBBTC', 'U': 3933593926, 'u': 3933593929, 'b': [['0.00693300', '10.80900000'], ['0.00693200', '5.99700000'], ['0.00692600', '18.81900000'], ['0.00691600', '20.10900000'], ['0.00662400', '1.29700000'], ['0.00613900', '0.68500000']], 'a': [['0.00694300', '10.27900000'], ['0.00718200', '0.31000000'], ['0.00743600', '0.55600000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182599002,"s":"BNBBT...94200","83.86300000"]]}' [206 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182599002, 's': 'BNBBTC', 'U': 3933593930, 'u': 3933593938, 'b': [['0.00693500', '1.08000000'], ['0.00692900', '16.02700000']], 'a': [['0.00693700', '8.14800000'], ['0.00694200', '83.86300000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182599002, 's': 'BNBBTC', 'U': 3933593930, 'u': 3933593938, 'b': [['0.00693500', '1.08000000'], ['0.00692900', '16.02700000']], 'a': [['0.00693700', '8.14800000'], ['0.00694200', '83.86300000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182599002, 's': 'BNBBTC', 'U': 3933593930, 'u': 3933593938, 'b': [['0.00693500', '1.08000000'], ['0.00692900', '16.02700000']], 'a': [['0.00693700', '8.14800000'], ['0.00694200', '83.86300000']]}
+DEBUG:websockets.client:< PING '1745182599746' [text, 13 bytes]
+DEBUG:websockets.client:> PONG '1745182599746' [text, 13 bytes]
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182600002,"s":"BNBBT...715600","0.97200000"]]}' [263 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182600002, 's': 'BNBBTC', 'U': 3933593939, 'u': 3933593943, 'b': [['0.00693500', '1.65000000'], ['0.00693300', '13.44300000'], ['0.00693200', '16.08900000'], ['0.00691600', '10.01700000'], ['0.00648600', '1.17100000']], 'a': [['0.00715600', '0.97200000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182600002, 's': 'BNBBTC', 'U': 3933593939, 'u': 3933593943, 'b': [['0.00693500', '1.65000000'], ['0.00693300', '13.44300000'], ['0.00693200', '16.08900000'], ['0.00691600', '10.01700000'], ['0.00648600', '1.17100000']], 'a': [['0.00715600', '0.97200000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182600002, 's': 'BNBBTC', 'U': 3933593939, 'u': 3933593943, 'b': [['0.00693500', '1.65000000'], ['0.00693300', '13.44300000'], ['0.00693200', '16.08900000'], ['0.00691600', '10.01700000'], ['0.00648600', '1.17100000']], 'a': [['0.00715600', '0.97200000']]}
+DEBUG:websockets.client:< TEXT '{"e":"depthUpdate","E":1745182601002,"s":"BNBBT...738800","1.38200000"]]}' [232 bytes]
+DEBUG:binance.ws.reconnecting_websocket:Received message: {'e': 'depthUpdate', 'E': 1745182601002, 's': 'BNBBTC', 'U': 3933593944, 'u': 3933593950, 'b': [['0.00693500', '0.54000000'], ['0.00600500', '0.77700000']], 'a': [['0.00693700', '8.14800000'], ['0.00693800', '7.65700000'], ['0.00738800', '1.38200000']]}
+DEBUG:binance.ws.depthcache:Received message: {'e': 'depthUpdate', 'E': 1745182601002, 's': 'BNBBTC', 'U': 3933593944, 'u': 3933593950, 'b': [['0.00693500', '0.54000000'], ['0.00600500', '0.77700000']], 'a': [['0.00693700', '8.14800000'], ['0.00693800', '7.65700000'], ['0.00738800', '1.38200000']]}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'depthUpdate', 'E': 1745182601002, 's': 'BNBBTC', 'U': 3933593944, 'u': 3933593950, 'b': [['0.00693500', '0.54000000'], ['0.00600500', '0.77700000']], 'a': [['0.00693700', '8.14800000'], ['0.00693800', '7.65700000'], ['0.00738800', '1.38200000']]}
+DEBUG:websockets.client:% sending keepalive ping
+DEBUG:websockets.client:> PING af 12 2d 7c [binary, 4 bytes]
+DEBUG:binance.ws.reconnecting_websocket:no message in 10 seconds
+DEBUG:binance.ws.reconnecting_websocket:no message in 10 seconds
+DEBUG:websockets.client:- timed out waiting for keepalive pong
+DEBUG:websockets.client:> CLOSE 1011 (internal error) keepalive ping timeout [24 bytes]
+DEBUG:websockets.client:= connection is CLOSING
+DEBUG:binance.ws.reconnecting_websocket:no message in 10 seconds
+DEBUG:websockets.client:< EOF
+DEBUG:websockets.client:> EOF
+DEBUG:websockets.client:= connection is CLOSED
+ERROR:binance.ws.reconnecting_websocket:BinanceWebsocketClosed (Connection closed. Reconnecting...)
+DEBUG:binance.ws.reconnecting_websocket:websocket reconnecting. 4 reconnects left - waiting 1
+DEBUG:binance.ws.depthcache:Received message: {'e': 'error', 'type': 'BinanceWebsocketClosed', 'm': 'Connection closed. Reconnecting...'}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'error', 'type': 'BinanceWebsocketClosed', 'm': 'Connection closed. Reconnecting...'}
+ERROR:binance.ws.depthcache:Error in depth event restarting cache: {'e': 'error', 'type': 'BinanceWebsocketClosed', 'm': 'Connection closed. Reconnecting...'}
+ERROR:__main__:Received depth cache error in callback: {'e': 'error', 'type': 'BinanceWebsocketClosed', 'm': 'Connection closed. Reconnecting...'}
+DEBUG:binance.ws.reconnecting_websocket:Establishing new WebSocket connection
+ERROR:binance.ws.reconnecting_websocket:Failed to connect to websocket: [Errno 8] nodename nor servname provided, or not known
+DEBUG:binance.ws.reconnecting_websocket:websocket reconnecting. 3 reconnects left - waiting 3
+DEBUG:binance.ws.reconnecting_websocket:Establishing new WebSocket connection
+ERROR:binance.ws.reconnecting_websocket:Failed to connect to websocket: [Errno 8] nodename nor servname provided, or not known
+DEBUG:binance.ws.reconnecting_websocket:websocket reconnecting. 2 reconnects left - waiting 5
+DEBUG:binance.ws.reconnecting_websocket:Establishing new WebSocket connection
+ERROR:binance.ws.reconnecting_websocket:Failed to connect to websocket: [Errno 8] nodename nor servname provided, or not known
+DEBUG:binance.ws.reconnecting_websocket:websocket reconnecting. 1 reconnects left - waiting 11
+DEBUG:binance.ws.reconnecting_websocket:Establishing new WebSocket connection
+ERROR:binance.ws.reconnecting_websocket:Failed to connect to websocket: [Errno 8] nodename nor servname provided, or not known
+ERROR:binance.ws.reconnecting_websocket:Max reconnections 5 reached:
+ERROR:binance.ws.reconnecting_websocket:Unknown exception: BinanceWebsocketUnableToConnect ()
+DEBUG:binance.ws.depthcache:Received message: {'e': 'error', 'type': 'BinanceWebsocketUnableToConnect', 'm': ''}
+DEBUG:binance.ws.depthcache:Received depth event: {'e': 'error', 'type': 'BinanceWebsocketUnableToConnect', 'm': ''}
+ERROR:binance.ws.depthcache:Error in depth event restarting cache: {'e': 'error', 'type': 'BinanceWebsocketUnableToConnect', 'm': ''}
+ERROR:__main__:Received depth cache error in callback: {'e': 'error', 'type': 'BinanceWebsocketUnableToConnect', 'm': ''}
+DEBUG:binance.ws.threaded_stream:Stopping ThreadedApiManager
+ERROR:binance.ws.threaded_stream:Error stopping client:
+DEBUG:binance.ws.depthcache:Exiting depth cache manager for BNBBTC
+DEBUG:binance.ws.reconnecting_websocket:Closing Websocket wss://stream.binance.com:9443/ws/bnbbtc@depth
+INFO:binance.ws.threaded_stream:Socket listener stopped
+DEBUG:binance.ws.reconnecting_websocket:Closing Websocket wss://ws-api.binance.com/ws-api/v3
+symbol BNBBTC
+[[0.006934, 11.439], [0.006933, 11.919], [0.006932, 5.997], [0.006931, 4.921], [0.00693, 17.192]]
+symbol BNBBTC
+[[0.006934, 11.439], [0.006933, 14.553], [0.006932, 16.09], [0.006931, 4.921], [0.00693, 17.192]]
+symbol BNBBTC
+[[0.006934, 11.439], [0.006933, 14.553], [0.006932, 16.09], [0.006931, 4.921], [0.00693, 17.192]]
+symbol BNBBTC
+[[0.006935, 4.307], [0.006934, 14.43], [0.006933, 13.443], [0.006932, 16.09], [0.006931, 4.921]]
+symbol BNBBTC
+[[0.006935, 1.08], [0.006934, 14.43], [0.006933, 13.443], [0.006932, 16.09], [0.006931, 4.921]]
+symbol BNBBTC
+[[0.006935, 1.08], [0.006934, 14.43], [0.006933, 10.809], [0.006932, 5.997], [0.006931, 4.921]]
+symbol BNBBTC
+[[0.006935, 1.08], [0.006934, 14.43], [0.006933, 10.809], [0.006932, 5.997], [0.006931, 4.921]]
+symbol BNBBTC
+[[0.006935, 1.65], [0.006934, 14.43], [0.006933, 13.443], [0.006932, 16.089], [0.006931, 4.921]]
+symbol BNBBTC
+[[0.006935, 0.54], [0.006934, 14.43], [0.006933, 13.443], [0.006932, 16.089], [0.006931, 4.921]]
