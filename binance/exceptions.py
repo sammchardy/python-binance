@@ -93,3 +93,22 @@ class NotImplementedException(Exception):
 
 class UnknownDateFormat(Exception):
     ...
+
+
+class BinanceRegionException(Exception):
+    """Raised when using a region-specific endpoint with incompatible client."""
+
+    def __init__(
+        self, required_tld: str, actual_tld: str, endpoint_name: str = "endpoint"
+    ):
+        self.required_tld = required_tld
+        self.actual_tld = actual_tld
+        self.endpoint_name = endpoint_name
+        self.message = (
+            f"{endpoint_name} is only available on binance.{required_tld}, "
+            f"but client is configured for binance.{actual_tld}"
+        )
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f"BinanceRegionException: {self.message}"
