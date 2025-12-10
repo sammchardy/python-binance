@@ -276,4 +276,201 @@ For more detailed logging with timestamps and log levels:
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     )
 
+Verbose Mode
+~~~~~~~~~~~~
+
+Verbose mode provides detailed logging of all HTTP requests and responses, which is particularly useful for debugging API issues, understanding request/response formats, and troubleshooting authentication or network problems.
+
+Method 1: Using the verbose Parameter (Recommended for Quick Debugging)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Enable verbose mode by passing ``verbose=True`` when creating the client:
+
+.. code:: python
+
+    from binance.client import Client
+    import logging
+
+    # Configure logging (optional - for seeing the output)
+    logging.basicConfig(level=logging.DEBUG)
+
+    # Enable verbose mode
+    client = Client(api_key, api_secret, verbose=True)
+
+    # All API calls will now log detailed information
+    server_time = client.get_server_time()
+
+For AsyncClient:
+
+.. code:: python
+
+    import asyncio
+    import logging
+    from binance.async_client import AsyncClient
+
+    logging.basicConfig(level=logging.DEBUG)
+
+    async def main():
+        # Enable verbose mode
+        client = await AsyncClient.create(api_key, api_secret, verbose=True)
+
+        # All API calls will now log detailed information
+        server_time = await client.get_server_time()
+
+        await client.close_connection()
+
+    if __name__ == "__main__":
+        asyncio.run(main())
+
+Method 2: Using Python's Logging Module (Recommended for Production)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more control over logging configuration, use Python's standard logging module:
+
+.. code:: python
+
+    import logging
+    from binance.client import Client
+
+    # Configure logging for binance module
+    logging.basicConfig(
+        level=logging.INFO,  # Set root level
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+
+    # Enable debug logging for binance specifically
+    logging.getLogger('binance.base_client').setLevel(logging.DEBUG)
+
+    # Create client (verbose parameter not needed)
+    client = Client(api_key, api_secret)
+
+This approach gives you fine-grained control and integrates with your application's existing logging infrastructure.
+
+What Gets Logged
+^^^^^^^^^^^^^^^^
+
+When verbose mode is enabled, you'll see detailed logs for each request including:
+
+- HTTP method and URL
+- Request headers and body
+- Response status code
+- Response headers and body (truncated to 1000 characters)
+
+Example output:
+
+.. code-block:: text
+
+    2025-11-30 22:01:26,957 - binance.base_client - DEBUG -
+    Request: GET https://api.binance.com/api/v3/time
+    RequestHeaders: {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    RequestBody: None
+    Response: 200
+    ResponseHeaders: {'Content-Type': 'application/json;charset=UTF-8', ...}
+    ResponseBody: {"serverTime":1764536487218}
+
+**Note:** Verbose mode should typically be disabled in production environments to minimize overhead and log volume. Use the logging module approach for production with appropriate log levels.
+
+WebSocket Verbose Logging
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+WebSocket connections support verbose mode just like REST API calls.
+
+Method 1: Using the verbose Parameter (Recommended for Quick Debugging)
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. code:: python
+
+    import logging
+    from binance import AsyncClient, BinanceSocketManager
+
+    # Configure logging to see output
+    logging.basicConfig(level=logging.DEBUG)
+
+    async def main():
+        client = await AsyncClient.create()
+
+        # Enable verbose mode for WebSocket connections
+        bm = BinanceSocketManager(client, verbose=True)
+
+        # WebSocket messages will be logged at DEBUG level
+        ts = bm.trade_socket('BTCUSDT')
+        async with ts as tscm:
+            msg = await tscm.recv()
+            print(msg)
+
+        await client.close_connection()
+
+Method 2: Using Python's Logging Module (Recommended for Production)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+.. code:: python
+
+    import logging
+    from binance import AsyncClient, BinanceSocketManager
+
+    # Configure logging
+    logging.basicConfig(level=logging.DEBUG)
+
+    # Enable debug logging for all WebSocket connections
+    logging.getLogger('binance.ws').setLevel(logging.DEBUG)
+
+    async def main():
+        client = await AsyncClient.create()
+        bm = BinanceSocketManager(client)
+
+        # WebSocket messages will be logged at DEBUG level
+        ts = bm.trade_socket('BTCUSDT')
+        async with ts as tscm:
+            msg = await tscm.recv()
+            print(msg)
+
+        await client.close_connection()
+
+You can also enable logging for specific WebSocket components:
+
+.. code:: python
+
+    # Log only WebSocket API messages
+    logging.getLogger('binance.ws.websocket_api').setLevel(logging.DEBUG)
+
+    # Log reconnection events
+    logging.getLogger('binance.ws.reconnecting_websocket').setLevel(logging.DEBUG)
+
+    # Log stream events
+    logging.getLogger('binance.ws.streams').setLevel(logging.DEBUG)
+
+WebSocket debug logs include:
+
+- Raw received messages
+- Connection state changes
+- Reconnection attempts
+- Subscription events
+- Error messages
+
+**Tip:** For comprehensive debugging, enable verbose mode for both REST API and WebSocket connections:
+
+.. code:: python
+
+    import logging
+    from binance import AsyncClient, BinanceSocketManager
+
+    logging.basicConfig(level=logging.DEBUG)
+
+    # Enable verbose for both REST API and WebSocket
+    client = await AsyncClient.create(verbose=True)
+    bm = BinanceSocketManager(client, verbose=True)
+
+For Threaded WebSocket Manager:
+
+.. code:: python
+
+    import logging
+    from binance.ws.threaded_stream import ThreadedApiManager
+
+    logging.basicConfig(level=logging.DEBUG)
+
+    # Enable verbose mode for threaded WebSocket manager
+    twm = ThreadedApiManager(api_key='your_key', api_secret='your_secret', verbose=True)
+    twm.start()
+
 .. image:: https://analytics-pixel.appspot.com/UA-111417213-1/github/python-binance/docs/overview?pixel

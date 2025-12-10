@@ -20,3 +20,15 @@ Check recvWindow is an integer and not a string.
 *A2*: You may need to regenerate your API Key and Secret
 
 *A3*: You may be attempting to access the API from a Chinese IP address, these are now restricted by Binance.
+
+*Q: How can I debug API issues?*
+
+*A*: Enable verbose mode to see detailed request and response information:
+
+.. code:: python
+
+    client = Client(api_key, api_secret, verbose=True)
+
+This will log all HTTP requests and responses, including headers, body, and status codes. This is particularly helpful for debugging authentication issues, understanding API behavior, and troubleshooting network problems.
+
+See the Logging section in the `Getting Started guide <overview.html#verbose-mode>`_ for more details.

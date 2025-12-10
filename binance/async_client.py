@@ -38,11 +38,12 @@ class AsyncClient(BaseClient):
         private_key_pass: Optional[str] = None,
         https_proxy: Optional[str] = None,
         time_unit: Optional[str] = None,
+        verbose: bool = False,
     ):
         self.https_proxy = https_proxy
         self.loop = loop or get_loop()
         self._session_params: Dict[str, Any] = session_params or {}
-        
+
         # Convert https_proxy to requests_params format for BaseClient
         if https_proxy and requests_params is None:
             requests_params = {'proxies': {'http': https_proxy, 'https': https_proxy}}
@@ -50,7 +51,7 @@ class AsyncClient(BaseClient):
             if 'proxies' not in requests_params:
                 requests_params['proxies'] = {}
             requests_params['proxies'].update({'http': https_proxy, 'https': https_proxy})
-        
+
         super().__init__(
             api_key,
             api_secret,
@@ -62,6 +63,7 @@ class AsyncClient(BaseClient):
             private_key,
             private_key_pass,
             time_unit=time_unit,
+            verbose=verbose,
         )
 
     @classmethod
@@ -80,6 +82,7 @@ class AsyncClient(BaseClient):
         private_key_pass: Optional[str] = None,
         https_proxy: Optional[str] = None,
         time_unit: Optional[str] = None,
+        verbose: bool = False,
     ):
         self = cls(
             api_key,
@@ -94,7 +97,8 @@ class AsyncClient(BaseClient):
             private_key,
             private_key_pass,
             https_proxy,
-            time_unit
+            time_unit,
+            verbose
         )
         self.https_proxy = https_proxy  # move this to the constructor
 
@@ -175,6 +179,20 @@ class AsyncClient(BaseClient):
             **kwargs,
         ) as response:
             self.response = response
+
+            if self.verbose:
+                response_text = await response.text()
+                self.logger.debug(
+                    "\nRequest: %s %s\nRequestHeaders: %s\nRequestBody: %s\nResponse: %s\nResponseHeaders: %s\nResponseBody: %s",
+                    method.upper(),
+                    uri,
+                    headers,
+                    data,
+                    response.status,
+                    dict(response.headers),
+                    response_text[:1000] if response_text else None
+                )
+
             return await self._handle_response(response)
 
     async def _handle_response(self, response: aiohttp.ClientResponse):

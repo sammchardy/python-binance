@@ -34,6 +34,7 @@ class Client(BaseClient):
         private_key_pass: Optional[str] = None,
         ping: Optional[bool] = True,
         time_unit: Optional[str] = None,
+        verbose: bool = False,
     ):
         super().__init__(
             api_key,
@@ -46,6 +47,7 @@ class Client(BaseClient):
             private_key,
             private_key_pass,
             time_unit=time_unit,
+            verbose=verbose,
         )
 
         # init DNS and SSL cert
@@ -88,6 +90,19 @@ class Client(BaseClient):
             data = f"{url_encoded_data}&signature={signature}"
 
         self.response = getattr(self.session, method)(uri, headers=headers, data=data, **kwargs)
+
+        if self.verbose:
+            self.logger.debug(
+                "\nRequest: %s %s\nRequestHeaders: %s\nRequestBody: %s\nResponse: %s\nResponseHeaders: %s\nResponseBody: %s",
+                method.upper(),
+                uri,
+                headers,
+                data,
+                self.response.status_code,
+                dict(self.response.headers),
+                self.response.text[:1000] if self.response.text else None
+            )
+
         return self._handle_response(self.response)
 
     @staticmethod
