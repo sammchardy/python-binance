@@ -24,6 +24,11 @@ def test_futures_order_book(futuresClient):
     assert_ob(order_book)
 
 
+def test_futures_rpi_depth(futuresClient):
+    rpi_depth = futuresClient.futures_rpi_depth(symbol="BTCUSDT")
+    assert_ob(rpi_depth)
+
+
 def test_futures_recent_trades(futuresClient):
     futuresClient.futures_recent_trades(symbol="BTCUSDT")
 
@@ -298,6 +303,22 @@ def test_futures_account_balance(futuresClient):
 
 def test_futures_account(futuresClient):
     futuresClient.futures_account()
+
+
+def test_futures_symbol_adl_risk(futuresClient):
+    # Test without symbol (get all)
+    adl_risks = futuresClient.futures_symbol_adl_risk()
+    assert isinstance(adl_risks, list)
+
+    # Test with specific symbol (if any symbols available)
+    if len(adl_risks) > 0:
+        test_symbol = adl_risks[0]["symbol"]
+        adl_risk = futuresClient.futures_symbol_adl_risk(symbol=test_symbol)
+        assert isinstance(adl_risk, dict)
+        assert "symbol" in adl_risk
+        assert "adlRisk" in adl_risk
+        assert adl_risk["adlRisk"] in ["low", "medium", "high"]
+        assert adl_risk["symbol"] == test_symbol
 
 
 def test_futures_change_leverage(futuresClient):
