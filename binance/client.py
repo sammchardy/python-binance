@@ -7309,6 +7309,43 @@ class Client(BaseClient):
         """
         return self._request_futures_api("get", "depth", data=params)
 
+    def futures_rpi_depth(self, **params):
+        """Get RPI Order Book with Retail Price Improvement orders
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/RPI-Order-Book
+
+        :param symbol: required
+        :type symbol: str
+        :param limit: Default 1000; Valid limits:[1000]
+        :type limit: int
+
+        :returns: API response
+
+        .. code-block:: python
+
+            {
+                "lastUpdateId": 1027024,
+                "E": 1589436922972,   // Message output time
+                "T": 1589436922959,   // Transaction time
+                "bids": [
+                    [
+                        "4.00000000",     // PRICE
+                        "431.00000000"    // QTY
+                    ]
+                ],
+                "asks": [
+                    [
+                        "4.00000200",
+                        "12.00000000"
+                    ]
+                ]
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_api("get", "rpiDepth", data=params)
+
     def futures_recent_trades(self, **params):
         """Get recent trades (up to last 500).
 
@@ -8194,6 +8231,47 @@ class Client(BaseClient):
 
         """
         return self._request_futures_api("get", "account", True, 2, data=params)
+
+    def futures_symbol_adl_risk(self, **params):
+        """Query the symbol-level ADL (Auto-Deleveraging) risk rating
+
+        The ADL risk rating measures the likelihood of ADL during liquidation.
+        Rating can be: high, medium, low. Updated every 30 minutes.
+
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/account/rest-api/Query-ADL-Risk-Rating
+
+        :param symbol: optional - if not provided, returns ADL risk for all symbols
+        :type symbol: str
+
+        :returns: API response
+
+        .. code-block:: python
+
+            # Single symbol
+            {
+                "symbol": "BTCUSDT",
+                "adlRisk": "low",
+                "updateTime": 1597370495002
+            }
+
+            # All symbols (when symbol not provided)
+            [
+                {
+                    "symbol": "BTCUSDT",
+                    "adlRisk": "low",
+                    "updateTime": 1597370495002
+                },
+                {
+                    "symbol": "ETHUSDT",
+                    "adlRisk": "high",
+                    "updateTime": 1597370495004
+                }
+            ]
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        return self._request_futures_api("get", "symbolAdlRisk", True, data=params)
 
     def futures_change_leverage(self, **params):
         """Change user's initial leverage of specific symbol market

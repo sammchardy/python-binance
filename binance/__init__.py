@@ -4,7 +4,7 @@
 
 """
 
-__version__ = "1.0.32"
+__version__ = "1.0.33"
 
 from binance.async_client import AsyncClient  # noqa
 from binance.client import Client  # noqa
@@ -13,7 +13,6 @@ from binance.ws.depthcache import (
     OptionsDepthCacheManager,  # noqa
     ThreadedDepthCacheManager,  # noqa
     FuturesDepthCacheManager,  # noqa
-    OptionsDepthCacheManager,  # noqa
 )
 from binance.ws.streams import (
     BinanceSocketManager,  # noqa

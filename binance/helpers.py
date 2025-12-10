@@ -76,7 +76,7 @@ def round_step_size(
 def convert_ts_str(ts_str):
     if ts_str is None:
         return ts_str
-    if type(ts_str) == int:
+    if isinstance(ts_str, int):
         return ts_str
     return date_to_milliseconds(ts_str)
 

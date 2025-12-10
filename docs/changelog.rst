@@ -1,5 +1,15 @@
 Changelog
 
+v1.0.33 - 2025-12-06
+
+**Fixed**
+
+- fix: reconnect keep alive (#1637)
+
+**Added**
+
+- moved conditional orders to the new futures algo serivce (#1639)
+
 v1.0.32 - 2025-11-03
 ^^^^^^^^^^^^^^^^^^^^
 

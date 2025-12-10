@@ -1716,6 +1716,11 @@ class AsyncClient(BaseClient):
     async def futures_order_book(self, **params):
         return await self._request_futures_api("get", "depth", data=params)
 
+    async def futures_rpi_depth(self, **params):
+        return await self._request_futures_api("get", "rpiDepth", data=params)
+
+    futures_rpi_depth.__doc__ = Client.futures_rpi_depth.__doc__
+
     async def futures_recent_trades(self, **params):
         return await self._request_futures_api("get", "trades", data=params)
 
@@ -2138,6 +2143,11 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api(
             "get", "account", True, version=2, data=params
         )
+
+    async def futures_symbol_adl_risk(self, **params):
+        return await self._request_futures_api("get", "symbolAdlRisk", True, data=params)
+
+    futures_symbol_adl_risk.__doc__ = Client.futures_symbol_adl_risk.__doc__
 
     async def futures_change_leverage(self, **params):
         return await self._request_futures_api("post", "leverage", True, data=params)
