@@ -114,3 +114,58 @@ def test_ws_futures_create_cancel_algo_order(futuresClient):
     )
 
     assert cancel_result["algoId"] == order["algoId"]
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
+def test_ws_futures_create_conditional_order_auto_routing(futuresClient):
+    """Test that conditional order types are automatically routed to algo endpoint"""
+    ticker = futuresClient.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+    positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
+
+    trigger_price = float(ticker["askPrice"]) * 1.5
+    order = futuresClient.ws_futures_create_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        quantity=1,
+        triggerPrice=trigger_price,
+    )
+
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["algoType"] == "CONDITIONAL"
+
+    # Cancel using algoId parameter
+    cancel_result = futuresClient.ws_futures_cancel_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+    assert cancel_result["algoId"] == order["algoId"]
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
+def test_ws_futures_conditional_order_with_stop_price(futuresClient):
+    """Test that stopPrice is converted to triggerPrice for conditional orders"""
+    ticker = futuresClient.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+    positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
+
+    # Create a TAKE_PROFIT_MARKET order with stopPrice (should be converted to triggerPrice)
+    # Use a price above current market price for SELL TAKE_PROFIT
+    trigger_price = float(ticker["askPrice"]) * 1.5
+    order = futuresClient.ws_futures_create_order(
+        symbol=ticker["symbol"],
+        side="SELL",
+        positionSide=positions[0]["positionSide"],
+        type="TAKE_PROFIT_MARKET",
+        quantity=1,
+        stopPrice=trigger_price,  # This should be converted to triggerPrice
+    )
+
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["algoType"] == "CONDITIONAL"
+
+    # Cancel the order
+    futuresClient.ws_futures_cancel_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )

@@ -4024,9 +4024,33 @@ class AsyncClient(BaseClient):
         Send in a new order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api
         """
-        if "newClientOrderId" not in params:
-            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        return await self._ws_futures_api_request("order.place", True, params)
+        # Check if this is a conditional order type that needs to use algo endpoint
+        order_type = params.get("type", "").upper()
+        conditional_types = [
+            "STOP",
+            "STOP_MARKET",
+            "TAKE_PROFIT",
+            "TAKE_PROFIT_MARKET",
+            "TRAILING_STOP_MARKET",
+        ]
+
+        if order_type in conditional_types:
+            # Route to algo order endpoint
+            if "clientAlgoId" not in params:
+                params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            # Remove newClientOrderId if it was added by default
+            params.pop("newClientOrderId", None)
+            if "algoType" not in params:
+                params["algoType"] = "CONDITIONAL"
+            # Convert stopPrice to triggerPrice for algo orders
+            if "stopPrice" in params and "triggerPrice" not in params:
+                params["triggerPrice"] = params.pop("stopPrice")
+            return await self._ws_futures_api_request("algoOrder.place", True, params)
+        else:
+            # Use regular order endpoint
+            if "newClientOrderId" not in params:
+                params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            return await self._ws_futures_api_request("order.place", True, params)
 
     async def ws_futures_edit_order(self, **params):
         """
@@ -4040,12 +4064,21 @@ class AsyncClient(BaseClient):
         cancel an order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Order
         """
-        return await self._ws_futures_api_request("order.cancel", True, params)
+        is_conditional = False
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return await self._ws_futures_api_request("algoOrder.cancel", True, params)
+        else:
+            return await self._ws_futures_api_request("order.cancel", True, params)
 
     async def ws_futures_get_order(self, **params):
         """
         Get an order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Query-Order
+
+        Note: Algo/conditional orders cannot be queried via websocket API
         """
         return await self._ws_futures_api_request("order.status", True, params)
 
