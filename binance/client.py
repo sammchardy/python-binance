@@ -7565,10 +7565,10 @@ class Client(BaseClient):
     def futures_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker-v2
 
         """
-        return self._request_futures_api("get", "ticker/price", data=params)
+        return self._request_futures_api("get", "ticker/price", version=2, data=params)
 
     def futures_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
