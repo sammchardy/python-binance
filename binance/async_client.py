@@ -1600,13 +1600,13 @@ class AsyncClient(BaseClient):
     get_personal_left_quota.__doc__ = Client.get_personal_left_quota.__doc__
 
     async def get_staking_asset_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_asset_us")
         return await self._request_margin_api("get", "staking/asset", True, data=params)
 
     get_staking_asset_us.__doc__ = Client.get_staking_asset_us.__doc__
 
     async def stake_asset_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "stake_asset_us")
         return await self._request_margin_api(
             "post", "staking/stake", True, data=params
         )
@@ -1614,7 +1614,7 @@ class AsyncClient(BaseClient):
     stake_asset_us.__doc__ = Client.stake_asset_us.__doc__
 
     async def unstake_asset_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "unstake_asset_us")
         return await self._request_margin_api(
             "post", "staking/unstake", True, data=params
         )
@@ -1622,7 +1622,7 @@ class AsyncClient(BaseClient):
     unstake_asset_us.__doc__ = Client.unstake_asset_us.__doc__
 
     async def get_staking_balance_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_balance_us")
         return await self._request_margin_api(
             "get", "staking/stakingBalance", True, data=params
         )
@@ -1630,7 +1630,7 @@ class AsyncClient(BaseClient):
     get_staking_balance_us.__doc__ = Client.get_staking_balance_us.__doc__
 
     async def get_staking_history_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_history_us")
         return await self._request_margin_api(
             "get", "staking/history", True, data=params
         )
@@ -1638,7 +1638,7 @@ class AsyncClient(BaseClient):
     get_staking_history_us.__doc__ = Client.get_staking_history_us.__doc__
 
     async def get_staking_rewards_history_us(self, **params):
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_rewards_history_us")
         return await self._request_margin_api(
             "get", "staking/stakingRewardsHistory", True, data=params
         )
