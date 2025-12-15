@@ -121,6 +121,7 @@ class BinanceSocketManager:
                 is_binary=is_binary,
                 user_timeout=self._user_timeout,
                 https_proxy=self._client.https_proxy,
+                max_queue_size=self._max_queue_size,
                 **self.ws_kwargs,
             )
 
