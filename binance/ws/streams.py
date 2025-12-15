@@ -2,6 +2,7 @@ import asyncio
 import time
 from enum import Enum
 from typing import Optional, List, Dict, Callable, Any
+import logging
 
 from binance.ws.constants import KEEPALIVE_TIMEOUT
 from binance.ws.keepalive_websocket import KeepAliveWebsocket
@@ -40,10 +41,11 @@ class BinanceSocketManager:
     WEBSOCKET_DEPTH_20 = "20"
 
     def __init__(
-        self, 
-        client: AsyncClient, 
+        self,
+        client: AsyncClient,
         user_timeout=KEEPALIVE_TIMEOUT,
         max_queue_size: int = 100,
+        verbose: bool = False,
     ):
         """Initialise the BinanceSocketManager
 
@@ -52,6 +54,8 @@ class BinanceSocketManager:
         :param user_timeout: Timeout for user socket in seconds
         :param max_queue_size: Max size of the websocket queue, defaults to 100
         :type max_queue_size: int
+        :param verbose: Enable verbose logging for WebSocket connections
+        :type verbose: bool
         """
         self.STREAM_URL = self.STREAM_URL.format(client.tld)
         self.FSTREAM_URL = self.FSTREAM_URL.format(client.tld)
@@ -65,7 +69,11 @@ class BinanceSocketManager:
         self.testnet = self._client.testnet
         self.demo = self._client.demo
         self._max_queue_size = max_queue_size
+        self.verbose = verbose
         self.ws_kwargs = {}
+
+        if verbose:
+            logging.getLogger('binance.ws').setLevel(logging.DEBUG)
 
     def _get_stream_url(self, stream_url: Optional[str] = None):
         if stream_url:
@@ -872,7 +880,7 @@ class BinanceSocketManager:
 
     def options_multiplex_socket(self, streams: List[str]):
         """Start a multiplexed socket using a list of socket names.
-        
+
         https://developers.binance.com/docs/derivatives/option/websocket-market-streams
 
         """
@@ -967,7 +975,6 @@ class BinanceSocketManager:
             stream_url = self.STREAM_DEMO_URL
         return self._get_account_socket("margin", stream_url=stream_url)
 
-
     def futures_socket(self):
         """Start a websocket for futures data
 
@@ -1041,7 +1048,7 @@ class BinanceSocketManager:
 
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/24-hour-TICKER
 
-        Stream provides real-time 24hr ticker information for all symbols. Only symbols whose ticker info 
+        Stream provides real-time 24hr ticker information for all symbols. Only symbols whose ticker info
         changed will be sent. Updates every 1000ms.
 
         :param symbol: The option symbol to subscribe to (e.g. "BTC-220930-18000-C")
@@ -1066,7 +1073,7 @@ class BinanceSocketManager:
 
     def options_recent_trades_socket(self, symbol: str):
         """Subscribe to a real-time trade information stream.
-        
+
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Trade-Streams
 
         Stream pushes raw trade information for a specific symbol or underlying asset.
@@ -1081,7 +1088,7 @@ class BinanceSocketManager:
         self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE
     ):
         """Subscribe to a Kline/Candlestick data stream.
-        
+
         API Reference: https://developers.binance.com/docs/derivatives/option/websocket-market-streams/Kline-Candlestick-Streams
 
         Stream pushes updates to the current klines/candlestick every 1000ms (if existing).
