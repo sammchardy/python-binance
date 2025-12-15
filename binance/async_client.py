@@ -126,6 +126,8 @@ class AsyncClient(BaseClient):
             await self.ws_api.close()
             self._ws_api = None
 
+    close_connection.__doc__ = Client.close_connection.__doc__
+
     async def _request(
         self, method, uri: str, signed: bool, force_params: bool = False, **kwargs
     ):
@@ -924,6 +926,8 @@ class AsyncClient(BaseClient):
             "get", "/spot/delist-schedule", signed=True, data=params
         )
 
+    get_spot_delist_schedule.__doc__ = Client.get_spot_delist_schedule.__doc__
+
     # Withdraw Endpoints
 
     async def withdraw(self, **params):
@@ -1297,45 +1301,63 @@ class AsyncClient(BaseClient):
             "get", "margin/repay", signed=True, data=params
         )
 
+    get_margin_repay_details.__doc__ = Client.get_margin_repay_details.__doc__
+
     async def get_cross_margin_data(self, **params):
         return await self._request_margin_api(
             "get", "margin/crossMarginData", signed=True, data=params
         )
+
+    get_cross_margin_data.__doc__ = Client.get_cross_margin_data.__doc__
 
     async def get_margin_interest_history(self, **params):
         return await self._request_margin_api(
             "get", "margin/interestHistory", signed=True, data=params
         )
 
+    get_margin_interest_history.__doc__ = Client.get_margin_interest_history.__doc__
+
     async def get_margin_force_liquidation_rec(self, **params):
         return await self._request_margin_api(
             "get", "margin/forceLiquidationRec", signed=True, data=params
         )
+
+    get_margin_force_liquidation_rec.__doc__ = Client.get_margin_force_liquidation_rec.__doc__
 
     async def get_margin_order(self, **params):
         return await self._request_margin_api(
             "get", "margin/order", signed=True, data=params
         )
 
+    get_margin_order.__doc__ = Client.get_margin_order.__doc__
+
     async def get_open_margin_orders(self, **params):
         return await self._request_margin_api(
             "get", "margin/openOrders", signed=True, data=params
         )
+
+    get_open_margin_orders.__doc__ = Client.get_open_margin_orders.__doc__
 
     async def get_all_margin_orders(self, **params):
         return await self._request_margin_api(
             "get", "margin/allOrders", signed=True, data=params
         )
 
+    get_all_margin_orders.__doc__ = Client.get_all_margin_orders.__doc__
+
     async def get_margin_trades(self, **params):
         return await self._request_margin_api(
             "get", "margin/myTrades", signed=True, data=params
         )
 
+    get_margin_trades.__doc__ = Client.get_margin_trades.__doc__
+
     async def get_max_margin_loan(self, **params):
         return await self._request_margin_api(
             "get", "margin/maxBorrowable", signed=True, data=params
         )
+
+    get_max_margin_loan.__doc__ = Client.get_max_margin_loan.__doc__
 
     async def get_max_margin_transfer(self, **params):
         return await self._request_margin_api(
@@ -1344,20 +1366,28 @@ class AsyncClient(BaseClient):
 
     # Margin OCO
 
+    get_max_margin_transfer.__doc__ = Client.get_max_margin_transfer.__doc__
+
     async def create_margin_oco_order(self, **params):
         return await self._request_margin_api(
             "post", "margin/order/oco", signed=True, data=params
         )
+
+    create_margin_oco_order.__doc__ = Client.create_margin_oco_order.__doc__
 
     async def cancel_margin_oco_order(self, **params):
         return await self._request_margin_api(
             "delete", "margin/orderList", signed=True, data=params
         )
 
+    cancel_margin_oco_order.__doc__ = Client.cancel_margin_oco_order.__doc__
+
     async def get_margin_oco_order(self, **params):
         return await self._request_margin_api(
             "get", "margin/orderList", signed=True, data=params
         )
+
+    get_margin_oco_order.__doc__ = Client.get_margin_oco_order.__doc__
 
     async def get_open_margin_oco_orders(self, **params):
         return await self._request_margin_api(
@@ -1366,17 +1396,23 @@ class AsyncClient(BaseClient):
 
     # Cross-margin
 
+    get_open_margin_oco_orders.__doc__ = Client.get_open_margin_oco_orders.__doc__
+
     async def margin_stream_get_listen_key(self):
         res = await self._request_margin_api(
             "post", "userDataStream", signed=False, data={}
         )
         return res["listenKey"]
 
+    margin_stream_get_listen_key.__doc__ = Client.margin_stream_get_listen_key.__doc__
+
     async def margin_stream_keepalive(self, listenKey):
         params = {"listenKey": listenKey}
         return await self._request_margin_api(
             "put", "userDataStream", signed=False, data=params
         )
+
+    margin_stream_keepalive.__doc__ = Client.margin_stream_keepalive.__doc__
 
     async def margin_stream_close(self, listenKey):
         params = {"listenKey": listenKey}
@@ -1386,6 +1422,8 @@ class AsyncClient(BaseClient):
 
         # Isolated margin
 
+    margin_stream_close.__doc__ = Client.margin_stream_close.__doc__
+
     async def isolated_margin_stream_get_listen_key(self, symbol):
         params = {"symbol": symbol}
         res = await self._request_margin_api(
@@ -1393,11 +1431,15 @@ class AsyncClient(BaseClient):
         )
         return res["listenKey"]
 
+    isolated_margin_stream_get_listen_key.__doc__ = Client.isolated_margin_stream_get_listen_key.__doc__
+
     async def isolated_margin_stream_keepalive(self, symbol, listenKey):
         params = {"symbol": symbol, "listenKey": listenKey}
         return await self._request_margin_api(
             "put", "userDataStream/isolated", signed=False, data=params
         )
+
+    isolated_margin_stream_keepalive.__doc__ = Client.isolated_margin_stream_keepalive.__doc__
 
     async def isolated_margin_stream_close(self, symbol, listenKey):
         params = {"symbol": symbol, "listenKey": listenKey}
@@ -1406,6 +1448,8 @@ class AsyncClient(BaseClient):
         )
 
     # Simple Earn Endpoints
+
+    isolated_margin_stream_close.__doc__ = Client.isolated_margin_stream_close.__doc__
 
     async def get_simple_earn_flexible_product_list(self, **params):
         return await self._request_margin_api(
@@ -1493,6 +1537,8 @@ class AsyncClient(BaseClient):
             "get", "lending/project/list", signed=True, data=params
         )
 
+    get_fixed_activity_project_list.__doc__ = Client.get_fixed_activity_project_list.__doc__
+
     async def change_fixed_activity_to_daily_position(self, **params):
         return await self._request_margin_api(
             "post", "lending/positionChanged", signed=True, data=params
@@ -1500,35 +1546,49 @@ class AsyncClient(BaseClient):
 
     # Staking Endpoints
 
+    change_fixed_activity_to_daily_position.__doc__ = Client.change_fixed_activity_to_daily_position.__doc__
+
     async def get_staking_product_list(self, **params):
         return await self._request_margin_api(
             "get", "staking/productList", signed=True, data=params
         )
+
+    get_staking_product_list.__doc__ = Client.get_staking_product_list.__doc__
 
     async def purchase_staking_product(self, **params):
         return await self._request_margin_api(
             "post", "staking/purchase", signed=True, data=params
         )
 
+    purchase_staking_product.__doc__ = Client.purchase_staking_product.__doc__
+
     async def redeem_staking_product(self, **params):
         return await self._request_margin_api(
             "post", "staking/redeem", signed=True, data=params
         )
+
+    redeem_staking_product.__doc__ = Client.redeem_staking_product.__doc__
 
     async def get_staking_position(self, **params):
         return await self._request_margin_api(
             "get", "staking/position", signed=True, data=params
         )
 
+    get_staking_position.__doc__ = Client.get_staking_position.__doc__
+
     async def get_staking_purchase_history(self, **params):
         return await self._request_margin_api(
             "get", "staking/purchaseRecord", signed=True, data=params
         )
 
+    get_staking_purchase_history.__doc__ = Client.get_staking_purchase_history.__doc__
+
     async def set_auto_staking(self, **params):
         return await self._request_margin_api(
             "post", "staking/setAutoStaking", signed=True, data=params
         )
+
+    set_auto_staking.__doc__ = Client.set_auto_staking.__doc__
 
     async def get_personal_left_quota(self, **params):
         return await self._request_margin_api(
@@ -1536,6 +1596,8 @@ class AsyncClient(BaseClient):
         )
 
     # US Staking Endpoints
+
+    get_personal_left_quota.__doc__ = Client.get_personal_left_quota.__doc__
 
     async def get_staking_asset_us(self, **params):
         assert self.tld == "us", "Endpoint only available on binance.us"
@@ -1592,110 +1654,154 @@ class AsyncClient(BaseClient):
             "get", "sub-account/list", True, data=params
         )
 
+    get_sub_account_list.__doc__ = Client.get_sub_account_list.__doc__
+
     async def get_sub_account_transfer_history(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/sub/transfer/history", True, data=params
         )
+
+    get_sub_account_transfer_history.__doc__ = Client.get_sub_account_transfer_history.__doc__
 
     async def get_sub_account_futures_transfer_history(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/futures/internalTransfer", True, data=params
         )
 
+    get_sub_account_futures_transfer_history.__doc__ = Client.get_sub_account_futures_transfer_history.__doc__
+
     async def create_sub_account_futures_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/futures/internalTransfer", True, data=params
         )
+
+    create_sub_account_futures_transfer.__doc__ = Client.create_sub_account_futures_transfer.__doc__
 
     async def get_sub_account_assets(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/assets", True, data=params, version=4
         )
 
+    get_sub_account_assets.__doc__ = Client.get_sub_account_assets.__doc__
+
     async def query_subaccount_spot_summary(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/spotSummary", True, data=params
         )
+
+    query_subaccount_spot_summary.__doc__ = Client.query_subaccount_spot_summary.__doc__
 
     async def get_subaccount_deposit_address(self, **params):
         return await self._request_margin_api(
             "get", "capital/deposit/subAddress", True, data=params
         )
 
+    get_subaccount_deposit_address.__doc__ = Client.get_subaccount_deposit_address.__doc__
+
     async def get_subaccount_deposit_history(self, **params):
         return await self._request_margin_api(
             "get", "capital/deposit/subHisrec", True, data=params
         )
+
+    get_subaccount_deposit_history.__doc__ = Client.get_subaccount_deposit_history.__doc__
 
     async def get_subaccount_futures_margin_status(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/status", True, data=params
         )
 
+    get_subaccount_futures_margin_status.__doc__ = Client.get_subaccount_futures_margin_status.__doc__
+
     async def enable_subaccount_margin(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/margin/enable", True, data=params
         )
+
+    enable_subaccount_margin.__doc__ = Client.enable_subaccount_margin.__doc__
 
     async def get_subaccount_margin_details(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/margin/account", True, data=params
         )
 
+    get_subaccount_margin_details.__doc__ = Client.get_subaccount_margin_details.__doc__
+
     async def get_subaccount_margin_summary(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/margin/accountSummary", True, data=params
         )
+
+    get_subaccount_margin_summary.__doc__ = Client.get_subaccount_margin_summary.__doc__
 
     async def enable_subaccount_futures(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/futures/enable", True, data=params
         )
 
+    enable_subaccount_futures.__doc__ = Client.enable_subaccount_futures.__doc__
+
     async def get_subaccount_futures_details(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/futures/account", True, data=params, version=2
         )
+
+    get_subaccount_futures_details.__doc__ = Client.get_subaccount_futures_details.__doc__
 
     async def get_subaccount_futures_summary(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/futures/accountSummary", True, data=params, version=2
         )
 
+    get_subaccount_futures_summary.__doc__ = Client.get_subaccount_futures_summary.__doc__
+
     async def get_subaccount_futures_positionrisk(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/futures/positionRisk", True, data=params, version=2
         )
+
+    get_subaccount_futures_positionrisk.__doc__ = Client.get_subaccount_futures_positionrisk.__doc__
 
     async def make_subaccount_futures_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/futures/transfer", True, data=params
         )
 
+    make_subaccount_futures_transfer.__doc__ = Client.make_subaccount_futures_transfer.__doc__
+
     async def make_subaccount_margin_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/margin/transfer", True, data=params
         )
+
+    make_subaccount_margin_transfer.__doc__ = Client.make_subaccount_margin_transfer.__doc__
 
     async def make_subaccount_to_subaccount_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/transfer/subToSub", True, data=params
         )
 
+    make_subaccount_to_subaccount_transfer.__doc__ = Client.make_subaccount_to_subaccount_transfer.__doc__
+
     async def make_subaccount_to_master_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/transfer/subToMaster", True, data=params
         )
+
+    make_subaccount_to_master_transfer.__doc__ = Client.make_subaccount_to_master_transfer.__doc__
 
     async def get_subaccount_transfer_history(self, **params):
         return await self._request_margin_api(
             "get", "sub-account/transfer/subUserHistory", True, data=params
         )
 
+    get_subaccount_transfer_history.__doc__ = Client.get_subaccount_transfer_history.__doc__
+
     async def make_subaccount_universal_transfer(self, **params):
         return await self._request_margin_api(
             "post", "sub-account/universalTransfer", True, data=params
         )
+
+    make_subaccount_universal_transfer.__doc__ = Client.make_subaccount_universal_transfer.__doc__
 
     async def get_universal_transfer_history(self, **params):
         return await self._request_margin_api(
@@ -1704,17 +1810,27 @@ class AsyncClient(BaseClient):
 
     # Futures API
 
+    get_universal_transfer_history.__doc__ = Client.get_universal_transfer_history.__doc__
+
     async def futures_ping(self):
         return await self._request_futures_api("get", "ping")
+
+    futures_ping.__doc__ = Client.futures_ping.__doc__
 
     async def futures_time(self):
         return await self._request_futures_api("get", "time")
 
+    futures_time.__doc__ = Client.futures_time.__doc__
+
     async def futures_exchange_info(self):
         return await self._request_futures_api("get", "exchangeInfo")
 
+    futures_exchange_info.__doc__ = Client.futures_exchange_info.__doc__
+
     async def futures_order_book(self, **params):
         return await self._request_futures_api("get", "depth", data=params)
+
+    futures_order_book.__doc__ = Client.futures_order_book.__doc__
 
     async def futures_rpi_depth(self, **params):
         return await self._request_futures_api("get", "rpiDepth", data=params)
@@ -1724,14 +1840,22 @@ class AsyncClient(BaseClient):
     async def futures_recent_trades(self, **params):
         return await self._request_futures_api("get", "trades", data=params)
 
+    futures_recent_trades.__doc__ = Client.futures_recent_trades.__doc__
+
     async def futures_historical_trades(self, **params):
         return await self._request_futures_api("get", "historicalTrades", data=params)
+
+    futures_historical_trades.__doc__ = Client.futures_historical_trades.__doc__
 
     async def futures_aggregate_trades(self, **params):
         return await self._request_futures_api("get", "aggTrades", data=params)
 
+    futures_aggregate_trades.__doc__ = Client.futures_aggregate_trades.__doc__
+
     async def futures_klines(self, **params):
         return await self._request_futures_api("get", "klines", data=params)
+
+    futures_klines.__doc__ = Client.futures_klines.__doc__
 
     async def futures_mark_price_klines(self, **params):
         return await self._request_futures_api("get", "markPriceKlines", data=params)
@@ -1751,6 +1875,8 @@ class AsyncClient(BaseClient):
     async def futures_continuous_klines(self, **params):
         return await self._request_futures_api("get", "continuousKlines", data=params)
 
+    futures_continuous_klines.__doc__ = Client.futures_continuous_klines.__doc__
+
     async def futures_historical_klines(
         self, symbol: str, interval: str, start_str, end_str=None, limit=None
     ):
@@ -1763,6 +1889,8 @@ class AsyncClient(BaseClient):
             klines_type=HistoricalKlinesType.FUTURES,
         )
 
+    futures_historical_klines.__doc__ = Client.futures_historical_klines.__doc__
+
     async def futures_historical_klines_generator(
         self, symbol, interval, start_str, end_str=None
     ):
@@ -1774,40 +1902,60 @@ class AsyncClient(BaseClient):
             klines_type=HistoricalKlinesType.FUTURES,
         )
 
+    futures_historical_klines_generator.__doc__ = Client.futures_historical_klines_generator.__doc__
+
     async def futures_mark_price(self, **params):
         return await self._request_futures_api("get", "premiumIndex", data=params)
 
+    futures_mark_price.__doc__ = Client.futures_mark_price.__doc__
+
     async def futures_funding_rate(self, **params):
         return await self._request_futures_api("get", "fundingRate", data=params)
+
+    futures_funding_rate.__doc__ = Client.futures_funding_rate.__doc__
 
     async def futures_top_longshort_account_ratio(self, **params):
         return await self._request_futures_data_api(
             "get", "topLongShortAccountRatio", data=params
         )
 
+    futures_top_longshort_account_ratio.__doc__ = Client.futures_top_longshort_account_ratio.__doc__
+
     async def futures_top_longshort_position_ratio(self, **params):
         return await self._request_futures_data_api(
             "get", "topLongShortPositionRatio", data=params
         )
 
+    futures_top_longshort_position_ratio.__doc__ = Client.futures_top_longshort_position_ratio.__doc__
+
     async def futures_global_longshort_ratio(self, **params):
         return await self._request_futures_data_api(
             "get", "globalLongShortAccountRatio", data=params
         )
+
+    futures_global_longshort_ratio.__doc__ = Client.futures_global_longshort_ratio.__doc__
         
     async def futures_taker_longshort_ratio(self, **params):
         return await self._request_futures_data_api(
             "get", "takerlongshortRatio", data=params
         )
 
+    futures_taker_longshort_ratio.__doc__ = Client.futures_taker_longshort_ratio.__doc__
+
     async def futures_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/24hr", data=params)
+
+    futures_ticker.__doc__ = Client.futures_ticker.__doc__
 
     async def futures_symbol_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/price", data=params)
 
+    futures_symbol_ticker.__doc__ = Client.futures_symbol_ticker.__doc__
+
     async def futures_orderbook_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/bookTicker", data=params)
+
+    futures_orderbook_ticker.__doc__ = Client.futures_orderbook_ticker.__doc__
 
     async def futures_index_price_constituents(self, **params):
         return await self._request_futures_api("get", "constituents", data=params)
@@ -1821,76 +1969,108 @@ class AsyncClient(BaseClient):
             "get", "forceOrders", signed=True, data=params
         )
 
+    futures_liquidation_orders.__doc__ = Client.futures_liquidation_orders.__doc__
+
     async def futures_api_trading_status(self, **params):
         return await self._request_futures_api(
             "get", "apiTradingStatus", signed=True, data=params
         )
+
+    futures_api_trading_status.__doc__ = Client.futures_api_trading_status.__doc__
 
     async def futures_commission_rate(self, **params):
         return await self._request_futures_api(
             "get", "commissionRate", signed=True, data=params
         )
 
+    futures_commission_rate.__doc__ = Client.futures_commission_rate.__doc__
+
     async def futures_adl_quantile_estimate(self, **params):
         return await self._request_futures_api(
             "get", "adlQuantile", signed=True, data=params
         )
 
+    futures_adl_quantile_estimate.__doc__ = Client.futures_adl_quantile_estimate.__doc__
+
     async def futures_open_interest(self, **params):
         return await self._request_futures_api("get", "openInterest", data=params)
 
+    futures_open_interest.__doc__ = Client.futures_open_interest.__doc__
+
     async def futures_index_info(self, **params):
         return await self._request_futures_api("get", "indexInfo", data=params)
+
+    futures_index_info.__doc__ = Client.futures_index_info.__doc__
 
     async def futures_open_interest_hist(self, **params):
         return await self._request_futures_data_api(
             "get", "openInterestHist", data=params
         )
 
+    futures_open_interest_hist.__doc__ = Client.futures_open_interest_hist.__doc__
+
     async def futures_leverage_bracket(self, **params):
         return await self._request_futures_api(
             "get", "leverageBracket", True, data=params
         )
+
+    futures_leverage_bracket.__doc__ = Client.futures_leverage_bracket.__doc__
 
     async def futures_account_transfer(self, **params):
         return await self._request_margin_api(
             "post", "futures/transfer", True, data=params
         )
 
+    futures_account_transfer.__doc__ = Client.futures_account_transfer.__doc__
+
     async def transfer_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/transfer", True, data=params
         )
+
+    transfer_history.__doc__ = Client.transfer_history.__doc__
 
     async def futures_loan_borrow_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/borrow/history", True, data=params
         )
 
+    futures_loan_borrow_history.__doc__ = Client.futures_loan_borrow_history.__doc__
+
     async def futures_loan_repay_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/repay/history", True, data=params
         )
+
+    futures_loan_repay_history.__doc__ = Client.futures_loan_repay_history.__doc__
 
     async def futures_loan_wallet(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/wallet", True, data=params, version=2
         )
 
+    futures_loan_wallet.__doc__ = Client.futures_loan_wallet.__doc__
+
     async def futures_cross_collateral_adjust_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/adjustCollateral/history", True, data=params
         )
+
+    futures_cross_collateral_adjust_history.__doc__ = Client.futures_cross_collateral_adjust_history.__doc__
 
     async def futures_cross_collateral_liquidation_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/liquidationHistory", True, data=params
         )
 
+    futures_cross_collateral_liquidation_history.__doc__ = Client.futures_cross_collateral_liquidation_history.__doc__
+
     async def futures_loan_interest_history(self, **params):
         return await self._request_margin_api(
             "get", "futures/loan/interestHistory", True, data=params
         )
+
+    futures_loan_interest_history.__doc__ = Client.futures_loan_interest_history.__doc__
 
     async def futures_create_order(self, **params):
         # Check if this is a conditional order type that needs to use algo endpoint
@@ -1919,6 +2099,8 @@ class AsyncClient(BaseClient):
             if "newClientOrderId" not in params:
                 params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
             return await self._request_futures_api("post", "order", True, data=params)
+
+    futures_create_order.__doc__ = Client.futures_create_order.__doc__
 
     async def futures_limit_order(self, **params):
         """Send in a new futures limit order.
@@ -2004,6 +2186,8 @@ class AsyncClient(BaseClient):
     async def futures_create_test_order(self, **params):
         return await self._request_futures_api("post", "order/test", True, data=params)
 
+    futures_create_test_order.__doc__ = Client.futures_create_test_order.__doc__
+
     async def futures_place_batch_order(self, **params):
         for order in params["batchOrders"]:
             if "newClientOrderId" not in order:
@@ -2015,6 +2199,8 @@ class AsyncClient(BaseClient):
         return await self._request_futures_api(
             "post", "batchOrders", True, data=params, force_params=True
         )
+
+    futures_place_batch_order.__doc__ = Client.futures_place_batch_order.__doc__
 
     async def futures_get_order(self, **params):
         # Check if this is a request for a conditional/algo order
@@ -2091,12 +2277,16 @@ class AsyncClient(BaseClient):
             "delete", "batchOrders", True, data=params, force_params=True
         )
 
+    futures_cancel_orders.__doc__ = Client.futures_cancel_orders.__doc__
+
     async def futures_countdown_cancel_all(self, **params):
         return await self._request_futures_api(
             "post", "countdownCancelAll", True, data=params
         )
 
     # Algo Orders (Conditional Orders)
+
+    futures_countdown_cancel_all.__doc__ = Client.futures_countdown_cancel_all.__doc__
 
     async def futures_create_algo_order(self, **params):
         if "clientAlgoId" not in params:
@@ -2139,10 +2329,14 @@ class AsyncClient(BaseClient):
             "get", "balance", True, version=3, data=params
         )
 
+    futures_account_balance.__doc__ = Client.futures_account_balance.__doc__
+
     async def futures_account(self, **params):
         return await self._request_futures_api(
             "get", "account", True, version=2, data=params
         )
+
+    futures_account.__doc__ = Client.futures_account.__doc__
 
     async def futures_symbol_adl_risk(self, **params):
         return await self._request_futures_api("get", "symbolAdlRisk", True, data=params)
@@ -2152,39 +2346,57 @@ class AsyncClient(BaseClient):
     async def futures_change_leverage(self, **params):
         return await self._request_futures_api("post", "leverage", True, data=params)
 
+    futures_change_leverage.__doc__ = Client.futures_change_leverage.__doc__
+
     async def futures_change_margin_type(self, **params):
         return await self._request_futures_api("post", "marginType", True, data=params)
+
+    futures_change_margin_type.__doc__ = Client.futures_change_margin_type.__doc__
 
     async def futures_change_position_margin(self, **params):
         return await self._request_futures_api(
             "post", "positionMargin", True, data=params
         )
 
+    futures_change_position_margin.__doc__ = Client.futures_change_position_margin.__doc__
+
     async def futures_position_margin_history(self, **params):
         return await self._request_futures_api(
             "get", "positionMargin/history", True, data=params
         )
+
+    futures_position_margin_history.__doc__ = Client.futures_position_margin_history.__doc__
 
     async def futures_position_information(self, **params):
         return await self._request_futures_api(
             "get", "positionRisk", True, version=3, data=params
         )
 
+    futures_position_information.__doc__ = Client.futures_position_information.__doc__
+
     async def futures_account_trades(self, **params):
         return await self._request_futures_api("get", "userTrades", True, data=params)
 
+    futures_account_trades.__doc__ = Client.futures_account_trades.__doc__
+
     async def futures_income_history(self, **params):
         return await self._request_futures_api("get", "income", True, data=params)
+
+    futures_income_history.__doc__ = Client.futures_income_history.__doc__
 
     async def futures_change_position_mode(self, **params):
         return await self._request_futures_api(
             "post", "positionSide/dual", True, data=params
         )
 
+    futures_change_position_mode.__doc__ = Client.futures_change_position_mode.__doc__
+
     async def futures_get_position_mode(self, **params):
         return await self._request_futures_api(
             "get", "positionSide/dual", True, data=params
         )
+
+    futures_get_position_mode.__doc__ = Client.futures_get_position_mode.__doc__
 
     async def futures_change_multi_assets_mode(self, multiAssetsMargin: bool):
         params = {"multiAssetsMargin": "true" if multiAssetsMargin else "false"}
@@ -2192,10 +2404,14 @@ class AsyncClient(BaseClient):
             "post", "multiAssetsMargin", True, data=params
         )
 
+    futures_change_multi_assets_mode.__doc__ = Client.futures_change_multi_assets_mode.__doc__
+
     async def futures_get_multi_assets_mode(self):
         return await self._request_futures_api(
             "get", "multiAssetsMargin", True, data={}
         )
+
+    futures_get_multi_assets_mode.__doc__ = Client.futures_get_multi_assets_mode.__doc__
 
     async def futures_stream_get_listen_key(self):
         res = await self._request_futures_api(
@@ -2203,11 +2419,15 @@ class AsyncClient(BaseClient):
         )
         return res["listenKey"]
 
+    futures_stream_get_listen_key.__doc__ = Client.futures_stream_get_listen_key.__doc__
+
     async def futures_stream_keepalive(self, listenKey):
         params = {"listenKey": listenKey}
         return await self._request_futures_api(
             "put", "listenKey", signed=False, data=params
         )
+
+    futures_stream_keepalive.__doc__ = Client.futures_stream_keepalive.__doc__
 
     async def futures_stream_close(self, listenKey):
         params = {"listenKey": listenKey}
@@ -2216,10 +2436,14 @@ class AsyncClient(BaseClient):
         )
 
     # new methods
+
+    futures_stream_close.__doc__ = Client.futures_stream_close.__doc__
     async def futures_account_config(self, **params):
         return await self._request_futures_api(
             "get", "accountConfig", signed=True, version=1, data=params
         )
+
+    futures_account_config.__doc__ = Client.futures_account_config.__doc__
 
     async def futures_symbol_config(self, **params):
         return await self._request_futures_api(
@@ -2228,41 +2452,63 @@ class AsyncClient(BaseClient):
 
     # COIN Futures API
 
+    futures_symbol_config.__doc__ = Client.futures_symbol_config.__doc__
+
     async def futures_coin_ping(self):
         return await self._request_futures_coin_api("get", "ping")
+
+    futures_coin_ping.__doc__ = Client.futures_coin_ping.__doc__
 
     async def futures_coin_time(self):
         return await self._request_futures_coin_api("get", "time")
 
+    futures_coin_time.__doc__ = Client.futures_coin_time.__doc__
+
     async def futures_coin_exchange_info(self):
         return await self._request_futures_coin_api("get", "exchangeInfo")
+
+    futures_coin_exchange_info.__doc__ = Client.futures_coin_exchange_info.__doc__
 
     async def futures_coin_order_book(self, **params):
         return await self._request_futures_coin_api("get", "depth", data=params)
 
+    futures_coin_order_book.__doc__ = Client.futures_coin_order_book.__doc__
+
     async def futures_coin_recent_trades(self, **params):
         return await self._request_futures_coin_api("get", "trades", data=params)
+
+    futures_coin_recent_trades.__doc__ = Client.futures_coin_recent_trades.__doc__
 
     async def futures_coin_historical_trades(self, **params):
         return await self._request_futures_coin_api(
             "get", "historicalTrades", data=params
         )
 
+    futures_coin_historical_trades.__doc__ = Client.futures_coin_historical_trades.__doc__
+
     async def futures_coin_aggregate_trades(self, **params):
         return await self._request_futures_coin_api("get", "aggTrades", data=params)
 
+    futures_coin_aggregate_trades.__doc__ = Client.futures_coin_aggregate_trades.__doc__
+
     async def futures_coin_klines(self, **params):
         return await self._request_futures_coin_api("get", "klines", data=params)
+
+    futures_coin_klines.__doc__ = Client.futures_coin_klines.__doc__
 
     async def futures_coin_continous_klines(self, **params):
         return await self._request_futures_coin_api(
             "get", "continuousKlines", data=params
         )
 
+    futures_coin_continous_klines.__doc__ = Client.futures_coin_continous_klines.__doc__
+
     async def futures_coin_index_price_klines(self, **params):
         return await self._request_futures_coin_api(
             "get", "indexPriceKlines", data=params
         )
+
+    futures_coin_index_price_klines.__doc__ = Client.futures_coin_index_price_klines.__doc__
 
     async def futures_coin_mark_price_klines(self, **params):
         return await self._request_futures_coin_api(
@@ -2283,19 +2529,29 @@ class AsyncClient(BaseClient):
     async def futures_coin_mark_price(self, **params):
         return await self._request_futures_coin_api("get", "premiumIndex", data=params)
 
+    futures_coin_mark_price.__doc__ = Client.futures_coin_mark_price.__doc__
+
     async def futures_coin_funding_rate(self, **params):
         return await self._request_futures_coin_api("get", "fundingRate", data=params)
+
+    futures_coin_funding_rate.__doc__ = Client.futures_coin_funding_rate.__doc__
 
     async def futures_coin_ticker(self, **params):
         return await self._request_futures_coin_api("get", "ticker/24hr", data=params)
 
+    futures_coin_ticker.__doc__ = Client.futures_coin_ticker.__doc__
+
     async def futures_coin_symbol_ticker(self, **params):
         return await self._request_futures_coin_api("get", "ticker/price", data=params)
+
+    futures_coin_symbol_ticker.__doc__ = Client.futures_coin_symbol_ticker.__doc__
 
     async def futures_coin_orderbook_ticker(self, **params):
         return await self._request_futures_coin_api(
             "get", "ticker/bookTicker", data=params
         )
+
+    futures_coin_orderbook_ticker.__doc__ = Client.futures_coin_orderbook_ticker.__doc__
 
     async def futures_coin_index_price_constituents(self, **params):
         return await self._request_futures_coin_api("get", "constituents", data=params)
@@ -2309,43 +2565,61 @@ class AsyncClient(BaseClient):
             "get", "forceOrders", signed=True, data=params
         )
 
+    futures_coin_liquidation_orders.__doc__ = Client.futures_coin_liquidation_orders.__doc__
+
     async def futures_coin_open_interest(self, **params):
         return await self._request_futures_coin_api("get", "openInterest", data=params)
+
+    futures_coin_open_interest.__doc__ = Client.futures_coin_open_interest.__doc__
 
     async def futures_coin_open_interest_hist(self, **params):
         return await self._request_futures_coin_data_api(
             "get", "openInterestHist", data=params
         )
 
+    futures_coin_open_interest_hist.__doc__ = Client.futures_coin_open_interest_hist.__doc__
+
     async def futures_coin_leverage_bracket(self, **params):
         return await self._request_futures_coin_api(
             "get", "leverageBracket", version=2, signed=True, data=params
         )
+
+    futures_coin_leverage_bracket.__doc__ = Client.futures_coin_leverage_bracket.__doc__
 
     async def new_transfer_history(self, **params):
         return await self._request_margin_api(
             "get", "asset/transfer", True, data=params
         )
 
+    new_transfer_history.__doc__ = Client.new_transfer_history.__doc__
+
     async def funding_wallet(self, **params):
         return await self._request_margin_api(
             "post", "asset/get-funding-asset", True, data=params
         )
+
+    funding_wallet.__doc__ = Client.funding_wallet.__doc__
 
     async def get_user_asset(self, **params):
         return await self._request_margin_api(
             "post", "asset/getUserAsset", True, data=params, version=3
         )
 
+    get_user_asset.__doc__ = Client.get_user_asset.__doc__
+
     async def universal_transfer(self, **params):
         return await self._request_margin_api(
             "post", "asset/transfer", signed=True, data=params
         )
 
+    universal_transfer.__doc__ = Client.universal_transfer.__doc__
+
     async def futures_coin_create_order(self, **params):
         if "newClientOrderId" not in params:
             params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
         return await self._request_futures_coin_api("post", "order", True, data=params)
+
+    futures_coin_create_order.__doc__ = Client.futures_coin_create_order.__doc__
 
     async def futures_coin_place_batch_order(self, **params):
         for order in params["batchOrders"]:
@@ -2359,28 +2633,40 @@ class AsyncClient(BaseClient):
             "post", "batchOrders", True, data=params
         )
 
+    futures_coin_place_batch_order.__doc__ = Client.futures_coin_place_batch_order.__doc__
+
     async def futures_coin_get_order(self, **params):
         return await self._request_futures_coin_api("get", "order", True, data=params)
+
+    futures_coin_get_order.__doc__ = Client.futures_coin_get_order.__doc__
 
     async def futures_coin_get_open_orders(self, **params):
         return await self._request_futures_coin_api(
             "get", "openOrders", True, data=params
         )
 
+    futures_coin_get_open_orders.__doc__ = Client.futures_coin_get_open_orders.__doc__
+
     async def futures_coin_get_all_orders(self, **params):
         return await self._request_futures_coin_api(
             "get", "allOrders", signed=True, data=params
         )
+
+    futures_coin_get_all_orders.__doc__ = Client.futures_coin_get_all_orders.__doc__
 
     async def futures_coin_cancel_order(self, **params):
         return await self._request_futures_coin_api(
             "delete", "order", signed=True, data=params
         )
 
+    futures_coin_cancel_order.__doc__ = Client.futures_coin_cancel_order.__doc__
+
     async def futures_coin_cancel_all_open_orders(self, **params):
         return await self._request_futures_coin_api(
             "delete", "allOpenOrders", signed=True, data=params, force_params=True
         )
+
+    futures_coin_cancel_all_open_orders.__doc__ = Client.futures_coin_cancel_all_open_orders.__doc__
 
     async def futures_coin_cancel_orders(self, **params):
         if params.get("orderidlist"):
@@ -2395,58 +2681,82 @@ class AsyncClient(BaseClient):
             "delete", "batchOrders", True, data=params
         )
 
+    futures_coin_cancel_orders.__doc__ = Client.futures_coin_cancel_orders.__doc__
+
     async def futures_coin_account_balance(self, **params):
         return await self._request_futures_coin_api(
             "get", "balance", signed=True, data=params
         )
+
+    futures_coin_account_balance.__doc__ = Client.futures_coin_account_balance.__doc__
 
     async def futures_coin_account(self, **params):
         return await self._request_futures_coin_api(
             "get", "account", signed=True, data=params
         )
 
+    futures_coin_account.__doc__ = Client.futures_coin_account.__doc__
+
     async def futures_coin_change_leverage(self, **params):
         return await self._request_futures_coin_api(
             "post", "leverage", signed=True, data=params
         )
+
+    futures_coin_change_leverage.__doc__ = Client.futures_coin_change_leverage.__doc__
 
     async def futures_coin_change_margin_type(self, **params):
         return await self._request_futures_coin_api(
             "post", "marginType", signed=True, data=params
         )
 
+    futures_coin_change_margin_type.__doc__ = Client.futures_coin_change_margin_type.__doc__
+
     async def futures_coin_change_position_margin(self, **params):
         return await self._request_futures_coin_api(
             "post", "positionMargin", True, data=params
         )
+
+    futures_coin_change_position_margin.__doc__ = Client.futures_coin_change_position_margin.__doc__
 
     async def futures_coin_position_margin_history(self, **params):
         return await self._request_futures_coin_api(
             "get", "positionMargin/history", True, data=params
         )
 
+    futures_coin_position_margin_history.__doc__ = Client.futures_coin_position_margin_history.__doc__
+
     async def futures_coin_position_information(self, **params):
         return await self._request_futures_coin_api(
             "get", "positionRisk", True, data=params
         )
+
+    futures_coin_position_information.__doc__ = Client.futures_coin_position_information.__doc__
 
     async def futures_coin_account_trades(self, **params):
         return await self._request_futures_coin_api(
             "get", "userTrades", True, data=params
         )
 
+    futures_coin_account_trades.__doc__ = Client.futures_coin_account_trades.__doc__
+
     async def futures_coin_income_history(self, **params):
         return await self._request_futures_coin_api("get", "income", True, data=params)
+
+    futures_coin_income_history.__doc__ = Client.futures_coin_income_history.__doc__
 
     async def futures_coin_change_position_mode(self, **params):
         return await self._request_futures_coin_api(
             "post", "positionSide/dual", True, data=params
         )
 
+    futures_coin_change_position_mode.__doc__ = Client.futures_coin_change_position_mode.__doc__
+
     async def futures_coin_get_position_mode(self, **params):
         return await self._request_futures_coin_api(
             "get", "positionSide/dual", True, data=params
         )
+
+    futures_coin_get_position_mode.__doc__ = Client.futures_coin_get_position_mode.__doc__
 
     async def futures_coin_stream_get_listen_key(self):
         res = await self._request_futures_coin_api(
@@ -2454,11 +2764,15 @@ class AsyncClient(BaseClient):
         )
         return res["listenKey"]
 
+    futures_coin_stream_get_listen_key.__doc__ = Client.futures_coin_stream_get_listen_key.__doc__
+
     async def futures_coin_stream_keepalive(self, listenKey):
         params = {"listenKey": listenKey}
         return await self._request_futures_coin_api(
             "put", "listenKey", signed=False, data=params
         )
+
+    futures_coin_stream_keepalive.__doc__ = Client.futures_coin_stream_keepalive.__doc__
 
     async def futures_coin_account_order_history_download(self, **params):
         return await self._request_futures_coin_api(
@@ -2502,20 +2816,28 @@ class AsyncClient(BaseClient):
             "delete", "listenKey", signed=False, data=params
         )
 
+    futures_coin_stream_close.__doc__ = Client.futures_coin_stream_close.__doc__
+
     async def get_all_coins_info(self, **params):
         return await self._request_margin_api(
             "get", "capital/config/getall", True, data=params
         )
+
+    get_all_coins_info.__doc__ = Client.get_all_coins_info.__doc__
 
     async def get_account_snapshot(self, **params):
         return await self._request_margin_api(
             "get", "accountSnapshot", True, data=params
         )
 
+    get_account_snapshot.__doc__ = Client.get_account_snapshot.__doc__
+
     async def disable_fast_withdraw_switch(self, **params):
         return await self._request_margin_api(
             "post", "disableFastWithdrawSwitch", True, data=params
         )
+
+    disable_fast_withdraw_switch.__doc__ = Client.disable_fast_withdraw_switch.__doc__
 
     async def enable_fast_withdraw_switch(self, **params):
         return await self._request_margin_api(
@@ -2530,58 +2852,90 @@ class AsyncClient(BaseClient):
 
     # Quoting interface endpoints
 
+    enable_fast_withdraw_switch.__doc__ = Client.enable_fast_withdraw_switch.__doc__
+
     async def options_ping(self):
         return await self._request_options_api("get", "ping")
+
+    options_ping.__doc__ = Client.options_ping.__doc__
 
     async def options_time(self):
         return await self._request_options_api("get", "time")
 
+    options_time.__doc__ = Client.options_time.__doc__
+
     async def options_info(self):
         return await self._request_options_api("get", "optionInfo")
+
+    options_info.__doc__ = Client.options_info.__doc__
 
     async def options_exchange_info(self):
         return await self._request_options_api("get", "exchangeInfo")
 
+    options_exchange_info.__doc__ = Client.options_exchange_info.__doc__
+
     async def options_index_price(self, **params):
         return await self._request_options_api("get", "index", data=params)
+
+    options_index_price.__doc__ = Client.options_index_price.__doc__
 
     async def options_price(self, **params):
         return await self._request_options_api("get", "ticker", data=params)
 
+    options_price.__doc__ = Client.options_price.__doc__
+
     async def options_mark_price(self, **params):
         return await self._request_options_api("get", "mark", data=params)
+
+    options_mark_price.__doc__ = Client.options_mark_price.__doc__
 
     async def options_order_book(self, **params):
         return await self._request_options_api("get", "depth", data=params)
 
+    options_order_book.__doc__ = Client.options_order_book.__doc__
+
     async def options_klines(self, **params):
         return await self._request_options_api("get", "klines", data=params)
 
+    options_klines.__doc__ = Client.options_klines.__doc__
+
     async def options_recent_trades(self, **params):
         return await self._request_options_api("get", "trades", data=params)
+
+    options_recent_trades.__doc__ = Client.options_recent_trades.__doc__
 
     async def options_historical_trades(self, **params):
         return await self._request_options_api("get", "historicalTrades", data=params)
 
     # Account and trading interface endpoints
 
+    options_historical_trades.__doc__ = Client.options_historical_trades.__doc__
+
     async def options_account_info(self, **params):
         return await self._request_options_api(
             "get", "account", signed=True, data=params
         )
+
+    options_account_info.__doc__ = Client.options_account_info.__doc__
 
     async def options_funds_transfer(self, **params):
         return await self._request_options_api(
             "post", "transfer", signed=True, data=params
         )
 
+    options_funds_transfer.__doc__ = Client.options_funds_transfer.__doc__
+
     async def options_positions(self, **params):
         return await self._request_options_api(
             "get", "position", signed=True, data=params
         )
 
+    options_positions.__doc__ = Client.options_positions.__doc__
+
     async def options_bill(self, **params):
         return await self._request_options_api("post", "bill", signed=True, data=params)
+
+    options_bill.__doc__ = Client.options_bill.__doc__
 
     async def options_place_order(self, **params):
         if "clientOrderId" not in params:
@@ -2589,6 +2943,8 @@ class AsyncClient(BaseClient):
         return await self._request_options_api(
             "post", "order", signed=True, data=params
         )
+
+    options_place_order.__doc__ = Client.options_place_order.__doc__
 
     async def options_place_batch_order(self, **params):
         for order in params["batchOrders"]:
@@ -2598,33 +2954,47 @@ class AsyncClient(BaseClient):
             "post", "batchOrders", signed=True, data=params
         )
 
+    options_place_batch_order.__doc__ = Client.options_place_batch_order.__doc__
+
     async def options_cancel_order(self, **params):
         return await self._request_options_api(
             "delete", "order", signed=True, data=params
         )
+
+    options_cancel_order.__doc__ = Client.options_cancel_order.__doc__
 
     async def options_cancel_batch_order(self, **params):
         return await self._request_options_api(
             "delete", "batchOrders", signed=True, data=params
         )
 
+    options_cancel_batch_order.__doc__ = Client.options_cancel_batch_order.__doc__
+
     async def options_cancel_all_orders(self, **params):
         return await self._request_options_api(
             "delete", "allOpenOrders", signed=True, data=params
         )
 
+    options_cancel_all_orders.__doc__ = Client.options_cancel_all_orders.__doc__
+
     async def options_query_order(self, **params):
         return await self._request_options_api("get", "order", signed=True, data=params)
+
+    options_query_order.__doc__ = Client.options_query_order.__doc__
 
     async def options_query_pending_orders(self, **params):
         return await self._request_options_api(
             "get", "openOrders", signed=True, data=params
         )
 
+    options_query_pending_orders.__doc__ = Client.options_query_pending_orders.__doc__
+
     async def options_query_order_history(self, **params):
         return await self._request_options_api(
             "get", "historyOrders", signed=True, data=params
         )
+
+    options_query_order_history.__doc__ = Client.options_query_order_history.__doc__
 
     async def options_user_trades(self, **params):
         return await self._request_options_api(
@@ -2633,10 +3003,14 @@ class AsyncClient(BaseClient):
 
     # Fiat Endpoints
 
+    options_user_trades.__doc__ = Client.options_user_trades.__doc__
+
     async def get_fiat_deposit_withdraw_history(self, **params):
         return await self._request_margin_api(
             "get", "fiat/orders", signed=True, data=params
         )
+
+    get_fiat_deposit_withdraw_history.__doc__ = Client.get_fiat_deposit_withdraw_history.__doc__
 
     async def get_fiat_payments_history(self, **params):
         return await self._request_margin_api(
@@ -2645,12 +3019,16 @@ class AsyncClient(BaseClient):
 
     # C2C Endpoints
 
+    get_fiat_payments_history.__doc__ = Client.get_fiat_payments_history.__doc__
+
     async def get_c2c_trade_history(self, **params):
         return await self._request_margin_api(
             "get", "c2c/orderMatch/listUserOrderHistory", signed=True, data=params
         )
 
     # Pay Endpoints
+
+    get_c2c_trade_history.__doc__ = Client.get_c2c_trade_history.__doc__
 
     async def get_pay_trade_history(self, **params):
         return await self._request_margin_api(
@@ -2721,110 +3099,154 @@ class AsyncClient(BaseClient):
     async def papi_get_account(self, **params):
         return await self._request_papi_api("get", "account", signed=True, data=params)
 
+    papi_get_account.__doc__ = Client.papi_get_account.__doc__
+
     async def papi_get_margin_max_borrowable(self, **params):
         return await self._request_papi_api(
             "get", "margin/maxBorrowable", signed=True, data=params
         )
+
+    papi_get_margin_max_borrowable.__doc__ = Client.papi_get_margin_max_borrowable.__doc__
 
     async def papi_get_margin_max_withdraw(self, **params):
         return await self._request_papi_api(
             "get", "margin/maxWithdraw", signed=True, data=params
         )
 
+    papi_get_margin_max_withdraw.__doc__ = Client.papi_get_margin_max_withdraw.__doc__
+
     async def papi_get_um_position_risk(self, **params):
         return await self._request_papi_api(
             "get", "um/positionRisk", signed=True, data=params
         )
+
+    papi_get_um_position_risk.__doc__ = Client.papi_get_um_position_risk.__doc__
 
     async def papi_get_cm_position_risk(self, **params):
         return await self._request_papi_api(
             "get", "cm/positionRisk", signed=True, data=params
         )
 
+    papi_get_cm_position_risk.__doc__ = Client.papi_get_cm_position_risk.__doc__
+
     async def papi_set_um_leverage(self, **params):
         return await self._request_papi_api(
             "post", "um/leverage", signed=True, data=params
         )
+
+    papi_set_um_leverage.__doc__ = Client.papi_set_um_leverage.__doc__
 
     async def papi_set_cm_leverage(self, **params):
         return await self._request_papi_api(
             "post", "cm/leverage", signed=True, data=params
         )
 
+    papi_set_cm_leverage.__doc__ = Client.papi_set_cm_leverage.__doc__
+
     async def papi_change_um_position_side_dual(self, **params):
         return await self._request_papi_api(
             "post", "um/positionSide/dual", signed=True, data=params
         )
+
+    papi_change_um_position_side_dual.__doc__ = Client.papi_change_um_position_side_dual.__doc__
 
     async def papi_get_um_position_side_dual(self, **params):
         return await self._request_papi_api(
             "get", "um/positionSide/dual", signed=True, data=params
         )
 
+    papi_get_um_position_side_dual.__doc__ = Client.papi_get_um_position_side_dual.__doc__
+
     async def papi_get_cm_position_side_dual(self, **params):
         return await self._request_papi_api(
             "get", "cm/positionSide/dual", signed=True, data=params
         )
+
+    papi_get_cm_position_side_dual.__doc__ = Client.papi_get_cm_position_side_dual.__doc__
 
     async def papi_get_um_leverage_bracket(self, **params):
         return await self._request_papi_api(
             "get", "um/leverageBracket", signed=True, data=params
         )
 
+    papi_get_um_leverage_bracket.__doc__ = Client.papi_get_um_leverage_bracket.__doc__
+
     async def papi_get_cm_leverage_bracket(self, **params):
         return await self._request_papi_api(
             "get", "cm/leverageBracket", signed=True, data=params
         )
+
+    papi_get_cm_leverage_bracket.__doc__ = Client.papi_get_cm_leverage_bracket.__doc__
 
     async def papi_get_um_api_trading_status(self, **params):
         return await self._request_papi_api(
             "get", "um/apiTradingStatus", signed=True, data=params
         )
 
+    papi_get_um_api_trading_status.__doc__ = Client.papi_get_um_api_trading_status.__doc__
+
     async def papi_get_um_comission_rate(self, **params):
         return await self._request_papi_api(
             "get", "um/commissionRate", signed=True, data=params
         )
+
+    papi_get_um_comission_rate.__doc__ = Client.papi_get_um_comission_rate.__doc__
 
     async def papi_get_cm_comission_rate(self, **params):
         return await self._request_papi_api(
             "get", "cm/commissionRate", signed=True, data=params
         )
 
+    papi_get_cm_comission_rate.__doc__ = Client.papi_get_cm_comission_rate.__doc__
+
     async def papi_get_margin_margin_loan(self, **params):
         return await self._request_papi_api(
             "get", "margin/marginLoan", signed=True, data=params
         )
+
+    papi_get_margin_margin_loan.__doc__ = Client.papi_get_margin_margin_loan.__doc__
 
     async def papi_get_margin_repay_loan(self, **params):
         return await self._request_papi_api(
             "get", "margin/repayLoan", signed=True, data=params
         )
 
+    papi_get_margin_repay_loan.__doc__ = Client.papi_get_margin_repay_loan.__doc__
+
     async def papi_get_repay_futures_switch(self, **params):
         return await self._request_papi_api(
             "get", "repay-futures-switch", signed=True, data=params
         )
+
+    papi_get_repay_futures_switch.__doc__ = Client.papi_get_repay_futures_switch.__doc__
 
     async def papi_repay_futures_switch(self, **params):
         return await self._request_papi_api(
             "post", "repay-futures-switch", signed=True, data=params
         )
 
+    papi_repay_futures_switch.__doc__ = Client.papi_repay_futures_switch.__doc__
+
     async def papi_get_margin_interest_history(self, **params):
         return await self._request_papi_api(
             "get", "margin/marginInterestHistory", signed=True, data=params
         )
+
+    papi_get_margin_interest_history.__doc__ = Client.papi_get_margin_interest_history.__doc__
 
     async def papi_repay_futures_negative_balance(self, **params):
         return await self._request_papi_api(
             "post", "repay-futures-negative-balance", signed=True, data=params
         )
 
+    papi_repay_futures_negative_balance.__doc__ = Client.papi_repay_futures_negative_balance.__doc__
+
     async def papi_get_portfolio_interest_history(self, **params):
         return await self._request_papi_api(
             "get", "portfolio/interest-history", signed=True, data=params
         )
+
+    papi_get_portfolio_interest_history.__doc__ = Client.papi_get_portfolio_interest_history.__doc__
 
 
     async def papi_get_portfolio_negative_balance_exchange_record(self, **params):
@@ -2838,85 +3260,119 @@ class AsyncClient(BaseClient):
             "post", "auto-collection", signed=True, data=params
         )
 
+    papi_fund_auto_collection.__doc__ = Client.papi_fund_auto_collection.__doc__
+
     async def papi_fund_asset_collection(self, **params):
         return await self._request_papi_api(
             "post", "asset-collection", signed=True, data=params
         )
+
+    papi_fund_asset_collection.__doc__ = Client.papi_fund_asset_collection.__doc__
 
     async def papi_bnb_transfer(self, **params):
         return await self._request_papi_api(
             "post", "bnb-transfer", signed=True, data=params
         )
 
+    papi_bnb_transfer.__doc__ = Client.papi_bnb_transfer.__doc__
+
     async def papi_get_um_income_history(self, **params):
         return await self._request_papi_api(
             "get", "um/income", signed=True, data=params
         )
+
+    papi_get_um_income_history.__doc__ = Client.papi_get_um_income_history.__doc__
 
     async def papi_get_cm_income_history(self, **params):
         return await self._request_papi_api(
             "get", "cm/income", signed=True, data=params
         )
 
+    papi_get_cm_income_history.__doc__ = Client.papi_get_cm_income_history.__doc__
+
     async def papi_get_um_account(self, **params):
         return await self._request_papi_api(
             "get", "um/account", signed=True, data=params
         )
+
+    papi_get_um_account.__doc__ = Client.papi_get_um_account.__doc__
 
     async def papi_get_um_account_v2(self, **params):
         return await self._request_papi_api(
             "get", "um/account", version=2, signed=True, data=params
         )
 
+    papi_get_um_account_v2.__doc__ = Client.papi_get_um_account_v2.__doc__
+
     async def papi_get_cm_account(self, **params):
         return await self._request_papi_api(
             "get", "cm/account", signed=True, data=params
         )
+
+    papi_get_cm_account.__doc__ = Client.papi_get_cm_account.__doc__
 
     async def papi_get_um_account_config(self, **params):
         return await self._request_papi_api(
             "get", "um/accountConfig", signed=True, data=params
         )
 
+    papi_get_um_account_config.__doc__ = Client.papi_get_um_account_config.__doc__
+
     async def papi_get_um_symbol_config(self, **params):
         return await self._request_papi_api(
             "get", "um/symbolConfig", signed=True, data=params
         )
+
+    papi_get_um_symbol_config.__doc__ = Client.papi_get_um_symbol_config.__doc__
 
     async def papi_get_um_trade_asyn(self, **params):
         return await self._request_papi_api(
             "get", "um/trade/asyn", signed=True, data=params
         )
 
+    papi_get_um_trade_asyn.__doc__ = Client.papi_get_um_trade_asyn.__doc__
+
     async def papi_get_um_trade_asyn_id(self, **params):
         return await self._request_papi_api(
             "get", "um/trade/asyn/id", signed=True, data=params
         )
+
+    papi_get_um_trade_asyn_id.__doc__ = Client.papi_get_um_trade_asyn_id.__doc__
 
     async def papi_get_um_order_asyn(self, **params):
         return await self._request_papi_api(
             "get", "um/order/asyn", signed=True, data=params
         )
 
+    papi_get_um_order_asyn.__doc__ = Client.papi_get_um_order_asyn.__doc__
+
     async def papi_get_um_order_asyn_id(self, **params):
         return await self._request_papi_api(
             "get", "um/order/asyn/id", signed=True, data=params
         )
+
+    papi_get_um_order_asyn_id.__doc__ = Client.papi_get_um_order_asyn_id.__doc__
 
     async def papi_get_um_income_asyn(self, **params):
         return await self._request_papi_api(
             "get", "um/income/asyn", signed=True, data=params
         )
 
+    papi_get_um_income_asyn.__doc__ = Client.papi_get_um_income_asyn.__doc__
+
     async def papi_get_um_income_asyn_id(self, **params):
         return await self._request_papi_api(
             "get", "um/income/asyn/id", signed=True, data=params
         )
 
+    papi_get_um_income_asyn_id.__doc__ = Client.papi_get_um_income_asyn_id.__doc__
+
     async def papi_ping(self, **params):
         return await self._request_papi_api("get", "ping", signed=False, data=params)
 
     # papi trading endpoints
+
+    papi_ping.__doc__ = Client.papi_ping.__doc__
 
     async def papi_create_um_order(self, **params):
         """Place new UM order.
@@ -3601,6 +4057,8 @@ class AsyncClient(BaseClient):
     # WebSocket API methods
     ############################################################
 
+    create_oco_order.__doc__ = Client.create_oco_order.__doc__
+
     async def ws_create_test_order(self, **params):
         """Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into the matching engine.
         https://binance-docs.github.io/apidocs/websocket_api/en/#test-new-order-trade
@@ -3822,6 +4280,8 @@ class AsyncClient(BaseClient):
 
     async def cancel_all_open_orders(self, **params):
         return await self._delete("openOrders", True, data=params)
+
+    cancel_all_open_orders.__doc__ = Client.cancel_all_open_orders.__doc__
 
     async def cancel_replace_order(self, **params):
         if "newClientOrderId" not in params:
