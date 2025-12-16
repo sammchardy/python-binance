@@ -34,6 +34,7 @@ class Client(BaseClient):
         private_key_pass: Optional[str] = None,
         ping: Optional[bool] = True,
         time_unit: Optional[str] = None,
+        verbose: bool = False,
     ):
         super().__init__(
             api_key,
@@ -46,6 +47,7 @@ class Client(BaseClient):
             private_key,
             private_key_pass,
             time_unit=time_unit,
+            verbose=verbose,
         )
 
         # init DNS and SSL cert
@@ -88,6 +90,19 @@ class Client(BaseClient):
             data = f"{url_encoded_data}&signature={signature}"
 
         self.response = getattr(self.session, method)(uri, headers=headers, data=data, **kwargs)
+
+        if self.verbose:
+            self.logger.debug(
+                "\nRequest: %s %s\nRequestHeaders: %s\nRequestBody: %s\nResponse: %s\nResponseHeaders: %s\nResponseBody: %s",
+                method.upper(),
+                uri,
+                headers,
+                data,
+                self.response.status_code,
+                dict(self.response.headers),
+                self.response.text[:1000] if self.response.text else None
+            )
+
         return self._handle_response(self.response)
 
     @staticmethod
@@ -6261,8 +6276,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-asset-information
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_asset_us")
         return self._request_margin_api("get", "staking/asset", True, data=params)
 
     def stake_asset_us(self, **params):
@@ -6270,8 +6286,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#stake-asset
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "stake_asset_us")
         return self._request_margin_api("post", "staking/stake", True, data=params)
 
     def unstake_asset_us(self, **params):
@@ -6279,8 +6296,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#unstake-asset
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "unstake_asset_us")
         return self._request_margin_api("post", "staking/unstake", True, data=params)
 
     def get_staking_balance_us(self, **params):
@@ -6288,8 +6306,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-balance
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_balance_us")
         return self._request_margin_api(
             "get", "staking/stakingBalance", True, data=params
         )
@@ -6299,8 +6318,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-history
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_history_us")
         return self._request_margin_api("get", "staking/history", True, data=params)
 
     def get_staking_rewards_history_us(self, **params):
@@ -6308,8 +6328,9 @@ class Client(BaseClient):
 
         https://docs.binance.us/#get-staking-rewards-history
 
+        :raises BinanceRegionException: If client is not configured for binance.us
         """
-        assert self.tld == "us", "Endpoint only available on binance.us"
+        self._require_tld("us", "get_staking_rewards_history_us")
         return self._request_margin_api(
             "get", "staking/stakingRewardsHistory", True, data=params
         )
@@ -7565,10 +7586,10 @@ class Client(BaseClient):
     def futures_symbol_ticker(self, **params):
         """Latest price for a symbol or symbols.
 
-        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker
+        https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api/Symbol-Price-Ticker-v2
 
         """
-        return self._request_futures_api("get", "ticker/price", data=params)
+        return self._request_futures_api("get", "ticker/price", version=2, data=params)
 
     def futures_orderbook_ticker(self, **params):
         """Best price/qty on the order book for a symbol or symbols.
@@ -13862,9 +13883,33 @@ class Client(BaseClient):
         Send in a new order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api
         """
-        if "newClientOrderId" not in params:
-            params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
-        return self._ws_futures_api_request_sync("order.place", True, params)
+        # Check if this is a conditional order type that needs to use algo endpoint
+        order_type = params.get("type", "").upper()
+        conditional_types = [
+            "STOP",
+            "STOP_MARKET",
+            "TAKE_PROFIT",
+            "TAKE_PROFIT_MARKET",
+            "TRAILING_STOP_MARKET",
+        ]
+
+        if order_type in conditional_types:
+            # Route to algo order endpoint
+            if "clientAlgoId" not in params:
+                params["clientAlgoId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            # Remove newClientOrderId if it was added by default
+            params.pop("newClientOrderId", None)
+            if "algoType" not in params:
+                params["algoType"] = "CONDITIONAL"
+            # Convert stopPrice to triggerPrice for algo orders
+            if "stopPrice" in params and "triggerPrice" not in params:
+                params["triggerPrice"] = params.pop("stopPrice")
+            return self._ws_futures_api_request_sync("algoOrder.place", True, params)
+        else:
+            # Use regular order endpoint
+            if "newClientOrderId" not in params:
+                params["newClientOrderId"] = self.CONTRACT_ORDER_PREFIX + self.uuid22()
+            return self._ws_futures_api_request_sync("order.place", True, params)
 
     def ws_futures_edit_order(self, **params):
         """
@@ -13878,12 +13923,21 @@ class Client(BaseClient):
         cancel an order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Cancel-Order
         """
-        return self._ws_futures_api_request_sync("order.cancel", True, params)
+        is_conditional = False
+        if "algoId" in params or "clientAlgoId" in params:
+            is_conditional = True
+
+        if is_conditional:
+            return self._ws_futures_api_request_sync("algoOrder.cancel", True, params)
+        else:
+            return self._ws_futures_api_request_sync("order.cancel", True, params)
 
     def ws_futures_get_order(self, **params):
         """
         Get an order
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/websocket-api/Query-Order
+
+        Note: Algo/conditional orders cannot be queried via websocket API
         """
         return self._ws_futures_api_request_sync("order.status", True, params)
 
