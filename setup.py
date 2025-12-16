@@ -18,7 +18,7 @@ with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="python-binance",
+    name="python_binance",
     version=version,
     packages=find_packages(exclude=["tests", "examples"]),
     description="Binance REST API python implementation",
