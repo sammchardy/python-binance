@@ -15,9 +15,9 @@ except ImportError:
     pass
 
 try:
-    from websockets.exceptions import ConnectionClosedError  # type: ignore
+    from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK  # type: ignore
 except ImportError:
-    from websockets import ConnectionClosedError  # type: ignore
+    from websockets import ConnectionClosedError, ConnectionClosedOK  # type: ignore
 
 
 Proxy = None
@@ -226,7 +226,9 @@ class ReconnectingWebsocket:
                     asyncio.IncompleteReadError,
                     gaierror,
                     ConnectionClosedError,
+                    ConnectionClosedOK,
                     BinanceWebsocketClosed,
+                    BinanceWebsocketUnableToConnect,
                 ) as e:
                     # reports errors and continue loop
                     self._log.error(f"{e.__class__.__name__} ({e})")
@@ -236,7 +238,6 @@ class ReconnectingWebsocket:
                         "m": f"{e}",
                     })
                 except (
-                    BinanceWebsocketUnableToConnect,
                     BinanceWebsocketQueueOverflow,
                     Exception,
                 ) as e:
