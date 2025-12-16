@@ -1,5 +1,5 @@
 =================================
-Welcome to python-binance v1.0.33
+Welcome to python-binance v1.0.34
 =================================
 
 .. image:: https://img.shields.io/pypi/v/python-binance.svg
@@ -66,6 +66,7 @@ Features
 - Demo trading support (by providing demo=True)
 - Testnet support for Spot, Futures and Vanilla Options (deprecated)
 - Simple handling of authentication include RSA and EDDSA keys
+- Verbose mode for inspecting requests (verbose=True)
 - No need to generate timestamps yourself, the wrapper does it for you
 - RecvWindow sent by default
 - Response exception handling
