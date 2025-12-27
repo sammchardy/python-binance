@@ -1,5 +1,19 @@
 Changelog
 
+v1.0.34 - 2025-12-16
+
+**Added**
+- verbose mode for inspecting requests (verbose=True) (#1642)
+- feat: add support for rpi orders (#1644)
+- feat: update futures ticker endpoint to v2 (#1650)
+- feat: add support for websocket algo orders (#1646)
+- docs: add missing doc references from async client (#1651)
+
+**Fixed**
+
+- fix: remove duplicate import and replace type() with isinstance() (#1623)
+- fix(client): use proper exception instead of assert for US endpoints (#1641)
+
 v1.0.33 - 2025-12-06
 
 **Fixed**

@@ -6,6 +6,7 @@ from typing import Dict, Optional, List, Tuple, Union, Any
 import asyncio
 import hashlib
 import hmac
+import logging
 import time
 from Crypto.PublicKey import RSA, ECC
 from Crypto.Hash import SHA256
@@ -167,6 +168,7 @@ class BaseClient:
         private_key_pass: Optional[str] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
         time_unit: Optional[str] = None,
+        verbose: bool = False,
     ):
         """Binance API Client constructor
 
@@ -184,10 +186,19 @@ class BaseClient:
         :type private_key_pass: optional - str
         :param time_unit: Time unit to use for requests. Supported values: "MILLISECOND", "MICROSECOND"
         :type time_unit: optional - str
+        :param verbose: Enable verbose logging for debugging
+        :type verbose: bool
 
         """
 
         self.tld = tld
+        self.verbose = verbose
+        self.logger = logging.getLogger(__name__)
+
+        # Set logger level based on verbose flag
+        # Users can override this by configuring logging externally
+        if verbose:
+            self.logger.setLevel(logging.DEBUG)
         self.API_URL = self.API_URL.format(base_endpoint, tld)
         self.MARGIN_API_URL = self.MARGIN_API_URL.format(base_endpoint, tld)
         self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
@@ -349,6 +360,18 @@ class BaseClient:
     def convert_to_dict(list_tuples):
         dictionary = dict((key, value) for key, value in list_tuples)
         return dictionary
+
+    def _require_tld(self, required_tld: str, endpoint_name: str = "endpoint") -> None:
+        """Validate client is configured for required TLD.
+
+        :param required_tld: The required TLD (e.g., "us")
+        :param endpoint_name: Description of the endpoint for error messages
+        :raises BinanceRegionException: If the client TLD doesn't match
+        """
+        if self.tld != required_tld:
+            from binance.exceptions import BinanceRegionException
+
+            raise BinanceRegionException(required_tld, self.tld, endpoint_name)
 
     def _ed25519_signature(self, query_string: str):
         assert self.PRIVATE_KEY
