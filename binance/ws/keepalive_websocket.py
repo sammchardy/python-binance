@@ -31,16 +31,23 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         self._timer = None
         self._subscription_id = None
         self._listen_key = None  # Used for non spot stream types
+        self._uses_ws_api_subscription = False  # True when using ws_api
 
     async def __aexit__(self, *args, **kwargs):
-        if not self._path:
-            return
         if self._timer:
             self._timer.cancel()
             self._timer = None
         # Clean up subscription if it exists
         if self._subscription_id is not None:
+            # Unregister the queue from ws_api before unsubscribing
+            if hasattr(self._client, 'ws_api') and self._client.ws_api:
+                self._client.ws_api.unregister_subscription_queue(self._subscription_id)
             await self._unsubscribe_from_user_data_stream()
+        if self._uses_ws_api_subscription:
+            # For ws_api subscriptions, we don't manage the connection
+            return
+        if not self._path:
+            return
         await super().__aexit__(*args, **kwargs)
 
     def _build_path(self):
@@ -51,15 +58,42 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
     async def _before_connect(self):
         if self._keepalive_type == "user":
+            # Subscribe via ws_api and register our own queue for events
             self._subscription_id = await self._subscribe_to_user_data_stream()
-            # Reuse the ws_api connection that's already established
-            self.ws = self._client.ws_api.ws
-            self.ws_state = self._client.ws_api.ws_state
-            self._queue = self._client.ws_api._queue
+            self._uses_ws_api_subscription = True
+            # Register our queue with ws_api so events get routed to us
+            self._client.ws_api.register_subscription_queue(self._subscription_id, self._queue)
+            self._path = f"user_subscription:{self._subscription_id}"
             return
         if not self._listen_key:
             self._listen_key = await self._get_listen_key()
             self._build_path()
+
+    async def connect(self):
+        """Override connect to handle ws_api subscriptions differently."""
+        if self._keepalive_type == "user":
+            # For user sockets using ws_api subscription:
+            # - Subscribe via ws_api (done in _before_connect)
+            # - Don't create our own websocket connection
+            # - Don't start a read loop (ws_api handles reading)
+            await self._before_connect()
+            await self._after_connect()
+            return
+        # For other keepalive types, use normal connection logic
+        await super().connect()
+
+    async def recv(self):
+        """Override recv to work without a read loop for ws_api subscriptions."""
+        if self._uses_ws_api_subscription:
+            # For ws_api subscriptions, just read from queue
+            res = None
+            while not res:
+                try:
+                    res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
+                except asyncio.TimeoutError:
+                    self._log.debug(f"no message in {self.TIMEOUT} seconds")
+            return res
+        return await super().recv()
 
     async def _after_connect(self):
         if self._timer is None:

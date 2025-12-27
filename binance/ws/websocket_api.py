@@ -14,7 +14,17 @@ class WebsocketAPI(ReconnectingWebsocket):
         self._testnet = testnet
         self._responses: Dict[str, asyncio.Future] = {}
         self._connection_lock: Optional[asyncio.Lock] = None
+        # Subscription queues for routing user data stream events
+        self._subscription_queues: Dict[str, asyncio.Queue] = {}
         super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
+
+    def register_subscription_queue(self, subscription_id: str, queue: asyncio.Queue) -> None:
+        """Register a queue to receive events for a specific subscription."""
+        self._subscription_queues[subscription_id] = queue
+
+    def unregister_subscription_queue(self, subscription_id: str) -> None:
+        """Unregister a subscription queue."""
+        self._subscription_queues.pop(subscription_id, None)
 
     @property
     def connection_lock(self) -> asyncio.Lock:
@@ -33,7 +43,21 @@ class WebsocketAPI(ReconnectingWebsocket):
         # Check if this is a subscription event (user data stream, etc.)
         # These have 'subscriptionId' and 'event' fields instead of 'id'
         if "subscriptionId" in parsed_msg and "event" in parsed_msg:
-            return parsed_msg["event"]
+            subscription_id = parsed_msg["subscriptionId"]
+            event = parsed_msg["event"]
+            # Route to the registered subscription queue if one exists
+            if subscription_id in self._subscription_queues:
+                queue = self._subscription_queues[subscription_id]
+                try:
+                    queue.put_nowait(event)
+                except asyncio.QueueFull:
+                    self._log.error(f"Subscription queue full for {subscription_id}, dropping event")
+                except Exception as e:
+                    self._log.error(f"Error putting event in subscription queue for {subscription_id}: {e}")
+                return None  # Don't put in main queue
+            else:
+                # No registered queue, return event for main queue (backward compat)
+                return event
 
         req_id, exception = None, None
         if "id" in parsed_msg:
