@@ -11,10 +11,11 @@ pytestmark = [
 # Configure logger for this module
 logger = logging.getLogger(__name__)
 
-# Test constants
-OPTION_SYMBOL = "BTC-251226-60000-P"
-UNDERLYING_SYMBOL = "BTC"
-EXPIRATION_DATE = "251226"
+# Test constants - Using most actively traded options as of Dec 2025
+# BTC-260925-50000-C: 18.22 contracts, $788k daily volume
+OPTION_SYMBOL = "BTC-260925-50000-C"
+UNDERLYING_SYMBOL = "BTCUSDT"  # Options API requires full symbol format
+EXPIRATION_DATE = "260925"  # September 25, 2026
 INTERVAL = "1m"
 DEPTH = "20"
 
@@ -128,14 +129,28 @@ async def test_options_mark_price(clientAsync):
 
 async def test_options_index_price(clientAsync):
     """Test options index price socket"""
-    symbol = 'ETHUSDT'
-    logger.info(f"Starting options index price test for {symbol}")
+    logger.info(f"Starting options index price test")
     bm = BinanceSocketManager(clientAsync)
-    socket = bm.options_index_price_socket(symbol)
+    socket = bm.options_index_price_socket()
     async with socket as ts:
         logger.debug("Waiting for index price message...")
         msg = await ts.recv()
-        logger.info(f"Received index price message: {msg}")
-        assert msg['e'] == 'index'
+        logger.info(f"Received index price message with {len(msg)} items")
+        assert len(msg) > 0
+        assert msg[0]['e'] == 'indexPrice'
     logger.info("Options index price test completed successfully")
+    await clientAsync.close_connection()
+
+@pytest.skip(reason="Not enough traffic")
+async def test_options_new_symbol(clientAsync):
+    """Test options new symbol socket"""
+    logger.info(f"Starting options new symbol test")
+    bm = BinanceSocketManager(clientAsync)
+    socket = bm.options_new_symbol_socket()
+    async with socket as ts:
+        logger.debug("Waiting for new symbol message...")
+        msg = await ts.recv()
+        logger.info(f"Received new symbol message: {msg}")
+        assert 'e' in msg
+    logger.info("Options new symbol test completed successfully")
     await clientAsync.close_connection()
