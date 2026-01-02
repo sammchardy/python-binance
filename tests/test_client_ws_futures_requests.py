@@ -122,7 +122,7 @@ def test_ws_futures_create_conditional_order_auto_routing(futuresClient):
     ticker = futuresClient.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
     positions = futuresClient.ws_futures_v2_account_position(symbol="LTCUSDT")
 
-    trigger_price = float(ticker["askPrice"]) * 1.5
+    trigger_price = round(float(ticker["askPrice"]) * 1.5, 2)
     order = futuresClient.ws_futures_create_order(
         symbol=ticker["symbol"],
         side="BUY",
@@ -151,7 +151,7 @@ def test_ws_futures_conditional_order_with_stop_price(futuresClient):
 
     # Create a TAKE_PROFIT_MARKET order with stopPrice (should be converted to triggerPrice)
     # Use a price above current market price for SELL TAKE_PROFIT
-    trigger_price = float(ticker["askPrice"]) * 1.5
+    trigger_price = round(float(ticker["askPrice"]) * 1.5, 2)
     order = futuresClient.ws_futures_create_order(
         symbol=ticker["symbol"],
         side="SELL",
