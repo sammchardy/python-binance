@@ -146,7 +146,7 @@ async def test_options_mark_price(clientAsync):
 
 async def test_options_index_price(clientAsync):
     """Test options index price socket"""
-    logger.info(f"Starting options index price test")
+    logger.info("Starting options index price test")
     bm = BinanceSocketManager(clientAsync)
     socket = bm.options_index_price_socket()
     async with socket as ts:
@@ -162,7 +162,7 @@ async def test_options_index_price(clientAsync):
 @pytest.skip(reason="Not enough traffic")
 async def test_options_new_symbol(clientAsync):
     """Test options new symbol socket"""
-    logger.info(f"Starting options new symbol test")
+    logger.info("Starting options new symbol test")
     bm = BinanceSocketManager(clientAsync)
     socket = bm.options_new_symbol_socket()
     async with socket as ts:
