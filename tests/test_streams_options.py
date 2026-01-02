@@ -159,7 +159,7 @@ async def test_options_index_price(clientAsync):
     await clientAsync.close_connection()
 
 
-@pytest.skip(reason="Not enough traffic")
+@pytest.mark.skip(reason="Not enough traffic")
 async def test_options_new_symbol(clientAsync):
     """Test options new symbol socket"""
     logger.info("Starting options new symbol test")
