@@ -941,7 +941,7 @@ class AsyncClient(BaseClient):
 
     async def get_spot_delist_schedule(self, **params):
         return await self._request_margin_api(
-            "get", "/spot/delist-schedule", signed=True, data=params
+            "get", "/spot/delist-schedule", signed=False, data=params
         )
 
     get_spot_delist_schedule.__doc__ = Client.get_spot_delist_schedule.__doc__
