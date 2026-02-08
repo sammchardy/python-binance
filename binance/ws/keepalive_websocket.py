@@ -32,6 +32,9 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         self._subscription_id = None
         self._listen_key = None  # Used for non spot stream types
         self._uses_ws_api_subscription = False  # True when using ws_api
+        self._listen_token_expiration = (
+            None  # Expiration time for listenToken-based subscriptions
+        )
 
     async def __aexit__(self, *args, **kwargs):
         if self._timer:
@@ -40,7 +43,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         # Clean up subscription if it exists
         if self._subscription_id is not None:
             # Unregister the queue from ws_api before unsubscribing
-            if hasattr(self._client, 'ws_api') and self._client.ws_api:
+            if hasattr(self._client, "ws_api") and self._client.ws_api:
                 self._client.ws_api.unregister_subscription_queue(self._subscription_id)
             await self._unsubscribe_from_user_data_stream()
         if self._uses_ws_api_subscription:
@@ -60,10 +63,55 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         if self._keepalive_type == "user":
             # Subscribe via ws_api and register our own queue for events
             self._subscription_id = await self._subscribe_to_user_data_stream()
+            if self._subscription_id is None:
+                raise ValueError(
+                    "Failed to subscribe to user data stream: no subscription ID returned"
+                )
             self._uses_ws_api_subscription = True
             # Register our queue with ws_api so events get routed to us
-            self._client.ws_api.register_subscription_queue(self._subscription_id, self._queue)
+            self._client.ws_api.register_subscription_queue(
+                self._subscription_id, self._queue
+            )
             self._path = f"user_subscription:{self._subscription_id}"
+            return
+        if self._keepalive_type == "margin":
+            # Subscribe to cross-margin via ws_api
+            self._subscription_id = await self._subscribe_to_margin_data_stream()
+            if self._subscription_id is None:
+                raise ValueError(
+                    "Failed to subscribe to margin data stream: no subscription ID returned"
+                )
+            self._uses_ws_api_subscription = True
+            # Register our queue with ws_api so events get routed to us
+            self._client.ws_api.register_subscription_queue(
+                self._subscription_id, self._queue
+            )
+            self._path = f"margin_subscription:{self._subscription_id}"
+            return
+        # Check if this is isolated margin (when keepalive_type is a symbol string)
+        if self._keepalive_type not in [
+            "user",
+            "margin",
+            "futures",
+            "coin_futures",
+            "portfolio_margin",
+        ]:
+            # This is isolated margin with symbol as keepalive_type
+            self._subscription_id = (
+                await self._subscribe_to_isolated_margin_data_stream(
+                    self._keepalive_type
+                )
+            )
+            if self._subscription_id is None:
+                raise ValueError(
+                    f"Failed to subscribe to isolated margin data stream for {self._keepalive_type}: no subscription ID returned"
+                )
+            self._uses_ws_api_subscription = True
+            # Register our queue with ws_api so events get routed to us
+            self._client.ws_api.register_subscription_queue(
+                self._subscription_id, self._queue
+            )
+            self._path = f"isolated_margin_subscription:{self._subscription_id}"
             return
         if not self._listen_key:
             self._listen_key = await self._get_listen_key()
@@ -71,14 +119,21 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
     async def connect(self):
         """Override connect to handle ws_api subscriptions differently."""
-        if self._keepalive_type == "user":
-            # For user sockets using ws_api subscription:
+        # Check if this keepalive type uses ws_api subscription
+        if self._keepalive_type in ["user", "margin"] or self._keepalive_type not in [
+            "futures",
+            "coin_futures",
+            "portfolio_margin",
+        ]:
+            # For sockets using ws_api subscription:
             # - Subscribe via ws_api (done in _before_connect)
             # - Don't create our own websocket connection
             # - Don't start a read loop (ws_api handles reading)
             await self._before_connect()
-            await self._after_connect()
-            return
+            # Check if ws_api subscription was actually used
+            if self._uses_ws_api_subscription:
+                await self._after_connect()
+                return
         # For other keepalive types, use normal connection logic
         await super().connect()
 
@@ -89,7 +144,9 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
             res = None
             while not res:
                 try:
-                    res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
+                    res = await asyncio.wait_for(
+                        self._queue.get(), timeout=self.TIMEOUT
+                    )
                 except asyncio.TimeoutError:
                     self._log.debug(f"no message in {self.TIMEOUT} seconds")
             return res
@@ -114,9 +171,47 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         )
         return response.get("subscriptionId")
 
+    async def _subscribe_to_margin_data_stream(self):
+        """Subscribe to cross-margin data stream using WebSocket API with listenToken"""
+        # Create listenToken for cross-margin
+        token_response = await self._client.margin_create_listen_token(
+            is_isolated=False
+        )
+        listen_token = token_response["token"]
+        self._listen_token_expiration = token_response.get("expirationTime")
+
+        # Subscribe using listenToken
+        params = {
+            "id": str(uuid.uuid4()),
+            "listenToken": listen_token,
+        }
+        response = await self._client._ws_api_request(
+            "userDataStream.subscribe.listenToken", signed=False, params=params
+        )
+        return response.get("subscriptionId")
+
+    async def _subscribe_to_isolated_margin_data_stream(self, symbol: str):
+        """Subscribe to isolated margin data stream using WebSocket API with listenToken"""
+        # Create listenToken for isolated margin
+        token_response = await self._client.margin_create_listen_token(
+            symbol=symbol, is_isolated=True
+        )
+        listen_token = token_response["token"]
+        self._listen_token_expiration = token_response.get("expirationTime")
+
+        # Subscribe using listenToken
+        params = {
+            "id": str(uuid.uuid4()),
+            "listenToken": listen_token,
+        }
+        response = await self._client._ws_api_request(
+            "userDataStream.subscribe.listenToken", signed=False, params=params
+        )
+        return response.get("subscriptionId")
+
     async def _unsubscribe_from_user_data_stream(self):
         """Unsubscribe from user data stream using WebSocket API"""
-        if self._keepalive_type == "user" and self._subscription_id is not None:
+        if self._subscription_id is not None:
             params = {
                 "id": str(uuid.uuid4()),
                 "subscriptionId": self._subscription_id,
@@ -146,7 +241,8 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
 
     async def _keepalive_socket(self):
         try:
-            if self._keepalive_type == "user":
+            # Skip keepalive for ws_api subscriptions (user, margin, isolated margin)
+            if self._uses_ws_api_subscription:
                 return
             listen_key = await self._get_listen_key()
             if listen_key != self._listen_key:

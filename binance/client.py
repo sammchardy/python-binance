@@ -3,6 +3,7 @@ from typing import Dict, Optional, List, Union, Any
 
 import requests
 import time
+import warnings
 from urllib.parse import urlencode, quote
 
 from .base_client import BaseClient
@@ -5667,6 +5668,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "POST /sapi/v1/userDataStream is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken, "
+            "then subscribe with userDataStream.subscribe.listenToken). "
+            "The margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         res = self._request_margin_api("post", "userDataStream", signed=False, data={})
         return res["listenKey"]
 
@@ -5687,6 +5696,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "PUT /sapi/v1/userDataStream is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken, "
+            "then subscribe with userDataStream.subscribe.listenToken). "
+            "The margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         params = {"listenKey": listenKey}
         return self._request_margin_api(
             "put", "userDataStream", signed=False, data=params
@@ -5709,9 +5726,52 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "DELETE /sapi/v1/userDataStream is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken, "
+            "then subscribe with userDataStream.subscribe.listenToken). "
+            "The margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         params = {"listenKey": listenKey}
         return self._request_margin_api(
             "delete", "userDataStream", signed=False, data=params
+        )
+
+    def margin_create_listen_token(self, symbol: Optional[str] = None, is_isolated: bool = False, validity: Optional[int] = None):
+        """Create a listenToken for margin account user data stream
+
+        https://developers.binance.com/docs/margin_trading/trade-data-stream/Create-Margin-Account-listenToken
+
+        :param symbol: Trading pair symbol (required when is_isolated=True)
+        :type symbol: str
+        :param is_isolated: Whether it is isolated margin (default: False for cross-margin)
+        :type is_isolated: bool
+        :param validity: Validity in milliseconds (default: 24 hours, max: 24 hours)
+        :type validity: int
+        :returns: API response with token and expirationTime
+
+        .. code-block:: python
+
+            {
+                "token": "6xXxePXwZRjVSHKhzUCCGnmN3fkvMTXru+pYJS8RwijXk9Vcyr3rkwfVOTcP2OkONqciYA",
+                "expirationTime": 1758792204196
+            }
+
+        :raises: BinanceRequestException, BinanceAPIException
+        """
+        params = {}
+        if is_isolated:
+            if not symbol:
+                raise ValueError("symbol is required when is_isolated=True")
+            params["symbol"] = symbol
+            params["isIsolated"] = "true"
+        if validity is not None:
+            params["validity"] = validity
+
+        return self._request_margin_api(
+            "post", "userListenToken", signed=True, data=params
         )
 
     # Isolated margin
@@ -5739,6 +5799,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "POST /sapi/v1/userDataStream/isolated is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken "
+            "with isIsolated=true, then subscribe with userDataStream.subscribe.listenToken). "
+            "The isolated_margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         params = {"symbol": symbol}
         res = self._request_margin_api(
             "post", "userDataStream/isolated", signed=False, data=params
@@ -5764,6 +5832,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "PUT /sapi/v1/userDataStream/isolated is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken "
+            "with isIsolated=true, then subscribe with userDataStream.subscribe.listenToken). "
+            "The isolated_margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         params = {"symbol": symbol, "listenKey": listenKey}
         return self._request_margin_api(
             "put", "userDataStream/isolated", signed=False, data=params
@@ -5788,6 +5864,14 @@ class Client(BaseClient):
         :raises: BinanceRequestException, BinanceAPIException
 
         """
+        warnings.warn(
+            "DELETE /sapi/v1/userDataStream/isolated is deprecated and will be removed on 2026-02-20. "
+            "Use the WebSocket API subscription method instead (create listenToken via POST /sapi/v1/userListenToken "
+            "with isIsolated=true, then subscribe with userDataStream.subscribe.listenToken). "
+            "The isolated_margin_socket() method now uses WebSocket API by default.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         params = {"symbol": symbol, "listenKey": listenKey}
         return self._request_margin_api(
             "delete", "userDataStream/isolated", signed=False, data=params
