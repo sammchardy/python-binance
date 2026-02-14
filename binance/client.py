@@ -8204,24 +8204,63 @@ class Client(BaseClient):
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/New-Algo-Order
 
+        :param algoType: required - Only support CONDITIONAL
+        :type algoType: str
         :param symbol: required
         :type symbol: str
         :param side: required - BUY or SELL
         :type side: str
-        :param type: required - STOP, TAKE_PROFIT, STOP_MARKET, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET
+        :param positionSide: optional - Default BOTH for One-way Mode; LONG or SHORT for Hedge Mode
+        :type positionSide: str
+        :param type: required - STOP_MARKET/TAKE_PROFIT_MARKET/STOP/TAKE_PROFIT/TRAILING_STOP_MARKET
         :type type: str
-        :param quantity: optional
+        :param timeInForce: optional - IOC or GTC or FOK or GTX, default GTC
+        :type timeInForce: str
+        :param quantity: optional - Cannot be sent with closePosition=true
         :type quantity: decimal
         :param price: optional
         :type price: decimal
         :param triggerPrice: optional - Used with STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET
         :type triggerPrice: decimal
-        :param algoType: required - CONDITIONAL
-        :type algoType: str
+        :param workingType: optional - triggerPrice triggered by: MARK_PRICE, CONTRACT_PRICE. Default CONTRACT_PRICE
+        :type workingType: str
+        :param priceMatch: optional - only available for LIMIT/STOP/TAKE_PROFIT order
+        :type priceMatch: str
+        :param closePosition: optional - true, false; Close-All, used with STOP_MARKET or TAKE_PROFIT_MARKET
+        :type closePosition: str
+        :param priceProtect: optional - "TRUE" or "FALSE", default "FALSE"
+        :type priceProtect: str
+        :param reduceOnly: optional - "true" or "false", default "false"
+        :type reduceOnly: str
+        :param activatePrice: optional - Used with TRAILING_STOP_MARKET orders
+        :type activatePrice: decimal
+        :param callbackRate: optional - Used with TRAILING_STOP_MARKET orders, min 0.1, max 10
+        :type callbackRate: decimal
+        :param clientAlgoId: optional - A unique id among open orders
+        :type clientAlgoId: str
+        :param newOrderRespType: optional - "ACK", "RESULT", default "ACK"
+        :type newOrderRespType: str
+        :param selfTradePreventionMode: optional - EXPIRE_TAKER, EXPIRE_MAKER, EXPIRE_BOTH, default NONE
+        :type selfTradePreventionMode: str
+        :param goodTillDate: optional - order cancel time for timeInForce GTD
+        :type goodTillDate: long
         :param recvWindow: optional - the number of milliseconds the request is valid for
         :type recvWindow: int
 
         :returns: API response
+
+        .. code-block:: python
+
+            result = client.futures_create_algo_order(
+                algoType='CONDITIONAL',
+                symbol='BNBUSDT',
+                side='SELL',
+                type='TAKE_PROFIT',
+                quantity='0.01',
+                price='750.000',
+                triggerPrice='750.000',
+                timeInForce='GTC'
+            )
 
         """
         if "clientAlgoId" not in params:
