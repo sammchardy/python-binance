@@ -659,7 +659,7 @@ async def test_futures_create_algo_order_with_price_protect_async(futuresClientA
     )
     assert order["symbol"] == ticker["symbol"]
     assert "algoId" in order
-    assert order["priceProtect"] == True
+    assert order["priceProtect"] is True
     # Clean up
     await futuresClientAsync.futures_cancel_algo_order(
         symbol=ticker["symbol"], algoId=order["algoId"]

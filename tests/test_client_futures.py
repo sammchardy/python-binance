@@ -920,7 +920,7 @@ def test_futures_create_algo_order_with_price_protect(futuresClient):
     )
     assert order["symbol"] == ticker["symbol"]
     assert "algoId" in order
-    assert order["priceProtect"] == True
+    assert order["priceProtect"] is True
     # Clean up
     futuresClient.futures_cancel_algo_order(
         symbol=ticker["symbol"], algoId=order["algoId"]
