@@ -642,3 +642,146 @@ async def test_futures_cancel_all_algo_open_orders_async(futuresClientAsync):
     result = await futuresClientAsync.futures_cancel_all_algo_open_orders(symbol="LTCUSDT")
     assert "code" in result or "msg" in result
 
+
+async def test_futures_create_algo_order_with_price_protect_async(futuresClientAsync):
+    """Test creating an algo order with priceProtect parameter async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+        priceProtect="TRUE",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["priceProtect"] is True
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+@pytest.mark.skip(reason="TRAILING_STOP_MARKET with activatePrice may not be fully supported in testnet environment")
+async def test_futures_create_algo_order_trailing_stop_async(futuresClientAsync):
+    """Test creating a TRAILING_STOP_MARKET algo order with activatePrice and callbackRate async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    current_price = float(ticker["lastPrice"])
+    
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="SELL",
+        positionSide=positions[0]["positionSide"],
+        type="TRAILING_STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        activatePrice=str(current_price * 1.1),
+        callbackRate="1.0",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+async def test_futures_create_algo_order_with_stp_mode_async(futuresClientAsync):
+    """Test creating an algo order with selfTradePreventionMode async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="SELL",
+        positionSide=positions[0]["positionSide"],
+        type="TAKE_PROFIT",
+        algoType="CONDITIONAL",
+        quantity=1,
+        price=10000,
+        triggerPrice=10000,
+        timeInForce="GTC",
+        selfTradePreventionMode="EXPIRE_MAKER",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["selfTradePreventionMode"] == "EXPIRE_MAKER"
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+async def test_futures_create_algo_order_with_price_match_async(futuresClientAsync):
+    """Test creating an algo order with priceMatch parameter async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="SELL",
+        positionSide=positions[0]["positionSide"],
+        type="TAKE_PROFIT",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=10000,
+        timeInForce="GTC",
+        priceMatch="OPPONENT",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["priceMatch"] == "OPPONENT"
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+async def test_futures_create_algo_order_with_new_order_resp_type_async(futuresClientAsync):
+    """Test creating an algo order with newOrderRespType parameter async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+        newOrderRespType="RESULT",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert "algoStatus" in order
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
+
+async def test_futures_create_algo_order_with_working_type_async(futuresClientAsync):
+    """Test creating an algo order with workingType parameter async"""
+    ticker = await futuresClientAsync.futures_ticker(symbol="LTCUSDT")
+    positions = await futuresClientAsync.futures_position_information(symbol="LTCUSDT")
+    order = await futuresClientAsync.futures_create_algo_order(
+        symbol=ticker["symbol"],
+        side="BUY",
+        positionSide=positions[0]["positionSide"],
+        type="STOP_MARKET",
+        algoType="CONDITIONAL",
+        quantity=1,
+        triggerPrice=1000,
+        workingType="MARK_PRICE",
+    )
+    assert order["symbol"] == ticker["symbol"]
+    assert "algoId" in order
+    assert order["workingType"] == "MARK_PRICE"
+    # Clean up
+    await futuresClientAsync.futures_cancel_algo_order(
+        symbol=ticker["symbol"], algoId=order["algoId"]
+    )
+
