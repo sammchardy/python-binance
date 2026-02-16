@@ -1,5 +1,16 @@
 Changelog
 
+v1.0.35 - 2026-02-16
+
+**Added**
+
+- chore: normalize package name by @carlosmiei in https://github.com/sammchardy/python-binance/pull/1653
+- feat: upgrade margin socket to use websocket api by @pcriadoperez in https://github.com/sammchardy/python-binance/pull/1670
+- feat: Update futures algo order API with new TP/SL parameters by @paul-lestyo in https://github.com/sammchardy/python-binance/pull/1672
+
+**Fixed**
+- fix: reconnects for websocket connection closed ok and ws-api by @pcriadoperez in https://github.com/sammchardy/python-binance/pull/1655
+
 v1.0.34 - 2025-12-16
 
 **Added**
