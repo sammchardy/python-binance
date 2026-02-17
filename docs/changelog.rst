@@ -1,6 +1,7 @@
 Changelog
 
 v1.0.35 - 2026-02-16
+^^^^^^^^^^^^^^^^^^^^
 
 **Added**
 
@@ -26,6 +27,7 @@ v1.0.34 - 2025-12-16
 - fix(client): use proper exception instead of assert for US endpoints (#1641)
 
 v1.0.33 - 2025-12-06
+^^^^^^^^^^^^^^^^^^^^
 
 **Fixed**
 
