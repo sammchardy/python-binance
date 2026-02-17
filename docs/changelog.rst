@@ -13,6 +13,7 @@ v1.0.35 - 2026-02-16
 - fix: reconnects for websocket connection closed ok and ws-api by @pcriadoperez in https://github.com/sammchardy/python-binance/pull/1655
 
 v1.0.34 - 2025-12-16
+^^^^^^^^^^^^^^^^^^^^
 
 **Added**
 - verbose mode for inspecting requests (verbose=True) (#1642)
