@@ -2054,6 +2054,8 @@ class AsyncClient(BaseClient):
 
     futures_symbol_ticker.__doc__ = Client.futures_symbol_ticker.__doc__
 
+    futures_symbol_ticker.__doc__ = Client.futures_symbol_ticker.__doc__
+
     async def futures_orderbook_ticker(self, **params):
         return await self._request_futures_api("get", "ticker/bookTicker", data=params)
 
