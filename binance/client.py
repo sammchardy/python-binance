@@ -2964,7 +2964,7 @@ class Client(BaseClient):
             ]
         """
         return self._request_margin_api(
-            "get", "spot/delist-schedule", True, data=params
+            "get", "spot/delist-schedule", False, data=params
         )
 
     # Withdraw Endpoints
