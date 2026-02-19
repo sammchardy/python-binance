@@ -349,7 +349,28 @@ class Client(BaseClient):
                 return item
 
         return None
+    
+    def get_latest_price_by_symbol(self,symbol) -> float:
+        """Latest price for One specific symbols.
 
+        Reference Document : https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+
+        :returns: Latest Price of a coin
+        
+        .. code-block:: python
+
+            input : BNBUSDT
+            output : 600.2 
+
+        :raises: BinanceRequestException, BinanceAPIException
+
+        """
+        val=0.0
+        list_price= [x['price'] for x in self.get_all_tickers() if x['symbol']==symbol]
+        
+        val = list_price[-1]['price']
+        
+        return float(val)
     # General Endpoints
 
     def ping(self) -> Dict:
