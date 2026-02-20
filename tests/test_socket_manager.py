@@ -2,6 +2,8 @@ from binance import BinanceSocketManager, AsyncClient
 import pytest
 from .conftest import proxy
 
+pytestmark = pytest.mark.live
+
 
 def assert_message(msg):
     assert msg["stream"] == "!ticker@arr"

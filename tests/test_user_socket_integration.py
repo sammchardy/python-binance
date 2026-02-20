@@ -13,11 +13,14 @@ Requirements:
 
 Run with: pytest tests/test_user_socket_integration.py -v
 """
+
 import asyncio
 import pytest
 import pytest_asyncio
 
 from binance import BinanceSocketManager
+
+pytestmark = pytest.mark.live
 
 
 @pytest_asyncio.fixture
@@ -36,22 +39,27 @@ class TestUserSocketArchitecture:
 
         async with user_socket:
             # Queues should be different objects
-            assert user_socket._queue is not clientAsync.ws_api._queue, \
+            assert user_socket._queue is not clientAsync.ws_api._queue, (
                 "user_socket should have its own queue, not share ws_api's queue"
+            )
 
     @pytest.mark.asyncio
-    async def test_user_socket_uses_ws_api_subscription(self, clientAsync, socket_manager):
+    async def test_user_socket_uses_ws_api_subscription(
+        self, clientAsync, socket_manager
+    ):
         """User socket should use ws_api subscription mechanism."""
         user_socket = socket_manager.user_socket()
 
         async with user_socket:
             # Should be marked as using ws_api subscription
-            assert user_socket._uses_ws_api_subscription is True, \
+            assert user_socket._uses_ws_api_subscription is True, (
                 "user_socket should be marked as using ws_api subscription"
+            )
 
             # Should have a subscription ID
-            assert user_socket._subscription_id is not None, \
+            assert user_socket._subscription_id is not None, (
                 "user_socket should have a subscription ID"
+            )
 
     @pytest.mark.asyncio
     async def test_user_socket_no_read_loop(self, clientAsync, socket_manager):
@@ -60,15 +68,19 @@ class TestUserSocketArchitecture:
 
         async with user_socket:
             # user_socket should not have started its own read loop
-            assert user_socket._handle_read_loop is None, \
+            assert user_socket._handle_read_loop is None, (
                 "user_socket should not have its own read loop"
+            )
 
             # ws_api should have a read loop
-            assert clientAsync.ws_api._handle_read_loop is not None, \
+            assert clientAsync.ws_api._handle_read_loop is not None, (
                 "ws_api should have a read loop"
+            )
 
     @pytest.mark.asyncio
-    async def test_user_socket_queue_registered_with_ws_api(self, clientAsync, socket_manager):
+    async def test_user_socket_queue_registered_with_ws_api(
+        self, clientAsync, socket_manager
+    ):
         """User socket's queue should be registered with ws_api for event routing."""
         user_socket = socket_manager.user_socket()
 
@@ -76,13 +88,15 @@ class TestUserSocketArchitecture:
             sub_id = user_socket._subscription_id
 
             # Subscription should be registered in ws_api
-            assert sub_id in clientAsync.ws_api._subscription_queues, \
+            assert sub_id in clientAsync.ws_api._subscription_queues, (
                 "Subscription should be registered with ws_api"
+            )
 
             # Registered queue should be user_socket's queue
             registered_queue = clientAsync.ws_api._subscription_queues[sub_id]
-            assert registered_queue is user_socket._queue, \
+            assert registered_queue is user_socket._queue, (
                 "Registered queue should be user_socket's queue"
+            )
 
     @pytest.mark.asyncio
     async def test_user_socket_cleanup_on_exit(self, clientAsync, socket_manager):
@@ -95,8 +109,9 @@ class TestUserSocketArchitecture:
             assert sub_id in clientAsync.ws_api._subscription_queues
 
         # After exit, subscription should be unregistered
-        assert sub_id not in clientAsync.ws_api._subscription_queues, \
+        assert sub_id not in clientAsync.ws_api._subscription_queues, (
             "Subscription should be unregistered after exit"
+        )
 
 
 class TestUserSocketFunctionality:
@@ -133,15 +148,18 @@ class TestNonUserSockets:
     """Tests verifying other socket types still work normally."""
 
     @pytest.mark.asyncio
-    async def test_margin_socket_not_using_ws_api_subscription(self, clientAsync, socket_manager):
+    async def test_margin_socket_not_using_ws_api_subscription(
+        self, clientAsync, socket_manager
+    ):
         """Non-user KeepAliveWebsockets (like margin socket) should not use ws_api subscription."""
         # margin_socket is a KeepAliveWebsocket with keepalive_type="margin"
         # Create it but don't connect - just check the flag
         margin_socket = socket_manager.margin_socket()
 
         # Before connecting, the flag should be False (default)
-        assert margin_socket._uses_ws_api_subscription is False, \
+        assert margin_socket._uses_ws_api_subscription is False, (
             "Margin socket should not use ws_api subscription"
+        )
 
         # The _keepalive_type should be "margin", not "user"
         assert margin_socket._keepalive_type == "margin"
@@ -156,10 +174,12 @@ class TestWsApiSubscriptionRouting:
         # Ensure ws_api is initialized
         await clientAsync.ws_api._ensure_ws_connection()
 
-        assert hasattr(clientAsync.ws_api, '_subscription_queues'), \
+        assert hasattr(clientAsync.ws_api, "_subscription_queues"), (
             "ws_api should have _subscription_queues attribute"
-        assert isinstance(clientAsync.ws_api._subscription_queues, dict), \
+        )
+        assert isinstance(clientAsync.ws_api._subscription_queues, dict), (
             "_subscription_queues should be a dict"
+        )
 
     @pytest.mark.asyncio
     async def test_ws_api_register_unregister_queue(self, clientAsync):
