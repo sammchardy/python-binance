@@ -1,6 +1,8 @@
 import os
 import pytest
 
+pytestmark = pytest.mark.live
+
 
 proxies = {}
 proxy = os.getenv("PROXY")
