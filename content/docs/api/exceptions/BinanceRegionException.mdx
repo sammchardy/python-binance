@@ -1,0 +1,71 @@
+---
+title: BinanceRegionException
+---
+
+Raised when using a region-specific endpoint with incompatible client.
+
+## Attributes
+
+<PyAttribute name={"required_tld"} type={null} value={"required_tld"} />
+
+<PyAttribute name={"actual_tld"} type={null} value={"actual_tld"} />
+
+<PyAttribute name={"endpoint_name"} type={null} value={"endpoint_name"} />
+
+<PyAttribute name={"message"} type={null} value={"f'{endpoint_name} is only available on binance.{required_tld}, but client is configured for binance.{actual_tld}'"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, required_tld, actual_tld, endpoint_name='endpoint')"}>
+
+<PySourceCode >
+
+```python
+def __init__(
+    self, required_tld: str, actual_tld: str, endpoint_name: str = "endpoint"
+):
+    self.required_tld = required_tld
+    self.actual_tld = actual_tld
+    self.endpoint_name = endpoint_name
+    self.message = (
+        f"{endpoint_name} is only available on binance.{required_tld}, "
+        f"but client is configured for binance.{actual_tld}"
+    )
+    super().__init__(self.message)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"required_tld"} type={"str"} value={null} />
+<PyParameter name={"actual_tld"} type={"str"} value={null} />
+<PyParameter name={"endpoint_name"} type={"str"} value={"'endpoint'"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__str__"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def __str__(self):
+    return f"BinanceRegionException: {self.message}"
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

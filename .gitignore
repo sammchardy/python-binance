@@ -11,3 +11,17 @@ python_binance.egg-info/
 venv*/
 .vscode
 .binance/
+
+# node / next.js / fumadocs
+node_modules/
+.next/
+out/
+.source/
+.DS_Store
+*.pem
+.env
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+api-output/

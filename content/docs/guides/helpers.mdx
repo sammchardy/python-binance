@@ -1,0 +1,18 @@
+---
+title: Helper Functions
+description: Utility functions for date conversion, interval parsing, and step size rounding
+---
+
+The `binance.helpers` module provides utility functions:
+
+- `date_to_milliseconds` — Convert a date string to milliseconds
+- `interval_to_milliseconds` — Convert a Binance interval string to milliseconds
+- `round_step_size` — Round a value to the nearest step size
+
+```python
+from binance.helpers import round_step_size
+
+amount = 0.000234234
+tick_size = 0.00001
+rounded_amount = round_step_size(amount, tick_size)
+```

@@ -1,0 +1,28 @@
+---
+title: BinanceOrderInactiveSymbolException
+---
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, value)"}>
+
+<PySourceCode >
+
+```python
+def __init__(self, value):
+    message = "Attempting to trade an inactive symbol %s" % value
+    super().__init__(-1013, message)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"value"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

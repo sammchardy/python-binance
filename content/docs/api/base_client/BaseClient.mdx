@@ -1,0 +1,1320 @@
+---
+title: BaseClient
+---
+
+## Attributes
+
+<PyAttribute name={"API_URL"} type={null} value={"self.API_URL.format(base_endpoint, tld)"} />
+
+<PyAttribute name={"API_TESTNET_URL"} type={null} value={"'https://testnet.binance.vision/api'"} />
+
+<PyAttribute name={"API_DEMO_URL"} type={null} value={"'https://demo-api.binance.com/api'"} />
+
+<PyAttribute name={"MARGIN_API_URL"} type={null} value={"self.MARGIN_API_URL.format(base_endpoint, tld)"} />
+
+<PyAttribute name={"WEBSITE_URL"} type={null} value={"self.WEBSITE_URL.format(tld)"} />
+
+<PyAttribute name={"FUTURES_URL"} type={null} value={"self.FUTURES_URL.format(tld)"} />
+
+<PyAttribute name={"FUTURES_TESTNET_URL"} type={null} value={"'https://testnet.binancefuture.com/fapi'"} />
+
+<PyAttribute name={"FUTURES_DEMO_URL"} type={null} value={"'https://demo-fapi.binance.com/fapi'"} />
+
+<PyAttribute name={"FUTURES_DATA_URL"} type={null} value={"self.FUTURES_DATA_URL.format(tld)"} />
+
+<PyAttribute name={"FUTURES_DATA_TESTNET_URL"} type={null} value={"'https://testnet.binancefuture.com/futures/data'"} />
+
+<PyAttribute name={"FUTURES_COIN_URL"} type={null} value={"self.FUTURES_COIN_URL.format(tld)"} />
+
+<PyAttribute name={"FUTURES_COIN_TESTNET_URL"} type={null} value={"'https://testnet.binancefuture.com/dapi'"} />
+
+<PyAttribute name={"FUTURES_COIN_DEMO_URL"} type={null} value={"'https://demo-dapi.binance.com/dapi'"} />
+
+<PyAttribute name={"FUTURES_COIN_DATA_URL"} type={null} value={"self.FUTURES_COIN_DATA_URL.format(tld)"} />
+
+<PyAttribute name={"FUTURES_COIN_DATA_TESTNET_URL"} type={null} value={"'https://testnet.binancefuture.com/futures/data'"} />
+
+<PyAttribute name={"OPTIONS_URL"} type={null} value={"self.OPTIONS_URL.format(tld)"} />
+
+<PyAttribute name={"OPTIONS_TESTNET_URL"} type={null} value={"self.OPTIONS_TESTNET_URL.format(tld)"} />
+
+<PyAttribute name={"PAPI_URL"} type={null} value={"'https://papi.binance.{}/papi'"} />
+
+<PyAttribute name={"WS_API_URL"} type={null} value={"'wss://ws-api.binance.{}/ws-api/v3'"} />
+
+<PyAttribute name={"WS_API_TESTNET_URL"} type={null} value={"'wss://ws-api.testnet.binance.vision/ws-api/v3'"} />
+
+<PyAttribute name={"WS_API_DEMO_URL"} type={null} value={"'wss://demo-ws-api.binance.com/ws-api/v3'"} />
+
+<PyAttribute name={"WS_FUTURES_URL"} type={null} value={"'wss://ws-fapi.binance.{}/ws-fapi/v1'"} />
+
+<PyAttribute name={"WS_FUTURES_TESTNET_URL"} type={null} value={"'wss://testnet.binancefuture.com/ws-fapi/v1'"} />
+
+<PyAttribute name={"WS_FUTURES_DEMO_URL"} type={null} value={"'wss://testnet.binancefuture.com/ws-fapi/v1'"} />
+
+<PyAttribute name={"PUBLIC_API_VERSION"} type={null} value={"'v3'"} />
+
+<PyAttribute name={"PRIVATE_API_VERSION"} type={null} value={"'v3'"} />
+
+<PyAttribute name={"MARGIN_API_VERSION"} type={null} value={"'v1'"} />
+
+<PyAttribute name={"MARGIN_API_VERSION2"} type={null} value={"'v2'"} />
+
+<PyAttribute name={"MARGIN_API_VERSION3"} type={null} value={"'v3'"} />
+
+<PyAttribute name={"MARGIN_API_VERSION4"} type={null} value={"'v4'"} />
+
+<PyAttribute name={"FUTURES_API_VERSION"} type={null} value={"'v1'"} />
+
+<PyAttribute name={"FUTURES_API_VERSION2"} type={null} value={"'v2'"} />
+
+<PyAttribute name={"FUTURES_API_VERSION3"} type={null} value={"'v3'"} />
+
+<PyAttribute name={"OPTIONS_API_VERSION"} type={null} value={"'v1'"} />
+
+<PyAttribute name={"PORTFOLIO_API_VERSION"} type={null} value={"'v1'"} />
+
+<PyAttribute name={"PORTFOLIO_API_VERSION2"} type={null} value={"'v2'"} />
+
+<PyAttribute name={"BASE_ENDPOINT_DEFAULT"} type={null} value={"''"} />
+
+<PyAttribute name={"BASE_ENDPOINT_1"} type={null} value={"'1'"} />
+
+<PyAttribute name={"BASE_ENDPOINT_2"} type={null} value={"'2'"} />
+
+<PyAttribute name={"BASE_ENDPOINT_3"} type={null} value={"'3'"} />
+
+<PyAttribute name={"BASE_ENDPOINT_4"} type={null} value={"'4'"} />
+
+<PyAttribute name={"REQUEST_TIMEOUT"} type={"float"} value={"10"} />
+
+<PyAttribute name={"REQUEST_RECVWINDOW"} type={"int"} value={"10000"} />
+
+<PyAttribute name={"SYMBOL_TYPE_SPOT"} type={null} value={"'SPOT'"} />
+
+<PyAttribute name={"ORDER_STATUS_NEW"} type={null} value={"'NEW'"} />
+
+<PyAttribute name={"ORDER_STATUS_PARTIALLY_FILLED"} type={null} value={"'PARTIALLY_FILLED'"} />
+
+<PyAttribute name={"ORDER_STATUS_FILLED"} type={null} value={"'FILLED'"} />
+
+<PyAttribute name={"ORDER_STATUS_CANCELED"} type={null} value={"'CANCELED'"} />
+
+<PyAttribute name={"ORDER_STATUS_PENDING_CANCEL"} type={null} value={"'PENDING_CANCEL'"} />
+
+<PyAttribute name={"ORDER_STATUS_REJECTED"} type={null} value={"'REJECTED'"} />
+
+<PyAttribute name={"ORDER_STATUS_EXPIRED"} type={null} value={"'EXPIRED'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1SECOND"} type={null} value={"'1s'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1MINUTE"} type={null} value={"'1m'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_3MINUTE"} type={null} value={"'3m'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_5MINUTE"} type={null} value={"'5m'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_15MINUTE"} type={null} value={"'15m'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_30MINUTE"} type={null} value={"'30m'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1HOUR"} type={null} value={"'1h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_2HOUR"} type={null} value={"'2h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_4HOUR"} type={null} value={"'4h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_6HOUR"} type={null} value={"'6h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_8HOUR"} type={null} value={"'8h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_12HOUR"} type={null} value={"'12h'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1DAY"} type={null} value={"'1d'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_3DAY"} type={null} value={"'3d'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1WEEK"} type={null} value={"'1w'"} />
+
+<PyAttribute name={"KLINE_INTERVAL_1MONTH"} type={null} value={"'1M'"} />
+
+<PyAttribute name={"SIDE_BUY"} type={null} value={"'BUY'"} />
+
+<PyAttribute name={"SIDE_SELL"} type={null} value={"'SELL'"} />
+
+<PyAttribute name={"ORDER_TYPE_LIMIT"} type={null} value={"'LIMIT'"} />
+
+<PyAttribute name={"ORDER_TYPE_MARKET"} type={null} value={"'MARKET'"} />
+
+<PyAttribute name={"ORDER_TYPE_STOP_LOSS"} type={null} value={"'STOP_LOSS'"} />
+
+<PyAttribute name={"ORDER_TYPE_STOP_LOSS_LIMIT"} type={null} value={"'STOP_LOSS_LIMIT'"} />
+
+<PyAttribute name={"ORDER_TYPE_TAKE_PROFIT"} type={null} value={"'TAKE_PROFIT'"} />
+
+<PyAttribute name={"ORDER_TYPE_TAKE_PROFIT_LIMIT"} type={null} value={"'TAKE_PROFIT_LIMIT'"} />
+
+<PyAttribute name={"ORDER_TYPE_LIMIT_MAKER"} type={null} value={"'LIMIT_MAKER'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_LIMIT"} type={null} value={"'LIMIT'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_MARKET"} type={null} value={"'MARKET'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_STOP"} type={null} value={"'STOP'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_STOP_MARKET"} type={null} value={"'STOP_MARKET'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_TAKE_PROFIT"} type={null} value={"'TAKE_PROFIT'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET"} type={null} value={"'TAKE_PROFIT_MARKET'"} />
+
+<PyAttribute name={"FUTURE_ORDER_TYPE_LIMIT_MAKER"} type={null} value={"'LIMIT_MAKER'"} />
+
+<PyAttribute name={"TIME_IN_FORCE_GTC"} type={null} value={"'GTC'"} />
+
+<PyAttribute name={"TIME_IN_FORCE_IOC"} type={null} value={"'IOC'"} />
+
+<PyAttribute name={"TIME_IN_FORCE_FOK"} type={null} value={"'FOK'"} />
+
+<PyAttribute name={"ORDER_RESP_TYPE_ACK"} type={null} value={"'ACK'"} />
+
+<PyAttribute name={"ORDER_RESP_TYPE_RESULT"} type={null} value={"'RESULT'"} />
+
+<PyAttribute name={"ORDER_RESP_TYPE_FULL"} type={null} value={"'FULL'"} />
+
+<PyAttribute name={"AGG_ID"} type={null} value={"'a'"} />
+
+<PyAttribute name={"AGG_PRICE"} type={null} value={"'p'"} />
+
+<PyAttribute name={"AGG_QUANTITY"} type={null} value={"'q'"} />
+
+<PyAttribute name={"AGG_FIRST_TRADE_ID"} type={null} value={"'f'"} />
+
+<PyAttribute name={"AGG_LAST_TRADE_ID"} type={null} value={"'l'"} />
+
+<PyAttribute name={"AGG_TIME"} type={null} value={"'T'"} />
+
+<PyAttribute name={"AGG_BUYER_MAKES"} type={null} value={"'m'"} />
+
+<PyAttribute name={"AGG_BEST_MATCH"} type={null} value={"'M'"} />
+
+<PyAttribute name={"SPOT_TO_FIAT"} type={null} value={"'MAIN_C2C'"} />
+
+<PyAttribute name={"SPOT_TO_USDT_FUTURE"} type={null} value={"'MAIN_UMFUTURE'"} />
+
+<PyAttribute name={"SPOT_TO_COIN_FUTURE"} type={null} value={"'MAIN_CMFUTURE'"} />
+
+<PyAttribute name={"SPOT_TO_MARGIN_CROSS"} type={null} value={"'MAIN_MARGIN'"} />
+
+<PyAttribute name={"SPOT_TO_MINING"} type={null} value={"'MAIN_MINING'"} />
+
+<PyAttribute name={"FIAT_TO_SPOT"} type={null} value={"'C2C_MAIN'"} />
+
+<PyAttribute name={"FIAT_TO_USDT_FUTURE"} type={null} value={"'C2C_UMFUTURE'"} />
+
+<PyAttribute name={"FIAT_TO_MINING"} type={null} value={"'C2C_MINING'"} />
+
+<PyAttribute name={"USDT_FUTURE_TO_SPOT"} type={null} value={"'UMFUTURE_MAIN'"} />
+
+<PyAttribute name={"USDT_FUTURE_TO_FIAT"} type={null} value={"'UMFUTURE_C2C'"} />
+
+<PyAttribute name={"USDT_FUTURE_TO_MARGIN_CROSS"} type={null} value={"'UMFUTURE_MARGIN'"} />
+
+<PyAttribute name={"COIN_FUTURE_TO_SPOT"} type={null} value={"'CMFUTURE_MAIN'"} />
+
+<PyAttribute name={"MARGIN_CROSS_TO_SPOT"} type={null} value={"'MARGIN_MAIN'"} />
+
+<PyAttribute name={"MARGIN_CROSS_TO_USDT_FUTURE"} type={null} value={"'MARGIN_UMFUTURE'"} />
+
+<PyAttribute name={"MINING_TO_SPOT"} type={null} value={"'MINING_MAIN'"} />
+
+<PyAttribute name={"MINING_TO_USDT_FUTURE"} type={null} value={"'MINING_UMFUTURE'"} />
+
+<PyAttribute name={"MINING_TO_FIAT"} type={null} value={"'MINING_C2C'"} />
+
+<PyAttribute name={"SPOT_ORDER_PREFIX"} type={null} value={"'x-HNA2TXFJ'"} />
+
+<PyAttribute name={"CONTRACT_ORDER_PREFIX"} type={null} value={"'x-Cb7ytekJ'"} />
+
+<PyAttribute name={"tld"} type={null} value={"tld"} />
+
+<PyAttribute name={"verbose"} type={null} value={"verbose"} />
+
+<PyAttribute name={"logger"} type={null} value={"logging.getLogger(__name__)"} />
+
+<PyAttribute name={"API_KEY"} type={null} value={"api_key"} />
+
+<PyAttribute name={"API_SECRET"} type={null} value={"api_secret"} />
+
+<PyAttribute name={"TIME_UNIT"} type={null} value={"time_unit"} />
+
+<PyAttribute name={"PRIVATE_KEY"} type={"Any"} value={"self._init_private_key(private_key, private_key_pass)"} />
+
+<PyAttribute name={"session"} type={null} value={"self._init_session()"} />
+
+<PyAttribute name={"response"} type={null} value={"None"} />
+
+<PyAttribute name={"testnet"} type={null} value={"testnet"} />
+
+<PyAttribute name={"demo"} type={null} value={"demo"} />
+
+<PyAttribute name={"timestamp_offset"} type={null} value={"0"} />
+
+<PyAttribute name={"ws_api"} type={null} value={"WebsocketAPI(url=ws_api_url, tld=tld, https_proxy=https_proxy)"} />
+
+<PyAttribute name={"ws_future"} type={null} value={"WebsocketAPI(url=ws_future_url, tld=tld, https_proxy=https_proxy)"} />
+
+<PyAttribute name={"loop"} type={null} value={"loop or get_loop()"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, api_key=None, api_secret=None, requests_params=None, tld='com', base_endpoint=BASE_ENDPOINT_DEFAULT, testnet=False, demo=False, private_key=None, private_key_pass=None, loop=None, time_unit=None, verbose=False)"}>
+
+Binance API Client constructor
+
+:param api_key: Api Key
+:type api_key: str.
+:param api_secret: Api Secret
+:type api_secret: str.
+:param requests_params: optional - Dictionary of requests params to use for all calls
+:type requests_params: dict.
+:param testnet: Use testnet environment - only available for vanilla options at the moment
+:type testnet: bool
+:param private_key: Path to private key, or string of file contents
+:type private_key: optional - str or Path
+:param private_key_pass: Password of private key
+:type private_key_pass: optional - str
+:param time_unit: Time unit to use for requests. Supported values: "MILLISECOND", "MICROSECOND"
+:type time_unit: optional - str
+:param verbose: Enable verbose logging for debugging
+:type verbose: bool
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    api_key: Optional[str] = None,
+    api_secret: Optional[str] = None,
+    requests_params: Optional[Dict[str, Any]] = None,
+    tld: str = "com",
+    base_endpoint: str = BASE_ENDPOINT_DEFAULT,
+    testnet: bool = False,
+    demo: bool = False,
+    private_key: Optional[Union[str, Path]] = None,
+    private_key_pass: Optional[str] = None,
+    loop: Optional[asyncio.AbstractEventLoop] = None,
+    time_unit: Optional[str] = None,
+    verbose: bool = False,
+):
+    """Binance API Client constructor
+
+    :param api_key: Api Key
+    :type api_key: str.
+    :param api_secret: Api Secret
+    :type api_secret: str.
+    :param requests_params: optional - Dictionary of requests params to use for all calls
+    :type requests_params: dict.
+    :param testnet: Use testnet environment - only available for vanilla options at the moment
+    :type testnet: bool
+    :param private_key: Path to private key, or string of file contents
+    :type private_key: optional - str or Path
+    :param private_key_pass: Password of private key
+    :type private_key_pass: optional - str
+    :param time_unit: Time unit to use for requests. Supported values: "MILLISECOND", "MICROSECOND"
+    :type time_unit: optional - str
+    :param verbose: Enable verbose logging for debugging
+    :type verbose: bool
+
+    """
+
+    self.tld = tld
+    self.verbose = verbose
+    self.logger = logging.getLogger(__name__)
+
+    # Set logger level based on verbose flag
+    # Users can override this by configuring logging externally
+    if verbose:
+        self.logger.setLevel(logging.DEBUG)
+    self.API_URL = self.API_URL.format(base_endpoint, tld)
+    self.MARGIN_API_URL = self.MARGIN_API_URL.format(base_endpoint, tld)
+    self.WEBSITE_URL = self.WEBSITE_URL.format(tld)
+    self.FUTURES_URL = self.FUTURES_URL.format(tld)
+    self.FUTURES_DATA_URL = self.FUTURES_DATA_URL.format(tld)
+    self.FUTURES_COIN_URL = self.FUTURES_COIN_URL.format(tld)
+    self.FUTURES_COIN_DATA_URL = self.FUTURES_COIN_DATA_URL.format(tld)
+    self.OPTIONS_URL = self.OPTIONS_URL.format(tld)
+    self.OPTIONS_TESTNET_URL = self.OPTIONS_TESTNET_URL.format(tld)
+
+    self.API_KEY = api_key
+    self.API_SECRET = api_secret
+    self.TIME_UNIT = time_unit
+    self._is_rsa = False
+    self.PRIVATE_KEY: Any = self._init_private_key(private_key, private_key_pass)
+    self.session = self._init_session()
+    self._requests_params = requests_params
+    self.response = None
+    self.testnet = testnet
+    self.demo = demo
+    self.timestamp_offset = 0
+    ws_api_url = self.WS_API_URL.format(tld)
+    if testnet:
+        ws_api_url = self.WS_API_TESTNET_URL
+    elif demo:
+        ws_api_url = self.WS_API_DEMO_URL
+    if self.TIME_UNIT:
+        ws_api_url += f"?timeUnit={self.TIME_UNIT}"
+    # Extract proxy from requests_params for WebSocket connections
+    https_proxy = None
+    if requests_params and 'proxies' in requests_params:
+        https_proxy = requests_params['proxies'].get('https') or requests_params['proxies'].get('http')
+
+    self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld, https_proxy=https_proxy)
+    ws_future_url = self.WS_FUTURES_URL.format(tld)
+    if testnet:
+        ws_future_url = self.WS_FUTURES_TESTNET_URL
+    elif demo:
+        ws_future_url = self.WS_FUTURES_DEMO_URL
+    self.ws_future = WebsocketAPI(url=ws_future_url, tld=tld, https_proxy=https_proxy)
+    self.loop = loop or get_loop()
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"api_key"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"api_secret"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"requests_params"} type={"Optional[Dict[str, Any]]"} value={"None"} />
+<PyParameter name={"tld"} type={"str"} value={"'com'"} />
+<PyParameter name={"base_endpoint"} type={"str"} value={"BASE_ENDPOINT_DEFAULT"} />
+<PyParameter name={"testnet"} type={"bool"} value={"False"} />
+<PyParameter name={"demo"} type={"bool"} value={"False"} />
+<PyParameter name={"private_key"} type={"Optional[Union[str, Path]]"} value={"None"} />
+<PyParameter name={"private_key_pass"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"loop"} type={"Optional[asyncio.AbstractEventLoop]"} value={"None"} />
+<PyParameter name={"time_unit"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"verbose"} type={"bool"} value={"False"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_headers"} type={"(self) -> Dict"}>
+
+<PySourceCode >
+
+```python
+def _get_headers(self) -> Dict:
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",  # noqa
+    }
+    if self.API_KEY:
+        assert self.API_KEY
+        headers["X-MBX-APIKEY"] = self.API_KEY
+    if self.TIME_UNIT:
+        assert self.TIME_UNIT
+        headers["X-MBX-TIME-UNIT"] = self.TIME_UNIT
+    return headers
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"typing.Dict"} />
+
+</PyFunction>
+
+<PyFunction name={"_init_session"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def _init_session(self):
+    raise NotImplementedError
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_init_private_key"} type={"(self, private_key, private_key_pass=None)"}>
+
+<PySourceCode >
+
+```python
+def _init_private_key(
+    self,
+    private_key: Optional[Union[str, Path]],
+    private_key_pass: Optional[str] = None,
+):
+    if not private_key:
+        return
+    if isinstance(private_key, Path):
+        with open(private_key, "r") as f:
+            private_key = f.read()
+    if len(private_key) > 120:
+        self._is_rsa = True
+        return RSA.import_key(private_key, passphrase=private_key_pass)
+    return ECC.import_key(private_key)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"private_key"} type={"Optional[Union[str, Path]]"} value={null} />
+<PyParameter name={"private_key_pass"} type={"Optional[str]"} value={"None"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_create_api_uri"} type={"(self, path, signed=True, version=PUBLIC_API_VERSION) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_api_uri(
+    self, path: str, signed: bool = True, version: str = PUBLIC_API_VERSION
+) -> str:
+    url = self.API_URL
+    if self.testnet:
+        url = self.API_TESTNET_URL
+    elif self.demo:
+        url = self.API_DEMO_URL
+    v = self.PRIVATE_API_VERSION if signed else version
+    return url + "/" + v + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={"True"} />
+<PyParameter name={"version"} type={"str"} value={"PUBLIC_API_VERSION"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_margin_api_uri"} type={"(self, path, version=1) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_margin_api_uri(self, path: str, version: int = 1) -> str:
+    options = {
+        1: self.MARGIN_API_VERSION,
+        2: self.MARGIN_API_VERSION2,
+        3: self.MARGIN_API_VERSION3,
+        4: self.MARGIN_API_VERSION4,
+    }
+    return self.MARGIN_API_URL + "/" + options[version] + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"version"} type={"int"} value={"1"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_papi_api_uri"} type={"(self, path, version=1) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_papi_api_uri(self, path: str, version: int = 1) -> str:
+    options = {1: self.PORTFOLIO_API_VERSION, 2: self.PORTFOLIO_API_VERSION2}
+    return self.PAPI_URL.format(self.tld) + "/" + options[version] + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"version"} type={"int"} value={"1"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_website_uri"} type={"(self, path) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_website_uri(self, path: str) -> str:
+    return self.WEBSITE_URL + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_futures_api_uri"} type={"(self, path, version=1) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_futures_api_uri(self, path: str, version: int = 1) -> str:
+    url = self.FUTURES_URL
+    if self.testnet:
+        url = self.FUTURES_TESTNET_URL
+    elif self.demo:
+        url = self.FUTURES_DEMO_URL
+    options = {
+        1: self.FUTURES_API_VERSION,
+        2: self.FUTURES_API_VERSION2,
+        3: self.FUTURES_API_VERSION3,
+    }
+    return url + "/" + options[version] + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"version"} type={"int"} value={"1"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_futures_data_api_uri"} type={"(self, path) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_futures_data_api_uri(self, path: str) -> str:
+    url = self.FUTURES_DATA_URL
+    if self.testnet:
+        url = self.FUTURES_DATA_TESTNET_URL
+    return url + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_futures_coin_api_url"} type={"(self, path, version=1) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_futures_coin_api_url(self, path: str, version: int = 1) -> str:
+    url = self.FUTURES_COIN_URL
+    if self.testnet:
+        url = self.FUTURES_COIN_TESTNET_URL
+    elif self.demo:
+        url = self.FUTURES_COIN_DEMO_URL
+    options = {
+        1: self.FUTURES_API_VERSION,
+        2: self.FUTURES_API_VERSION2,
+        3: self.FUTURES_API_VERSION3,
+    }
+    return url + "/" + options[version] + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"version"} type={"int"} value={"1"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_futures_coin_data_api_url"} type={"(self, path, version=1) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_futures_coin_data_api_url(self, path: str, version: int = 1) -> str:
+    url = self.FUTURES_COIN_DATA_URL
+    if self.testnet:
+        url = self.FUTURES_COIN_DATA_TESTNET_URL
+    return url + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+<PyParameter name={"version"} type={"int"} value={"1"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_create_options_api_uri"} type={"(self, path) -> str"}>
+
+<PySourceCode >
+
+```python
+def _create_options_api_uri(self, path: str) -> str:
+    url = self.OPTIONS_URL
+    if self.testnet:
+        url = self.OPTIONS_TESTNET_URL
+    return url + "/" + self.OPTIONS_API_VERSION + "/" + path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"path"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_rsa_signature"} type={"(self, query_string)"}>
+
+<PySourceCode >
+
+```python
+def _rsa_signature(self, query_string: str):
+    assert self.PRIVATE_KEY
+    h = SHA256.new(query_string.encode("utf-8"))
+    signature = pkcs1_15.new(self.PRIVATE_KEY).sign(h)  # type: ignore
+    res = b64encode(signature).decode()
+    # return self.encode_uri_component(res)
+    return res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"query_string"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"encode_uri_component"} type={"(uri, safe=\"~()*!.'\")"}>
+
+<PySourceCode >
+
+```python
+@staticmethod
+def encode_uri_component(uri, safe="~()*!.'"):
+    return _urlencode.quote(uri, safe=safe)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"uri"} type={null} value={null} />
+<PyParameter name={"safe"} type={null} value={"\"~()*!.'\""} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"convert_to_dict"} type={"(list_tuples)"}>
+
+<PySourceCode >
+
+```python
+@staticmethod
+def convert_to_dict(list_tuples):
+    dictionary = dict((key, value) for key, value in list_tuples)
+    return dictionary
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"list_tuples"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_require_tld"} type={"(self, required_tld, endpoint_name='endpoint') -> None"}>
+
+Validate client is configured for required TLD.
+
+:param required_tld: The required TLD (e.g., "us")
+:param endpoint_name: Description of the endpoint for error messages
+:raises BinanceRegionException: If the client TLD doesn't match
+
+<PySourceCode >
+
+```python
+def _require_tld(self, required_tld: str, endpoint_name: str = "endpoint") -> None:
+    """Validate client is configured for required TLD.
+
+    :param required_tld: The required TLD (e.g., "us")
+    :param endpoint_name: Description of the endpoint for error messages
+    :raises BinanceRegionException: If the client TLD doesn't match
+    """
+    if self.tld != required_tld:
+        from binance.exceptions import BinanceRegionException
+
+        raise BinanceRegionException(required_tld, self.tld, endpoint_name)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"required_tld"} type={"str"} value={null} />
+<PyParameter name={"endpoint_name"} type={"str"} value={"'endpoint'"} />
+
+</div>
+
+<PyFunctionReturn type={"None"} />
+
+</PyFunction>
+
+<PyFunction name={"_ed25519_signature"} type={"(self, query_string)"}>
+
+<PySourceCode >
+
+```python
+def _ed25519_signature(self, query_string: str):
+    assert self.PRIVATE_KEY
+    res = b64encode(
+        eddsa.new(self.PRIVATE_KEY, "rfc8032").sign(query_string.encode())
+    ).decode()  # type: ignore
+    # return self.encode_uri_component(res)
+    return res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"query_string"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_hmac_signature"} type={"(self, query_string) -> str"}>
+
+<PySourceCode >
+
+```python
+def _hmac_signature(self, query_string: str) -> str:
+    assert self.API_SECRET, "API Secret required for private endpoints"
+    m = hmac.new(
+        self.API_SECRET.encode("utf-8"),
+        query_string.encode("utf-8"),
+        hashlib.sha256,
+    )
+    return m.hexdigest()
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"query_string"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_generate_signature"} type={"(self, data, uri_encode=True) -> str"}>
+
+<PySourceCode >
+
+```python
+def _generate_signature(self, data: Dict, uri_encode=True) -> str:
+    sig_func = self._hmac_signature
+    if self.PRIVATE_KEY:
+        if self._is_rsa:
+            sig_func = self._rsa_signature
+        else:
+            sig_func = self._ed25519_signature
+    query_string = "&".join([f"{d[0]}={_urlencode.quote(d[1]) if d[0] == 'symbol' else d[1]}" for d in self._order_params(data)])
+    res = sig_func(query_string)
+    return self.encode_uri_component(res) if uri_encode else res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"data"} type={"Dict"} value={null} />
+<PyParameter name={"uri_encode"} type={null} value={"True"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_sign_ws_params"} type={"(self, params, signature_func)"}>
+
+<PySourceCode >
+
+```python
+def _sign_ws_params(self, params, signature_func):
+    if "signature" in params:
+        return params
+    params.setdefault("apiKey", self.API_KEY)
+    params.setdefault("timestamp", int(time.time() * 1000 + self.timestamp_offset))
+    params = dict(sorted(params.items()))
+    return {**params, "signature": signature_func(params)}
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"params"} type={null} value={null} />
+<PyParameter name={"signature_func"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_generate_ws_api_signature"} type={"(self, data) -> str"}>
+
+<PySourceCode >
+
+```python
+def _generate_ws_api_signature(self, data: Dict) -> str:
+    sig_func = self._hmac_signature
+    if self.PRIVATE_KEY:
+        if self._is_rsa:
+            sig_func = self._rsa_signature
+        else:
+            sig_func = self._ed25519_signature
+    query_string = urlencode(data)
+    return sig_func(query_string)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"data"} type={"Dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"_ws_futures_api_request"} type={"(self, method, signed, params)"}>
+
+Send request and wait for response
+
+<PySourceCode >
+
+```python
+async def _ws_futures_api_request(self, method: str, signed: bool, params: dict):
+    """Send request and wait for response"""
+    id = params.pop("id", self.uuid22())
+    payload = {
+        "id": id,
+        "method": method,
+        "params": params,
+    }
+    if signed:
+        payload["params"] = self._sign_ws_params(params, self._generate_signature)
+    return await self.ws_future.request(id, payload)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={"str"} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={null} />
+<PyParameter name={"params"} type={"dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_ws_futures_api_request_sync"} type={"(self, method, signed, params)"}>
+
+<PySourceCode >
+
+```python
+def _ws_futures_api_request_sync(self, method: str, signed: bool, params: dict):
+    self.loop = get_loop()
+    return self.loop.run_until_complete(
+        self._ws_futures_api_request(method, signed, params)
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={"str"} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={null} />
+<PyParameter name={"params"} type={"dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_make_sync"} type={"(self, method)"}>
+
+<PySourceCode >
+
+```python
+async def _make_sync(self, method):
+    return asyncio.run(method)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_ws_api_request"} type={"(self, method, signed, params)"}>
+
+Send request and wait for response
+
+<PySourceCode >
+
+```python
+async def _ws_api_request(self, method: str, signed: bool, params: dict):
+    """Send request and wait for response"""
+    id = params.pop("id", self.uuid22())
+    payload = {
+        "id": id,
+        "method": method,
+        "params": params,
+    }
+    if signed:
+        payload["params"] = self._sign_ws_params(
+            params, self._generate_ws_api_signature
+        )
+    return await self.ws_api.request(id, payload)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={"str"} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={null} />
+<PyParameter name={"params"} type={"dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_ws_api_request_sync"} type={"(self, method, signed, params)"}>
+
+Send request to WS API and wait for response
+
+<PySourceCode >
+
+```python
+def _ws_api_request_sync(self, method: str, signed: bool, params: dict):
+    """Send request to WS API and wait for response"""
+    self.loop = get_loop()
+    return self.loop.run_until_complete(
+        self._ws_api_request(method, signed, params)
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={"str"} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={null} />
+<PyParameter name={"params"} type={"dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_version"} type={"(version, **kwargs) -> int"}>
+
+<PySourceCode >
+
+```python
+@staticmethod
+def _get_version(version: int, **kwargs) -> int:
+    if "data" in kwargs and "version" in kwargs["data"]:
+        version_override = kwargs["data"].get("version")
+        del kwargs["data"]["version"]
+        return version_override
+    return version
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"version"} type={"int"} value={null} />
+<PyParameter name={"kwargs"} type={null} value={"{}"} />
+
+</div>
+
+<PyFunctionReturn type={"int"} />
+
+</PyFunction>
+
+<PyFunction name={"uuid22"} type={"(length=22)"}>
+
+<PySourceCode >
+
+```python
+@staticmethod
+def uuid22(length=22):
+    return format(random.getrandbits(length * 4), "x")
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"length"} type={null} value={"22"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_order_params"} type={"(data) -> List[Tuple[str, str]]"}>
+
+Convert params to list with signature as last element
+
+:param data:
+:return:
+
+<PySourceCode >
+
+```python
+@staticmethod
+def _order_params(data: Dict) -> List[Tuple[str, str]]:
+    """Convert params to list with signature as last element
+
+    :param data:
+    :return:
+
+    """
+    data = dict(filter(lambda el: el[1] is not None, data.items()))
+    has_signature = False
+    params = []
+    for key, value in data.items():
+        if key == "signature":
+            has_signature = True
+        else:
+            params.append((key, str(value)))
+    # sort parameters by key
+    params.sort(key=itemgetter(0))
+    if has_signature:
+        params.append(("signature", data["signature"]))
+    return params
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"data"} type={"Dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"typing.List[typing.Tuple[str, str]]"} />
+
+</PyFunction>
+
+<PyFunction name={"_get_request_kwargs"} type={"(self, method, signed, force_params=False, **kwargs) -> Dict"}>
+
+<PySourceCode >
+
+```python
+def _get_request_kwargs(
+    self, method, signed: bool, force_params: bool = False, **kwargs
+) -> Dict:
+    # set default requests timeout
+    kwargs["timeout"] = self.REQUEST_TIMEOUT
+
+    # add our global requests params
+    if self._requests_params:
+        kwargs.update(self._requests_params)
+
+    data = kwargs.get("data", None)
+    if data and isinstance(data, dict):
+        kwargs["data"] = data
+        # find any requests params passed and apply them
+        if "requests_params" in kwargs["data"]:
+            # merge requests params into kwargs
+            kwargs.update(kwargs["data"]["requests_params"])
+            del kwargs["data"]["requests_params"]
+
+    if signed:
+        # generate signature
+        kwargs["data"]["timestamp"] = int(
+            time.time() * 1000 + self.timestamp_offset
+        )
+        if self.REQUEST_RECVWINDOW:
+            kwargs["data"]["recvWindow"] = self.REQUEST_RECVWINDOW
+        kwargs["data"]["signature"] = self._generate_signature(kwargs["data"])
+
+    # sort get and post params to match signature order
+    if data:
+        # sort post params and remove any arguments with values of None
+        kwargs["data"] = self._order_params(kwargs["data"])
+        # Remove any arguments with values of None.
+        null_args = [
+            i for i, (key, value) in enumerate(kwargs["data"]) if value is None
+        ]
+        for i in reversed(null_args):
+            del kwargs["data"][i]
+
+    # if get request assign data array to params value for requests lib
+    if data and (method == "get" or force_params):
+        kwargs["params"] = "&".join(
+            "%s=%s" % (data[0], _urlencode.quote(data[1]) if data[0] == 'symbol' else data[1]) for data in kwargs["data"]
+        )
+        del kwargs["data"]
+
+    # Temporary fix for Signature issue while using batchOrders in AsyncClient
+    if "params" in kwargs.keys():
+        if (
+            "batchOrders" in kwargs["params"]
+            or "orderidlist" in kwargs["params"]
+            or "origclientorderidlist" in kwargs["params"]
+        ):
+            kwargs["data"] = kwargs["params"]
+            del kwargs["params"]
+
+    return kwargs
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"method"} type={null} value={null} />
+<PyParameter name={"signed"} type={"bool"} value={null} />
+<PyParameter name={"force_params"} type={"bool"} value={"False"} />
+<PyParameter name={"kwargs"} type={null} value={"{}"} />
+
+</div>
+
+<PyFunctionReturn type={"typing.Dict"} />
+
+</PyFunction>

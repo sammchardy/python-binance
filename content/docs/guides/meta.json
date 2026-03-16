@@ -1,0 +1,16 @@
+{
+  "title": "Guides",
+  "pages": [
+    "general",
+    "market-data",
+    "account",
+    "margin",
+    "websockets",
+    "depth-cache",
+    "sub-accounts",
+    "withdrawals",
+    "constants",
+    "exceptions",
+    "helpers"
+  ]
+}

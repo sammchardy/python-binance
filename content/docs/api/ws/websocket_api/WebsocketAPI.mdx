@@ -1,0 +1,318 @@
+---
+title: WebsocketAPI
+---
+
+## Attributes
+
+<PyAttribute name={"connection_lock"} type={"asyncio.Lock"} value={null} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, url, tld='com', testnet=False, https_proxy=None)"}>
+
+<PySourceCode >
+
+```python
+def __init__(self, url: str, tld: str = "com", testnet: bool = False, https_proxy: Optional[str] = None):
+    self._tld = tld
+    self._testnet = testnet
+    self._responses: Dict[str, asyncio.Future] = {}
+    self._connection_lock: Optional[asyncio.Lock] = None
+    # Subscription queues for routing user data stream events
+    self._subscription_queues: Dict[str, asyncio.Queue] = {}
+    super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"url"} type={"str"} value={null} />
+<PyParameter name={"tld"} type={"str"} value={"'com'"} />
+<PyParameter name={"testnet"} type={"bool"} value={"False"} />
+<PyParameter name={"https_proxy"} type={"Optional[str]"} value={"None"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"register_subscription_queue"} type={"(self, subscription_id, queue) -> None"}>
+
+Register a queue to receive events for a specific subscription.
+
+<PySourceCode >
+
+```python
+def register_subscription_queue(self, subscription_id: str, queue: asyncio.Queue) -> None:
+    """Register a queue to receive events for a specific subscription."""
+    self._subscription_queues[subscription_id] = queue
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"subscription_id"} type={"str"} value={null} />
+<PyParameter name={"queue"} type={"asyncio.Queue"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"None"} />
+
+</PyFunction>
+
+<PyFunction name={"unregister_subscription_queue"} type={"(self, subscription_id) -> None"}>
+
+Unregister a subscription queue.
+
+<PySourceCode >
+
+```python
+def unregister_subscription_queue(self, subscription_id: str) -> None:
+    """Unregister a subscription queue."""
+    self._subscription_queues.pop(subscription_id, None)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"subscription_id"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"None"} />
+
+</PyFunction>
+
+<PyFunction name={"_handle_message"} type={"(self, msg)"}>
+
+Override message handling to support request-response
+
+<PySourceCode >
+
+```python
+def _handle_message(self, msg):
+    """Override message handling to support request-response"""
+    parsed_msg = super()._handle_message(msg)
+    self._log.debug(f"Received message: {parsed_msg}")
+    if parsed_msg is None:
+        return None
+
+    # Check if this is a subscription event (user data stream, etc.)
+    # These have 'subscriptionId' and 'event' fields instead of 'id'
+    if "subscriptionId" in parsed_msg and "event" in parsed_msg:
+        subscription_id = parsed_msg["subscriptionId"]
+        event = parsed_msg["event"]
+        # Route to the registered subscription queue if one exists
+        if subscription_id in self._subscription_queues:
+            queue = self._subscription_queues[subscription_id]
+            try:
+                queue.put_nowait(event)
+            except asyncio.QueueFull:
+                self._log.error(f"Subscription queue full for {subscription_id}, dropping event")
+            except Exception as e:
+                self._log.error(f"Error putting event in subscription queue for {subscription_id}: {e}")
+            return None  # Don't put in main queue
+        else:
+            # No registered queue, return event for main queue (backward compat)
+            return event
+
+    req_id, exception = None, None
+    if "id" in parsed_msg:
+        req_id = parsed_msg["id"]
+    if "status" in parsed_msg:
+        if parsed_msg["status"] != 200:
+            exception = BinanceAPIException(
+                parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
+            )
+    if req_id is not None and req_id in self._responses:
+        if exception is not None:
+            self._responses[req_id].set_exception(exception)
+        else:
+            self._responses[req_id].set_result(parsed_msg)
+        return None  # Don't queue request-response messages
+    elif exception is not None:
+        raise exception
+    else:
+        self._log.warning(f"WS api receieved unknown message: {parsed_msg}")
+        return None
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_ensure_ws_connection"} type={"(self) -> None"}>
+
+Ensure WebSocket connection is established and ready
+
+This function will:
+1. Check if connection exists and is streaming
+2. Attempt to connect if not
+3. Wait for connection to be ready
+4. Handle reconnection if needed
+
+<PySourceCode >
+
+```python
+async def _ensure_ws_connection(self) -> None:
+    """Ensure WebSocket connection is established and ready
+
+    This function will:
+    1. Check if connection exists and is streaming
+    2. Attempt to connect if not
+    3. Wait for connection to be ready
+    4. Handle reconnection if needed
+    """
+    async with self.connection_lock:
+        try:
+            if (
+                self.ws is None
+                or (isinstance(self.ws, WebSocketClientProtocol) and self.ws.closed)
+                or self.ws_state != WSListenerState.STREAMING
+            ):
+                await self.connect()
+
+                # Wait for connection to be ready
+                retries = 0
+                while (
+                    self.ws_state != WSListenerState.STREAMING
+                    and retries < self.MAX_RECONNECTS
+                ):
+                    if self.ws_state == WSListenerState.RECONNECTING:
+                        self._log.info("Connection is reconnecting, waiting...")
+                        await self._wait_for_reconnect()
+
+                    elif self.ws is None or self.ws.closed:
+                        self._log.info("Connection lost, reconnecting...")
+                        await self.connect()
+
+                    retries += 1
+                    await asyncio.sleep(self.MIN_RECONNECT_WAIT)
+
+                if self.ws_state != WSListenerState.STREAMING:
+                    raise BinanceWebsocketUnableToConnect(
+                        f"Failed to establish connection after {retries} attempts"
+                    )
+
+                self._log.debug("WebSocket connection established")
+
+        except Exception as e:
+            self._log.error(f"Error ensuring WebSocket connection: {e}")
+            raise BinanceWebsocketUnableToConnect(f"Connection failed: {str(e)}")
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"None"} />
+
+</PyFunction>
+
+<PyFunction name={"request"} type={"(self, id, payload) -> dict"}>
+
+Send request and wait for response
+
+<PySourceCode >
+
+```python
+async def request(self, id: str, payload: dict) -> dict:
+    """Send request and wait for response"""
+    await self._ensure_ws_connection()
+
+    # Create future for response
+    future = asyncio.Future()
+    self._responses[id] = future
+
+    try:
+        # Send request
+        if self.ws is None:
+            raise BinanceWebsocketUnableToConnect(
+                "Trying to send request while WebSocket is not connected"
+            )
+        await self.ws.send(self.json_dumps(payload))
+
+        # Wait for response
+        response = await asyncio.wait_for(future, timeout=self.TIMEOUT)
+
+        # Check for errors
+        if "error" in response:
+            raise BinanceWebsocketUnableToConnect(response["error"])
+
+        return response.get("result", response)
+
+    except asyncio.TimeoutError:
+        raise BinanceWebsocketUnableToConnect("Request timed out")
+    except Exception as e:
+        raise e
+    finally:
+        self._responses.pop(id, None)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"id"} type={"str"} value={null} />
+<PyParameter name={"payload"} type={"dict"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"dict"} />
+
+</PyFunction>
+
+<PyFunction name={"__aexit__"} type={"(self, exc_type, exc_val, exc_tb)"}>
+
+Clean up responses before closing
+
+<PySourceCode >
+
+```python
+async def __aexit__(self, exc_type, exc_val, exc_tb):
+    """Clean up responses before closing"""
+    response_ids = list(self._responses.keys())  # Create a copy of keys
+    for req_id in response_ids:
+        future = self._responses.pop(req_id)  # Remove and get the future
+        if not future.done():
+            future.set_exception(
+                BinanceWebsocketUnableToConnect("WebSocket closing")
+            )
+    await super().__aexit__(exc_type, exc_val, exc_tb)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"exc_type"} type={null} value={null} />
+<PyParameter name={"exc_val"} type={null} value={null} />
+<PyParameter name={"exc_tb"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

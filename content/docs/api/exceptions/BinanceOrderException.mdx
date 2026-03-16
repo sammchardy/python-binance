@@ -1,0 +1,56 @@
+---
+title: BinanceOrderException
+---
+
+## Attributes
+
+<PyAttribute name={"code"} type={null} value={"code"} />
+
+<PyAttribute name={"message"} type={null} value={"message"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, code, message)"}>
+
+<PySourceCode >
+
+```python
+def __init__(self, code, message):
+    self.code = code
+    self.message = message
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"code"} type={null} value={null} />
+<PyParameter name={"message"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__str__"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def __str__(self):
+    return "BinanceOrderException(code=%s): %s" % (self.code, self.message)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

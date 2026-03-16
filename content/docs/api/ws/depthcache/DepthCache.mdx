@@ -1,0 +1,325 @@
+---
+title: DepthCache
+---
+
+## Attributes
+
+<PyAttribute name={"symbol"} type={null} value={"symbol"} />
+
+<PyAttribute name={"update_time"} type={null} value={"None"} />
+
+<PyAttribute name={"conv_type"} type={"Callable"} value={"conv_type"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, symbol, conv_type=float)"}>
+
+Initialise the DepthCache
+
+:param symbol: Symbol to create depth cache for
+:type symbol: string
+:param conv_type: Optional type to represent price, and amount, default is float.
+:type conv_type: function.
+
+<PySourceCode >
+
+```python
+def __init__(self, symbol, conv_type: Callable = float):
+    """Initialise the DepthCache
+
+    :param symbol: Symbol to create depth cache for
+    :type symbol: string
+    :param conv_type: Optional type to represent price, and amount, default is float.
+    :type conv_type: function.
+
+    """
+    self.symbol = symbol
+    self._bids = {}
+    self._asks = {}
+    self.update_time = None
+    self.conv_type: Callable = conv_type
+    self._log = logging.getLogger(__name__)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"symbol"} type={null} value={null} />
+<PyParameter name={"conv_type"} type={"Callable"} value={"float"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"add_bid"} type={"(self, bid)"}>
+
+Add a bid to the cache
+
+:param bid:
+:return:
+
+<PySourceCode >
+
+```python
+def add_bid(self, bid):
+    """Add a bid to the cache
+
+    :param bid:
+    :return:
+
+    """
+    self._bids[bid[0]] = self.conv_type(bid[1])
+    if bid[1] == "0.00000000":
+        del self._bids[bid[0]]
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"bid"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"add_ask"} type={"(self, ask)"}>
+
+Add an ask to the cache
+
+:param ask:
+:return:
+
+<PySourceCode >
+
+```python
+def add_ask(self, ask):
+    """Add an ask to the cache
+
+    :param ask:
+    :return:
+
+    """
+    self._asks[ask[0]] = self.conv_type(ask[1])
+    if ask[1] == "0.00000000":
+        del self._asks[ask[0]]
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"ask"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"get_bids"} type={"(self)"}>
+
+Get the current bids
+
+:return: list of bids with price and quantity as conv_type
+
+.. code-block:: python
+
+    [
+        [
+            0.0001946,  # Price
+            45.0        # Quantity
+        ],
+        [
+            0.00019459,
+            2384.0
+        ],
+        [
+            0.00019158,
+            5219.0
+        ],
+        [
+            0.00019157,
+            1180.0
+        ],
+        [
+            0.00019082,
+            287.0
+        ]
+    ]
+
+<PySourceCode >
+
+```python
+def get_bids(self):
+    """Get the current bids
+
+    :return: list of bids with price and quantity as conv_type
+
+    .. code-block:: python
+
+        [
+            [
+                0.0001946,  # Price
+                45.0        # Quantity
+            ],
+            [
+                0.00019459,
+                2384.0
+            ],
+            [
+                0.00019158,
+                5219.0
+            ],
+            [
+                0.00019157,
+                1180.0
+            ],
+            [
+                0.00019082,
+                287.0
+            ]
+        ]
+
+    """
+    return DepthCache.sort_depth(self._bids, reverse=True, conv_type=self.conv_type)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"get_asks"} type={"(self)"}>
+
+Get the current asks
+
+:return: list of asks with price and quantity as conv_type.
+
+.. code-block:: python
+
+    [
+        [
+            0.0001955,  # Price
+            57.0'       # Quantity
+        ],
+        [
+            0.00019699,
+            778.0
+        ],
+        [
+            0.000197,
+            64.0
+        ],
+        [
+            0.00019709,
+            1130.0
+        ],
+        [
+            0.0001971,
+            385.0
+        ]
+    ]
+
+<PySourceCode >
+
+```python
+def get_asks(self):
+    """Get the current asks
+
+    :return: list of asks with price and quantity as conv_type.
+
+    .. code-block:: python
+
+        [
+            [
+                0.0001955,  # Price
+                57.0'       # Quantity
+            ],
+            [
+                0.00019699,
+                778.0
+            ],
+            [
+                0.000197,
+                64.0
+            ],
+            [
+                0.00019709,
+                1130.0
+            ],
+            [
+                0.0001971,
+                385.0
+            ]
+        ]
+
+    """
+    return DepthCache.sort_depth(
+        self._asks, reverse=False, conv_type=self.conv_type
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"sort_depth"} type={"(vals, reverse=False, conv_type=float)"}>
+
+Sort bids or asks by price
+
+<PySourceCode >
+
+```python
+@staticmethod
+def sort_depth(vals, reverse=False, conv_type: Callable = float):
+    """Sort bids or asks by price"""
+    if isinstance(vals, dict):
+        lst = [
+            [conv_type(price), conv_type(quantity)]
+            for price, quantity in vals.items()
+        ]
+    elif isinstance(vals, list):
+        lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals]
+    else:
+        raise ValueError(f"Unknown order book depth data type: {type(vals)}")
+    lst = sorted(lst, key=itemgetter(0), reverse=reverse)
+    return lst
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"vals"} type={null} value={null} />
+<PyParameter name={"reverse"} type={null} value={"False"} />
+<PyParameter name={"conv_type"} type={"Callable"} value={"float"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

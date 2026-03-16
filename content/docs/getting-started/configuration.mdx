@@ -1,0 +1,255 @@
+---
+title: Configuration
+description: Initialise the client, configure requests settings, proxies, and logging
+---
+
+## Initialise the Client
+
+Pass your API Key and Secret:
+
+```python
+from binance.client import Client
+client = Client(api_key, api_secret)
+```
+
+Or for the asynchronous client:
+
+```python
+import asyncio
+from binance import AsyncClient
+
+async def main():
+    client = await AsyncClient.create(api_key, api_secret)
+    await client.close_connection()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## Making API Calls
+
+Every method supports passing arbitrary parameters via keyword arguments matching those in the [Binance API documentation](https://github.com/binance-exchange/binance-official-api-docs). These keyword arguments are sent directly to the relevant endpoint.
+
+Each API method returns a dictionary of the JSON response. The docstring of each method references the endpoint it implements.
+
+The `timestamp` parameter is generated for you where required.
+
+Some methods have a `recvWindow` parameter for [timing security](https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md#timing-security).
+
+API Endpoints are rate limited by Binance at 20 requests per second.
+
+## Async API Calls
+
+`aiohttp` is used to handle async REST requests. Each function available in the normal client is also available in the `AsyncClient` class.
+
+```python
+import asyncio
+from binance import AsyncClient
+
+async def main():
+    client = await AsyncClient.create()
+
+    res = await client.get_exchange_info()
+    print(json.dumps(res, indent=2))
+
+    await client.close_connection()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Read [Async basics for Binance](https://sammchardy.github.io/binance/2021/05/01/async-binance-basics.html) for more information.
+
+## API Rate Limit
+
+Check the `get_exchange_info()` call for up-to-date rate limits. Current limits:
+
+- 1200 weights per minute
+- 10 orders per second
+- 100,000 orders per 24hrs
+
+Some calls have a higher weight than others, especially those returning information about all symbols. Read the [official Binance documentation](https://github.com/binance-exchange/binance-official-api-docs) for details.
+
+On each request Binance returns `X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter)` and `X-MBX-ORDER-COUNT-(intervalNum)` headers.
+
+### Asynchronous example
+
+```python
+import asyncio
+from binance import AsyncClient
+
+async def main():
+    client = await AsyncClient.create(api_key, api_secret)
+    res = await client.get_exchange_info()
+    print(client.response.headers)
+    await client.close_connection()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+### Synchronous example
+
+```python
+from binance import Client
+
+def main():
+    client = Client(api_key, api_secret)
+    res = client.get_exchange_info()
+    print(client.response.headers)
+
+if __name__ == "__main__":
+    main()
+```
+
+## Requests Settings
+
+`python-binance` uses the [requests](http://docs.python-requests.org/en/master/) library. You can set custom requests parameters for all API calls when creating the client:
+
+```python
+client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
+```
+
+You can also pass custom parameters through any API call to override defaults:
+
+```python
+# verify: False and timeout: 5 for this call
+client = Client("api-key", "api-secret", {"verify": False, "timeout": 20})
+client.get_all_orders(symbol='BNBBTC', requests_params={'timeout': 5})
+```
+
+### Proxy Settings
+
+```python
+proxies = {
+    'http': 'http://10.10.1.10:3128',
+    'https': 'http://10.10.1.10:1080'
+}
+
+# In the Client instantiation
+client = Client("api-key", "api-secret", {'proxies': proxies})
+
+# Or on an individual call
+client.get_all_orders(symbol='BNBBTC', requests_params={'proxies': proxies})
+```
+
+Or set environment variables:
+
+```bash
+# Linux
+export HTTP_PROXY="http://10.10.1.10:3128"
+export HTTPS_PROXY="http://10.10.1.10:1080"
+
+# Windows
+set HTTP_PROXY=http://10.10.1.10:3128
+set HTTPS_PROXY=http://10.10.1.10:1080
+```
+
+## Logging
+
+python-binance uses the Python logging module.
+
+### Basic Logging Setup
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+### Advanced Logging Setup
+
+```python
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
+```
+
+### Verbose Mode
+
+Verbose mode logs all HTTP requests and responses — useful for debugging API issues.
+
+**Method 1: Using the verbose Parameter**
+
+```python
+from binance.client import Client
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+client = Client(api_key, api_secret, verbose=True)
+server_time = client.get_server_time()
+```
+
+For AsyncClient:
+
+```python
+import asyncio
+import logging
+from binance.async_client import AsyncClient
+
+logging.basicConfig(level=logging.DEBUG)
+
+async def main():
+    client = await AsyncClient.create(api_key, api_secret, verbose=True)
+    server_time = await client.get_server_time()
+    await client.close_connection()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+**Method 2: Using Python's Logging Module (Production)**
+
+```python
+import logging
+from binance.client import Client
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+logging.getLogger('binance.base_client').setLevel(logging.DEBUG)
+
+client = Client(api_key, api_secret)
+```
+
+When verbose mode is enabled, you'll see logs for each request including HTTP method and URL, request headers and body, response status code, and response headers and body (truncated to 1000 characters).
+
+> **Note:** Verbose mode should be disabled in production environments.
+
+### WebSocket Verbose Logging
+
+```python
+import logging
+from binance import AsyncClient, BinanceSocketManager
+
+logging.basicConfig(level=logging.DEBUG)
+
+# Enable verbose for both REST API and WebSocket
+client = await AsyncClient.create(verbose=True)
+bm = BinanceSocketManager(client, verbose=True)
+```
+
+You can also enable logging for specific WebSocket components:
+
+```python
+logging.getLogger('binance.ws.websocket_api').setLevel(logging.DEBUG)
+logging.getLogger('binance.ws.reconnecting_websocket').setLevel(logging.DEBUG)
+logging.getLogger('binance.ws.streams').setLevel(logging.DEBUG)
+```
+
+For ThreadedWebsocketManager:
+
+```python
+import logging
+from binance.ws.threaded_stream import ThreadedApiManager
+
+logging.basicConfig(level=logging.DEBUG)
+
+twm = ThreadedApiManager(api_key='your_key', api_secret='your_secret', verbose=True)
+twm.start()
+```

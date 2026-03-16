@@ -1,0 +1,243 @@
+---
+title: WebSockets
+description: Real-time streaming data via ThreadedWebsocketManager and BinanceSocketManager
+---
+
+## API Requests via WebSockets
+
+Some API endpoints can be accessed via websockets:
+
+- Synchronous: `client.ws_<endpoint_name>`
+- Asynchronous: `async_client.ws_<endpoint_name>`
+
+```python
+# Synchronous
+client.ws_get_order_book(symbol="BTCUSDT")
+
+# Asynchronous
+await async_client.ws_get_order_book(symbol="BTCUSDT")
+```
+
+## WebSocket Managers for Streaming Data
+
+There are 2 ways to interact with websockets for streaming data:
+
+- **ThreadedWebsocketManager** — does not require asyncio programming
+- **BinanceSocketManager** — requires asyncio
+
+`ThreadedWebsocketManager` functions begin with `start_` (e.g. `start_ticker_socket`), while `BinanceSocketManager` uses the plain name (e.g. `ticker_socket`).
+
+Multiple socket connections can be made through either manager. Only one instance of each socket type will be created per symbol. Messages are received as dictionary objects matching the [Binance WebSocket API documentation](https://binance-docs.github.io/apidocs/spot/en/#websocket-market-streams).
+
+Websockets reconnect automatically with up to 5 retries using exponential backoff.
+
+## ThreadedWebsocketManager Usage
+
+```python
+import time
+from binance import ThreadedWebsocketManager
+
+api_key = '<api_key>'
+api_secret = '<api_secret>'
+
+def main():
+    symbol = 'BNBBTC'
+
+    twm = ThreadedWebsocketManager(api_key=api_key, api_secret=api_secret)
+    twm.start()
+
+    def handle_socket_message(msg):
+        print(f"message type: {msg['e']}")
+        print(msg)
+
+    twm.start_kline_socket(callback=handle_socket_message, symbol=symbol)
+    twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
+
+    # Multiplex socket
+    streams = ['bnbbtc@miniTicker', 'bnbbtc@bookTicker']
+    twm.start_multiplex_socket(callback=handle_socket_message, streams=streams)
+
+    twm.join()
+
+if __name__ == "__main__":
+    main()
+```
+
+### Stop Individual Stream
+
+```python
+twm = ThreadedWebsocketManager()
+twm.start()
+
+depth_stream_name = twm.start_depth_socket(callback=handle_socket_message, symbol=symbol)
+
+# Later...
+twm.stop_socket(depth_stream_name)
+```
+
+### Stop All Streams
+
+```python
+twm.stop()
+```
+
+Attempting to start a stream after `stop` is called will not work.
+
+## BinanceSocketManager Usage
+
+```python
+import asyncio
+from binance import AsyncClient, BinanceSocketManager
+
+async def main():
+    client = await AsyncClient.create()
+    bm = BinanceSocketManager(client)
+    ts = bm.trade_socket('BNBBTC')
+    async with ts as tscm:
+        while True:
+            res = await tscm.recv()
+            print(res)
+
+    await client.close_connection()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Set a custom timeout:
+
+```python
+bm = BinanceSocketManager(client, user_timeout=60)
+```
+
+Manually enter and exit the context manager:
+
+```python
+ts = bm.trade_socket('BNBBTC')
+await ts.__aenter__()
+msg = await ts.recv()
+print(msg)
+await ts.__aexit__(None, None, None)
+```
+
+## Using a Different TLD
+
+```python
+# ThreadedWebsocketManager
+twm = ThreadedWebsocketManager(tld='us')
+
+# BinanceSocketManager
+client = await AsyncClient.create(tld='us')
+bm = BinanceSocketManager(client)
+```
+
+## WebSocket Errors
+
+If an error occurs, a message is sent to the callback:
+
+```python
+{
+    'e': 'error',
+    'type': '<ErrorType>',
+    'm': '<Error message>'
+}
+```
+
+| Type | Description | Typical Action |
+|------|-------------|----------------|
+| `BinanceWebsocketUnableToConnect` | Could not connect after max retries | Check network, restart socket |
+| `BinanceWebsocketClosed` | Connection closed, will auto-reconnect | Usually auto-reconnects |
+| `BinanceWebsocketQueueOverflow` | Message queue exceeded max size (default 100) | Process messages faster or increase queue |
+| `CancelledError` | Task was cancelled (e.g., on shutdown) | Usually safe to ignore |
+| `IncompleteReadError` | Connection interrupted during read | Will attempt to reconnect |
+| `gaierror` | DNS failure | Check network |
+| `ConnectionClosedError` | Unexpected close | Will attempt to reconnect |
+
+**Example error handling:**
+
+```python
+def process_message(msg):
+    if msg.get('e') == 'error':
+        print(f"WebSocket error: {msg.get('type')} - {msg.get('m')}")
+    else:
+        # process message normally
+        pass
+```
+
+> Most connection-related errors trigger automatic reconnection up to 5 times. If the queue overflows, increase `max_queue_size` or process messages more quickly.
+
+## WebSocket Examples
+
+### Multiplex Socket
+
+Combine multiple streams (depth, kline, ticker, trade — not user stream). Symbols must be lowercase.
+
+```python
+ms = bm.multiplex_socket(['bnbbtc@aggTrade', 'neobtc@ticker'])
+```
+
+### Depth Socket
+
+```python
+# Diff response (default)
+ds = bm.depth_socket('BNBBTC')
+
+# Partial book response (valid depths: 5, 10, 20)
+ds = bm.depth_socket('BNBBTC', depth=BinanceSocketManager.WEBSOCKET_DEPTH_5)
+```
+
+### Kline Socket
+
+```python
+from binance.enums import *
+ks = bm.kline_socket('BNBBTC', interval=KLINE_INTERVAL_30MINUTE)
+```
+
+### Aggregated Trade Socket
+
+```python
+ats = bm.aggtrade_socket('BNBBTC')
+```
+
+### Trade Socket
+
+```python
+ts = bm.trade_socket('BNBBTC')
+```
+
+### Symbol Ticker Socket
+
+```python
+sts = bm.symbol_ticker_socket('BNBBTC')
+```
+
+### Ticker Socket
+
+```python
+ts = bm.ticker_socket(process_message)
+```
+
+### Mini Ticker Socket
+
+```python
+# Updates every second (default)
+mts = bm.miniticker_socket()
+
+# Updates every 5 seconds
+mts = bm.miniticker_socket(5000)
+```
+
+### User Socket
+
+Watches for Account Update, Order Update, and Trade Update events. There are separate sockets for Spot, Cross-margin, and Isolated margin.
+
+```python
+# Spot trading
+bm.user_socket()
+
+# Cross-margin
+bm.margin_socket()
+
+# Isolated margin
+bm.isolated_margin_socket(symbol)
+```

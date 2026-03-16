@@ -1,0 +1,103 @@
+---
+title: Market Data
+description: Order book, trades, klines/candlesticks, tickers, and price data endpoints
+---
+
+## Get Market Depth
+
+```python
+depth = client.get_order_book(symbol='BNBBTC')
+```
+
+## Get Recent Trades
+
+```python
+trades = client.get_recent_trades(symbol='BNBBTC')
+```
+
+## Get Historical Trades
+
+```python
+trades = client.get_historical_trades(symbol='BNBBTC')
+```
+
+## Get Aggregate Trades
+
+```python
+trades = client.get_aggregate_trades(symbol='BNBBTC')
+```
+
+## Aggregate Trade Iterator
+
+Iterate over aggregate trades for a symbol from a given date or order id:
+
+```python
+agg_trades = client.aggregate_trade_iter(symbol='ETHBTC', start_str='30 minutes ago UTC')
+
+for trade in agg_trades:
+    print(trade)
+
+# Convert to list (note: generators can only be iterated once)
+agg_trades = client.aggregate_trade_iter(symbol='ETHBTC', start_str='30 minutes ago UTC')
+agg_trade_list = list(agg_trades)
+
+# Using last_id
+agg_trades = client.aggregate_trade_iter(symbol='ETHBTC', last_id=23380478)
+agg_trade_list = list(agg_trades)
+```
+
+## Get Kline/Candlesticks
+
+```python
+candles = client.get_klines(symbol='BNBBTC', interval=Client.KLINE_INTERVAL_30MINUTE)
+```
+
+## Get Historical Kline/Candlesticks
+
+Fetch klines for any date range and interval:
+
+```python
+# Fetch 1 minute klines for the last day
+klines = client.get_historical_klines("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+
+# Fetch 30 minute klines for a specific date range
+klines = client.get_historical_klines("ETHBTC", Client.KLINE_INTERVAL_30MINUTE, "1 Dec, 2017", "1 Jan, 2018")
+
+# Fetch weekly klines since listing
+klines = client.get_historical_klines("NEOBTC", Client.KLINE_INTERVAL_1WEEK, "1 Jan, 2017")
+```
+
+## Get Historical Klines Using a Generator
+
+```python
+for kline in client.get_historical_klines_generator("BNBBTC", Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC"):
+    print(kline)
+```
+
+## Get Average Price
+
+```python
+avg_price = client.get_avg_price(symbol='BNBBTC')
+```
+
+## Get 24hr Ticker
+
+```python
+tickers = client.get_ticker()
+```
+
+## Get All Prices
+
+Get last price for all markets:
+
+```python
+prices = client.get_all_tickers()
+```
+
+## Get Orderbook Tickers
+
+Get first bid and ask entry in the order book for all markets:
+
+```python
+tickers = client.get_orderbook_tickers()
+```

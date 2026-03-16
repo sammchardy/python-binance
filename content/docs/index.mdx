@@ -1,0 +1,38 @@
+---
+title: python-binance
+description: Python wrapper for the Binance exchange API
+---
+
+Welcome to the **python-binance** documentation.
+
+This is the unofficial Python wrapper for the [Binance exchange REST API v3](https://github.com/binance-exchange/binance-official-api-docs). It supports:
+
+- Spot, Margin, and Futures trading
+- Synchronous and Asynchronous clients
+- WebSocket streaming with automatic reconnection
+- Depth cache management
+- Testnet support
+
+## Quick Start
+
+```bash
+pip install python-binance
+```
+
+```python
+from binance.client import Client
+
+client = Client(api_key, api_secret)
+
+# Get market data
+tickers = client.get_all_tickers()
+
+# Place an order
+order = client.order_market_buy(symbol='BNBBTC', quantity=100)
+```
+
+## Links
+
+- [GitHub Repository](https://github.com/sammchardy/python-binance)
+- [PyPI Package](https://pypi.org/project/python-binance/)
+- [Binance API Documentation](https://binance-docs.github.io/apidocs/spot/en/)
