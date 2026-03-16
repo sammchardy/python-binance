@@ -1,0 +1,74 @@
+---
+title: BinanceAPIException
+---
+
+## Attributes
+
+<PyAttribute name={"code"} type={null} value={"json_res.get('code')"} />
+
+<PyAttribute name={"message"} type={null} value={"json_res.get('msg')"} />
+
+<PyAttribute name={"status_code"} type={null} value={"status_code"} />
+
+<PyAttribute name={"response"} type={null} value={"response"} />
+
+<PyAttribute name={"request"} type={null} value={"getattr(response, 'request', None)"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, response, status_code, text)"}>
+
+<PySourceCode >
+
+```python
+def __init__(self, response, status_code, text):
+    self.code = 0
+    try:
+        json_res = json.loads(text)
+    except ValueError:
+        self.message = "Invalid JSON error message from Binance: {}".format(
+            response.text
+        )
+    else:
+        self.code = json_res.get("code")
+        self.message = json_res.get("msg")
+    self.status_code = status_code
+    self.response = response
+    self.request = getattr(response, "request", None)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"response"} type={null} value={null} />
+<PyParameter name={"status_code"} type={null} value={null} />
+<PyParameter name={"text"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__str__"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def __str__(self):  # pragma: no cover
+    return "APIError(code=%s): %s" % (self.code, self.message)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

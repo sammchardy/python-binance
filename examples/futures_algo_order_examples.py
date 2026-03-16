@@ -131,7 +131,7 @@ def create_with_good_till_date():
     import time
     # Set expiry to 1 hour from now (timestamp in milliseconds)
     expiry_time = int((time.time() + 3600) * 1000)
-    
+
     order = client.futures_create_algo_order(
         symbol='BTCUSDT',
         side='SELL',
@@ -202,20 +202,20 @@ if __name__ == '__main__':
     print("=" * 50)
     print("Futures Algo Order Examples")
     print("=" * 50)
-    
+
     # Create different types of algo orders
     # Uncomment the examples you want to try
-    
+
     # order = create_basic_stop_market_order()
     # order = create_take_profit_with_price_protect()
     # order = create_trailing_stop_market()
     # order = create_stop_with_stp_mode()
     # order = create_take_profit_with_price_match()
     # order = create_with_result_response()
-    
+
     # Query orders
     # orders = query_open_algo_orders('BTCUSDT')
-    
+
     # Cancel orders
     # cancel_algo_order('BTCUSDT', algo_id=12345)
     # cancel_all_algo_orders('BTCUSDT')

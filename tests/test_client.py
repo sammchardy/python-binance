@@ -27,7 +27,6 @@ def test_ping(client):
     call_method_and_assert_uri_contains(client, 'ping', '/v3/')
 
 
-
 def test_get_server_time(client):
     client.get_server_time()
 
@@ -59,8 +58,10 @@ def test_get_aggregate_trades(client):
 def test_get_klines(client):
     client.get_klines(symbol="BTCUSDT", interval="1d")
 
+
 def test_get_ui_klines(client):
     client.get_ui_klines(symbol="BTCUSDT", interval="1d")
+
 
 def test_get_avg_price(client):
     client.get_avg_price(symbol="BTCUSDT")

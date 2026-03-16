@@ -1,0 +1,227 @@
+---
+title: ThreadedDepthCacheManager
+---
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, api_key=None, api_secret=None, requests_params=None, tld='com', testnet=False)"}>
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    api_key: Optional[str] = None,
+    api_secret: Optional[str] = None,
+    requests_params: Optional[Dict[str, str]] = None,
+    tld: str = "com",
+    testnet: bool = False,
+):
+    super().__init__(api_key, api_secret, requests_params, tld, testnet)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"api_key"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"api_secret"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"requests_params"} type={"Optional[Dict[str, str]]"} value={"None"} />
+<PyParameter name={"tld"} type={"str"} value={"'com'"} />
+<PyParameter name={"testnet"} type={"bool"} value={"False"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_start_depth_cache"} type={"(self, dcm_class, callback, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float, **kwargs) -> str"}>
+
+<PySourceCode >
+
+```python
+def _start_depth_cache(
+    self,
+    dcm_class,
+    callback: Callable,
+    symbol: str,
+    refresh_interval=None,
+    bm=None,
+    limit=10,
+    conv_type=float,
+    **kwargs,
+) -> str:
+    while not self._client:
+        time.sleep(0.01)
+
+    dcm = dcm_class(
+        client=self._client,
+        symbol=symbol,
+        loop=self._loop,
+        refresh_interval=refresh_interval,
+        bm=bm,
+        limit=limit,
+        conv_type=conv_type,
+        **kwargs,
+    )
+    path = symbol.lower() + "@depth" + str(limit)
+    self._socket_running[path] = True
+    self._loop.call_soon(
+        asyncio.create_task, self.start_listener(dcm, path, callback)
+    )
+    return path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"dcm_class"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"refresh_interval"} type={null} value={"None"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"10"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+<PyParameter name={"kwargs"} type={null} value={"{}"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_depth_cache"} type={"(self, callback, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float, ws_interval=0) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_depth_cache(
+    self,
+    callback: Callable,
+    symbol: str,
+    refresh_interval=None,
+    bm=None,
+    limit=10,
+    conv_type=float,
+    ws_interval=0,
+) -> str:
+    return self._start_depth_cache(
+        dcm_class=DepthCacheManager,
+        callback=callback,
+        symbol=symbol,
+        refresh_interval=refresh_interval,
+        bm=bm,
+        limit=limit,
+        conv_type=conv_type,
+        ws_interval=ws_interval,
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"refresh_interval"} type={null} value={"None"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"10"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+<PyParameter name={"ws_interval"} type={null} value={"0"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_futures_depth_socket"} type={"(self, callback, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_futures_depth_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    refresh_interval=None,
+    bm=None,
+    limit=10,
+    conv_type=float,
+) -> str:
+    return self._start_depth_cache(
+        dcm_class=FuturesDepthCacheManager,
+        callback=callback,
+        symbol=symbol,
+        refresh_interval=refresh_interval,
+        bm=bm,
+        limit=limit,
+        conv_type=conv_type,
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"refresh_interval"} type={null} value={"None"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"10"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_depth_socket"} type={"(self, callback, symbol, refresh_interval=None, bm=None, limit=10, conv_type=float) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_depth_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    refresh_interval=None,
+    bm=None,
+    limit=10,
+    conv_type=float,
+) -> str:
+    return self._start_depth_cache(
+        dcm_class=OptionsDepthCacheManager,
+        callback=callback,
+        symbol=symbol,
+        refresh_interval=refresh_interval,
+        bm=bm,
+        limit=limit,
+        conv_type=conv_type,
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"refresh_interval"} type={null} value={"None"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"10"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>

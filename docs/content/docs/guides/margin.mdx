@@ -1,0 +1,216 @@
+---
+title: Margin Trading
+description: Cross-margin, isolated margin trading, loans, and margin account management
+---
+
+> **Cross-margin vs isolated margin trading**
+>
+> Binance offers both *cross-margin* trading (where all margin is in one account) and *isolated margin* trading (where each pair is a separate margin account). Make sure you are interacting with the right one.
+>
+> Some API endpoints apply to the cross-margin or isolated margin accounts only. Other endpoints, such as trade execution, are used for cross-margin by default, but you can use isolated margin by using the `isIsolated` or `isolatedSymbol` parameters.
+
+## Market Data
+
+### Get Cross-Margin Asset Info
+
+```python
+info = client.get_margin_asset(asset='BNB')
+```
+
+### Get Cross-Margin Symbol Info
+
+```python
+info = client.get_margin_symbol(symbol='BTCUSDT')
+```
+
+### Get Isolated Margin Symbol Info
+
+```python
+info = client.get_isolated_margin_symbol(symbol='BTCUSDT')
+```
+
+### Get All Isolated Margin Symbols
+
+```python
+info = client.get_all_isolated_margin_symbols()
+```
+
+### Get Margin Price Index
+
+```python
+info = client.get_margin_price_index(symbol='BTCUSDT')
+```
+
+## Orders
+
+### Cross-Margin vs Isolated Margin Orders
+
+By default, trade execution endpoints use the *cross-margin* account. To use *isolated margin*, add `isIsolated='TRUE'` to the API calls.
+
+### Order Validation
+
+Binance has rules around symbol pair orders with validation on minimum price, quantity, and total order value. Read more in the [Filters](https://binance-docs.github.io/apidocs/spot/en/#filters) section of the official API.
+
+```python
+amount = 0.000234234
+precision = 5
+amt_str = "{:0.0{}f}".format(amount, precision)
+```
+
+### Fetch All Margin Orders
+
+```python
+orders = client.get_all_margin_orders(symbol='BNBBTC', limit=10)
+```
+
+### Place a Margin Order
+
+```python
+from binance.enums import *
+
+order = client.create_margin_order(
+    symbol='BNBBTC',
+    side=SIDE_BUY,
+    type=ORDER_TYPE_LIMIT,
+    timeInForce=TIME_IN_FORCE_GTC,
+    quantity=100,
+    price='0.00001')
+```
+
+### Check Order Status
+
+```python
+order = client.get_margin_order(
+    symbol='BNBBTC',
+    orderId='orderId')
+```
+
+### Cancel a Margin Order
+
+```python
+result = client.cancel_margin_order(
+    symbol='BNBBTC',
+    orderId='orderId')
+```
+
+### Get All Open Margin Orders
+
+```python
+orders = client.get_open_margin_orders(symbol='BNBBTC')
+```
+
+For isolated margin, add `isIsolated='TRUE'`.
+
+### Get All Margin Orders
+
+```python
+orders = client.get_all_margin_orders(symbol='BNBBTC')
+```
+
+For isolated margin, add `isIsolated='TRUE'`.
+
+## Account
+
+### Get Cross-Margin Account Info
+
+```python
+info = client.get_margin_account()
+```
+
+### Create Isolated Margin Account
+
+```python
+account = client.create_isolated_margin_account(base='BTC', quote='ETH')
+```
+
+### Get Isolated Margin Account Info
+
+```python
+info = client.get_isolated_margin_account()
+```
+
+### Transfer Spot to Cross-Margin
+
+```python
+transaction = client.transfer_spot_to_margin(asset='BTC', amount='1.1')
+```
+
+### Transfer Cross-Margin to Spot
+
+```python
+transaction = client.transfer_margin_to_spot(asset='BTC', amount='1.1')
+```
+
+### Transfer Spot to Isolated Margin
+
+```python
+transaction = client.transfer_spot_to_isolated_margin(
+    asset='BTC', symbol='ETHBTC', amount='1.1')
+```
+
+### Transfer Isolated Margin to Spot
+
+```python
+transaction = client.transfer_isolated_margin_to_spot(
+    asset='BTC', symbol='ETHBTC', amount='1.1')
+```
+
+### Get Max Transfer Amount
+
+```python
+details = client.get_max_margin_transfer(asset='BTC')
+```
+
+For isolated margin, add `isolatedSymbol=symbol_name`.
+
+## Trades
+
+### Get All Margin Trades
+
+```python
+trades = client.get_margin_trades(symbol='BNBBTC')
+```
+
+For isolated margin, add `isIsolated='TRUE'`.
+
+## Loans
+
+### Create Loan
+
+```python
+transaction = client.create_margin_loan(asset='BTC', amount='1.1')
+```
+
+For isolated margin, add `isIsolated='TRUE'` and `symbol=symbol_name`.
+
+### Repay Loan
+
+```python
+transaction = client.repay_margin_loan(asset='BTC', amount='1.1')
+```
+
+For isolated margin, add `isIsolated='TRUE'` and `symbol=symbol_name`.
+
+### Get Loan Details
+
+```python
+details = client.get_margin_loan_details(asset='BTC', txId='100001')
+```
+
+For isolated margin, add `isolatedSymbol=symbol_name`.
+
+### Get Repay Details
+
+```python
+details = client.get_margin_repay_details(asset='BTC', txId='100001')
+```
+
+For isolated margin, add `isolatedSymbol=symbol_name`.
+
+### Get Max Loan Amount
+
+```python
+details = client.get_max_margin_loan(asset='BTC')
+```
+
+For isolated margin, add `isolatedSymbol=symbol_name`.

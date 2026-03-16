@@ -1,0 +1,69 @@
+---
+title: General Endpoints
+description: Ping, server time, system status, exchange info, and other general API endpoints
+---
+
+## Ping the Server
+
+```python
+client.ping()
+```
+
+## Get the Server Time
+
+```python
+time_res = client.get_server_time()
+```
+
+## Get System Status
+
+```python
+status = client.get_system_status()
+```
+
+Returns:
+
+```python
+{
+    "status": 0,        # 0: normal, 1: system maintenance
+    "msg": "normal"     # normal or System maintenance.
+}
+```
+
+## Get Exchange Info
+
+```python
+info = client.get_exchange_info()
+```
+
+## Get Symbol Info
+
+Get the exchange info for a particular symbol:
+
+```python
+info = client.get_symbol_info('BNBBTC')
+```
+
+## Get All Coins Info
+
+Get information of coins (available for deposit and withdraw) for user:
+
+```python
+info = client.get_all_tickers()
+```
+
+## Get Daily Account Snapshot
+
+Get daily account snapshot of specific type. Valid types: `SPOT`, `MARGIN`, `FUTURES`.
+
+```python
+info = client.get_account_snapshot(type='SPOT')
+```
+
+## Get Current Products
+
+> **Deprecated:** Use Exchange Info instead.
+
+```python
+products = client.get_products()
+```

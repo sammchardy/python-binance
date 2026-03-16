@@ -1,0 +1,1136 @@
+---
+title: ThreadedWebsocketManager
+---
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, api_key=None, api_secret=None, requests_params=None, tld='com', testnet=False, session_params=None, https_proxy=None, loop=None, max_queue_size=100)"}>
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    api_key: Optional[str] = None,
+    api_secret: Optional[str] = None,
+    requests_params: Optional[Dict[str, Any]] = None,
+    tld: str = "com",
+    testnet: bool = False,
+    session_params: Optional[Dict[str, Any]] = None,
+    https_proxy: Optional[str] = None,
+    loop: Optional[asyncio.AbstractEventLoop] = None,
+    max_queue_size: int = 100,
+):
+    super().__init__(
+        api_key,
+        api_secret,
+        requests_params,
+        tld,
+        testnet,
+        session_params,
+        https_proxy,
+        loop,
+    )
+    self._bsm: Optional[BinanceSocketManager] = None
+    self._max_queue_size = max_queue_size
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"api_key"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"api_secret"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"requests_params"} type={"Optional[Dict[str, Any]]"} value={"None"} />
+<PyParameter name={"tld"} type={"str"} value={"'com'"} />
+<PyParameter name={"testnet"} type={"bool"} value={"False"} />
+<PyParameter name={"session_params"} type={"Optional[Dict[str, Any]]"} value={"None"} />
+<PyParameter name={"https_proxy"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"loop"} type={"Optional[asyncio.AbstractEventLoop]"} value={"None"} />
+<PyParameter name={"max_queue_size"} type={"int"} value={"100"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_before_socket_listener_start"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _before_socket_listener_start(self):
+    assert self._client
+    self._bsm = BinanceSocketManager(
+        client=self._client,
+        max_queue_size=self._max_queue_size
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_start_async_socket"} type={"(self, callback, socket_name, params, path=None) -> str"}>
+
+<PySourceCode >
+
+```python
+def _start_async_socket(
+    self,
+    callback: Callable,
+    socket_name: str,
+    params: Dict[str, Any],
+    path: Optional[str] = None,
+) -> str:
+    start_time = time.time()
+    while not self._bsm:
+        if time.time() - start_time > 5:
+            raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
+        time.sleep(0.1)
+    socket = getattr(self._bsm, socket_name)(**params)
+    socket_path: str = path or socket._path  # noqa
+    self._socket_running[socket_path] = True
+    self._loop.call_soon_threadsafe(
+        asyncio.create_task, self.start_listener(socket, socket_path, callback)
+    )
+    return socket_path
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"socket_name"} type={"str"} value={null} />
+<PyParameter name={"params"} type={"Dict[str, Any]"} value={null} />
+<PyParameter name={"path"} type={"Optional[str]"} value={"None"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_depth_socket"} type={"(self, callback, symbol, depth=None, interval=None) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_depth_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    depth: Optional[str] = None,
+    interval: Optional[int] = None,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="depth_socket",
+        params={
+            "symbol": symbol,
+            "depth": depth,
+            "interval": interval,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"depth"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"interval"} type={"Optional[int]"} value={"None"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_kline_socket"} type={"(self, callback, symbol, interval=AsyncClient.KLINE_INTERVAL_1MINUTE) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_kline_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="kline_socket",
+        params={
+            "symbol": symbol,
+            "interval": interval,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"interval"} type={null} value={"AsyncClient.KLINE_INTERVAL_1MINUTE"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_kline_futures_socket"} type={"(self, callback, symbol, interval=AsyncClient.KLINE_INTERVAL_1MINUTE, futures_type=FuturesType.USD_M, contract_type=ContractType.PERPETUAL) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_kline_futures_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+    futures_type: FuturesType = FuturesType.USD_M,
+    contract_type: ContractType = ContractType.PERPETUAL,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="kline_futures_socket",
+        params={
+            "symbol": symbol,
+            "interval": interval,
+            "futures_type": futures_type,
+            "contract_type": contract_type,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"interval"} type={null} value={"AsyncClient.KLINE_INTERVAL_1MINUTE"} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+<PyParameter name={"contract_type"} type={"ContractType"} value={"ContractType.PERPETUAL"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_miniticker_socket"} type={"(self, callback, update_time=1000) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_miniticker_socket(
+    self, callback: Callable, update_time: int = 1000
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="miniticker_socket",
+        params={
+            "update_time": update_time,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"update_time"} type={"int"} value={"1000"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_trade_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_trade_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="trade_socket",
+        params={
+            "symbol": symbol,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_aggtrade_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_aggtrade_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="aggtrade_socket",
+        params={
+            "symbol": symbol,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_aggtrade_futures_socket"} type={"(self, callback, symbol, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_aggtrade_futures_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="aggtrade_futures_socket",
+        params={
+            "symbol": symbol,
+            "futures_type": futures_type,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_symbol_miniticker_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_symbol_miniticker_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="symbol_miniticker_socket",
+        params={
+            "symbol": symbol,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_symbol_ticker_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_symbol_ticker_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="symbol_ticker_socket",
+        params={
+            "symbol": symbol,
+        },
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_ticker_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_ticker_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="ticker_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_index_price_socket"} type={"(self, callback, symbol, fast=True) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_index_price_socket(
+    self, callback: Callable, symbol: str, fast: bool = True
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="index_price_socket",
+        params={"symbol": symbol, "fast": fast},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"fast"} type={"bool"} value={"True"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_symbol_mark_price_socket"} type={"(self, callback, symbol, fast=True, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_symbol_mark_price_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    fast: bool = True,
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="symbol_mark_price_socket",
+        params={"symbol": symbol, "fast": fast, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"fast"} type={"bool"} value={"True"} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_all_mark_price_socket"} type={"(self, callback, fast=True, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_all_mark_price_socket(
+    self,
+    callback: Callable,
+    fast: bool = True,
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="all_mark_price_socket",
+        params={"fast": fast, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"fast"} type={"bool"} value={"True"} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_symbol_ticker_futures_socket"} type={"(self, callback, symbol, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_symbol_ticker_futures_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="symbol_ticker_futures_socket",
+        params={"symbol": symbol, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_individual_symbol_ticker_futures_socket"} type={"(self, callback, symbol, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_individual_symbol_ticker_futures_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="individual_symbol_ticker_futures_socket",
+        params={"symbol": symbol, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_all_ticker_futures_socket"} type={"(self, callback, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_all_ticker_futures_socket(
+    self, callback: Callable, futures_type: FuturesType = FuturesType.USD_M
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="all_ticker_futures_socket",
+        params={"futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_symbol_book_ticker_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_symbol_book_ticker_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="symbol_book_ticker_socket",
+        params={"symbol": symbol},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_book_ticker_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_book_ticker_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="book_ticker_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_multiplex_socket"} type={"(self, callback, streams) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_multiplex_socket(self, callback: Callable, streams: List[str]) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="multiplex_socket",
+        params={"streams": streams},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"streams"} type={"List[str]"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_multiplex_socket"} type={"(self, callback, streams) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_multiplex_socket(
+    self, callback: Callable, streams: List[str]
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_multiplex_socket",
+        params={"streams": streams},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"streams"} type={"List[str]"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_futures_multiplex_socket"} type={"(self, callback, streams, futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_futures_multiplex_socket(
+    self,
+    callback: Callable,
+    streams: List[str],
+    futures_type: FuturesType = FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="futures_multiplex_socket",
+        params={"streams": streams, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"streams"} type={"List[str]"} value={null} />
+<PyParameter name={"futures_type"} type={"FuturesType"} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_user_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_user_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="user_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_futures_user_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_futures_user_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="futures_user_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_coin_futures_user_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_coin_futures_user_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="coin_futures_user_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_margin_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_margin_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="margin_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_futures_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_futures_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="futures_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_coin_futures_socket"} type={"(self, callback) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_coin_futures_socket(self, callback: Callable) -> str:
+    return self._start_async_socket(
+        callback=callback, socket_name="coin_futures_socket", params={}
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_isolated_margin_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_isolated_margin_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="isolated_margin_socket",
+        params={"symbol": symbol},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_ticker_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_ticker_socket(self, callback: Callable, symbol: str) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_ticker_socket",
+        params={"symbol": symbol},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_ticker_by_expiration_socket"} type={"(self, callback, symbol, expiration_date) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_ticker_by_expiration_socket(
+    self, callback: Callable, symbol: str, expiration_date: str
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_ticker_by_expiration_socket",
+        params={"symbol": symbol, "expiration_date": expiration_date},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"expiration_date"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_recent_trades_socket"} type={"(self, callback, symbol) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_recent_trades_socket(
+    self, callback: Callable, symbol: str
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_recent_trades_socket",
+        params={"symbol": symbol},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_kline_socket"} type={"(self, callback, symbol, interval=AsyncClient.KLINE_INTERVAL_1MINUTE) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_kline_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    interval=AsyncClient.KLINE_INTERVAL_1MINUTE,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_kline_socket",
+        params={"symbol": symbol, "interval": interval},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"interval"} type={null} value={"AsyncClient.KLINE_INTERVAL_1MINUTE"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_options_depth_socket"} type={"(self, callback, symbol, depth='10') -> str"}>
+
+<PySourceCode >
+
+```python
+def start_options_depth_socket(
+    self, callback: Callable, symbol: str, depth: str = "10"
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="options_depth_socket",
+        params={"symbol": symbol, "depth": depth},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"depth"} type={"str"} value={"'10'"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"start_futures_depth_socket"} type={"(self, callback, symbol, depth='10', futures_type=FuturesType.USD_M) -> str"}>
+
+<PySourceCode >
+
+```python
+def start_futures_depth_socket(
+    self,
+    callback: Callable,
+    symbol: str,
+    depth: str = "10",
+    futures_type=FuturesType.USD_M,
+) -> str:
+    return self._start_async_socket(
+        callback=callback,
+        socket_name="futures_depth_socket",
+        params={"symbol": symbol, "depth": depth, "futures_type": futures_type},
+    )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"callback"} type={"Callable"} value={null} />
+<PyParameter name={"symbol"} type={"str"} value={null} />
+<PyParameter name={"depth"} type={"str"} value={"'10'"} />
+<PyParameter name={"futures_type"} type={null} value={"FuturesType.USD_M"} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>

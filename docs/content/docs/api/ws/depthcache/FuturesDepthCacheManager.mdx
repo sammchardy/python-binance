@@ -1,0 +1,88 @@
+---
+title: FuturesDepthCacheManager
+---
+
+## Functions
+
+<PyFunction name={"_process_depth_message"} type={"(self, msg)"}>
+
+Process a depth event message.
+
+:param msg: Depth event message.
+:return:
+
+<PySourceCode >
+
+```python
+async def _process_depth_message(self, msg):
+    """Process a depth event message.
+
+    :param msg: Depth event message.
+    :return:
+
+    """
+    msg = msg.get("data")
+    return await super()._process_depth_message(msg)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_apply_orders"} type={"(self, msg)"}>
+
+<PySourceCode >
+
+```python
+def _apply_orders(self, msg):
+    assert self._depth_cache
+    self._depth_cache._bids = msg.get("b", [])
+    self._depth_cache._asks = msg.get("a", [])
+
+    # keeping update time
+    self._depth_cache.update_time = msg.get("E") or msg.get("lastUpdateId")
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_socket"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def _get_socket(self):
+    sock = self._bm.futures_depth_socket(self._symbol)
+    return sock
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

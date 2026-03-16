@@ -1,0 +1,622 @@
+---
+title: ReconnectingWebsocket
+---
+
+## Attributes
+
+<PyAttribute name={"MAX_RECONNECTS"} type={null} value={"5"} />
+
+<PyAttribute name={"MAX_RECONNECT_SECONDS"} type={null} value={"60"} />
+
+<PyAttribute name={"MIN_RECONNECT_WAIT"} type={null} value={"0.1"} />
+
+<PyAttribute name={"TIMEOUT"} type={null} value={"10"} />
+
+<PyAttribute name={"NO_MESSAGE_RECONNECT_TIMEOUT"} type={null} value={"60"} />
+
+<PyAttribute name={"ws"} type={"Optional[ws.WebSocketClientProtocol]"} value={"None"} />
+
+<PyAttribute name={"ws_state"} type={null} value={"WSListenerState.INITIALISING"} />
+
+<PyAttribute name={"max_queue_size"} type={null} value={"max_queue_size"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, url, path=None, prefix='ws/', is_binary=False, exit_coro=None, https_proxy=None, max_queue_size=100, **kwargs)"}>
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    url: str,
+    path: Optional[str] = None,
+    prefix: str = "ws/",
+    is_binary: bool = False,
+    exit_coro=None,
+    https_proxy: Optional[str] = None,
+    max_queue_size: int = 100,
+    **kwargs,
+):
+    self._loop = get_loop()
+    self._log = logging.getLogger(__name__)
+    self._path = path
+    self._url = url
+    self._exit_coro = exit_coro
+    self._prefix = prefix
+    self._reconnects = 0
+    self._is_binary = is_binary
+    self._conn = None
+    self._socket = None
+    self.ws: Optional[ws.WebSocketClientProtocol] = None  # type: ignore
+    self.ws_state = WSListenerState.INITIALISING
+    self._queue = asyncio.Queue()
+    self._handle_read_loop = None
+    self._https_proxy = https_proxy
+    self._ws_kwargs = kwargs
+    self.max_queue_size = max_queue_size
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"url"} type={"str"} value={null} />
+<PyParameter name={"path"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"prefix"} type={"str"} value={"'ws/'"} />
+<PyParameter name={"is_binary"} type={"bool"} value={"False"} />
+<PyParameter name={"exit_coro"} type={null} value={"None"} />
+<PyParameter name={"https_proxy"} type={"Optional[str]"} value={"None"} />
+<PyParameter name={"max_queue_size"} type={"int"} value={"100"} />
+<PyParameter name={"kwargs"} type={null} value={"{}"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"json_dumps"} type={"(self, msg) -> str"}>
+
+<PySourceCode >
+
+```python
+def json_dumps(self, msg) -> str:
+    if orjson:
+        return orjson.dumps(msg).decode("utf-8")
+    return json.dumps(msg)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"str"} />
+
+</PyFunction>
+
+<PyFunction name={"json_loads"} type={"(self, msg)"}>
+
+<PySourceCode >
+
+```python
+def json_loads(self, msg):
+    if orjson:
+        return orjson.loads(msg)
+    return json.loads(msg)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__aenter__"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def __aenter__(self):
+    await self.connect()
+    return self
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"close"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def close(self):
+    await self.__aexit__(None, None, None)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__aexit__"} type={"(self, exc_type, exc_val, exc_tb)"}>
+
+<PySourceCode >
+
+```python
+async def __aexit__(self, exc_type, exc_val, exc_tb):
+    self._log.debug(f"Closing Websocket {self._url}{self._prefix}{self._path}")
+    if self._handle_read_loop:
+        await self._kill_read_loop()
+    if self._exit_coro:
+        await self._exit_coro(self._path)
+    if self.ws:
+        await self.ws.close()
+    if self._conn and hasattr(self._conn, "protocol"):
+        await self._conn.__aexit__(exc_type, exc_val, exc_tb)
+    self.ws = None
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"exc_type"} type={null} value={null} />
+<PyParameter name={"exc_val"} type={null} value={null} />
+<PyParameter name={"exc_tb"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"connect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def connect(self):
+    self._log.debug("Establishing new WebSocket connection")
+    self.ws_state = WSListenerState.RECONNECTING
+    await self._before_connect()
+
+    ws_url = (
+        f"{self._url}{getattr(self, '_prefix', '')}{getattr(self, '_path', '')}"
+    )
+
+    # handle https_proxy
+    if self._https_proxy:
+        if not Proxy or not proxy_connect:
+            raise ImportError(
+                "websockets_proxy is not installed, please install it to use a websockets proxy (pip install websockets_proxy)"
+            )
+        proxy = Proxy.from_url(self._https_proxy)  # type: ignore
+        self._conn = proxy_connect(
+            ws_url, close_timeout=0.1, proxy=proxy, **self._ws_kwargs
+        )  # type: ignore
+    else:
+        self._conn = ws.connect(ws_url, close_timeout=0.1, **self._ws_kwargs)  # type: ignore
+
+    try:
+        self.ws = await self._conn.__aenter__()
+    except Exception as e:  # noqa
+        self._log.error(f"Failed to connect to websocket: {e}")
+        self.ws_state = WSListenerState.RECONNECTING
+        raise e
+    self.ws_state = WSListenerState.STREAMING
+    self._reconnects = 0
+    await self._after_connect()
+    if not self._handle_read_loop:
+        self._handle_read_loop = self._loop.call_soon_threadsafe(
+            asyncio.create_task, self._read_loop()
+        )
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_kill_read_loop"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _kill_read_loop(self):
+    self.ws_state = WSListenerState.EXITING
+    while self._handle_read_loop:
+        await sleep(0.1)
+    self._log.debug("Finished killing read_loop")
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_before_connect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _before_connect(self):
+    pass
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_after_connect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _after_connect(self):
+    pass
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_handle_message"} type={"(self, evt)"}>
+
+<PySourceCode >
+
+```python
+def _handle_message(self, evt):
+    if self._is_binary:
+        try:
+            evt = gzip.decompress(evt)
+        except (ValueError, OSError) as e:
+            self._log.error(f"Failed to decompress message: {(e)}")
+            raise
+        except Exception as e:
+            self._log.error(f"Unexpected decompression error: {(e)}")
+            raise
+    try:
+        return self.json_loads(evt)
+    except ValueError as e:
+        self._log.error(f"JSON Value Error parsing message: Error: {(e)}")
+        raise
+    except TypeError as e:
+        self._log.error(f"JSON Type Error parsing message. Error: {(e)}")
+        raise
+    except Exception as e:
+        self._log.error(f"Unexpected error parsing message. Error: {(e)}")
+        raise
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"evt"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_read_loop"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _read_loop(self):
+    try:
+        while True:
+            try:
+                while self.ws_state == WSListenerState.RECONNECTING:
+                    await self._run_reconnect()
+
+                if self.ws_state == WSListenerState.EXITING:
+                    self._log.debug(
+                        f"_read_loop {self._path} break for {self.ws_state}"
+                    )
+                    break
+                elif self.ws.state == ws.protocol.State.CLOSING:  # type: ignore
+                    await asyncio.sleep(0.1)
+                    continue
+                elif self.ws.state == ws.protocol.State.CLOSED:  # type: ignore
+                    self._reconnect()
+                    raise BinanceWebsocketClosed(
+                        "Connection closed. Reconnecting..."
+                    )
+                elif self.ws_state == WSListenerState.STREAMING:
+                    assert self.ws
+                    res = await asyncio.wait_for(
+                        self.ws.recv(), timeout=self.TIMEOUT
+                    )
+                    res = self._handle_message(res)
+                    self._log.debug(f"Received message: {res}")
+                    if res:
+                        if self._queue.qsize() < self.max_queue_size:
+                            await self._queue.put(res)
+                        else:
+                            raise BinanceWebsocketQueueOverflow(
+                                f"Message queue size {self._queue.qsize()} exceeded maximum {self.max_queue_size}"
+                            )
+            except asyncio.TimeoutError:
+                self._log.debug(f"no message in {self.TIMEOUT} seconds")
+                # _no_message_received_reconnect
+            except asyncio.CancelledError as e:
+                self._log.debug(f"_read_loop cancelled error {e}")
+                await self._queue.put({
+                    "e": "error",
+                    "type": f"{e.__class__.__name__}",
+                    "m": f"{e}",
+                })
+                break
+            except (
+                asyncio.IncompleteReadError,
+                gaierror,
+                ConnectionClosedError,
+                ConnectionClosedOK,
+                BinanceWebsocketClosed,
+            ) as e:
+                # reports errors and continue loop
+                self._log.error(f"{e.__class__.__name__} ({e})")
+                await self._queue.put({
+                    "e": "error",
+                    "type": f"{e.__class__.__name__}",
+                    "m": f"{e}",
+                })
+            except (
+                BinanceWebsocketUnableToConnect,
+                BinanceWebsocketQueueOverflow,
+                Exception,
+            ) as e:
+                # reports errors and break the loop
+                self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
+                await self._queue.put({
+                    "e": "error",
+                    "type": e.__class__.__name__,
+                    "m": f"{e}",
+                })
+                break
+    except Exception as e:
+        self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
+    finally:
+        self._handle_read_loop = None  # Signal the coro is stopped
+        self._reconnects = 0
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_run_reconnect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _run_reconnect(self):
+    await self.before_reconnect()
+    if self._reconnects < self.MAX_RECONNECTS:
+        reconnect_wait = self._get_reconnect_wait(self._reconnects)
+        self._log.debug(
+            f"websocket reconnecting. {self.MAX_RECONNECTS - self._reconnects} reconnects left - "
+            f"waiting {reconnect_wait}"
+        )
+        await asyncio.sleep(reconnect_wait)
+        try:
+            await self.connect()
+        except Exception as e:
+            pass
+    else:
+        self._log.error(f"Max reconnections {self.MAX_RECONNECTS} reached:")
+        # Signal the error
+        raise BinanceWebsocketUnableToConnect
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"recv"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def recv(self):
+    res = None
+    while not res:
+        if not self._handle_read_loop:
+            raise ReadLoopClosed(
+                "Read loop has been closed, please reset the websocket connection and listen to the message error."
+            )
+        try:
+            res = await asyncio.wait_for(self._queue.get(), timeout=self.TIMEOUT)
+        except asyncio.TimeoutError:
+            self._log.debug(f"no message in {self.TIMEOUT} seconds")
+    return res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_wait_for_reconnect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def _wait_for_reconnect(self):
+    while (
+        self.ws_state != WSListenerState.STREAMING
+        and self.ws_state != WSListenerState.EXITING
+    ):
+        await sleep(0.1)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_reconnect_wait"} type={"(self, attempts) -> int"}>
+
+<PySourceCode >
+
+```python
+def _get_reconnect_wait(self, attempts: int) -> int:
+    expo = 2**attempts
+    return round(random() * min(self.MAX_RECONNECT_SECONDS, expo - 1) + 1)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"attempts"} type={"int"} value={null} />
+
+</div>
+
+<PyFunctionReturn type={"int"} />
+
+</PyFunction>
+
+<PyFunction name={"before_reconnect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def before_reconnect(self):
+    if self.ws:
+        self.ws = None
+
+    if self._conn and hasattr(self._conn, "protocol"):
+        await self._conn.__aexit__(None, None, None)
+
+    self._reconnects += 1
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_reconnect"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def _reconnect(self):
+    self.ws_state = WSListenerState.RECONNECTING
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

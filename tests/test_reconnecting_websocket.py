@@ -215,12 +215,12 @@ async def delayed_return():
 async def test_recv_read_loop_closed():
     """Test that recv() raises ReadLoopClosed when read loop is closed."""
     ws = ReconnectingWebsocket(url="wss://test.url")
-    
+
     # Simulate read loop being closed by setting _handle_read_loop to None
     ws._handle_read_loop = None
-    
+
     with pytest.raises(ReadLoopClosed) as exc_info:
         await ws.recv()
-    
+
     assert "Read loop has been closed" in str(exc_info.value)
     assert "please reset the websocket connection" in str(exc_info.value)

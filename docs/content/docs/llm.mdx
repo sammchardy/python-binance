@@ -1,0 +1,46 @@
+---
+title: LLM Integration
+description: Use python-binance docs with AI assistants — copy or link to machine-readable versions of the documentation
+---
+
+import { LLMPageActions, LLMOpenButtons } from "@/components/ai/llm-page-actions"
+
+This documentation is available in machine-readable formats for use with AI assistants like Claude, ChatGPT, Cursor, Copilot, and others.
+
+## Agent Skill
+
+Install the agent skill into any project or globally with [npx skills](https://www.npmjs.com/package/skills)
+(works with Claude Code, Cursor, Copilot, Gemini CLI, Goose, Roo Code, and 30+ other agents):
+
+```bash
+# Install into the current project
+npx -y skills add sammchardy/python-binance
+
+# Install globally (available in all projects)
+npx -y skills add sammchardy/python-binance --global
+```
+
+Once installed, your AI agent will have access to python-binance documentation and API reference as context when working on your project.
+
+## Copy Docs for AI
+
+<LLMPageActions />
+
+## Open With
+
+<LLMOpenButtons />
+
+## Per-Page Markdown
+
+Append `.mdx` to any docs URL to get the Markdown source for that page. For example:
+
+- [`/docs/getting-started/installation.mdx`](/docs/getting-started/installation.mdx)
+- [`/docs/guides/websockets.mdx`](/docs/guides/websockets.mdx)
+- [`/docs/guides/account.mdx`](/docs/guides/account.mdx)
+
+## Direct Links
+
+| Format | URL | Description |
+|--------|-----|-------------|
+| **llms.txt** | [`/llms.txt`](/llms.txt) | Page index with titles, URLs, and descriptions |
+| **llms-full.txt** | [`/llms-full.txt`](/llms-full.txt) | Full processed Markdown of all documentation pages |

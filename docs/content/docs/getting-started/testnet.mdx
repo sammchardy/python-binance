@@ -1,0 +1,36 @@
+---
+title: Testnet
+description: Using the Binance Spot, Futures, and Vanilla Options testnets
+---
+
+Binance offers a [Spot](https://testnet.binance.vision/), [Futures](https://testnet.binancefuture.com/) and [Vanilla Options](https://testnet.binanceops.com/) Testnet to test interacting with the exchange.
+
+To enable this, set the `testnet` parameter to `True`:
+
+```python
+client = Client(api_key, api_secret, testnet=True)
+```
+
+Or for the async client:
+
+```python
+client = await AsyncClient.create(api_key, api_secret, testnet=True)
+```
+
+The testnet parameter will also be used by any websocket streams when the client is passed to the `BinanceSocketManager`.
+
+## Using a Different TLD
+
+If you are interacting with a regional version of Binance (e.g. `.us` or `.jp`), pass the `tld` parameter:
+
+```python
+client = Client(api_key, api_secret, tld='us')
+```
+
+Or for the async client:
+
+```python
+client = await AsyncClient.create(api_key, api_secret, tld='us')
+```
+
+This TLD will also be used by any websocket streams when the client is passed to the `BinanceSocketManager`.

@@ -1,0 +1,458 @@
+---
+title: BaseDepthCacheManager
+---
+
+## Attributes
+
+<PyAttribute name={"TIMEOUT"} type={null} value={"60"} />
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, client, symbol, loop=None, refresh_interval=DEFAULT_REFRESH, bm=None, limit=10, conv_type=float)"}>
+
+Create a DepthCacheManager instance
+
+:param client: Binance API client
+:type client: binance.Client
+:param loop:
+:type loop:
+:param symbol: Symbol to create depth cache for
+:type symbol: string
+:param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+:type refresh_interval: int
+:param bm: Optional BinanceSocketManager
+:type bm: BinanceSocketManager
+:param limit: Optional number of orders to get from orderbook
+:type limit: int
+:param conv_type: Optional type to represent price, and amount, default is float.
+:type conv_type: function.
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    client,
+    symbol,
+    loop=None,
+    refresh_interval: Optional[int] = DEFAULT_REFRESH,
+    bm=None,
+    limit=10,
+    conv_type=float,
+):
+    """Create a DepthCacheManager instance
+
+    :param client: Binance API client
+    :type client: binance.Client
+    :param loop:
+    :type loop:
+    :param symbol: Symbol to create depth cache for
+    :type symbol: string
+    :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+    :type refresh_interval: int
+    :param bm: Optional BinanceSocketManager
+    :type bm: BinanceSocketManager
+    :param limit: Optional number of orders to get from orderbook
+    :type limit: int
+    :param conv_type: Optional type to represent price, and amount, default is float.
+    :type conv_type: function.
+
+    """
+
+    self._client = client
+    self._depth_cache = None
+    self._loop = loop or get_loop()
+    self._symbol = symbol
+    self._limit = limit
+    self._last_update_id = None
+    self._bm = bm or BinanceSocketManager(self._client)
+    self._refresh_interval = refresh_interval
+    self._conn_key = None
+    self._conv_type = conv_type
+    self._log = logging.getLogger(__name__)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"client"} type={null} value={null} />
+<PyParameter name={"symbol"} type={null} value={null} />
+<PyParameter name={"loop"} type={null} value={"None"} />
+<PyParameter name={"refresh_interval"} type={"Optional[int]"} value={"DEFAULT_REFRESH"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"10"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__aenter__"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def __aenter__(self):
+    await asyncio.gather(self._init_cache(), self._start_socket())
+    await self._socket.__aenter__()
+    return self
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"__aexit__"} type={"(self, *args, **kwargs)"}>
+
+<PySourceCode >
+
+```python
+async def __aexit__(self, *args, **kwargs):
+    self._log.debug(f"Exiting depth cache manager for {self._symbol}")
+    await self._socket.__aexit__(*args, **kwargs)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"args"} type={null} value={"()"} />
+<PyParameter name={"kwargs"} type={null} value={"{}"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"recv"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+async def recv(self):
+    dc = None
+    while not dc:
+        try:
+            res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
+            self._log.debug(f"Received message: {res}")
+        except Exception as e:
+            self._log.warning(f"Exception recieving message: {e.__class__.__name__} (e) ")
+        else:
+            dc = await self._depth_event(res)
+    return dc
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_init_cache"} type={"(self)"}>
+
+Initialise the depth cache calling REST endpoint
+
+:return:
+
+<PySourceCode >
+
+```python
+async def _init_cache(self):
+    """Initialise the depth cache calling REST endpoint
+
+    :return:
+    """
+    self._log.debug(f"Initialising depth cache for {self._symbol}")
+    # initialise or clear depth cache
+    self._depth_cache = DepthCache(self._symbol, conv_type=self._conv_type)
+
+    # set a time to refresh the depth cache
+    if self._refresh_interval:
+        self._refresh_time = int(time.time()) + self._refresh_interval
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_start_socket"} type={"(self)"}>
+
+Start the depth cache socket
+
+:return:
+
+<PySourceCode >
+
+```python
+async def _start_socket(self):
+    """Start the depth cache socket
+
+    :return:
+    """
+    self._socket = self._get_socket()
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_socket"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def _get_socket(self):
+    raise NotImplementedError
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_depth_event"} type={"(self, msg)"}>
+
+Handle a depth event
+
+:param msg:
+:return:
+
+<PySourceCode >
+
+```python
+async def _depth_event(self, msg):
+    """Handle a depth event
+
+    :param msg:
+    :return:
+
+    """
+    self._log.debug(f"Received depth event: {msg}")
+
+    if not msg:
+        return None
+
+    if "e" in msg and msg["e"] == "error":
+        # notify user by return msg with error
+        self._log.error(f"Error in depth event restarting cache: {msg}")
+        return msg
+
+    return await self._process_depth_message(msg)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_process_depth_message"} type={"(self, msg)"}>
+
+Process a depth event message.
+
+:param msg: Depth event message.
+:return:
+
+<PySourceCode >
+
+```python
+async def _process_depth_message(self, msg):
+    """Process a depth event message.
+
+    :param msg: Depth event message.
+    :return:
+
+    """
+
+    # add any bid or ask values
+    self._apply_orders(msg)
+
+    # call the callback with the updated depth cache
+    res = self._depth_cache
+
+    # after processing event see if we need to refresh the depth cache
+    if self._refresh_interval and int(time.time()) > self._refresh_time:
+        await self._init_cache()
+
+    return res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_apply_orders"} type={"(self, msg)"}>
+
+<PySourceCode >
+
+```python
+def _apply_orders(self, msg):
+    assert self._depth_cache
+    for bid in msg.get("b", []) + msg.get("bids", []):
+        self._depth_cache.add_bid(bid)
+    for ask in msg.get("a", []) + msg.get("asks", []):
+        self._depth_cache.add_ask(ask)
+
+    # keeping update time
+    self._depth_cache.update_time = msg.get("E") or msg.get("lastUpdateId")
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"get_depth_cache"} type={"(self)"}>
+
+Get the current depth cache
+
+:return: DepthCache object
+
+<PySourceCode >
+
+```python
+def get_depth_cache(self):
+    """Get the current depth cache
+
+    :return: DepthCache object
+
+    """
+    return self._depth_cache
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"close"} type={"(self)"}>
+
+Close the open socket for this manager
+
+:return:
+
+<PySourceCode >
+
+```python
+async def close(self):
+    """Close the open socket for this manager
+
+    :return:
+    """
+    self._depth_cache = None
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"get_symbol"} type={"(self)"}>
+
+Get the symbol
+
+:return: symbol
+
+<PySourceCode >
+
+```python
+def get_symbol(self):
+    """Get the symbol
+
+    :return: symbol
+    """
+    return self._symbol
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

@@ -1,0 +1,243 @@
+---
+title: DepthCacheManager
+---
+
+## Functions
+
+<PyFunction name={"__init__"} type={"(self, client, symbol, loop=None, refresh_interval=None, bm=None, limit=500, conv_type=float, ws_interval=None)"}>
+
+Initialise the DepthCacheManager
+
+:param client: Binance API client
+:type client: binance.Client
+:param loop: asyncio loop
+:param symbol: Symbol to create depth cache for
+:type symbol: string
+:param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+:type refresh_interval: int
+:param limit: Optional number of orders to get from orderbook
+:type limit: int
+:param conv_type: Optional type to represent price, and amount, default is float.
+:type conv_type: function.
+:param ws_interval: Optional interval for updates on websocket, default None. If not set, updates happen every second. Must be 0, None (1s) or 100 (100ms).
+:type ws_interval: int
+
+<PySourceCode >
+
+```python
+def __init__(
+    self,
+    client,
+    symbol,
+    loop=None,
+    refresh_interval: Optional[int] = None,
+    bm=None,
+    limit=500,
+    conv_type=float,
+    ws_interval=None,
+):
+    """Initialise the DepthCacheManager
+
+    :param client: Binance API client
+    :type client: binance.Client
+    :param loop: asyncio loop
+    :param symbol: Symbol to create depth cache for
+    :type symbol: string
+    :param refresh_interval: Optional number of seconds between cache refresh, use 0 or None to disable
+    :type refresh_interval: int
+    :param limit: Optional number of orders to get from orderbook
+    :type limit: int
+    :param conv_type: Optional type to represent price, and amount, default is float.
+    :type conv_type: function.
+    :param ws_interval: Optional interval for updates on websocket, default None. If not set, updates happen every second. Must be 0, None (1s) or 100 (100ms).
+    :type ws_interval: int
+
+    """
+    super().__init__(client, symbol, loop, refresh_interval, bm, limit, conv_type)
+    self._ws_interval = ws_interval
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"client"} type={null} value={null} />
+<PyParameter name={"symbol"} type={null} value={null} />
+<PyParameter name={"loop"} type={null} value={"None"} />
+<PyParameter name={"refresh_interval"} type={"Optional[int]"} value={"None"} />
+<PyParameter name={"bm"} type={null} value={"None"} />
+<PyParameter name={"limit"} type={null} value={"500"} />
+<PyParameter name={"conv_type"} type={null} value={"float"} />
+<PyParameter name={"ws_interval"} type={null} value={"None"} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_init_cache"} type={"(self)"}>
+
+Initialise the depth cache calling REST endpoint
+
+:return:
+
+<PySourceCode >
+
+```python
+async def _init_cache(self):
+    """Initialise the depth cache calling REST endpoint
+
+    :return:
+    """
+    self._last_update_id = None
+    self._depth_message_buffer = []
+
+    res = await self._client.get_order_book(symbol=self._symbol, limit=self._limit)
+
+    # initialise or clear depth cache
+    await super()._init_cache()
+
+    # process bid and asks from the order book
+    self._apply_orders(res)
+    assert self._depth_cache
+    for bid in res["bids"]:
+        self._depth_cache.add_bid(bid)
+    for ask in res["asks"]:
+        self._depth_cache.add_ask(ask)
+
+    # set first update id
+    self._last_update_id = res["lastUpdateId"]
+
+    # Apply any updates from the websocket
+    for msg in self._depth_message_buffer:
+        await self._process_depth_message(msg)
+
+    # clear the depth buffer
+    self._depth_message_buffer = []
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_start_socket"} type={"(self)"}>
+
+Start the depth cache socket
+
+:return:
+
+<PySourceCode >
+
+```python
+async def _start_socket(self):
+    """Start the depth cache socket
+
+    :return:
+    """
+    if not getattr(self, "_depth_message_buffer", None):
+        self._depth_message_buffer = []
+
+    await super()._start_socket()
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_get_socket"} type={"(self)"}>
+
+<PySourceCode >
+
+```python
+def _get_socket(self):
+    return self._bm.depth_socket(self._symbol, interval=self._ws_interval)
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>
+
+<PyFunction name={"_process_depth_message"} type={"(self, msg)"}>
+
+Process a depth event message.
+
+:param msg: Depth event message.
+:return:
+
+<PySourceCode >
+
+```python
+async def _process_depth_message(self, msg):
+    """Process a depth event message.
+
+    :param msg: Depth event message.
+    :return:
+
+    """
+
+    if self._last_update_id is None:
+        # Initial depth snapshot fetch not yet performed, buffer messages
+        self._depth_message_buffer.append(msg)
+        return
+
+    if msg["u"] <= self._last_update_id:
+        # ignore any updates before the initial update id
+        return
+    elif msg["U"] != self._last_update_id + 1:
+        # if not buffered check we get sequential updates
+        # otherwise init cache again
+        await self._init_cache()
+
+    # add any bid or ask values
+    self._apply_orders(msg)
+
+    # call the callback with the updated depth cache
+    res = self._depth_cache
+
+    self._last_update_id = msg["u"]
+
+    # after processing event see if we need to refresh the depth cache
+    if self._refresh_interval and int(time.time()) > self._refresh_time:
+        await self._init_cache()
+
+    return res
+```
+
+</PySourceCode>
+
+<div >
+
+<PyParameter name={"self"} type={null} value={null} />
+<PyParameter name={"msg"} type={null} value={null} />
+
+</div>
+
+<PyFunctionReturn type={null} />
+
+</PyFunction>

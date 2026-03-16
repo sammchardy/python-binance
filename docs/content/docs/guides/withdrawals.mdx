@@ -1,0 +1,56 @@
+---
+title: Withdrawals
+description: Withdrawing funds, deposit/withdraw history, and deposit addresses
+---
+
+## Place a Withdrawal
+
+Make sure you enable Withdrawal permissions for your API Key. You must have withdrawn to the address through the website and approved via email before using the API.
+
+```python
+from binance.exceptions import BinanceAPIException
+
+try:
+    result = client.withdraw(
+        coin='ETH',
+        address='<eth_address>',
+        amount=100)
+except BinanceAPIException as e:
+    print(e)
+else:
+    print("Success")
+
+# With a name parameter
+result = client.withdraw(
+    coin='ETH',
+    address='<eth_address>',
+    amount=100,
+    name='Withdraw')
+
+# For coins requiring a tag (e.g. XRP, XMR)
+result = client.withdraw(
+    coin='XRP',
+    address='<xrp_address>',
+    addressTag='<xrp_address_tag>',
+    amount=10000)
+```
+
+## Fetch Deposit History
+
+```python
+deposits = client.get_deposit_history()
+btc_deposits = client.get_deposit_history(coin='BTC')
+```
+
+## Fetch Withdraw History
+
+```python
+withdraws = client.get_withdraw_history()
+btc_withdraws = client.get_withdraw_history(coin='BTC')
+```
+
+## Get Deposit Address
+
+```python
+address = client.get_deposit_address(coin='BTC')
+```

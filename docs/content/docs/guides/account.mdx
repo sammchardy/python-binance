@@ -1,0 +1,214 @@
+---
+title: Account Endpoints
+description: Orders, account info, balances, trades, fees, and dust management
+---
+
+## Orders
+
+### Order Validation
+
+Binance has rules around symbol pair orders with validation on minimum price, quantity, and total order value. Read more in the [Filters](https://binance-docs.github.io/apidocs/spot/en/#filters) section of the official API.
+
+Read [Understanding Binance Order Filters](https://sammchardy.github.io/binance/2021/05/03/binance-order-filters.html) for more information.
+
+It can be helpful to format the output:
+
+```python
+amount = 0.000234234
+precision = 5
+amt_str = "{:0.0{}f}".format(amount, precision)
+```
+
+Or use the helper to round to step size:
+
+```python
+from binance.helpers import round_step_size
+
+amount = 0.000234234
+tick_size = 0.00001
+rounded_amount = round_step_size(amount, tick_size)
+```
+
+### Fetch All Orders
+
+```python
+orders = client.get_all_orders(symbol='BNBBTC', limit=10)
+```
+
+### Place an Order
+
+Use `create_order` for full control:
+
+```python
+from binance.enums import *
+
+order = client.create_order(
+    symbol='BNBBTC',
+    side=SIDE_BUY,
+    type=ORDER_TYPE_LIMIT,
+    timeInForce=TIME_IN_FORCE_GTC,
+    quantity=100,
+    price='0.00001')
+```
+
+**Limit orders:**
+
+```python
+order = client.order_limit_buy(
+    symbol='BNBBTC',
+    quantity=100,
+    price='0.00001')
+
+order = client.order_limit_sell(
+    symbol='BNBBTC',
+    quantity=100,
+    price='0.00001')
+```
+
+**Market orders:**
+
+```python
+order = client.order_market_buy(
+    symbol='BNBBTC',
+    quantity=100)
+
+order = client.order_market_sell(
+    symbol='BNBBTC',
+    quantity=100)
+```
+
+**OCO orders:**
+
+```python
+from binance.enums import *
+
+order = client.create_oco_order(
+    symbol='BNBBTC',
+    side=SIDE_SELL,
+    stopLimitTimeInForce=TIME_IN_FORCE_GTC,
+    quantity=100,
+    stopPrice='0.00001',
+    price='0.00002')
+```
+
+### Place a Test Order
+
+Creates and validates a new order but does not send it into the exchange:
+
+```python
+from binance.enums import *
+
+order = client.create_test_order(
+    symbol='BNBBTC',
+    side=SIDE_BUY,
+    type=ORDER_TYPE_LIMIT,
+    timeInForce=TIME_IN_FORCE_GTC,
+    quantity=100,
+    price='0.00001')
+```
+
+### Check Order Status
+
+```python
+order = client.get_order(
+    symbol='BNBBTC',
+    orderId='orderId')
+```
+
+### Cancel an Order
+
+```python
+result = client.cancel_order(
+    symbol='BNBBTC',
+    orderId='orderId')
+```
+
+### Get All Open Orders
+
+```python
+orders = client.get_open_orders(symbol='BNBBTC')
+```
+
+### Get All Orders
+
+```python
+orders = client.get_all_orders(symbol='BNBBTC')
+```
+
+## Account
+
+### Get Account Info
+
+```python
+info = client.get_account()
+```
+
+### Get Asset Balance
+
+```python
+balance = client.get_asset_balance(asset='BTC')
+```
+
+### Get Account Status
+
+```python
+status = client.get_account_status()
+```
+
+### Get Account API Trading Status
+
+```python
+status = client.get_account_api_trading_status()
+```
+
+### Get Trades
+
+```python
+trades = client.get_my_trades(symbol='BNBBTC')
+```
+
+### Get Trade Fees
+
+```python
+# Get fees for all symbols
+fees = client.get_trade_fee()
+
+# Get fee for one symbol
+fees = client.get_trade_fee(symbol='BNBBTC')
+```
+
+### Get Asset Details
+
+```python
+details = client.get_asset_details()
+```
+
+### Get Dust Log
+
+```python
+log = client.get_dust_log()
+```
+
+### Transfer Dust
+
+```python
+transfer = client.transfer_dust(asset='BNZ')
+```
+
+### Get Asset Dividend History
+
+```python
+history = client.get_asset_dividend_history()
+```
+
+### Disable Fast Withdraw Switch
+
+```python
+client.disable_fast_withdraw_switch()
+```
+
+### Enable Fast Withdraw Switch
+
+```python
+client.enable_fast_withdraw_switch()
+```
