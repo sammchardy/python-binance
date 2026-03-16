@@ -6,6 +6,7 @@ from .test_get_order_book import assert_ob
 
 pytestmark = [pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")]
 
+
 def test_ws_get_order_book(client):
     orderbook = client.ws_get_order_book(symbol="BTCUSDT")
     assert_ob(orderbook)

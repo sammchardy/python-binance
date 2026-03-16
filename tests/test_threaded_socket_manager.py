@@ -27,6 +27,7 @@ exchange_info = client.get_exchange_info()
 symbols = [info['symbol'].lower() for info in exchange_info['symbols']]
 streams = [f"{symbol}@bookTicker" for symbol in symbols][0:100]  # Take first 800 symbols
 
+
 def test_threaded_socket_manager():
     logger.debug("Starting test_threaded_socket_manager")
     global twm
@@ -64,10 +65,10 @@ def test_threaded_socket_manager():
 def test_many_symbols_small_queue():
     logger.debug("Starting test_many_symbols_small_queue with queue size 1")
     twm = ThreadedWebsocketManager(api_key, api_secret, https_proxy=proxy, testnet=True, max_queue_size=1)
-    
+
     error_received = False
     msg_received = False
-    
+
     def handle_message(msg):
         nonlocal error_received, msg_received
         if msg.get("e") == "error":
@@ -76,7 +77,7 @@ def test_many_symbols_small_queue():
             return
         msg_received = True
         logger.debug("Received valid message")
-    
+
     try:
         logger.debug("Starting ThreadedWebsocketManager")
         twm.start()
@@ -84,7 +85,7 @@ def test_many_symbols_small_queue():
         twm.start_multiplex_socket(callback=handle_message, streams=streams)
         logger.debug("Waiting 10 seconds for messages")
         time.sleep(10)
-        
+
         assert msg_received, "Should have received messages"
     finally:
         logger.debug("Cleaning up test_many_symbols_small_queue")
@@ -95,21 +96,21 @@ def test_many_symbols_small_queue():
 def test_many_symbols_adequate_queue():
     logger.debug("Starting test_many_symbols_adequate_queue with queue size 200")
     twm = ThreadedWebsocketManager(api_key, api_secret, https_proxy=proxy, testnet=True, max_queue_size=200)
-    
+
     messages_received = 0
     error_received = False
-    
+
     def handle_message(msg):
         nonlocal messages_received, error_received
         if msg.get("e") == "error":
             error_received = True
             logger.debug("Received WebSocket error: %s", msg.get('m', 'Unknown error'))
             return
-            
+
         messages_received += 1
         if messages_received % 10 == 0:  # Log every 10th message
             logger.debug("Processed %d messages", messages_received)
-    
+
     try:
         logger.debug("Starting ThreadedWebsocketManager")
         twm.start()
@@ -117,7 +118,7 @@ def test_many_symbols_adequate_queue():
         twm.start_futures_multiplex_socket(callback=handle_message, streams=streams)
         logger.debug("Waiting 10 seconds for messages")
         time.sleep(10)
-        
+
         logger.debug("Test completed. Messages received: %d, Errors: %s", messages_received, error_received)
         assert messages_received > 0, "Should have received some messages"
         assert not error_received, "Should not have received any errors"
@@ -130,22 +131,22 @@ def test_many_symbols_adequate_queue():
 def test_slow_async_callback_no_error():
     logger.debug("Starting test_slow_async_callback_no_error with queue size 400")
     twm = ThreadedWebsocketManager(api_key, api_secret, https_proxy=proxy, testnet=True, max_queue_size=400)
-    
+
     messages_processed = 0
     error_received = False
-    
+
     async def slow_async_callback(msg):
         nonlocal messages_processed, error_received
         if msg.get("e") == "error":
             error_received = True
             logger.debug("Received WebSocket error: %s", msg.get('m', 'Unknown error'))
             return
-            
+
         logger.debug("Processing message with 2 second delay")
         await asyncio.sleep(2)
         messages_processed += 1
         logger.debug("Message processed. Total processed: %d", messages_processed)
-    
+
     try:
         logger.debug("Starting ThreadedWebsocketManager")
         twm.start()
@@ -153,7 +154,7 @@ def test_slow_async_callback_no_error():
         twm.start_futures_multiplex_socket(callback=slow_async_callback, streams=streams)
         logger.debug("Waiting 10 seconds for messages")
         time.sleep(10)
-        
+
         logger.debug("Test completed. Messages processed: %d, Errors: %s", messages_processed, error_received)
         assert messages_processed > 0, "Should have processed some messages"
         assert not error_received, "Should not have received any errors"
@@ -168,21 +169,21 @@ def test_no_internet_connection():
     logger.debug("Starting test_no_internet_connection")
     invalid_proxy = "http://invalid.proxy:1234"
     logger.debug("Using invalid proxy: %s", invalid_proxy)
-    
+
     with pytest.raises(RuntimeError, match="Binance Socket Manager failed to initialize after 5 seconds"):
         twm = ThreadedWebsocketManager(
-            api_key, 
-            api_secret, 
-            https_proxy=invalid_proxy, 
+            api_key,
+            api_secret,
+            https_proxy=invalid_proxy,
             testnet=True
         )
-        
+
         try:
             logger.debug("Attempting to start ThreadedWebsocketManager with invalid proxy")
             twm.start()
             logger.debug("Attempting to start kline socket (should fail)")
             twm.start_kline_socket(
-                callback=lambda x: print(x), 
+                callback=lambda x: print(x),
                 symbol="BTCUSDT"
             )
         finally:

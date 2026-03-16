@@ -933,7 +933,7 @@ def test_futures_create_algo_order_trailing_stop(futuresClient):
     ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
     positions = futuresClient.futures_position_information(symbol="LTCUSDT")
     current_price = float(ticker["lastPrice"])
-    
+
     # For SELL trailing stop: activatePrice should be above current price
     # For BUY trailing stop: activatePrice should be below current price
     order = futuresClient.futures_create_algo_order(
@@ -1048,4 +1048,3 @@ def test_futures_create_algo_order_with_working_type(futuresClient):
     futuresClient.futures_cancel_algo_order(
         symbol=ticker["symbol"], algoId=order["algoId"]
     )
-

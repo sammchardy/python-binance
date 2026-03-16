@@ -59,7 +59,7 @@ async def test_invalid_request(clientAsync):
     #         "APIError(code=-1100): Illegal characters found in parameter 'symbol'; legal range is \'^[\\\\w\\\\-._&&[^a-z]]{1,50}$\'."
     #     ),
     # ):
-        
+
     #     # {'id': 'a2790cf96b11a8add71ebf', 'status': 400, 'error': {'code': -1100...:-1100,"msg":"Illegal characters found in parameter \'symbol\'; legal range is \'^[\\\\w\\\\-._&&[^a-z]]{1,50}$\'."}'
     #     await clientAsync.ws_get_order_book(symbol="send error")
 
@@ -133,6 +133,7 @@ async def test_message_handling(clientAsync):
     finally:
         await clientAsync.close_connection()
 
+
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception(clientAsync):
     try:
@@ -144,6 +145,7 @@ async def test_message_handling_raise_exception(clientAsync):
             await future
     finally:
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio
 async def test_message_handling_raise_exception_without_id(clientAsync):

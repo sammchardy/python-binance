@@ -77,13 +77,16 @@ class BinanceWebsocketQueueOverflow(Exception):
     """Raised when the websocket message queue exceeds its maximum size."""
     pass
 
+
 class BinanceWebsocketClosed(Exception):
     """Raised when websocket connection is closed."""
     pass
 
+
 class ReadLoopClosed(Exception):
     """Raised when trying to read from read loop but already closed"""
     pass
+
 
 class NotImplementedException(Exception):
     def __init__(self, value):

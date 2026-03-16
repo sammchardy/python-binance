@@ -632,11 +632,13 @@ def test_margin_get_borrow_repay_records(client):
         size=10
     )
 
+
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_interest_rate_history(client):
     client.margin_interest_rate_history(
         asset="BTC",
     )
+
 
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_max_borrowable(client):

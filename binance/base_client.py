@@ -231,7 +231,7 @@ class BaseClient:
         https_proxy = None
         if requests_params and 'proxies' in requests_params:
             https_proxy = requests_params['proxies'].get('https') or requests_params['proxies'].get('http')
-        
+
         self.ws_api = WebsocketAPI(url=ws_api_url, tld=tld, https_proxy=https_proxy)
         ws_future_url = self.WS_FUTURES_URL.format(tld)
         if testnet:

@@ -18,6 +18,7 @@ EXPIRATION_DATE = "251226"
 INTERVAL = "1m"
 DEPTH = "20"
 
+
 async def test_options_ticker(clientAsync):
     """Test options ticker socket"""
     logger.info(f"Starting options ticker test for symbol: {OPTION_SYMBOL}")
@@ -30,6 +31,7 @@ async def test_options_ticker(clientAsync):
         assert msg['e'] == '24hrTicker'
     logger.info("Options ticker test completed successfully")
     await clientAsync.close_connection()
+
 
 async def test_options_ticker_by_expiration(clientAsync):
     """Test options ticker by expiration socket"""
@@ -44,6 +46,7 @@ async def test_options_ticker_by_expiration(clientAsync):
     logger.info("Options ticker by expiration test completed successfully")
     await clientAsync.close_connection()
 
+
 async def test_options_recent_trades(clientAsync):
     """Test options recent trades socket"""
     logger.info(f"Starting options recent trades test for {UNDERLYING_SYMBOL}")
@@ -56,6 +59,7 @@ async def test_options_recent_trades(clientAsync):
         assert msg['e'] == 'trade'
     logger.info("Options recent trades test completed successfully")
     await clientAsync.close_connection()
+
 
 async def test_options_kline(clientAsync):
     """Test options kline socket"""
@@ -70,6 +74,7 @@ async def test_options_kline(clientAsync):
     logger.info("Options kline test completed successfully")
     await clientAsync.close_connection()
 
+
 async def test_options_depth(clientAsync):
     """Test options depth socket"""
     logger.info(f"Starting options depth test for {OPTION_SYMBOL}, depth: {DEPTH}")
@@ -82,6 +87,7 @@ async def test_options_depth(clientAsync):
         assert msg['e'] == 'depth'
     logger.info("Options depth test completed successfully")
     await clientAsync.close_connection()
+
 
 async def test_options_multiplex(clientAsync):
     """Test options multiplex socket"""
@@ -100,6 +106,7 @@ async def test_options_multiplex(clientAsync):
     logger.info("Options multiplex test completed successfully")
     await clientAsync.close_connection()
 
+
 async def test_options_open_interest(clientAsync):
     """Test options open interest socket"""
     logger.info(f"Starting options open interest test for {UNDERLYING_SYMBOL}, expiration: {EXPIRATION_DATE}")
@@ -113,6 +120,7 @@ async def test_options_open_interest(clientAsync):
     logger.info("Options open interest test completed successfully")
     await clientAsync.close_connection()
 
+
 async def test_options_mark_price(clientAsync):
     """Test options mark price socket"""
     logger.info(f"Starting options mark price test for {UNDERLYING_SYMBOL}")
@@ -125,6 +133,7 @@ async def test_options_mark_price(clientAsync):
         assert len(msg) > 0
     logger.info("Options mark price test completed successfully")
     await clientAsync.close_connection()
+
 
 async def test_options_index_price(clientAsync):
     """Test options index price socket"""
