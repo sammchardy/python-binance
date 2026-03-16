@@ -12,7 +12,7 @@ venv*/
 .vscode
 .binance/
 
-# node / next.js / fumadocs
+# node / next.js / fumadocs (inside docs/)
 node_modules/
 .next/
 out/
@@ -24,4 +24,4 @@ out/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
-api-output/
+docs/api-output/

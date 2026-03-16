@@ -50,7 +50,7 @@ export default async function Page(props: {
         <LLMCopyButton markdownUrl={markdownUrl} />
         <ViewOptions
           markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/sammchardy/python-binance/blob/docs/content/docs/${page.slugs.join("/")}.mdx`}
+          githubUrl={`https://github.com/sammchardy/python-binance/blob/docs/docs/content/docs/${page.slugs.join("/")}.mdx`}
         />
       </div>
       <DocsBody>

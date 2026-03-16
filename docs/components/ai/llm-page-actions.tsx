@@ -115,7 +115,7 @@ export function LLMOpenButtons() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 not-prose my-6">
       <LinkCard
-        href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_DOCS_BRANCH}/content/docs`}
+        href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_DOCS_BRANCH}/docs/content/docs`}
         title="Open in GitHub"
         description="Browse the docs source files on GitHub."
         icon={
