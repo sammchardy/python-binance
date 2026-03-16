@@ -408,31 +408,34 @@ def generate_llms_full_txt(methods_by_category, total_count):
         lines.append(f"- [{cat}](#{anchor}) ({count} methods)")
     lines.append("")
 
-    # Method details by category — compact format
+    # Method listing by category — one line per method
     for cat in sorted(methods_by_category.keys()):
         lines.append(f"## {cat}")
         lines.append("")
 
         for name, method in methods_by_category[cat]:
-            sig_str = get_signature_str(method)
             description, params, _ = extract_docstring_info(method)
 
-            # Method heading with signature
-            lines.append(f"### `client.{name}({sig_str})`")
-            if description:
-                lines.append(f"> {description}")
-
+            # Build compact param list (names only)
             if params:
-                for p in params:
-                    type_str = f": {p['type']}" if p["type"] else ""
-                    # Truncate long descriptions to keep file compact
-                    desc = p["desc"]
-                    if len(desc) > 80:
-                        desc = desc[:77] + "..."
-                    desc_str = f" — {desc}" if desc else ""
-                    lines.append(f"- `{p['name']}`{type_str}{desc_str}")
+                param_names = ", ".join(p["name"] for p in params)
+                param_str = f"({param_names})"
+            else:
+                sig_str = get_signature_str(method)
+                if sig_str and sig_str != "**params":
+                    param_str = f"({sig_str})"
+                else:
+                    param_str = "()"
 
-            lines.append("")
+            # One line: method(params) — description (truncated, skip placeholders)
+            if description.startswith("Placeholder function"):
+                description = ""
+            if len(description) > 120:
+                description = description[:117] + "..."
+            desc_str = f" — {description}" if description else ""
+            lines.append(f"- `client.{name}{param_str}`{desc_str}")
+
+        lines.append("")
 
     return "\n".join(lines)
 
