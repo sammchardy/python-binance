@@ -316,7 +316,7 @@ LLM & AI Agent Support
 This library includes resources to help AI coding assistants (Claude Code, Cursor, Copilot, etc.):
 
 - ``llms.txt`` — Concise library overview for LLMs (`llmstxt.org <https://llmstxt.org>`_ standard)
-- ``llms-full.txt`` — Complete API reference for LLMs (all 798+ methods with signatures and parameters)
+- ``llms-full.txt`` — Complete API reference for LLMs (all 797+ methods with signatures and parameters)
 - ``.agents/skills/python-binance/`` — Agent Skill (works with any `Agent Skills <https://agentskills.io>`_ compatible tool)
 - ``generate_llms_txt.py`` — Script to regenerate the LLM files after library updates
 

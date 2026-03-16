@@ -4,7 +4,7 @@ This reference points to the comprehensive auto-generated method documentation.
 
 ## Primary Reference
 
-The full method reference with all 798+ methods, their signatures, parameters, and response examples is available at:
+The full method reference with all 797+ methods, their signatures and parameters is available at:
 
 **[llms-full.txt](../../../../llms-full.txt)**
 

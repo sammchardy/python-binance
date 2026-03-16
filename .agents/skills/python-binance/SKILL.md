@@ -8,7 +8,7 @@ description: >
 
 # python-binance SDK
 
-Unofficial Python SDK for the Binance cryptocurrency exchange. 798+ methods covering Spot, Margin, Futures, Options, Portfolio Margin, and WebSocket APIs.
+Unofficial Python SDK for the Binance cryptocurrency exchange. 797+ methods covering Spot, Margin, Futures, Options, Portfolio Margin, and WebSocket APIs.
 
 ## Setup
 
@@ -190,6 +190,6 @@ except BinanceAPIException as e:
 
 ## Full Reference
 
-For the complete method reference with all 798+ methods, signatures, and parameters, see:
+For the complete method reference with all 797+ methods, signatures, and parameters, see:
 - `llms-full.txt` in the repository root
 - `Endpoints.md` for endpoint-to-method mapping

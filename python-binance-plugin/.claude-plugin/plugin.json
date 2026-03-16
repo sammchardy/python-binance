@@ -1,9 +1,0 @@
-{
-  "name": "python-binance",
-  "description": "Help using the python-binance library for Binance exchange trading",
-  "version": "1.0.0",
-  "author": {
-    "name": "python-binance"
-  },
-  "repository": "https://github.com/sammchardy/python-binance"
-}

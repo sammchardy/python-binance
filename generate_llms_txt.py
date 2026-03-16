@@ -6,7 +6,7 @@ Usage:
 
 Outputs:
     llms.txt       - Concise LLM overview (~4-6KB)
-    llms-full.txt  - Comprehensive method reference (~200-300KB)
+    llms-full.txt  - Compact method reference
 """
 
 import inspect
@@ -84,7 +84,6 @@ def extract_docstring_info(method):
     # First non-empty line(s) before :param or https:// is the description
     desc_lines = []
     param_lines = []
-    rest_lines = []
     in_params = False
     in_rest = False
 
@@ -102,7 +101,7 @@ def extract_docstring_info(method):
             in_rest = True
 
         if in_rest:
-            rest_lines.append(line)
+            continue
         elif in_params:
             param_lines.append(line)
         elif stripped.startswith("https://"):
@@ -129,47 +128,7 @@ def extract_docstring_info(method):
                 # Continuation line for multi-line param descriptions
                 current_param["desc"] += " " + stripped
 
-    # Extract response example from rest, converting RST to Markdown
-    response_text = "\n".join(rest_lines)
-    # Convert RST code blocks to Markdown fences
-    response_text = re.sub(
-        r"\.\. code-block:: (\w+)",
-        r"```\1",
-        response_text,
-    )
-    # Add closing fences: a code block ends when indentation returns to base level
-    # after a ```lang line
-    result_lines = []
-    in_code_block = False
-    for line in response_text.split("\n"):
-        stripped = line.strip()
-        if stripped.startswith("```") and not stripped == "```":
-            in_code_block = True
-            result_lines.append(stripped)
-        elif in_code_block:
-            if stripped == "" and result_lines and result_lines[-1] == "":
-                # Skip double blank lines inside code blocks
-                continue
-            # RST code blocks are indented; unindented non-empty line ends the block
-            if stripped and not line.startswith("    ") and not line.startswith("\t"):
-                result_lines.append("```")
-                result_lines.append("")
-                in_code_block = False
-                result_lines.append(line)
-            else:
-                # Remove one level of RST indentation (4 spaces), preserve inner indentation
-                if line.startswith("    "):
-                    line = line[4:]
-                result_lines.append(line)
-        else:
-            result_lines.append(line)
-    if in_code_block:
-        result_lines.append("```")
-    response_text = "\n".join(result_lines)
-    # Convert RST field markup to plain text
-    response_text = re.sub(r":returns:\s*", "**Returns:** ", response_text)
-
-    return description, params, response_text
+    return description, params, ""
 
 
 def generate_llms_txt(methods_by_category, total_count):
@@ -426,7 +385,11 @@ except BinanceOrderException as e:
 
 
 def generate_llms_full_txt(methods_by_category, total_count):
-    """Generate the comprehensive llms-full.txt content."""
+    """Generate a compact llms-full.txt method reference.
+
+    Uses a dense format: one heading + description + param list per method,
+    no response examples. Keeps the file small enough to fit in LLM context.
+    """
     lines = []
     lines.append("# python-binance — Full Method Reference")
     lines.append("")
@@ -445,51 +408,30 @@ def generate_llms_full_txt(methods_by_category, total_count):
         lines.append(f"- [{cat}](#{anchor}) ({count} methods)")
     lines.append("")
 
-    # Method details by category
+    # Method details by category — compact format
     for cat in sorted(methods_by_category.keys()):
         lines.append(f"## {cat}")
         lines.append("")
 
         for name, method in methods_by_category[cat]:
             sig_str = get_signature_str(method)
-            description, params, response_text = extract_docstring_info(method)
+            description, params, _ = extract_docstring_info(method)
 
+            # Method heading with signature
             lines.append(f"### `client.{name}({sig_str})`")
-            lines.append("")
             if description:
-                lines.append(description)
-                lines.append("")
+                lines.append(f"> {description}")
 
             if params:
-                lines.append("**Parameters:**")
                 for p in params:
-                    type_str = f" ({p['type']})" if p["type"] else ""
-                    desc_str = f" — {p['desc']}" if p["desc"] else ""
+                    type_str = f": {p['type']}" if p["type"] else ""
+                    # Truncate long descriptions to keep file compact
+                    desc = p["desc"]
+                    if len(desc) > 80:
+                        desc = desc[:77] + "..."
+                    desc_str = f" — {desc}" if desc else ""
                     lines.append(f"- `{p['name']}`{type_str}{desc_str}")
-                lines.append("")
 
-            # Include response examples if present (trimmed)
-            if response_text.strip():
-                # Extract just the returns and response example, skip raises
-                resp_lines = response_text.strip().split("\n")
-                filtered = []
-                skip = False
-                for rl in resp_lines:
-                    if rl.strip().startswith(":raises:"):
-                        skip = True
-                        continue
-                    if not skip:
-                        filtered.append(rl)
-                    if skip and rl.strip() and not rl.strip().startswith(":"):
-                        skip = False
-                        filtered.append(rl)
-
-                resp_text = "\n".join(filtered).strip()
-                if resp_text:
-                    lines.append(resp_text)
-                    lines.append("")
-
-            lines.append("---")
             lines.append("")
 
     return "\n".join(lines)
