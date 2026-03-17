@@ -15,7 +15,7 @@ except ImportError:
     pass
 
 try:
-    from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK # type: ignore
+    from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK  # type: ignore
 except ImportError:
     from websockets import ConnectionClosedError, ConnectionClosedOK  # type: ignore
 
@@ -77,6 +77,10 @@ class ReconnectingWebsocket:
         self._https_proxy = https_proxy
         self._ws_kwargs = kwargs
         self.max_queue_size = max_queue_size
+
+    async def _propagate_error(self, error_msg: dict):
+        """Put error message on the main queue. Subclasses can override to propagate elsewhere."""
+        await self._queue.put(error_msg)
 
     def json_dumps(self, msg) -> str:
         if orjson:
@@ -216,7 +220,7 @@ class ReconnectingWebsocket:
                     # _no_message_received_reconnect
                 except asyncio.CancelledError as e:
                     self._log.debug(f"_read_loop cancelled error {e}")
-                    await self._queue.put({
+                    await self._propagate_error({
                         "e": "error",
                         "type": f"{e.__class__.__name__}",
                         "m": f"{e}",
@@ -231,7 +235,7 @@ class ReconnectingWebsocket:
                 ) as e:
                     # reports errors and continue loop
                     self._log.error(f"{e.__class__.__name__} ({e})")
-                    await self._queue.put({
+                    await self._propagate_error({
                         "e": "error",
                         "type": f"{e.__class__.__name__}",
                         "m": f"{e}",
@@ -243,7 +247,7 @@ class ReconnectingWebsocket:
                 ) as e:
                     # reports errors and break the loop
                     self._log.error(f"Unknown exception: {e.__class__.__name__} ({e})")
-                    await self._queue.put({
+                    await self._propagate_error({
                         "e": "error",
                         "type": e.__class__.__name__,
                         "m": f"{e}",

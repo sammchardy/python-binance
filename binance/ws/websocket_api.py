@@ -9,16 +9,26 @@ from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConn
 
 
 class WebsocketAPI(ReconnectingWebsocket):
-    def __init__(self, url: str, tld: str = "com", testnet: bool = False, https_proxy: Optional[str] = None):
+    def __init__(
+        self,
+        url: str,
+        tld: str = "com",
+        testnet: bool = False,
+        https_proxy: Optional[str] = None,
+    ):
         self._tld = tld
         self._testnet = testnet
         self._responses: Dict[str, asyncio.Future] = {}
         self._connection_lock: Optional[asyncio.Lock] = None
         # Subscription queues for routing user data stream events
         self._subscription_queues: Dict[str, asyncio.Queue] = {}
-        super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
+        super().__init__(
+            url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy
+        )
 
-    def register_subscription_queue(self, subscription_id: str, queue: asyncio.Queue) -> None:
+    def register_subscription_queue(
+        self, subscription_id: str, queue: asyncio.Queue
+    ) -> None:
         """Register a queue to receive events for a specific subscription."""
         self._subscription_queues[subscription_id] = queue
 
@@ -32,6 +42,15 @@ class WebsocketAPI(ReconnectingWebsocket):
             loop = asyncio.get_event_loop()
             self._connection_lock = asyncio.Lock()
         return self._connection_lock
+
+    async def _propagate_error(self, error_msg: dict):
+        """Propagate error to main queue and all subscription queues."""
+        await super()._propagate_error(error_msg)
+        for queue in self._subscription_queues.values():
+            try:
+                queue.put_nowait(error_msg)
+            except asyncio.QueueFull:
+                self._log.error("Subscription queue full, dropping error message")
 
     def _handle_message(self, msg):
         """Override message handling to support request-response"""
@@ -51,9 +70,13 @@ class WebsocketAPI(ReconnectingWebsocket):
                 try:
                     queue.put_nowait(event)
                 except asyncio.QueueFull:
-                    self._log.error(f"Subscription queue full for {subscription_id}, dropping event")
+                    self._log.error(
+                        f"Subscription queue full for {subscription_id}, dropping event"
+                    )
                 except Exception as e:
-                    self._log.error(f"Error putting event in subscription queue for {subscription_id}: {e}")
+                    self._log.error(
+                        f"Error putting event in subscription queue for {subscription_id}: {e}"
+                    )
                 return None  # Don't put in main queue
             else:
                 # No registered queue, return event for main queue (backward compat)
@@ -65,7 +88,9 @@ class WebsocketAPI(ReconnectingWebsocket):
         if "status" in parsed_msg:
             if parsed_msg["status"] != 200:
                 exception = BinanceAPIException(
-                    parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
+                    parsed_msg,
+                    parsed_msg["status"],
+                    self.json_dumps(parsed_msg["error"]),
                 )
         if req_id is not None and req_id in self._responses:
             if exception is not None:
