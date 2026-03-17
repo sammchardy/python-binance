@@ -16,6 +16,7 @@ class WebsocketAPI(ReconnectingWebsocket):
         self._connection_lock: Optional[asyncio.Lock] = None
         # Subscription queues for routing user data stream events
         self._subscription_queues: Dict[str, asyncio.Queue] = {}
+        self._on_reconnect_callbacks = []
         super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
 
     def register_subscription_queue(self, subscription_id: str, queue: asyncio.Queue) -> None:
@@ -25,6 +26,17 @@ class WebsocketAPI(ReconnectingWebsocket):
     def unregister_subscription_queue(self, subscription_id: str) -> None:
         """Unregister a subscription queue."""
         self._subscription_queues.pop(subscription_id, None)
+
+    def add_reconnect_callback(self, callback) -> None:
+        self._on_reconnect_callbacks.append(callback)
+
+    def remove_reconnect_callback(self, callback) -> None:
+        if callback in self._on_reconnect_callbacks:
+            self._on_reconnect_callbacks.remove(callback)
+
+    async def _after_connect(self):
+        for cb in self._on_reconnect_callbacks:
+            await cb(self.ws, self)
 
     @property
     def connection_lock(self) -> asyncio.Lock:
