@@ -1,9 +1,11 @@
 """Tests for verbose mode functionality"""
 
-import pytest
 import logging
-from binance.client import Client
+
+import pytest
+
 from binance.async_client import AsyncClient
+from binance.client import Client
 
 
 def test_client_verbose_initialization():

@@ -1,8 +1,9 @@
 """Tests for BinanceRegionException and region validation."""
 
 import pytest
-from binance.client import Client
+
 from binance.async_client import AsyncClient
+from binance.client import Client
 from binance.exceptions import BinanceRegionException
 
 

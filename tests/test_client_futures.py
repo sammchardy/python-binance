@@ -1,10 +1,11 @@
-from datetime import datetime
 import re
+from datetime import datetime, timezone
 
 import pytest
 import requests_mock
-from .test_order import assert_contract_order
+
 from .test_get_order_book import assert_ob
+from .test_order import assert_contract_order
 
 
 def test_futures_ping(futuresClient):
@@ -65,13 +66,17 @@ def test_futures_continuous_klines(futuresClient):
 
 def test_futures_historical_klines(futuresClient):
     futuresClient.futures_historical_klines(
-        symbol="BTCUSDT", interval="1h", start_str=datetime.now().strftime("%Y-%m-%d")
+        symbol="BTCUSDT",
+        interval="1h",
+        start_str=datetime.now(tz=timezone.utc).strftime("%Y-%m-%d"),
     )
 
 
 def test_futures_historical_klines_generator(futuresClient):
     futuresClient.futures_historical_klines_generator(
-        symbol="BTCUSDT", interval="1h", start_str=datetime.now().strftime("%Y-%m-%d")
+        symbol="BTCUSDT",
+        interval="1h",
+        start_str=datetime.now(tz=timezone.utc).strftime("%Y-%m-%d"),
     )
 
 
@@ -927,13 +932,15 @@ def test_futures_create_algo_order_with_price_protect(futuresClient):
     )
 
 
-@pytest.mark.skip(reason="TRAILING_STOP_MARKET with activatePrice may not be fully supported in testnet environment")
+@pytest.mark.skip(
+    reason="TRAILING_STOP_MARKET with activatePrice may not be fully supported in testnet environment"
+)
 def test_futures_create_algo_order_trailing_stop(futuresClient):
     """Test creating a TRAILING_STOP_MARKET algo order with activatePrice and callbackRate"""
     ticker = futuresClient.futures_ticker(symbol="LTCUSDT")
     positions = futuresClient.futures_position_information(symbol="LTCUSDT")
     current_price = float(ticker["lastPrice"])
-    
+
     # For SELL trailing stop: activatePrice should be above current price
     # For BUY trailing stop: activatePrice should be below current price
     order = futuresClient.futures_create_algo_order(
@@ -1048,4 +1055,3 @@ def test_futures_create_algo_order_with_working_type(futuresClient):
     futuresClient.futures_cancel_algo_order(
         symbol=ticker["symbol"], algoId=order["algoId"]
     )
-

@@ -1,24 +1,36 @@
-from typing import Dict, Optional
+from __future__ import annotations
+
 import asyncio
 
 from websockets import WebSocketClientProtocol  # type: ignore
 
+from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
+
 from .constants import WSListenerState
 from .reconnecting_websocket import ReconnectingWebsocket
-from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect
 
 
 class WebsocketAPI(ReconnectingWebsocket):
-    def __init__(self, url: str, tld: str = "com", testnet: bool = False, https_proxy: Optional[str] = None):
+    def __init__(
+        self,
+        url: str,
+        tld: str = "com",
+        testnet: bool = False,
+        https_proxy: str | None = None,
+    ):
         self._tld = tld
         self._testnet = testnet
-        self._responses: Dict[str, asyncio.Future] = {}
-        self._connection_lock: Optional[asyncio.Lock] = None
+        self._responses: dict[str, asyncio.Future] = {}
+        self._connection_lock: asyncio.Lock | None = None
         # Subscription queues for routing user data stream events
-        self._subscription_queues: Dict[str, asyncio.Queue] = {}
-        super().__init__(url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy)
+        self._subscription_queues: dict[str, asyncio.Queue] = {}
+        super().__init__(
+            url=url, prefix="", path="", is_binary=False, https_proxy=https_proxy
+        )
 
-    def register_subscription_queue(self, subscription_id: str, queue: asyncio.Queue) -> None:
+    def register_subscription_queue(
+        self, subscription_id: str, queue: asyncio.Queue
+    ) -> None:
         """Register a queue to receive events for a specific subscription."""
         self._subscription_queues[subscription_id] = queue
 
@@ -51,9 +63,13 @@ class WebsocketAPI(ReconnectingWebsocket):
                 try:
                     queue.put_nowait(event)
                 except asyncio.QueueFull:
-                    self._log.error(f"Subscription queue full for {subscription_id}, dropping event")
+                    self._log.error(
+                        f"Subscription queue full for {subscription_id}, dropping event"
+                    )
                 except Exception as e:
-                    self._log.error(f"Error putting event in subscription queue for {subscription_id}: {e}")
+                    self._log.error(
+                        f"Error putting event in subscription queue for {subscription_id}: {e}"
+                    )
                 return None  # Don't put in main queue
             else:
                 # No registered queue, return event for main queue (backward compat)
@@ -62,11 +78,10 @@ class WebsocketAPI(ReconnectingWebsocket):
         req_id, exception = None, None
         if "id" in parsed_msg:
             req_id = parsed_msg["id"]
-        if "status" in parsed_msg:
-            if parsed_msg["status"] != 200:
-                exception = BinanceAPIException(
-                    parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
-                )
+        if "status" in parsed_msg and parsed_msg["status"] != 200:
+            exception = BinanceAPIException(
+                parsed_msg, parsed_msg["status"], self.json_dumps(parsed_msg["error"])
+            )
         if req_id is not None and req_id in self._responses:
             if exception is not None:
                 self._responses[req_id].set_exception(exception)
@@ -123,7 +138,7 @@ class WebsocketAPI(ReconnectingWebsocket):
 
             except Exception as e:
                 self._log.error(f"Error ensuring WebSocket connection: {e}")
-                raise BinanceWebsocketUnableToConnect(f"Connection failed: {str(e)}")
+                raise BinanceWebsocketUnableToConnect(f"Connection failed: {e!s}")
 
     async def request(self, id: str, payload: dict) -> dict:
         """Send request and wait for response"""
@@ -153,7 +168,7 @@ class WebsocketAPI(ReconnectingWebsocket):
         except asyncio.TimeoutError:
             raise BinanceWebsocketUnableToConnect("Request timed out")
         except Exception as e:
-            raise e
+            raise
         finally:
             self._responses.pop(id, None)
 

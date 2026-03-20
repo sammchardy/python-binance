@@ -1,9 +1,13 @@
 [tool.ruff]
 preview = true
-lint.ignore = ["F722","F841","F821","E402","E501","E902","E713","E741","E714", "E275","E721","E266", "E261"]
+lint.ignore = [
+    "F403","F722","F841","F821","E402","E501","E902","E713","E741","E714",
+    "E275","E721","E266","E261",
+    "BLE001",  # blind except - intentional in websocket/network code
+    "TRY002",  # raise vanilla Exception - existing pattern
+]
 
 [tool.pytest.ini_options]
 timeout = 90
 timeout_method = "thread"
 asyncio_default_fixture_loop_scope = "function"
-

@@ -1,15 +1,17 @@
-import logging
-from operator import itemgetter
+from __future__ import annotations
+
 import asyncio
+import logging
 import time
-from typing import Optional, Dict, Callable
+from operator import itemgetter
+from typing import Callable
 
 from ..helpers import get_loop
 from .streams import BinanceSocketManager
 from .threaded_stream import ThreadedApiManager
 
 
-class DepthCache(object):
+class DepthCache:
     def __init__(self, symbol, conv_type: Callable = float):
         """Initialise the DepthCache
 
@@ -127,7 +129,7 @@ class DepthCache(object):
         elif isinstance(vals, list):
             lst = [[conv_type(price), conv_type(quantity)] for price, quantity in vals]
         else:
-            raise ValueError(f"Unknown order book depth data type: {type(vals)}")
+            raise TypeError(f"Unknown order book depth data type: {type(vals)}")
         lst = sorted(lst, key=itemgetter(0), reverse=reverse)
         return lst
 
@@ -143,7 +145,7 @@ class BaseDepthCacheManager:
         client,
         symbol,
         loop=None,
-        refresh_interval: Optional[int] = DEFAULT_REFRESH,
+        refresh_interval: int | None = DEFAULT_REFRESH,
         bm=None,
         limit=10,
         conv_type=float,
@@ -195,7 +197,9 @@ class BaseDepthCacheManager:
                 res = await asyncio.wait_for(self._socket.recv(), timeout=self.TIMEOUT)
                 self._log.debug(f"Received message: {res}")
             except Exception as e:
-                self._log.warning(f"Exception recieving message: {e.__class__.__name__} (e) ")
+                self._log.warning(
+                    f"Exception recieving message: {e.__class__.__name__} (e) "
+                )
             else:
                 dc = await self._depth_event(res)
         return dc
@@ -301,7 +305,7 @@ class DepthCacheManager(BaseDepthCacheManager):
         client,
         symbol,
         loop=None,
-        refresh_interval: Optional[int] = None,
+        refresh_interval: int | None = None,
         bm=None,
         limit=500,
         conv_type=float,
@@ -439,9 +443,9 @@ class OptionsDepthCacheManager(BaseDepthCacheManager):
 class ThreadedDepthCacheManager(ThreadedApiManager):
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, str]] = None,
+        api_key: str | None = None,
+        api_secret: str | None = None,
+        requests_params: dict[str, str] | None = None,
         tld: str = "com",
         testnet: bool = False,
     ):

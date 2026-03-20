@@ -1,5 +1,7 @@
-from binance import BinanceSocketManager, AsyncClient
 import pytest
+
+from binance import AsyncClient, BinanceSocketManager
+
 from .conftest import proxy
 
 

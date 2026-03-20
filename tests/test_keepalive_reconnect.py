@@ -5,10 +5,12 @@ This test reproduces the issue where reconnection events create duplicate keepal
 that continue running indefinitely, leading to resource exhaustion and redundant API calls.
 """
 
-import sys
 import asyncio
-import pytest
+import sys
 from unittest.mock import AsyncMock, MagicMock
+
+import pytest
+
 from binance.async_client import AsyncClient
 from binance.ws.keepalive_websocket import KeepAliveWebsocket
 
@@ -51,7 +53,6 @@ async def test_no_duplicate_keepalive_loops_on_reconnect():
         keepalive_call_count += 1
         # Call the original method but skip the actual API call
         # Just track that it was called
-        return
 
     ws._keepalive_socket = tracked_keepalive
 
@@ -122,7 +123,6 @@ async def test_keepalive_stops_after_exit():
     async def tracked_keepalive():
         nonlocal keepalive_call_count
         keepalive_call_count += 1
-        return
 
     ws._keepalive_socket = tracked_keepalive
 
@@ -181,7 +181,6 @@ async def test_multiple_reconnects_no_loop_accumulation():
     async def tracked_keepalive():
         nonlocal keepalive_call_count
         keepalive_call_count += 1
-        return
 
     ws._keepalive_socket = tracked_keepalive
 

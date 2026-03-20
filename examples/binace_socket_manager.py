@@ -1,6 +1,6 @@
+import asyncio
 import os
 import sys
-import asyncio
 import time
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

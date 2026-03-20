@@ -1,6 +1,6 @@
 import os
-import pytest
 
+import pytest
 
 proxies = {}
 proxy = os.getenv("PROXY")

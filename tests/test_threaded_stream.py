@@ -1,9 +1,10 @@
-import pytest
 import asyncio
-
-import websockets
-from binance.ws.threaded_stream import ThreadedApiManager
 from unittest.mock import Mock
+
+import pytest
+import websockets
+
+from binance.ws.threaded_stream import ThreadedApiManager
 
 # For Python 3.7 compatibility
 try:
@@ -12,7 +13,7 @@ except ImportError:
     # Create our own AsyncMock for Python 3.7
     class AsyncMock(Mock):
         async def __call__(self, *args, **kwargs):
-            return super(AsyncMock, self).__call__(*args, **kwargs)
+            return super().__call__(*args, **kwargs)
 
         async def __aenter__(self):
             return self

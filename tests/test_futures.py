@@ -1,7 +1,9 @@
-import requests_mock
 import json
-from binance.client import Client
 import re
+
+import requests_mock
+
+from binance.client import Client
 
 client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 

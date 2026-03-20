@@ -1,6 +1,8 @@
-from binance.ws.depthcache import DepthCache
 from decimal import Decimal
+
 import pytest
+
+from binance.ws.depthcache import DepthCache
 
 TEST_SYMBOL = "BNBBTC"
 

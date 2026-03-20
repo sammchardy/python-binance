@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # python-binance documentation build configuration file, created by
 # sphinx-quickstart on Thu Sep 21 20:24:54 2017.

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Comprehensive verbose mode example for python-binance
 
@@ -10,7 +9,8 @@ This example demonstrates verbose logging for:
 
 import asyncio
 import logging
-from binance import Client, AsyncClient, BinanceSocketManager
+
+from binance import AsyncClient, BinanceSocketManager, Client
 
 # Configure logging to see verbose output
 logging.basicConfig(

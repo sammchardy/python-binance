@@ -1,19 +1,18 @@
+from __future__ import annotations
+
 import asyncio
+import logging
 import time
 from enum import Enum
-from typing import Optional, List, Dict, Callable, Any
-import logging
+from typing import Any, Callable
 
+from binance.async_client import AsyncClient
+from binance.enums import ContractType, FuturesType
+from binance.helpers import get_loop
 from binance.ws.constants import KEEPALIVE_TIMEOUT
 from binance.ws.keepalive_websocket import KeepAliveWebsocket
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.threaded_stream import ThreadedApiManager
-
-
-from binance.async_client import AsyncClient
-from binance.enums import FuturesType
-from binance.enums import ContractType
-from binance.helpers import get_loop
 
 
 class BinanceSocketType(str, Enum):
@@ -73,9 +72,9 @@ class BinanceSocketManager:
         self.ws_kwargs = {}
 
         if verbose:
-            logging.getLogger('binance.ws').setLevel(logging.DEBUG)
+            logging.getLogger("binance.ws").setLevel(logging.DEBUG)
 
-    def _get_stream_url(self, stream_url: Optional[str] = None):
+    def _get_stream_url(self, stream_url: str | None = None):
         if stream_url:
             return stream_url
         stream_url = self.STREAM_URL
@@ -88,7 +87,7 @@ class BinanceSocketManager:
     def _get_socket(
         self,
         path: str,
-        stream_url: Optional[str] = None,
+        stream_url: str | None = None,
         prefix: str = "ws/",
         is_binary: bool = False,
         socket_type: BinanceSocketType = BinanceSocketType.SPOT,
@@ -114,7 +113,7 @@ class BinanceSocketManager:
     def _get_account_socket(
         self,
         path: str,
-        stream_url: Optional[str] = None,
+        stream_url: str | None = None,
         prefix: str = "ws/",
         is_binary: bool = False,
     ) -> KeepAliveWebsocket:
@@ -167,7 +166,7 @@ class BinanceSocketManager:
         await self._stop_socket(path)
 
     def depth_socket(
-        self, symbol: str, depth: Optional[str] = None, interval: Optional[int] = None
+        self, symbol: str, depth: str | None = None, interval: int | None = None
     ):
         """Start a websocket for symbol market depth returning either a diff or a partial book
 
@@ -857,7 +856,7 @@ class BinanceSocketManager:
         """
         return self._get_socket("!bookTicker")
 
-    def multiplex_socket(self, streams: List[str]):
+    def multiplex_socket(self, streams: list[str]):
         """Start a multiplexed socket using a list of socket names.
         User stream sockets can not be included.
 
@@ -878,7 +877,7 @@ class BinanceSocketManager:
         path = f"streams={'/'.join(streams)}"
         return self._get_socket(path, prefix="stream?")
 
-    def options_multiplex_socket(self, streams: List[str]):
+    def options_multiplex_socket(self, streams: list[str]):
         """Start a multiplexed socket using a list of socket names.
 
         https://developers.binance.com/docs/derivatives/option/websocket-market-streams
@@ -889,7 +888,7 @@ class BinanceSocketManager:
         return self._get_options_socket(stream_path, prefix="stream?")
 
     def futures_multiplex_socket(
-        self, streams: List[str], futures_type: FuturesType = FuturesType.USD_M
+        self, streams: list[str], futures_type: FuturesType = FuturesType.USD_M
     ):
         """Start a multiplexed socket using a list of socket names.
         User stream sockets can not be included.
@@ -1121,7 +1120,9 @@ class BinanceSocketManager:
         """
         return self._get_options_socket(symbol.upper() + "@depth" + str(depth))
 
-    def futures_depth_socket(self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M):
+    def futures_depth_socket(
+        self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M
+    ):
         """Subscribe to a futures depth data stream
 
         https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
@@ -1194,7 +1195,9 @@ class BinanceSocketManager:
         :param expiration_date: The expiration date (e.g., "221125" for Nov 25, 2022)
         :type expiration_date: str
         """
-        return self._get_options_socket(symbol.upper() + "@openInterest@" + expiration_date)
+        return self._get_options_socket(
+            symbol.upper() + "@openInterest@" + expiration_date
+        )
 
     def options_mark_price_socket(self, symbol: str):
         """Subscribe to an options mark price stream.
@@ -1251,14 +1254,14 @@ class BinanceSocketManager:
 class ThreadedWebsocketManager(ThreadedApiManager):
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        api_secret: Optional[str] = None,
-        requests_params: Optional[Dict[str, Any]] = None,
+        api_key: str | None = None,
+        api_secret: str | None = None,
+        requests_params: dict[str, Any] | None = None,
         tld: str = "com",
         testnet: bool = False,
-        session_params: Optional[Dict[str, Any]] = None,
-        https_proxy: Optional[str] = None,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        session_params: dict[str, Any] | None = None,
+        https_proxy: str | None = None,
+        loop: asyncio.AbstractEventLoop | None = None,
         max_queue_size: int = 100,
     ):
         super().__init__(
@@ -1271,30 +1274,31 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             https_proxy,
             loop,
         )
-        self._bsm: Optional[BinanceSocketManager] = None
+        self._bsm: BinanceSocketManager | None = None
         self._max_queue_size = max_queue_size
 
     async def _before_socket_listener_start(self):
         assert self._client
         self._bsm = BinanceSocketManager(
-            client=self._client,
-            max_queue_size=self._max_queue_size
+            client=self._client, max_queue_size=self._max_queue_size
         )
 
     def _start_async_socket(
         self,
         callback: Callable,
         socket_name: str,
-        params: Dict[str, Any],
-        path: Optional[str] = None,
+        params: dict[str, Any],
+        path: str | None = None,
     ) -> str:
         start_time = time.time()
         while not self._bsm:
             if time.time() - start_time > 5:
-                raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
+                raise RuntimeError(
+                    "Binance Socket Manager failed to initialize after 5 seconds"
+                )
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
-        socket_path: str = path or socket._path  # noqa
+        socket_path: str = path or socket._path
         self._socket_running[socket_path] = True
         self._loop.call_soon_threadsafe(
             asyncio.create_task, self.start_listener(socket, socket_path, callback)
@@ -1305,8 +1309,8 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         self,
         callback: Callable,
         symbol: str,
-        depth: Optional[str] = None,
-        interval: Optional[int] = None,
+        depth: str | None = None,
+        interval: int | None = None,
     ) -> str:
         return self._start_async_socket(
             callback=callback,
@@ -1498,7 +1502,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
             callback=callback, socket_name="book_ticker_socket", params={}
         )
 
-    def start_multiplex_socket(self, callback: Callable, streams: List[str]) -> str:
+    def start_multiplex_socket(self, callback: Callable, streams: list[str]) -> str:
         return self._start_async_socket(
             callback=callback,
             socket_name="multiplex_socket",
@@ -1506,7 +1510,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         )
 
     def start_options_multiplex_socket(
-        self, callback: Callable, streams: List[str]
+        self, callback: Callable, streams: list[str]
     ) -> str:
         return self._start_async_socket(
             callback=callback,
@@ -1517,7 +1521,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     def start_futures_multiplex_socket(
         self,
         callback: Callable,
-        streams: List[str],
+        streams: list[str],
         futures_type: FuturesType = FuturesType.USD_M,
     ) -> str:
         return self._start_async_socket(

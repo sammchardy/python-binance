@@ -1,9 +1,10 @@
+import json
 import time
+from datetime import datetime
+
 import dateparser
 import pytz
-import json
 
-from datetime import datetime
 from binance.client import Client
 
 
@@ -19,7 +20,7 @@ def date_to_milliseconds(date_str):
     """
     # get epoch value in UTC
     assert date_str is not None
-    epoch = datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
+    epoch = datetime.fromtimestamp(0, tz=pytz.utc)
     # parse our date string
     d = dateparser.parse(date_str)
     assert d is not None
@@ -142,9 +143,7 @@ klines = get_historical_klines(symbol, interval, start, end)
 
 # open a file with filename including symbol, interval and start and end converted to milliseconds
 with open(
-    "Binance_{}_{}_{}-{}.json".format(
-        symbol, interval, date_to_milliseconds(start), date_to_milliseconds(end)
-    ),
+    f"Binance_{symbol}_{interval}_{date_to_milliseconds(start)}-{date_to_milliseconds(end)}.json",
     "w",  # set file write mode
 ) as f:
     f.write(json.dumps(klines))

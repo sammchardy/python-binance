@@ -1,6 +1,7 @@
 """Tests for WebSocket verbose logging"""
 
 import logging
+
 import pytest
 
 

@@ -1,12 +1,12 @@
+from __future__ import annotations
+
 import asyncio
-from decimal import Decimal
 import json
-from typing import Union, Optional, Dict
+from datetime import datetime, timezone
+from decimal import Decimal
 
 import dateparser
 import pytz
-
-from datetime import datetime, timezone
 
 from binance.exceptions import UnknownDateFormat
 
@@ -21,9 +21,9 @@ def date_to_milliseconds(date_str: str) -> int:
     :param date_str: date in readable format, i.e. "January 01, 2018", "11 hours ago UTC", "now UTC"
     """
     # get epoch value in UTC
-    epoch: datetime = datetime.fromtimestamp(0,timezone.utc)
+    epoch: datetime = datetime.fromtimestamp(0, timezone.utc)
     # parse our date string
-    d: Optional[datetime] = dateparser.parse(date_str, settings={"TIMEZONE": "UTC"})
+    d: datetime | None = dateparser.parse(date_str, settings={"TIMEZONE": "UTC"})
     if not d:
         raise UnknownDateFormat(date_str)
 
@@ -35,7 +35,7 @@ def date_to_milliseconds(date_str: str) -> int:
     return int((d - epoch).total_seconds() * 1000.0)
 
 
-def interval_to_milliseconds(interval: str) -> Optional[int]:
+def interval_to_milliseconds(interval: str) -> int | None:
     """Convert a Binance interval string to milliseconds
 
     :param interval: Binance interval string, e.g.: 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w
@@ -46,7 +46,7 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
          None if interval suffix is not one of m, h, d, w
 
     """
-    seconds_per_unit: Dict[str, int] = {
+    seconds_per_unit: dict[str, int] = {
         "s": 1,
         "m": 60,
         "h": 60 * 60,
@@ -59,9 +59,7 @@ def interval_to_milliseconds(interval: str) -> Optional[int]:
         return None
 
 
-def round_step_size(
-    quantity: Union[float, Decimal], step_size: Union[float, Decimal]
-) -> float:
+def round_step_size(quantity: float | Decimal, step_size: float | Decimal) -> float:
     """Rounds a given quantity to a specific step size
 
     :param quantity: required

@@ -1,6 +1,9 @@
-import pytest
 import sys
+
+import pytest
+
 from binance.exceptions import BinanceAPIException
+
 from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 

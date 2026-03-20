@@ -1,9 +1,11 @@
 import sys
-from binance import BinanceSocketManager
+
 import pytest
 
+from binance import BinanceSocketManager
 from binance.async_client import AsyncClient
-from .conftest import proxy, api_key, api_secret, testnet
+
+from .conftest import api_key, api_secret, proxy, testnet
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
@@ -17,6 +19,7 @@ async def test_socket_stopped_on_aexit(clientAsync):
     ts2 = bm.trade_socket("BNBBTC")
     assert ts2 is not ts1, "socket should be removed from _conn on exit"
     await clientAsync.close_connection()
+
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio

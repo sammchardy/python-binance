@@ -1,5 +1,7 @@
-import pytest
 import sys
+
+import pytest
+
 from binance.exceptions import BinanceAPIException
 
 
@@ -29,7 +31,7 @@ def test_get_order_book(client):
         assert_ob(order_book)
 
     except BinanceAPIException as e:
-        pytest.fail(f"API request failed: {str(e)}")
+        pytest.fail(f"API request failed: {e!s}")
 
 
 def test_futures_get_order_book(client):
@@ -38,7 +40,7 @@ def test_futures_get_order_book(client):
         assert_ob(order_book)
 
     except BinanceAPIException as e:
-        pytest.fail(f"API request failed: {str(e)}")
+        pytest.fail(f"API request failed: {e!s}")
 
 
 def test_get_order_book_with_limit(client):
@@ -50,7 +52,7 @@ def test_get_order_book_with_limit(client):
         assert len(order_book["asks"]) <= 5
 
     except BinanceAPIException as e:
-        pytest.fail(f"API request failed: {str(e)}")
+        pytest.fail(f"API request failed: {e!s}")
 
 
 @pytest.mark.asyncio(scope="function")
@@ -65,7 +67,7 @@ async def test_futures_get_order_book_async(clientAsync):
         order_book = await clientAsync.futures_order_book(symbol="BTCUSDT")
         assert_ob(order_book)
     except BinanceAPIException as e:
-        pytest.fail(f"API request failed: {str(e)}")
+        pytest.fail(f"API request failed: {e!s}")
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")

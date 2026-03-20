@@ -6,7 +6,6 @@ sys.path.append(root)
 
 from binance.client import Client
 
-
 api_key = ""  # your api_key here
 secret = ""  # your secret here
 client = Client(api_key, secret, testnet=True)

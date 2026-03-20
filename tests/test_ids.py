@@ -1,9 +1,10 @@
 import re
-import requests_mock
+
 import pytest
+import requests_mock
 from aioresponses import aioresponses
 
-from binance import Client, AsyncClient
+from binance import AsyncClient, Client
 
 client = Client(api_key="api_key", api_secret="api_secret", ping=False)
 
@@ -219,6 +220,7 @@ async def test_swap_id_async():
         )
         await clientAsync.close_connection()
 
+
 @pytest.mark.asyncio()
 async def test_swap_trigger_id_async():
     clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
@@ -238,6 +240,7 @@ async def test_swap_trigger_id_async():
             symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_swap_trigger_endpoint_id_async():
@@ -259,6 +262,7 @@ async def test_swap_trigger_endpoint_id_async():
             symbol="LTCUSDT", side="BUY", type="STOP_MARKET", quantity=0.1
         )
         await clientAsync.close_connection()
+
 
 @pytest.mark.asyncio()
 async def test_papi_um_id_async():
