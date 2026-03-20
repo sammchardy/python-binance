@@ -54,10 +54,15 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         await super().__aexit__(*args, **kwargs)
 
     def _build_path(self):
-        self._path = self._listen_key
+        if self._keepalive_type in ("futures", "coin_futures"):
+            self._path = f"?listenKey={self._listen_key}"
+            self._prefix = "ws"
+        else:
+            self._path = self._listen_key
         time_unit = getattr(self._client, "TIME_UNIT", None)
         if time_unit:
-            self._path = f"{self._listen_key}?timeUnit={time_unit}"
+            sep = "&" if "?" in self._path else "?"
+            self._path = f"{self._path}{sep}timeUnit={time_unit}"
 
     async def _before_connect(self):
         if self._keepalive_type == "user":
