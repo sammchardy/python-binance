@@ -54,7 +54,7 @@ class KeepAliveWebsocket(ReconnectingWebsocket):
         await super().__aexit__(*args, **kwargs)
 
     def _build_path(self):
-        if self._keepalive_type in ("futures", "coin_futures"):
+        if self._keepalive_type == "futures":
             self._path = f"?listenKey={self._listen_key}"
             self._prefix = "ws"
         else:
