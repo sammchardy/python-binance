@@ -71,7 +71,7 @@ class BinanceSocketManager:
         self.ws_kwargs = {}
 
         if verbose:
-            logging.getLogger('binance.ws').setLevel(logging.DEBUG)
+            logging.getLogger("binance.ws").setLevel(logging.DEBUG)
 
     def _get_stream_url(self, stream_url: Optional[str] = None):
         if stream_url:
@@ -134,7 +134,11 @@ class BinanceSocketManager:
         return self._conns[conn_id]
 
     def _get_futures_socket(
-        self, path: str, futures_type: FuturesType, prefix: str = "stream?streams="
+        self,
+        path: str,
+        futures_type: FuturesType,
+        prefix: str = "stream?streams=",
+        category: Optional[str] = None,
     ):
         socket_type: BinanceSocketType = BinanceSocketType.USD_M_FUTURES
         if futures_type == FuturesType.USD_M:
@@ -143,6 +147,8 @@ class BinanceSocketManager:
                 stream_url = self.FSTREAM_TESTNET_URL
             elif self.demo:
                 stream_url = self.FSTREAM_DEMO_URL
+            if category:
+                stream_url = f"{stream_url}{category}/"
         else:
             stream_url = self.DSTREAM_URL
             if self.testnet:
@@ -174,7 +180,9 @@ class BinanceSocketManager:
         elif base_path == "market":
             stream_url = base_url + "market/"
         else:
-            raise ValueError(f"base_path must be 'public' or 'market', got '{base_path}'")
+            raise ValueError(
+                f"base_path must be 'public' or 'market', got '{base_path}'"
+            )
 
         return self._get_socket(
             path,
@@ -361,7 +369,9 @@ class BinanceSocketManager:
         """
 
         path = f"{symbol.lower()}_{contract_type.value}@continuousKline_{interval}"
-        return self._get_futures_socket(path, prefix="ws/", futures_type=futures_type)
+        return self._get_futures_socket(
+            path, prefix="ws/", futures_type=futures_type, category="market"
+        )
 
     def miniticker_socket(self, update_time: int = 1000):
         """Start a miniticker websocket for all trades
@@ -487,7 +497,7 @@ class BinanceSocketManager:
 
         """
         return self._get_futures_socket(
-            symbol.lower() + "@aggTrade", futures_type=futures_type
+            symbol.lower() + "@aggTrade", futures_type=futures_type, category="market"
         )
 
     def symbol_miniticker_socket(self, symbol: str):
@@ -642,7 +652,9 @@ class BinanceSocketManager:
                 }
             ]
         """
-        return self._get_futures_socket("!ticker@arr", FuturesType.USD_M)
+        return self._get_futures_socket(
+            "!ticker@arr", FuturesType.USD_M, category="market"
+        )
 
     def futures_coin_ticker_socket(self):
         """Start a websocket for all ticker data
@@ -728,7 +740,7 @@ class BinanceSocketManager:
         """
         stream_name = "@markPrice@1s" if fast else "@markPrice"
         return self._get_futures_socket(
-            symbol.lower() + stream_name, futures_type=futures_type
+            symbol.lower() + stream_name, futures_type=futures_type, category="market"
         )
 
     def all_mark_price_socket(
@@ -755,7 +767,9 @@ class BinanceSocketManager:
             ]
         """
         stream_name = "!markPrice@arr@1s" if fast else "!markPrice@arr"
-        return self._get_futures_socket(stream_name, futures_type=futures_type)
+        return self._get_futures_socket(
+            stream_name, futures_type=futures_type, category="market"
+        )
 
     def symbol_ticker_futures_socket(
         self, symbol: str, futures_type: FuturesType = FuturesType.USD_M
@@ -779,7 +793,7 @@ class BinanceSocketManager:
             ]
         """
         return self._get_futures_socket(
-            symbol.lower() + "@bookTicker", futures_type=futures_type
+            symbol.lower() + "@bookTicker", futures_type=futures_type, category="public"
         )
 
     def individual_symbol_ticker_futures_socket(
@@ -800,7 +814,7 @@ class BinanceSocketManager:
             }
         """
         return self._get_futures_socket(
-            symbol.lower() + "@ticker", futures_type=futures_type
+            symbol.lower() + "@ticker", futures_type=futures_type, category="market"
         )
 
     def all_ticker_futures_socket(
@@ -832,7 +846,10 @@ class BinanceSocketManager:
             ]
         """
 
-        return self._get_futures_socket(channel, futures_type=futures_type)
+        category = "public" if "bookTicker" in channel else "market"
+        return self._get_futures_socket(
+            channel, futures_type=futures_type, category=category
+        )
 
     def symbol_book_ticker_socket(self, symbol: str):
         """Start a websocket for the best bid or ask's price or quantity for a specified symbol.
@@ -916,10 +933,15 @@ class BinanceSocketManager:
         """
         stream_name = "/".join(streams)
         stream_path = f"streams={stream_name}"
-        return self._get_options_socket(stream_path, base_path="market", prefix="stream?")
+        return self._get_options_socket(
+            stream_path, base_path="market", prefix="stream?"
+        )
 
     def futures_multiplex_socket(
-        self, streams: List[str], futures_type: FuturesType = FuturesType.USD_M
+        self,
+        streams: List[str],
+        futures_type: FuturesType = FuturesType.USD_M,
+        category: str = "market",
     ):
         """Start a multiplexed socket using a list of socket names.
         User stream sockets can not be included.
@@ -932,6 +954,7 @@ class BinanceSocketManager:
 
         :param streams: list of stream names in lower case
         :param futures_type: use USD-M or COIN-M futures default USD-M
+        :param category: stream category for USD-M futures URL routing ("public", "market", or "private"), default "market"
 
         :returns: connection key string if successful, False otherwise
 
@@ -940,7 +963,7 @@ class BinanceSocketManager:
         """
         path = f"streams={'/'.join(streams)}"
         return self._get_futures_socket(
-            path, prefix="stream?", futures_type=futures_type
+            path, prefix="stream?", futures_type=futures_type, category=category
         )
 
     def user_socket(self):
@@ -975,6 +998,7 @@ class BinanceSocketManager:
             stream_url = self.FSTREAM_TESTNET_URL
         elif self.demo:
             stream_url = self.FSTREAM_DEMO_URL
+        stream_url += "private/"
         return self._get_account_socket("futures", stream_url=stream_url)
 
     def coin_futures_user_socket(self):
@@ -1019,6 +1043,7 @@ class BinanceSocketManager:
             stream_url = self.FSTREAM_TESTNET_URL
         elif self.demo:
             stream_url = self.FSTREAM_DEMO_URL
+        stream_url += "private/"
         return self._get_account_socket("futures", stream_url=stream_url)
 
     def coin_futures_socket(self):
@@ -1087,7 +1112,9 @@ class BinanceSocketManager:
         :param symbol: The option symbol to subscribe to (e.g. "BTC-220930-18000-C")
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@optionTicker", base_path="public")
+        return self._get_options_socket(
+            symbol.lower() + "@optionTicker", base_path="public"
+        )
 
     def options_ticker_by_expiration_socket(self, symbol: str, expiration_date: str):
         """Subscribe to a 24-hour ticker info stream by underlying asset and expiration date.
@@ -1105,7 +1132,9 @@ class BinanceSocketManager:
         :param expiration_date: The expiration date (e.g., "251230" for Dec 30, 2025)
         :type expiration_date: str
         """
-        return self._get_options_socket(symbol.lower() + "@optionTicker@" + expiration_date, base_path="public")
+        return self._get_options_socket(
+            symbol.lower() + "@optionTicker@" + expiration_date, base_path="public"
+        )
 
     def options_recent_trades_socket(self, symbol: str):
         """Subscribe to a real-time trade information stream.
@@ -1121,7 +1150,9 @@ class BinanceSocketManager:
         :param symbol: The option symbol or underlying asset (e.g., "BTC-200630-9000-P" or "BTCUSDT")
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@optionTrade", base_path="public")
+        return self._get_options_socket(
+            symbol.lower() + "@optionTrade", base_path="public"
+        )
 
     def options_kline_socket(
         self, symbol: str, interval=AsyncClient.KLINE_INTERVAL_1MINUTE
@@ -1142,9 +1173,13 @@ class BinanceSocketManager:
         :param interval: Kline interval, default KLINE_INTERVAL_1MINUTE
         :type interval: str
         """
-        return self._get_options_socket(symbol.lower() + "@kline_" + interval, base_path="market")
+        return self._get_options_socket(
+            symbol.lower() + "@kline_" + interval, base_path="market"
+        )
 
-    def options_depth_socket(self, symbol: str, depth: str = "10", speed: str = "500ms"):
+    def options_depth_socket(
+        self, symbol: str, depth: str = "10", speed: str = "500ms"
+    ):
         """Subscribe to partial book depth stream for options trading.
 
         Top <levels> bids and asks. Valid levels are 5, 10, 20.
@@ -1162,7 +1197,9 @@ class BinanceSocketManager:
         :param speed: Update speed. Valid values: "100ms" or "500ms", default "500ms"
         :type speed: str
         """
-        return self._get_options_socket(symbol.lower() + "@depth" + str(depth) + "@" + speed, base_path="public")
+        return self._get_options_socket(
+            symbol.lower() + "@depth" + str(depth) + "@" + speed, base_path="public"
+        )
 
     def options_book_ticker_socket(self, symbol: str):
         """Subscribe to an options book ticker stream.
@@ -1185,9 +1222,13 @@ class BinanceSocketManager:
         :param symbol: The option symbol (e.g., "BTC-251226-110000-C")
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@bookTicker", base_path="public")
+        return self._get_options_socket(
+            symbol.lower() + "@bookTicker", base_path="public"
+        )
 
-    def futures_depth_socket(self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M):
+    def futures_depth_socket(
+        self, symbol: str, depth: str = "10", futures_type=FuturesType.USD_M
+    ):
         """Subscribe to a futures depth data stream
 
         https://binance-docs.github.io/apidocs/futures/en/#partial-book-depth-streams
@@ -1199,7 +1240,9 @@ class BinanceSocketManager:
         :param futures_type: use USD-M or COIN-M futures default USD-M
         """
         return self._get_futures_socket(
-            symbol.lower() + "@depth" + str(depth), futures_type=futures_type
+            symbol.lower() + "@depth" + str(depth),
+            futures_type=futures_type,
+            category="public",
         )
 
     def futures_rpi_depth_socket(self, symbol: str, futures_type=FuturesType.USD_M):
@@ -1215,7 +1258,9 @@ class BinanceSocketManager:
         :param futures_type: use USD-M or COIN-M futures default USD-M
         """
         return self._get_futures_socket(
-            symbol.lower() + "@rpiDepth@500ms", futures_type=futures_type
+            symbol.lower() + "@rpiDepth@500ms",
+            futures_type=futures_type,
+            category="public",
         )
 
     def options_new_symbol_socket(self):
@@ -1263,7 +1308,10 @@ class BinanceSocketManager:
         :param expiration_date: The expiration date (e.g., "221125" for Nov 25, 2022)
         :type expiration_date: str
         """
-        return self._get_options_socket(symbol.lower() + "@optionOpenInterest@" + expiration_date, base_path="market")
+        return self._get_options_socket(
+            symbol.lower() + "@optionOpenInterest@" + expiration_date,
+            base_path="market",
+        )
 
     def options_mark_price_socket(self, symbol: str):
         """Subscribe to an options mark price stream.
@@ -1287,7 +1335,9 @@ class BinanceSocketManager:
         :param symbol: The underlying asset (e.g., "BTCUSDT", "ETHUSDT")
         :type symbol: str
         """
-        return self._get_options_socket(symbol.lower() + "@optionMarkPrice", base_path="market")
+        return self._get_options_socket(
+            symbol.lower() + "@optionMarkPrice", base_path="market"
+        )
 
     def options_index_price_socket(self):
         """Subscribe to an options index price stream.
@@ -1351,8 +1401,7 @@ class ThreadedWebsocketManager(ThreadedApiManager):
     async def _before_socket_listener_start(self):
         assert self._client
         self._bsm = BinanceSocketManager(
-            client=self._client,
-            max_queue_size=self._max_queue_size
+            client=self._client, max_queue_size=self._max_queue_size
         )
 
     def _start_async_socket(
@@ -1365,7 +1414,9 @@ class ThreadedWebsocketManager(ThreadedApiManager):
         start_time = time.time()
         while not self._bsm:
             if time.time() - start_time > 5:
-                raise RuntimeError("Binance Socket Manager failed to initialize after 5 seconds")
+                raise RuntimeError(
+                    "Binance Socket Manager failed to initialize after 5 seconds"
+                )
             time.sleep(0.1)
         socket = getattr(self._bsm, socket_name)(**params)
         socket_path: str = path or socket._path  # noqa
