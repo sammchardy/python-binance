@@ -1,7 +1,7 @@
 import pytest
 
 
-pytestmark = pytest.mark.margin
+pytestmark = [pytest.mark.margin, pytest.mark.live]
 
 
 def test_margin__get_account_status(client):
@@ -596,10 +596,7 @@ def test_margin_enable_fast_withdraw_switch(client):
 
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_next_hourly_interest_rate(client):
-    client.margin_next_hourly_interest_rate(
-        assets="BTC",
-        isIsolated="FALSE"
-    )
+    client.margin_next_hourly_interest_rate(assets="BTC", isIsolated="FALSE")
 
 
 @pytest.mark.skip(reason="can't test margin endpoints")
@@ -612,11 +609,7 @@ def test_margin_interest_history(client):
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_borrow_repay(client):
     client.margin_borrow_repay(
-        asset="BTC",
-        amount=0.1,
-        isIsolated="FALSE",
-        symbol="BTCUSDT",
-        type="BORROW"
+        asset="BTC", amount=0.1, isIsolated="FALSE", symbol="BTCUSDT", type="BORROW"
     )
 
 
@@ -629,14 +622,16 @@ def test_margin_get_borrow_repay_records(client):
         startTime=1563438204000,
         endTime=1563438204000,
         current=1,
-        size=10
+        size=10,
     )
+
 
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_interest_rate_history(client):
     client.margin_interest_rate_history(
         asset="BTC",
     )
+
 
 @pytest.mark.skip(reason="can't test margin endpoints")
 def test_margin_max_borrowable(client):

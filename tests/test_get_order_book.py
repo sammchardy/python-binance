@@ -2,6 +2,8 @@ import pytest
 import sys
 from binance.exceptions import BinanceAPIException
 
+pytestmark = pytest.mark.live
+
 
 def assert_ob(order_book):
     assert isinstance(order_book, dict)

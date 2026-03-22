@@ -6,4 +6,12 @@ lint.ignore = ["F722","F841","F821","E402","E501","E902","E713","E741","E714", "
 timeout = 90
 timeout_method = "thread"
 asyncio_default_fixture_loop_scope = "function"
-
+markers = [
+    "live: requires network access to Binance",
+    "spot: mark a test as part of the spot tests",
+    "futures: mark a test as part of the futures tests",
+    "margin: mark a test as part of the margin tests",
+    "portfolio: mark a test as part of the portfolio tests",
+    "gift_card: mark a test as part of the gift card tests",
+    "options: mark a test as part of the options tests",
+]

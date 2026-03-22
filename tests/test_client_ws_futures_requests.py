@@ -4,6 +4,8 @@ from binance.exceptions import BinanceAPIException
 from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 
+pytestmark = pytest.mark.live
+
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 def test_ws_futures_get_order_book(futuresClient):

@@ -23,14 +23,17 @@ def test_mock_gift_card_fetch_token_limit(liveClient):
         assert response == expected_response
 
 
+@pytest.mark.live
 def test_gift_card_fetch_token_limit(liveClient):
     liveClient.gift_card_fetch_token_limit(baseToken="BUSD")
 
 
+@pytest.mark.live
 def test_gift_card_fetch_rsa_public_key(liveClient):
     liveClient.gift_card_fetch_rsa_public_key()
 
 
+@pytest.mark.live
 def test_gift_card_create_verify_and_redeem(liveClient):
     # create a gift card
     response = liveClient.gift_card_create(token="USDT", amount=1.0)
@@ -46,6 +49,7 @@ def test_gift_card_create_verify_and_redeem(liveClient):
     assert response["data"]["referenceNo"] == redeem_response["data"]["referenceNo"]
 
 
+@pytest.mark.live
 def test_gift_card_create_dual_token_and_redeem(liveClient):
     response = liveClient.gift_card_create_dual_token(
         baseToken="USDT", faceToken="BNB", baseTokenAmount=1.0

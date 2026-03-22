@@ -1,6 +1,6 @@
 import pytest
 
-pytestmark = [pytest.mark.gift_card, pytest.mark.asyncio]
+pytestmark = [pytest.mark.gift_card, pytest.mark.asyncio, pytest.mark.live]
 
 
 async def test_gift_card_fetch_token_limit(liveClientAsync):

@@ -6,6 +6,8 @@ from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConn
 from .test_get_order_book import assert_ob
 from .test_order import assert_contract_order
 
+pytestmark = pytest.mark.live
+
 try:
     from unittest.mock import patch  # Python 3.8+
 except ImportError:
@@ -59,9 +61,9 @@ async def test_ws_futures_get_order_book_ticker(futuresClientAsync):
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
 async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClientAsync):
-    if 'orjson' not in sys.modules:
+    if "orjson" not in sys.modules:
         raise ImportError("orjson is not available")
-    
+
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
     positions = await futuresClientAsync.ws_futures_v2_account_position(
         symbol="LTCUSDT"
@@ -92,11 +94,16 @@ async def test_ws_futures_create_get_edit_cancel_order_with_orjson(futuresClient
         orderid=order["orderId"], symbol=order["symbol"]
     )
 
+
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")
 @pytest.mark.asyncio()
-async def test_ws_futures_create_get_edit_cancel_order_without_orjson(futuresClientAsync):
-    with patch.dict('sys.modules', {'orjson': None}):
-        ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
+async def test_ws_futures_create_get_edit_cancel_order_without_orjson(
+    futuresClientAsync,
+):
+    with patch.dict("sys.modules", {"orjson": None}):
+        ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(
+            symbol="LTCUSDT"
+        )
         positions = await futuresClientAsync.ws_futures_v2_account_position(
             symbol="LTCUSDT"
         )
@@ -170,7 +177,11 @@ async def test_ws_futures_fail_to_connect(futuresClientAsync):
     await futuresClientAsync.close_connection()
 
     # Mock the WebSocket API's connect method to raise an exception
-    with patch.object(futuresClientAsync.ws_future, 'connect', side_effect=ConnectionError("Simulated connection failure")):
+    with patch.object(
+        futuresClientAsync.ws_future,
+        "connect",
+        side_effect=ConnectionError("Simulated connection failure"),
+    ):
         with pytest.raises(BinanceWebsocketUnableToConnect):
             await futuresClientAsync.ws_futures_get_order_book(symbol="BTCUSDT")
 
@@ -180,7 +191,9 @@ async def test_ws_futures_fail_to_connect(futuresClientAsync):
 async def test_ws_futures_create_cancel_algo_order(futuresClientAsync):
     """Test creating and canceling an algo order via websocket async"""
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
-    positions = await futuresClientAsync.ws_futures_v2_account_position(symbol="LTCUSDT")
+    positions = await futuresClientAsync.ws_futures_v2_account_position(
+        symbol="LTCUSDT"
+    )
 
     # Create an algo order
     order = await futuresClientAsync.ws_futures_create_algo_order(
@@ -210,7 +223,9 @@ async def test_ws_futures_create_cancel_algo_order(futuresClientAsync):
 async def test_ws_futures_create_conditional_order_auto_routing(futuresClientAsync):
     """Test that conditional order types are automatically routed to algo endpoint"""
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
-    positions = await futuresClientAsync.ws_futures_v2_account_position(symbol="LTCUSDT")
+    positions = await futuresClientAsync.ws_futures_v2_account_position(
+        symbol="LTCUSDT"
+    )
 
     # Create a STOP_MARKET order using ws_futures_create_order
     # It should automatically route to the algo endpoint
@@ -241,7 +256,9 @@ async def test_ws_futures_create_conditional_order_auto_routing(futuresClientAsy
 async def test_ws_futures_conditional_order_with_stop_price(futuresClientAsync):
     """Test that stopPrice is converted to triggerPrice for conditional orders"""
     ticker = await futuresClientAsync.ws_futures_get_order_book_ticker(symbol="LTCUSDT")
-    positions = await futuresClientAsync.ws_futures_v2_account_position(symbol="LTCUSDT")
+    positions = await futuresClientAsync.ws_futures_v2_account_position(
+        symbol="LTCUSDT"
+    )
 
     # Create a TAKE_PROFIT_MARKET order with stopPrice (should be converted to triggerPrice)
     # Use a price above current market price for SELL TAKE_PROFIT
