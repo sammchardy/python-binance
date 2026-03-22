@@ -1,9 +1,21 @@
 [tool.ruff]
 preview = true
-lint.ignore = ["F722","F841","F821","E402","E501","E902","E713","E741","E714", "E275","E721","E266", "E261"]
+lint.ignore = [
+    "F722","F841","F821","E402","E501","E902","E713","E741","E714",
+    "E275","E721","E266","E261",
+    # Type annotation modernization (fix gradually)
+    "FA100","FA102","UP004","UP006","UP008","UP009","UP028","UP031","UP032","UP035",
+    # Import sorting (fix gradually)
+    "I001",
+    # Code style (fix gradually)
+    "B006","B017","BLE001","C402","DTZ004","DTZ005","EXE001","EXE002",
+    "FURB167","N999","PIE790","PIE808","PLC0414","PLR1711","PLR2044",
+    "RUF010","RUF100","S102","S110",
+    "SIM102","SIM117","SIM118","SIM401",
+    "TRY002","TRY004","TRY201",
+]
 
 [tool.pytest.ini_options]
 timeout = 90
 timeout_method = "thread"
 asyncio_default_fixture_loop_scope = "function"
-
