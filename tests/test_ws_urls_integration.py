@@ -249,7 +249,7 @@ class TestTestnetEnvironment:
         sock = bsm.aggtrade_futures_socket("btcusdt")
         assert (
             _ws_url(sock)
-            == "wss://stream.binancefuture.com/market/stream?streams=btcusdt@aggTrade"
+            == "wss://fstream.binancefuture.com/market/stream?streams=btcusdt@aggTrade"
         )
 
     def test_depth_testnet(self, testnet_client):
@@ -257,7 +257,7 @@ class TestTestnetEnvironment:
         sock = bsm.futures_depth_socket("btcusdt")
         assert (
             _ws_url(sock)
-            == "wss://stream.binancefuture.com/public/stream?streams=btcusdt@depth10"
+            == "wss://fstream.binancefuture.com/public/stream?streams=btcusdt@depth10"
         )
 
 
