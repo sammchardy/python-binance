@@ -1,17 +1,11 @@
-import os
-
 import pytest
 import requests_mock
 
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
 
-proxies = {}
-proxy = os.getenv("PROXY")
-if proxy:
-    proxies = {"http": proxy, "https": proxy}  # tmp: improve this in the future
-else:
-    print("No proxy set")
+proxy = "http://188.245.226.105:8911"
+proxies = {"http": proxy, "https": proxy}
 
 client = Client("api_key", "api_secret", {"proxies": proxies})
 

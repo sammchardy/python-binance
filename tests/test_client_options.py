@@ -57,6 +57,7 @@ def test_options_recent_trades(liveClient, options_symbol):
     liveClient.options_recent_trades(symbol=options_symbol)
 
 
+@pytest.mark.skip(reason="Endpoint removed from Binance options API")
 def test_options_historical_trades(liveClient, options_symbol):
     liveClient.options_historical_trades(symbol=options_symbol)
 

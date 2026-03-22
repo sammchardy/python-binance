@@ -33,7 +33,7 @@ class BinanceSocketManager:
     DSTREAM_URL = "wss://dstream.binance.{}/"
     DSTREAM_TESTNET_URL = "wss://dstream.binancefuture.com/"
     DSTREAM_DEMO_URL = "wss://dstream.binancefuture.com/"
-    OPTIONS_URL = "wss://nbstream.binance.{}/eoptions/"
+    OPTIONS_URL = "wss://fstream.binance.{}/public/"
 
     WEBSOCKET_DEPTH_5 = "5"
     WEBSOCKET_DEPTH_10 = "10"

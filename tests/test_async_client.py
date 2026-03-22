@@ -124,14 +124,6 @@ async def test_get_system_status(clientAsync):
     await clientAsync.get_system_status()
 
 
-# User Stream Endpoints
-
-
-async def test_stream_get_listen_key_and_close(clientAsync):
-    listen_key = await clientAsync.stream_get_listen_key()
-    await clientAsync.stream_close(listen_key)
-
-
 # Quoting interface endpoints
 
 

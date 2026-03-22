@@ -6,10 +6,12 @@ import pytest
 from binance import BinanceSocketManager
 
 pytestmark = [
+    pytest.mark.skip(reason="Binance options websocket service unavailable"),
     pytest.mark.skipif(
         sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+"
     ),
     pytest.mark.asyncio,
+    pytest.mark.timeout(15),
 ]
 
 # Configure logger for this module

@@ -167,12 +167,14 @@ async def test_receive_valid_json():
 @pytest.mark.asyncio
 async def test_connect_fails_to_connect_on_enter_context():
     """Test ws.connect raises a ConnectionClosedError."""
-    ws = ReconnectingWebsocket(url="wss://test.url")
-    ws._conn = AsyncMock()
+    mock_conn = AsyncMock()
     exception = ConnectionError("Connection closed")
-    ws._conn.__aenter__.side_effect = exception
-    with pytest.raises(ConnectionError):
-        await ws.__aenter__()
+    mock_conn.__aenter__.side_effect = exception
+
+    with patch("websockets.connect", return_value=mock_conn):
+        ws = ReconnectingWebsocket(url="wss://test.url")
+        with pytest.raises(ConnectionError):
+            await ws.__aenter__()
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="Requires Python 3.8+")

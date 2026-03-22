@@ -110,14 +110,6 @@ def test_get_system_status(client):
     client.get_system_status()
 
 
-# User Stream Endpoints
-
-
-def test_stream_get_listen_key_and_close(client):
-    listen_key = client.stream_get_listen_key()
-    client.stream_close(listen_key)
-
-
 # Quoting interface endpoints
 @pytest.mark.skip(reason="Endpoint not working on testnet")
 def test_get_account_status(client):

@@ -58,6 +58,7 @@ async def test_options_recent_trades(liveClientAsync, options_symbol):
     await liveClientAsync.options_recent_trades(symbol=options_symbol)
 
 
+@pytest.mark.skip(reason="Endpoint removed from Binance options API")
 async def test_options_historical_trades(liveClientAsync, options_symbol):
     await liveClientAsync.options_historical_trades(symbol=options_symbol)
 
