@@ -1,5 +1,14 @@
 Changelog
 
+v1.0.36 - 2026-03-24
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+- feat: USD-M futures WebSocket URL category support #1684
+
+**Fixed**
+- fix: propagate connection errors to subscription queues #1681
+
 v1.0.35 - 2026-02-16
 ^^^^^^^^^^^^^^^^^^^^
 
