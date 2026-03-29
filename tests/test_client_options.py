@@ -2,7 +2,12 @@ import pytest
 import sys
 
 
-pytestmark = [pytest.mark.options, pytest.mark.skipif(sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+")]
+pytestmark = [
+    pytest.mark.options,
+    pytest.mark.skipif(
+        sys.version_info < (3, 8), reason="websockets_proxy Python 3.8+"
+    ),
+]
 
 
 @pytest.fixture
@@ -52,6 +57,7 @@ def test_options_recent_trades(liveClient, options_symbol):
     liveClient.options_recent_trades(symbol=options_symbol)
 
 
+@pytest.mark.skip(reason="Endpoint removed from Binance options API")
 def test_options_historical_trades(liveClient, options_symbol):
     liveClient.options_historical_trades(symbol=options_symbol)
 

@@ -1,5 +1,14 @@
 Changelog
 
+v1.0.36 - 2026-03-24
+^^^^^^^^^^^^^^^^^^^^
+
+**Added**
+- feat: USD-M futures WebSocket URL category support #1684
+
+**Fixed**
+- fix: propagate connection errors to subscription queues #1681
+
 v1.0.35 - 2026-02-16
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -13,6 +22,7 @@ v1.0.35 - 2026-02-16
 - fix: reconnects for websocket connection closed ok and ws-api by @pcriadoperez in https://github.com/sammchardy/python-binance/pull/1655
 
 v1.0.34 - 2025-12-16
+^^^^^^^^^^^^^^^^^^^^
 
 **Added**
 - verbose mode for inspecting requests (verbose=True) (#1642)
