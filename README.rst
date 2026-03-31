@@ -310,6 +310,27 @@ Python-binance also supports `orjson` for parsing JSON since it is much faster t
 
 However, `orjson` is not enabled by default because it is not supported by every python interpreter. If you want to opt-in, you just need to install it (`pip install orjson`) on your local environment. Python-binance will detect the installion and pick it up automatically.
 
+LLM & AI Agent Support
+----------------------
+
+This library includes resources to help AI coding assistants (Claude Code, Cursor, Copilot, etc.):
+
+- ``llms.txt`` — Concise library overview for LLMs (`llmstxt.org <https://llmstxt.org>`_ standard)
+- ``llms-full.txt`` — Complete API reference for LLMs (all 797+ methods with signatures and parameters)
+- ``.agents/skills/python-binance/`` — Agent Skill (works with any `Agent Skills <https://agentskills.io>`_ compatible tool)
+- ``generate_llms_txt.py`` — Script to regenerate the LLM files after library updates
+
+**Install the agent skill** into any project or globally with `npx skills <https://www.npmjs.com/package/skills>`_
+(works with Claude Code, Cursor, Copilot, Gemini CLI, Goose, Roo Code, and 30+ other agents):
+
+.. code:: bash
+
+    # Install into the current project
+    npx -y skills add sammchardy/python-binance
+
+    # Install globally (available in all projects)
+    npx -y skills add sammchardy/python-binance --global
+
 Star history
 ------------
 

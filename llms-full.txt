@@ -1,0 +1,844 @@
+# python-binance — Full Method Reference
+
+> Auto-generated reference for all 797 public methods in python-binance.
+> For a concise overview, see llms.txt.
+
+## Table of Contents
+
+- [Convert](#convert) (2 methods)
+- [Futures Coin-M](#futures-coin-m) (65 methods)
+- [Futures USD-M](#futures-usd-m) (109 methods)
+- [Gift Card](#gift-card) (6 methods)
+- [Margin](#margin) (211 methods)
+- [Options](#options) (46 methods)
+- [Portfolio Margin](#portfolio-margin) (103 methods)
+- [Spot / General](#spot--general) (197 methods)
+- [WebSocket API](#websocket-api) (43 methods)
+- [WebSocket Futures](#websocket-futures) (15 methods)
+
+## Convert
+
+- `client.convert_accept_quote(quoteId, recvWindow)` — Accept the offered quote by quote ID.
+- `client.convert_request_quote(fromAsset, toAsset, fromAmount, toAmount, recvWindow)` — Request a quote for the requested token pairs
+
+## Futures Coin-M
+
+- `client.futures_coin_account()` — Get current account information.
+- `client.futures_coin_account_balance()` — Get futures account balance
+- `client.futures_coin_account_order_history_download(startTime, endTime, recvWindow)` — Get Download Id For Futures Order History
+- `client.futures_coin_account_trade_history_download(startTime, endTime)` — Get Download Id For Futures Trade History (USER_DATA)
+- `client.futures_coin_account_trade_history_download_link(downloadId)` — Get futures trade download link by Id
+- `client.futures_coin_account_trades()` — Get trades for the authenticated account and symbol.
+- `client.futures_coin_accout_order_history_download_link(downloadId, recvWindow)` — Get futures order history download link by Id
+- `client.futures_coin_aggregate_trades()` — Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have th...
+- `client.futures_coin_basis()` — Get future basis of a specific symbol
+- `client.futures_coin_cancel_all_open_orders()` — Cancel all open futures orders
+- `client.futures_coin_cancel_order()` — Cancel an active futures order.
+- `client.futures_coin_cancel_orders()` — Cancel multiple futures orders
+- `client.futures_coin_change_leverage()` — Change user's initial leverage of specific symbol market
+- `client.futures_coin_change_margin_type()` — Change the margin type for a symbol
+- `client.futures_coin_change_position_margin()` — Change the position margin for a symbol
+- `client.futures_coin_change_position_mode()` — Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
+- `client.futures_coin_continous_klines()` — Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
+- `client.futures_coin_countdown_cancel_all(symbol, countdownTime, recvWindow)` — Cancel all open orders of the specified symbol at the end of the specified countdown.
+- `client.futures_coin_create_order()` — Send in a new order.
+- `client.futures_coin_exchange_info()` — Current exchange trading rules and symbol information
+- `client.futures_coin_funding_rate()` — Get funding rate history
+- `client.futures_coin_get_all_orders()` — Get all futures account orders; active, canceled, or filled.
+- `client.futures_coin_get_open_order()` — Get current open order.
+- `client.futures_coin_get_open_orders()` — Get all open orders on a symbol.
+- `client.futures_coin_get_order()` — Check an order's status.
+- `client.futures_coin_get_position_mode()` — Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
+- `client.futures_coin_global_longshort_ratio()` — Get present long to short ratio for top positions of a specific symbol.
+- `client.futures_coin_historical_trades()` — Get older market historical trades.
+- `client.futures_coin_income_history()` — Get income history for authenticated account
+- `client.futures_coin_index_price_constituents()` — Get index price constituents
+- `client.futures_coin_index_price_klines()` — Kline/candlestick bars for the index price of a pair..
+- `client.futures_coin_klines()` — Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+- `client.futures_coin_leverage_bracket()` — Notional and Leverage Brackets
+- `client.futures_coin_liquidation_orders()` — Get all liquidation orders
+- `client.futures_coin_mark_price()` — Get Mark Price and Funding Rate
+- `client.futures_coin_mark_price_klines()` — Kline/candlestick bars for the index price of a pair..
+- `client.futures_coin_modify_order()` — Modify an existing order. Currently only LIMIT order modification is supported.
+- `client.futures_coin_open_interest()` — Get present open interest of a specific symbol.
+- `client.futures_coin_open_interest_hist()` — Get open interest statistics of a specific symbol.
+- `client.futures_coin_order_book()` — Get the Order Book for the market
+- `client.futures_coin_orderbook_ticker()` — Best price/qty on the order book for a symbol or symbols.
+- `client.futures_coin_ping()` — Test connectivity to the Rest API
+- `client.futures_coin_place_batch_order()` — Send in new orders. To avoid modifying the existing signature generation and parameter order logic, the url encoding ...
+- `client.futures_coin_position_information()` — Get position information
+- `client.futures_coin_position_margin_history()` — Get position margin change history
+- `client.futures_coin_premium_index_klines()` — Kline/candlestick bars for the index price of a pair..
+- `client.futures_coin_recent_trades()` — Get recent trades (up to last 500).
+- `client.futures_coin_stream_close(listenKey)`
+- `client.futures_coin_stream_get_listen_key()`
+- `client.futures_coin_stream_keepalive(listenKey)`
+- `client.futures_coin_symbol_ticker()` — Latest price for a symbol or symbols.
+- `client.futures_coin_taker_buy_sell_volume()` — Get present long to short ratio for top positions of a specific symbol.
+- `client.futures_coin_ticker()` — 24 hour rolling window price change statistics.
+- `client.futures_coin_time()` — Test connectivity to the Rest API and get the current server time.
+- `client.futures_coin_top_longshort_account_ratio()` — Get present long to short ratio for top positions of a specific symbol.
+- `client.futures_coin_top_longshort_position_ratio()` — Get present long to short ratio for top positions of a specific symbol.
+- `client.futures_coin_v1_get_adl_quantile(params)`
+- `client.futures_coin_v1_get_commission_rate(params)`
+- `client.futures_coin_v1_get_funding_info(params)`
+- `client.futures_coin_v1_get_income_asyn(params)`
+- `client.futures_coin_v1_get_income_asyn_id(params)`
+- `client.futures_coin_v1_get_order_amendment(params)`
+- `client.futures_coin_v1_get_pm_account_info(params)`
+- `client.futures_coin_v1_put_batch_orders(params)`
+- `client.futures_coin_v1_put_order(params)`
+
+## Futures USD-M
+
+- `client.futures_account()` — Get current account information.
+- `client.futures_account_balance()` — Get futures account balance
+- `client.futures_account_config()` — Get futures account configuration
+- `client.futures_account_trades()` — Get trades for the authenticated account and symbol.
+- `client.futures_account_transfer()` — Execute transfer between spot account and futures account.
+- `client.futures_adl_quantile_estimate()` — Get Position ADL Quantile Estimate
+- `client.futures_aggregate_trades()` — Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have th...
+- `client.futures_api_trading_status(symbol)` — Get quantitative trading rules for order placement, such as Unfilled Ratio (UFR), Good-Til-Canceled Ratio (GCR), Imme...
+- `client.futures_basis()` — Get future basis of a specific symbol
+- `client.futures_cancel_algo_order(symbol, algoId, clientAlgoId, recvWindow)` — Cancel an active algo order.
+- `client.futures_cancel_all_algo_open_orders(symbol, recvWindow)` — Cancel all open algo orders
+- `client.futures_cancel_all_open_orders(conditional)` — Cancel all open futures orders
+- `client.futures_cancel_order(conditional, algoId, clientAlgoId)` — Cancel an active futures order.
+- `client.futures_cancel_orders()` — Cancel multiple futures orders
+- `client.futures_change_leverage()` — Change user's initial leverage of specific symbol market
+- `client.futures_change_margin_type()` — Change the margin type for a symbol
+- `client.futures_change_multi_assets_mode(multiAssetsMargin)` — Change user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
+- `client.futures_change_position_margin()` — Change the position margin for a symbol
+- `client.futures_change_position_mode()` — Change position mode for authenticated account
+- `client.futures_commission_rate(symbol)` — Get Futures commission rate
+- `client.futures_continuous_klines()` — Kline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.
+- `client.futures_countdown_cancel_all(symbol, countdownTime, recvWindow)` — Cancel all open orders of the specified symbol at the end of the specified countdown.
+- `client.futures_create_algo_order(algoType, symbol, side, positionSide, type, timeInForce, quantity, price, triggerPrice, workingType, priceMatch, closePosition, priceProtect, reduceOnly, activatePrice, callbackRate, clientAlgoId, newOrderRespType, selfTradePreventionMode, goodTillDate, recvWindow)` — Send in a new algo order (conditional order).
+- `client.futures_create_order()` — Send in a new order. Note: After 2025-12-09, conditional order types (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MAR...
+- `client.futures_create_test_order()` — Testing order request, this order will not be submitted to matching engine
+- `client.futures_cross_collateral_adjust_history()`
+- `client.futures_cross_collateral_liquidation_history()`
+- `client.futures_delivery_price()` — Get latest price for a symbol or symbols
+- `client.futures_exchange_info()` — Current exchange trading rules and symbol information
+- `client.futures_funding_rate()` — Get funding rate history
+- `client.futures_get_algo_order(symbol, algoId, clientAlgoId, recvWindow)` — Check an algo order's status.
+- `client.futures_get_all_algo_orders(symbol, startTime, endTime, limit, recvWindow)` — Get all algo account orders; active, canceled, or filled.
+- `client.futures_get_all_orders(conditional)` — Get all futures account orders; active, canceled, or filled.
+- `client.futures_get_multi_assets_mode()` — Get user's Multi-Assets mode (Multi-Assets Mode or Single-Asset Mode) on Every symbol
+- `client.futures_get_open_algo_orders(symbol, recvWindow)` — Get all open algo orders on a symbol.
+- `client.futures_get_open_orders(conditional)` — Get all open orders on a symbol.
+- `client.futures_get_order(conditional, algoId, clientAlgoId)` — Check an order's status.
+- `client.futures_get_position_mode()` — Get position mode for authenticated account
+- `client.futures_global_longshort_ratio()` — Get present global long to short ratio of a specific symbol.
+- `client.futures_historical_data_link(symbol, dataType, startTime, endTime, recvWindow, timestamp)` — Get Future TickLevel Orderbook Historical Data Download Link.
+- `client.futures_historical_klines(symbol, interval, start_str, end_str, limit)` — Get historical futures klines from Binance
+- `client.futures_historical_klines_generator(symbol, interval, start_str, end_str)` — Get historical futures klines generator from Binance
+- `client.futures_historical_mark_price_klines(symbol, interval, start_str, end_str, limit)` — Get historical futures mark price klines from Binance
+- `client.futures_historical_trades()` — Get older market historical trades.
+- `client.futures_income_history()` — Get income history for authenticated account
+- `client.futures_index_info()` — Get index_info
+- `client.futures_index_price_constituents()` — Get index price constituents
+- `client.futures_index_price_klines()` — Kline/candlestick bars for the index price of a symbol. Klines are uniquely identified by their open time.
+- `client.futures_insurance_fund_balance_snapshot()` — Get Insurance Fund Balance Snapshot
+- `client.futures_klines()` — Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+- `client.futures_leverage_bracket()` — Notional and Leverage Brackets
+- `client.futures_limit_buy_order()` — Send in a new futures limit buy order.
+- `client.futures_limit_order()` — Send in a new futures limit order.
+- `client.futures_limit_sell_order()` — Send in a new futures limit sell order.
+- `client.futures_liquidation_orders()` — Get all liquidation orders
+- `client.futures_loan_borrow_history()`
+- `client.futures_loan_interest_history()`
+- `client.futures_loan_repay_history()`
+- `client.futures_loan_wallet()`
+- `client.futures_mark_price()` — Get Mark Price and Funding Rate
+- `client.futures_mark_price_klines()` — Kline/candlestick bars for the mark price of a symbol. Klines are uniquely identified by their open time.
+- `client.futures_market_buy_order()` — Send in a new futures market buy order.
+- `client.futures_market_order()` — Send in a new futures market order.
+- `client.futures_market_sell_order()` — Send in a new futures market sell order.
+- `client.futures_modify_order()` — Modify an existing order. Currently only LIMIT order modification is supported.
+- `client.futures_open_interest()` — Get present open interest of a specific symbol.
+- `client.futures_open_interest_hist()` — Get open interest statistics of a specific symbol.
+- `client.futures_order_book()` — Get the Order Book for the market
+- `client.futures_orderbook_ticker()` — Best price/qty on the order book for a symbol or symbols.
+- `client.futures_ping()` — Test connectivity to the Rest API
+- `client.futures_place_batch_order()` — Send in new orders. To avoid modifying the existing signature generation and parameter order logic, the url encoding ...
+- `client.futures_position_information()` — Get position information
+- `client.futures_position_margin_history()` — Get position margin change history
+- `client.futures_premium_index_klines()` — Premium index kline bars of a symbol.l. Klines are uniquely identified by their open time.
+- `client.futures_recent_trades()` — Get recent trades (up to last 500).
+- `client.futures_rpi_depth(symbol, limit)` — Get RPI Order Book with Retail Price Improvement orders
+- `client.futures_stream_close(listenKey)`
+- `client.futures_stream_get_listen_key()`
+- `client.futures_stream_keepalive(listenKey)`
+- `client.futures_symbol_adl_risk(symbol)` — Query the symbol-level ADL (Auto-Deleveraging) risk rating The ADL risk rating measures the likelihood of ADL during ...
+- `client.futures_symbol_config()` — Get current account symbol configuration
+- `client.futures_symbol_ticker()` — Latest price for a symbol or symbols.
+- `client.futures_taker_longshort_ratio()` — Get taker buy to sell volume ratio of a specific symbol
+- `client.futures_ticker()` — 24 hour rolling window price change statistics.
+- `client.futures_time()` — Test connectivity to the Rest API and get the current server time.
+- `client.futures_top_longshort_account_ratio()` — Get present long to short ratio for top accounts of a specific symbol.
+- `client.futures_top_longshort_position_ratio()` — Get present long to short ratio for top positions of a specific symbol.
+- `client.futures_v1_delete_batch_order(params)`
+- `client.futures_v1_get_asset_index(params)`
+- `client.futures_v1_get_convert_exchange_info(params)`
+- `client.futures_v1_get_convert_order_status(params)`
+- `client.futures_v1_get_fee_burn(params)`
+- `client.futures_v1_get_funding_info(params)`
+- `client.futures_v1_get_income_asyn(params)`
+- `client.futures_v1_get_income_asyn_id(params)`
+- `client.futures_v1_get_open_order(params)`
+- `client.futures_v1_get_order_amendment(params)`
+- `client.futures_v1_get_order_asyn(params)`
+- `client.futures_v1_get_order_asyn_id(params)`
+- `client.futures_v1_get_pm_account_info(params)`
+- `client.futures_v1_get_rate_limit_order(params)`
+- `client.futures_v1_get_trade_asyn(params)`
+- `client.futures_v1_get_trade_asyn_id(params)`
+- `client.futures_v1_post_batch_order(params)`
+- `client.futures_v1_post_convert_accept_quote(params)`
+- `client.futures_v1_post_convert_get_quote(params)`
+- `client.futures_v1_post_fee_burn(params)`
+- `client.futures_v1_put_batch_order(params)`
+- `client.futures_v1_put_batch_orders(params)`
+
+## Gift Card
+
+- `client.gift_card_create(token, amount)` — This API is for creating a Binance Gift Card. To get started with, please make sure: - You have a Binance account - Y...
+- `client.gift_card_create_dual_token(baseToken, faceToken, discount)` — This API is for creating a dual-token ( stablecoin-denominated) Binance Gift Card. You may create a gift card using U...
+- `client.gift_card_fetch_rsa_public_key(recvWindow)` — This API is for fetching the RSA Public Key. This RSA Public key will be used to encrypt the card code. Important Not...
+- `client.gift_card_fetch_token_limit(baseToken)` — Verify which tokens are available for you to create Stablecoin-Denominated gift cards
+- `client.gift_card_redeem(code, externalUid, recvWindow)` — This API is for redeeming a Binance Gift Card. Once redeemed, the coins will be deposited in your funding wallet. Imp...
+- `client.gift_card_verify(referenceNo)` — This API is for verifying whether the Binance Gift Card is valid or not by entering Gift Card Number. Important Note:...
+
+## Margin
+
+- `client.margin_borrow_repay(asset, amount, isIsolated, symbol, type)` — Margin Account Borrow/Repay (MARGIN)
+- `client.margin_create_listen_token(symbol, is_isolated, validity)` — Create a listenToken for margin account user data stream
+- `client.margin_get_borrow_repay_records(asset, isolatedSymbol, txId, startTime, endTime, current, size)` — Query Query borrow/repay records in Margin account (USER_DATA)
+- `client.margin_interest_history(asset, isolatedSymbol, startTime, endTime, current, size)` — Get Interest History (USER_DATA)
+- `client.margin_interest_rate_history(asset, vipLevel, startTime, endTime)` — Query Margin Interest Rate History (USER_DATA)
+- `client.margin_manual_liquidation(type)`
+- `client.margin_max_borrowable(asset, isolatedSymbol)` — Query Max Borrow (USER_DATA)
+- `client.margin_next_hourly_interest_rate(assets, isIsolated)` — Get future hourly interest rate (USER_DATA)
+- `client.margin_stream_close(listenKey)` — Close out a cross-margin data stream.
+- `client.margin_stream_get_listen_key()` — Start a new cross-margin data stream and return the listen key If a stream already exists it should return the same k...
+- `client.margin_stream_keepalive(listenKey)` — PING a cross-margin data stream to prevent a time out.
+- `client.margin_v1_delete_account_api_restrictions_ip_restriction_ip_list(params)`
+- `client.margin_v1_delete_algo_spot_order(params)`
+- `client.margin_v1_delete_broker_sub_account_api(params)`
+- `client.margin_v1_delete_broker_sub_account_api_ip_restriction_ip_list(params)`
+- `client.margin_v1_delete_sub_account_sub_account_api_ip_restriction_ip_list(params)`
+- `client.margin_v1_get_account_api_restrictions_ip_restriction(params)`
+- `client.margin_v1_get_account_info(params)`
+- `client.margin_v1_get_algo_spot_historical_orders(params)`
+- `client.margin_v1_get_algo_spot_open_orders(params)`
+- `client.margin_v1_get_algo_spot_sub_orders(params)`
+- `client.margin_v1_get_asset_custody_transfer_history(params)`
+- `client.margin_v1_get_asset_ledger_transfer_cloud_mining_query_by_page(params)`
+- `client.margin_v1_get_asset_wallet_balance(params)`
+- `client.margin_v1_get_broker_rebate_futures_recent_record(params)`
+- `client.margin_v1_get_broker_rebate_historical_record(params)`
+- `client.margin_v1_get_broker_rebate_recent_record(params)`
+- `client.margin_v1_get_broker_sub_account(params)`
+- `client.margin_v1_get_broker_sub_account_api(params)`
+- `client.margin_v1_get_broker_sub_account_api_commission_coin_futures(params)`
+- `client.margin_v1_get_broker_sub_account_api_commission_futures(params)`
+- `client.margin_v1_get_broker_sub_account_api_ip_restriction(params)`
+- `client.margin_v1_get_broker_sub_account_bnb_burn_status(params)`
+- `client.margin_v1_get_broker_sub_account_deposit_hist(params)`
+- `client.margin_v1_get_broker_sub_account_futures_summary(params)`
+- `client.margin_v1_get_broker_sub_account_margin_summary(params)`
+- `client.margin_v1_get_broker_sub_account_spot_summary(params)`
+- `client.margin_v1_get_broker_transfer(params)`
+- `client.margin_v1_get_broker_transfer_futures(params)`
+- `client.margin_v1_get_broker_universal_transfer(params)`
+- `client.margin_v1_get_capital_contract_convertible_coins(params)`
+- `client.margin_v1_get_capital_deposit_address_list(params)`
+- `client.margin_v1_get_convert_asset_info(params)`
+- `client.margin_v1_get_convert_exchange_info(params)`
+- `client.margin_v1_get_convert_limit_query_open_orders(params)`
+- `client.margin_v1_get_convert_order_status(params)`
+- `client.margin_v1_get_copy_trading_futures_lead_symbol(params)`
+- `client.margin_v1_get_copy_trading_futures_user_status(params)`
+- `client.margin_v1_get_dci_product_accounts(params)`
+- `client.margin_v1_get_dci_product_list(params)`
+- `client.margin_v1_get_dci_product_positions(params)`
+- `client.margin_v1_get_eth_staking_eth_history_redemption_history(params)`
+- `client.margin_v1_get_eth_staking_eth_history_staking_history(params)`
+- `client.margin_v1_get_eth_staking_eth_history_wbeth_rewards_history(params)`
+- `client.margin_v1_get_lending_auto_invest_all_asset(params)`
+- `client.margin_v1_get_lending_auto_invest_history_list(params)`
+- `client.margin_v1_get_lending_auto_invest_index_info(params)`
+- `client.margin_v1_get_lending_auto_invest_index_user_summary(params)`
+- `client.margin_v1_get_lending_auto_invest_one_off_status(params)`
+- `client.margin_v1_get_lending_auto_invest_plan_id(params)`
+- `client.margin_v1_get_lending_auto_invest_plan_list(params)`
+- `client.margin_v1_get_lending_auto_invest_rebalance_history(params)`
+- `client.margin_v1_get_lending_auto_invest_redeem_history(params)`
+- `client.margin_v1_get_lending_auto_invest_source_asset_list(params)`
+- `client.margin_v1_get_lending_auto_invest_target_asset_list(params)`
+- `client.margin_v1_get_lending_auto_invest_target_asset_roi_list(params)`
+- `client.margin_v1_get_loan_borrow_history(params)`
+- `client.margin_v1_get_loan_collateral_data(params)`
+- `client.margin_v1_get_loan_income(params)`
+- `client.margin_v1_get_loan_loanable_data(params)`
+- `client.margin_v1_get_loan_ltv_adjustment_history(params)`
+- `client.margin_v1_get_loan_ongoing_orders(params)`
+- `client.margin_v1_get_loan_repay_collateral_rate(params)`
+- `client.margin_v1_get_loan_repay_history(params)`
+- `client.margin_v1_get_loan_vip_collateral_account(params)`
+- `client.margin_v1_get_loan_vip_loanable_data(params)`
+- `client.margin_v1_get_loan_vip_ongoing_orders(params)`
+- `client.margin_v1_get_loan_vip_repay_history(params)`
+- `client.margin_v1_get_loan_vip_request_interest_rate(params)`
+- `client.margin_v1_get_localentity_deposit_history(params)`
+- `client.margin_v1_get_localentity_vasp(params)`
+- `client.margin_v1_get_localentity_withdraw_history(params)`
+- `client.margin_v1_get_managed_subaccount_account_snapshot(params)`
+- `client.margin_v1_get_managed_subaccount_asset(params)`
+- `client.margin_v1_get_managed_subaccount_deposit_address(params)`
+- `client.margin_v1_get_managed_subaccount_fetch_future_asset(params)`
+- `client.margin_v1_get_managed_subaccount_info(params)`
+- `client.margin_v1_get_managed_subaccount_margin_asset(params)`
+- `client.margin_v1_get_managed_subaccount_query_trans_log(params)`
+- `client.margin_v1_get_managed_subaccount_query_trans_log_for_investor(params)`
+- `client.margin_v1_get_managed_subaccount_query_trans_log_for_trade_parent(params)`
+- `client.margin_v1_get_margin_all_order_list(params)`
+- `client.margin_v1_get_margin_available_inventory(params)`
+- `client.margin_v1_get_margin_delist_schedule(params)`
+- `client.margin_v1_get_margin_leverage_bracket(params)`
+- `client.margin_v1_get_margin_rate_limit_order(params)`
+- `client.margin_v1_get_margin_trade_coeff(params)`
+- `client.margin_v1_get_mining_hash_transfer_config_details_list(params)`
+- `client.margin_v1_get_mining_hash_transfer_profit_details(params)`
+- `client.margin_v1_get_mining_payment_list(params)`
+- `client.margin_v1_get_mining_payment_other(params)`
+- `client.margin_v1_get_mining_payment_uid(params)`
+- `client.margin_v1_get_mining_pub_algo_list(params)`
+- `client.margin_v1_get_mining_pub_coin_list(params)`
+- `client.margin_v1_get_mining_statistics_user_list(params)`
+- `client.margin_v1_get_mining_statistics_user_status(params)`
+- `client.margin_v1_get_mining_worker_detail(params)`
+- `client.margin_v1_get_mining_worker_list(params)`
+- `client.margin_v1_get_portfolio_balance(params)`
+- `client.margin_v1_get_simple_earn_flexible_history_redemption_record(params)`
+- `client.margin_v1_get_simple_earn_flexible_history_subscription_record(params)`
+- `client.margin_v1_get_simple_earn_locked_history_redemption_record(params)`
+- `client.margin_v1_get_simple_earn_locked_history_subscription_record(params)`
+- `client.margin_v1_get_sol_staking_account(params)`
+- `client.margin_v1_get_sol_staking_sol_history_bnsol_rewards_history(params)`
+- `client.margin_v1_get_sol_staking_sol_history_boost_rewards_history(params)`
+- `client.margin_v1_get_sol_staking_sol_history_rate_history(params)`
+- `client.margin_v1_get_sol_staking_sol_history_redemption_history(params)`
+- `client.margin_v1_get_sol_staking_sol_history_staking_history(params)`
+- `client.margin_v1_get_sol_staking_sol_history_unclaimed_rewards(params)`
+- `client.margin_v1_get_sol_staking_sol_quota(params)`
+- `client.margin_v1_get_spot_delist_schedule(params)`
+- `client.margin_v1_get_staking_staking_record(params)`
+- `client.margin_v1_get_sub_account_sub_account_api_ip_restriction(params)`
+- `client.margin_v1_get_sub_account_transaction_statistics(params)`
+- `client.margin_v1_post_account_api_restrictions_ip_restriction(params)`
+- `client.margin_v1_post_account_api_restrictions_ip_restriction_ip_list(params)`
+- `client.margin_v1_post_account_disable_fast_withdraw_switch(params)`
+- `client.margin_v1_post_account_enable_fast_withdraw_switch(params)`
+- `client.margin_v1_post_algo_futures_new_order_twap(params)`
+- `client.margin_v1_post_algo_futures_new_order_vp(params)`
+- `client.margin_v1_post_algo_spot_new_order_twap(params)`
+- `client.margin_v1_post_asset_convert_transfer(params)`
+- `client.margin_v1_post_asset_convert_transfer_query_by_page(params)`
+- `client.margin_v1_post_broker_sub_account(params)`
+- `client.margin_v1_post_broker_sub_account_api(params)`
+- `client.margin_v1_post_broker_sub_account_api_commission(params)`
+- `client.margin_v1_post_broker_sub_account_api_commission_coin_futures(params)`
+- `client.margin_v1_post_broker_sub_account_api_commission_futures(params)`
+- `client.margin_v1_post_broker_sub_account_api_ip_restriction(params)`
+- `client.margin_v1_post_broker_sub_account_api_ip_restriction_ip_list(params)`
+- `client.margin_v1_post_broker_sub_account_api_permission(params)`
+- `client.margin_v1_post_broker_sub_account_api_permission_universal_transfer(params)`
+- `client.margin_v1_post_broker_sub_account_api_permission_vanilla_options(params)`
+- `client.margin_v1_post_broker_sub_account_blvt(params)`
+- `client.margin_v1_post_broker_sub_account_bnb_burn_margin_interest(params)`
+- `client.margin_v1_post_broker_sub_account_bnb_burn_spot(params)`
+- `client.margin_v1_post_broker_transfer(params)`
+- `client.margin_v1_post_broker_transfer_futures(params)`
+- `client.margin_v1_post_broker_universal_transfer(params)`
+- `client.margin_v1_post_capital_contract_convertible_coins(params)`
+- `client.margin_v1_post_capital_deposit_credit_apply(params)`
+- `client.margin_v1_post_convert_limit_cancel_order(params)`
+- `client.margin_v1_post_convert_limit_place_order(params)`
+- `client.margin_v1_post_dci_product_auto_compound_edit_status(params)`
+- `client.margin_v1_post_dci_product_subscribe(params)`
+- `client.margin_v1_post_eth_staking_eth_redeem(params)`
+- `client.margin_v1_post_eth_staking_wbeth_unwrap(params)`
+- `client.margin_v1_post_eth_staking_wbeth_wrap(params)`
+- `client.margin_v1_post_lending_auto_invest_one_off(params)`
+- `client.margin_v1_post_lending_auto_invest_plan_add(params)`
+- `client.margin_v1_post_lending_auto_invest_plan_edit_status(params)`
+- `client.margin_v1_post_lending_auto_invest_redeem(params)`
+- `client.margin_v1_post_lending_customized_fixed_purchase(params)`
+- `client.margin_v1_post_lending_daily_purchase(params)`
+- `client.margin_v1_post_lending_daily_redeem(params)`
+- `client.margin_v1_post_loan_adjust_ltv(params)`
+- `client.margin_v1_post_loan_borrow(params)`
+- `client.margin_v1_post_loan_customize_margin_call(params)`
+- `client.margin_v1_post_loan_flexible_repay_history(params)`
+- `client.margin_v1_post_loan_repay(params)`
+- `client.margin_v1_post_loan_vip_borrow(params)`
+- `client.margin_v1_post_loan_vip_renew(params)`
+- `client.margin_v1_post_loan_vip_repay(params)`
+- `client.margin_v1_post_localentity_withdraw_apply(params)`
+- `client.margin_v1_post_managed_subaccount_deposit(params)`
+- `client.margin_v1_post_managed_subaccount_withdraw(params)`
+- `client.margin_v1_post_mining_hash_transfer_config(params)`
+- `client.margin_v1_post_mining_hash_transfer_config_cancel(params)`
+- `client.margin_v1_post_portfolio_mint(params)`
+- `client.margin_v1_post_portfolio_redeem(params)`
+- `client.margin_v1_post_portfolio_repay_futures_switch(params)`
+- `client.margin_v1_post_simple_earn_locked_set_redeem_option(params)`
+- `client.margin_v1_post_sol_staking_sol_claim(params)`
+- `client.margin_v1_post_sol_staking_sol_redeem(params)`
+- `client.margin_v1_post_sol_staking_sol_stake(params)`
+- `client.margin_v1_post_sub_account_blvt_enable(params)`
+- `client.margin_v1_post_sub_account_eoptions_enable(params)`
+- `client.margin_v1_post_sub_account_sub_account_api_ip_restriction(params)`
+- `client.margin_v1_post_sub_account_sub_account_api_ip_restriction_ip_list(params)`
+- `client.margin_v1_post_sub_account_virtual_sub_account(params)`
+- `client.margin_v1_put_localentity_deposit_provide_info(params)`
+- `client.margin_v2_get_broker_sub_account_futures_summary(params)`
+- `client.margin_v2_get_eth_staking_account(params)`
+- `client.margin_v2_get_loan_flexible_borrow_history(params)`
+- `client.margin_v2_get_loan_flexible_collateral_data(params)`
+- `client.margin_v2_get_loan_flexible_loanable_data(params)`
+- `client.margin_v2_get_loan_flexible_ltv_adjustment_history(params)`
+- `client.margin_v2_get_loan_flexible_ongoing_orders(params)`
+- `client.margin_v2_get_loan_flexible_repay_history(params)`
+- `client.margin_v2_get_loan_flexible_repay_rate(params)`
+- `client.margin_v2_get_localentity_withdraw_history(params)`
+- `client.margin_v2_get_portfolio_account(params)`
+- `client.margin_v2_get_portfolio_collateral_rate(params)`
+- `client.margin_v2_post_broker_sub_account_api_ip_restriction(params)`
+- `client.margin_v2_post_eth_staking_eth_stake(params)`
+- `client.margin_v2_post_loan_flexible_adjust_ltv(params)`
+- `client.margin_v2_post_loan_flexible_borrow(params)`
+- `client.margin_v2_post_loan_flexible_repay(params)`
+- `client.margin_v2_post_sub_account_sub_account_api_ip_restriction(params)`
+- `client.margin_v3_get_broker_sub_account_futures_summary(params)`
+
+## Options
+
+- `client.options_accept_block_trade_order(blockOrderMatchingKey, recvWindow)` — Accept Block Trade Order (TRADE) Accept a block trade order.
+- `client.options_account_get_block_trades(endTime, startTime, underlying, recvWindow)` — Account Block Trade List (USER_DATA) Gets block trades for a specific account.
+- `client.options_account_info(recvWindow)` — Account asset info (USER_DATA)
+- `client.options_bill(currency, recordId, startTime, endTime, limit, recvWindow)` — Account funding flow (USER_DATA)
+- `client.options_cancel_all_orders(symbol, recvWindow)` — Cancel all Option orders (TRADE)
+- `client.options_cancel_batch_order(symbol, orderIds, clientOrderIds, recvWindow)` — Cancel Multiple Option orders (TRADE)
+- `client.options_cancel_block_trade_order(blockOrderMatchingKey, recvWindow)` — Cancel Block Trade Order (TRADE)
+- `client.options_cancel_order(symbol, orderId, clientOrderId, recvWindow)` — Cancel Option order (TRADE)
+- `client.options_create_block_trade_order(liquidity, symbol, side, price, quantity, recvWindow)` — New Block Trade Order (TRADE)
+- `client.options_exchange_info()` — Get current limit info and trading pair info
+- `client.options_exercise_record(symbol, startTime, endTime, limit, recvWindow)` — Get account exercise records.
+- `client.options_extend_block_trade_order(blockOrderMatchingKey, recvWindow)` — Extend Block Trade Order (TRADE) Extends a block trade expire time by 30 mins from the current time.
+- `client.options_funds_transfer(currency, type, amount, recvWindow)` — Funds transfer (USER_DATA)
+- `client.options_get_bill(currency, recordId, startTime, endTime, limit, recvWindow)` — Get account funding flows
+- `client.options_get_block_trade_order(blockOrderMatchingKey, recvWindow)` — Query Block Trade Details (USER_DATA) Query block trade details; returns block trade details from counterparty's pers...
+- `client.options_get_block_trade_orders(blockOrderMatchingKey, endTime, startTime, underlying, recvWindow)` — Query Block Trade Order (TRADE) Check block trade order status.
+- `client.options_get_market_maker_protection_config(underlying, recvWindow)` — Get config for MMP.
+- `client.options_historical_trades(symbol, fromId, limit)` — Query trade history
+- `client.options_index_price(underlying)` — Get the spot index price
+- `client.options_info()` — Get current trading pair info
+- `client.options_klines(symbol, interval, startTime, endTime, limit)` — Candle data
+- `client.options_mark_price(symbol)` — Get the latest mark price
+- `client.options_open_interest(params, underlyingAsset, expiration)` — Get present open interest specific underlying asset on specific expiration date.
+- `client.options_order_book(symbol, limit)` — Depth information
+- `client.options_ping()` — Test connectivity
+- `client.options_place_batch_order(orders, recvWindow)` — Place Multiple Option orders (TRADE)
+- `client.options_place_order(symbol, side, type, quantity, price, timeInForce, reduceOnly, postOnly, newOrderRespType, clientOrderId, recvWindow)` — Option order (TRADE)
+- `client.options_positions(symbol, recvWindow)` — Option holdings info (USER_DATA)
+- `client.options_post_market_maker_protection_config(underlying, windowTimeInMilliseconds, frozenTimeInMilliseconds, qtyLimit, deltaLimit, recvWindow)` — Set config for MMP.
+- `client.options_price(symbol)` — Get the latest price
+- `client.options_query_order(symbol, orderId, clientOrderId, recvWindow)` — Query Option order (TRADE)
+- `client.options_query_order_history(symbol, orderId, startTime, endTime, limit, recvWindow)` — Query Option order history (TRADE)
+- `client.options_query_pending_orders(symbol, orderId, startTime, endTime, limit, recvWindow)` — Query current pending Option orders (TRADE)
+- `client.options_recent_trades(symbol, limit)` — Recently completed Option trades
+- `client.options_reset_market_maker_protection_config(underlying, recvWindow)` — Reset MMP, start MMP order again.
+- `client.options_time()` — Get server time
+- `client.options_user_trades(symbol, fromId, startTime, endTime, limit, recvWindow)` — Option Trade List (USER_DATA)
+- `client.options_v1_delete_all_open_orders_by_underlying(params)`
+- `client.options_v1_get_block_trades(params)`
+- `client.options_v1_get_countdown_cancel_all(params)`
+- `client.options_v1_get_exercise_history(params)`
+- `client.options_v1_get_income_asyn(params)`
+- `client.options_v1_get_income_asyn_id(params)`
+- `client.options_v1_get_margin_account(params)`
+- `client.options_v1_post_countdown_cancel_all(params)`
+- `client.options_v1_post_countdown_cancel_all_heart_beat(params)`
+
+## Portfolio Margin
+
+- `client.papi_bnb_transfer(recvWindow)` — Transfer BNB in and out of UM.
+- `client.papi_cancel_cm_all_open_orders()` — Cancel an active CM LIMIT order.
+- `client.papi_cancel_cm_conditional_all_open_orders()` — Cancel All CM Open Conditional Orders.
+- `client.papi_cancel_cm_conditional_order()` — Cancel CM Conditional Order.
+- `client.papi_cancel_cm_order()` — Cancel an active CM LIMIT order.
+- `client.papi_cancel_margin_all_open_orders()` — Cancel Margin Account All Open Orders on a Symbol.
+- `client.papi_cancel_margin_order()` — Cancel Margin Account Order.
+- `client.papi_cancel_margin_order_list()` — Cancel Margin Account OCO Orders.
+- `client.papi_cancel_um_all_open_orders()` — Cancel an active UM LIMIT order.
+- `client.papi_cancel_um_conditional_all_open_orders()` — Cancel All UM Open Conditional Orders.
+- `client.papi_cancel_um_conditional_order()` — Cancel UM Conditional Order.
+- `client.papi_cancel_um_order()` — Cancel an active UM LIMIT order.
+- `client.papi_change_cm_position_side_dual(dualSidePosition, recvWindow)` — Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM.
+- `client.papi_change_um_position_side_dual(dualSidePosition, recvWindow)` — Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
+- `client.papi_create_cm_conditional_order()` — Place new CM Conditional order.
+- `client.papi_create_cm_order()` — Place new CM order.
+- `client.papi_create_margin_order()` — New Margin Order.
+- `client.papi_create_um_conditional_order()` — Place new UM Conditional order.
+- `client.papi_create_um_order()` — Place new UM order.
+- `client.papi_fund_asset_collection(recvWindow)` — Transfers specific asset from Futures Account to Margin account.
+- `client.papi_fund_auto_collection(recvWindow)` — Fund collection for Portfolio Margin.
+- `client.papi_get_account(recvWindow)` — Query account information.
+- `client.papi_get_balance(asset, recvWindow)` — Query account balance.
+- `client.papi_get_cm_account(recvWindow)` — Get current CM account asset and position information.
+- `client.papi_get_cm_adl_quantile()` — Query CM Position ADL Quantile Estimation.
+- `client.papi_get_cm_all_orders()` — Get all account CM orders; active, canceled, or filled.
+- `client.papi_get_cm_comission_rate(symbol, recvWindow)` — Get User Commission Rate for CM.
+- `client.papi_get_cm_conditional_all_orders()` — Query All CM Conditional Orders.
+- `client.papi_get_cm_conditional_open_order()` — Query Current UM Open Conditional Order.
+- `client.papi_get_cm_conditional_open_orders()` — Get all open conditional orders on a symbol.
+- `client.papi_get_cm_conditional_order_history()` — Get all open conditional orders on a symbol.
+- `client.papi_get_cm_force_orders()` — Query User's CM Force Orders.
+- `client.papi_get_cm_income_history(recvWindow)` — Get CM Income History.
+- `client.papi_get_cm_leverage_bracket(symbol, recvWindow)` — Query CM notional and leverage brackets.
+- `client.papi_get_cm_open_order()` — Query current CM open order.
+- `client.papi_get_cm_open_orders()` — Get all open orders on a symbol.
+- `client.papi_get_cm_order()` — Check an CM order's status.
+- `client.papi_get_cm_order_amendment()` — Get order modification history.
+- `client.papi_get_cm_position_risk(asset, recvWindow)` — Query margin max borrow.
+- `client.papi_get_cm_position_side_dual(recvWindow)` — Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in CM.
+- `client.papi_get_cm_user_trades()` — Get trades for a specific account and CM symbol.
+- `client.papi_get_margin_all_order_list()` — Query all OCO for a specific margin account based on provided optional parameters.
+- `client.papi_get_margin_all_orders()` — Query All Margin Account Orders.
+- `client.papi_get_margin_force_orders()` — Query user's margin force orders.
+- `client.papi_get_margin_interest_history(recvWindow)` — Get Margin Borrow/Loan Interest History.
+- `client.papi_get_margin_margin_loan(asset, recvWindow)` — Query margin loan record.
+- `client.papi_get_margin_max_borrowable(asset, recvWindow)` — Query margin max borrow.
+- `client.papi_get_margin_max_withdraw(asset, recvWindow)` — Query margin max borrow.
+- `client.papi_get_margin_my_trades()` — Margin Account Trade List.
+- `client.papi_get_margin_open_order_list()` — Query Margin Account's Open OCO.
+- `client.papi_get_margin_open_orders()` — Query Current Margin Open Order.
+- `client.papi_get_margin_order()` — Query Margin Account Order.
+- `client.papi_get_margin_order_list()` — Retrieves a specific OCO based on provided optional parameters.
+- `client.papi_get_margin_repay_debt()` — Repay debt for a margin loan.
+- `client.papi_get_margin_repay_loan(asset, recvWindow)` — Query margin repay record.
+- `client.papi_get_portfolio_interest_history(recvWindow)` — Query interest history of negative balance for portfolio margin.
+- `client.papi_get_portfolio_negative_balance_exchange_record(recvWindow)` — Query user negative balance auto exchange record.
+- `client.papi_get_rate_limit(recvWindow)` — Query User Rate Limit
+- `client.papi_get_repay_futures_switch(recvWindow)` — Query Auto-repay-futures Status.
+- `client.papi_get_um_account(recvWindow)` — Get current UM account asset and position information.
+- `client.papi_get_um_account_config(recvWindow)` — Query UM Futures account configuration.
+- `client.papi_get_um_account_v2(recvWindow)` — Get current UM account asset and position information.
+- `client.papi_get_um_adl_quantile()` — Query UM Position ADL Quantile Estimation.
+- `client.papi_get_um_all_orders()` — Get all account UM orders; active, canceled, or filled.
+- `client.papi_get_um_api_trading_status(symbol, recvWindow)` — Portfolio Margin UM Trading Quantitative Rules Indicators.
+- `client.papi_get_um_comission_rate(symbol, recvWindow)` — Get User Commission Rate for UM.
+- `client.papi_get_um_conditional_all_orders()` — Query All UM Conditional Orders.
+- `client.papi_get_um_conditional_open_order()` — Query Current UM Open Conditional Order.
+- `client.papi_get_um_conditional_open_orders()` — Get all open conditional orders on a symbol.
+- `client.papi_get_um_conditional_order_history()` — Get all open conditional orders on a symbol.
+- `client.papi_get_um_fee_burn()` — Get user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off).
+- `client.papi_get_um_force_orders()` — Query User's UM Force Orders.
+- `client.papi_get_um_income_asyn(recvWindow)` — Get download id for UM futures transaction history.
+- `client.papi_get_um_income_asyn_id(recvWindow)` — Get UM futures Transaction download link by Id.
+- `client.papi_get_um_income_history(recvWindow)` — Get UM Income History.
+- `client.papi_get_um_leverage_bracket(symbol, recvWindow)` — Query UM notional and leverage brackets.
+- `client.papi_get_um_open_order()` — Query current UM open order.
+- `client.papi_get_um_open_orders()` — Get all open orders on a symbol.
+- `client.papi_get_um_order()` — Check an UM order's status.
+- `client.papi_get_um_order_amendment()` — Get order modification history.
+- `client.papi_get_um_order_asyn(recvWindow)` — Get download id for UM futures order history.
+- `client.papi_get_um_order_asyn_id(recvWindow)` — Get UM futures order download link by Id.
+- `client.papi_get_um_position_risk(symbol, recvWindow)` — Query margin max borrow.
+- `client.papi_get_um_position_side_dual(recvWindow)` — Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol in UM.
+- `client.papi_get_um_symbol_config(recvWindow)` — Get current UM account symbol configuration.
+- `client.papi_get_um_trade_asyn(recvWindow)` — Get download id for UM futures trade history.
+- `client.papi_get_um_trade_asyn_id(recvWindow)` — Get UM futures trade download link by Id.
+- `client.papi_get_um_user_trades()` — Get trades for a specific account and UM symbol.
+- `client.papi_margin_loan()` — Apply for a margin loan.
+- `client.papi_margin_order_oco()` — Send in a new OCO for a margin account.
+- `client.papi_modify_cm_order()` — Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the...
+- `client.papi_modify_um_order()` — Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the...
+- `client.papi_ping()` — Test connectivity to the Rest API.
+- `client.papi_repay_futures_negative_balance(recvWindow)` — Repay futures Negative Balance.
+- `client.papi_repay_futures_switch(autoRepay, recvWindow)` — Change Auto-repay-futures Status.
+- `client.papi_repay_loan()` — Repay for a margin loan.
+- `client.papi_set_cm_leverage(asset, leverage, recvWindow)` — Query margin max borrow.
+- `client.papi_set_um_fee_burn()` — Change user's BNB Fee Discount for UM Futures (Fee Discount On or Fee Discount Off ) on EVERY symbol.
+- `client.papi_set_um_leverage(asset, leverage, recvWindow)` — Query margin max borrow.
+- `client.papi_stream_close(listenKey)` — Close out a user data stream.
+- `client.papi_stream_get_listen_key()` — Start a new user data stream for Portfolio Margin account.
+- `client.papi_stream_keepalive(listenKey)` — Keepalive a user data stream to prevent a time out.
+- `client.papi_v1_post_ping(params)`
+
+## Spot / General
+
+- `client.aggregate_trade_iter(symbol, start_str, last_id)` — Iterate over aggregate trade data from (start_time or last_id) to the end of the history so far. If start_time is spe...
+- `client.cancel_all_open_margin_orders(symbol, isIsolated, recvWindow)` — Cancels all active orders on a symbol for margin account.
+- `client.cancel_all_open_orders(symbol)` — Cancel all open orders on a symbol.
+- `client.cancel_margin_oco_order(symbol, isIsolated, orderListId, listClientOrderId, newClientOrderId, recvWindow)` — Cancel an entire Order List for a margin account.
+- `client.cancel_margin_order(symbol, isIsolated, orderId, origClientOrderId, newClientOrderId, recvWindow)` — Cancel an active order for margin account. Either orderId or origClientOrderId must be sent.
+- `client.cancel_order(symbol, orderId, origClientOrderId, newClientOrderId, recvWindow)` — Cancel an active order. Either orderId or origClientOrderId must be sent.
+- `client.cancel_replace_order(symbol, side, type, cancelReplaceMode, timeInForce, quantity, quoteOrderQty, price, cancelNewClientOrderId, cancelOrigClientOrderId, cancelOrderId, newClientOrderId, strategyId, strategyType, stopPrice, trailingDelta, icebergQty, newOrderRespType, selfTradePreventionMode, cancelRestrictions, recvWindow)` — Cancels an existing order and places a new order on the same symbol. Filters and Order Count are evaluated before the...
+- `client.change_fixed_activity_to_daily_position()` — Change Fixed/Activity Position to Daily Position
+- `client.close_connection()`
+- `client.create_isolated_margin_account(base, quote)` — Create isolated margin account for symbol
+- `client.create_margin_loan(asset, amount, isIsolated, symbol, recvWindow)` — Apply for a loan in cross-margin or isolated-margin account.
+- `client.create_margin_oco_order(symbol, isIsolated, listClientOrderId, side, quantity, limitClientOrderId, price, limitIcebergQty, stopClientOrderId, stopPrice, stopLimitPrice, stopIcebergQty, stopLimitTimeInForce, newOrderRespType, sideEffectType, recvWindow)` — Post a new OCO trade for margin account.
+- `client.create_margin_order(symbol, isIsolated, side, type, quantity, price, stopPrice, timeInForce, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Post a new order for margin account.
+- `client.create_oco_order(symbol, listClientOrderId, side, quantity, aboveType, aboveClientOrderId, aboveIcebergQty, abovePrice, aboveStopPrice, aboveTrailingDelta, aboveTimeInForce, aboveStrategyId, aboveStrategyType, belowType, belowClientOrderId, belowIcebergQty, belowPrice, belowStopPrice, belowTrailingDelta, belowTimeInForce, belowStrategyId, belowStrategyType, newOrderRespType, selfTradePreventionMode, recvWindow, timestamp)` — Send in an one-cancels-the-other (OCO) pair, where activation of one order immediately cancels the other. An OCO has ...
+- `client.create_order(symbol, side, type, timeInForce, quantity, quoteOrderQty, price, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Send in a new order Any order with an icebergQty MUST have timeInForce set to GTC.
+- `client.create_sub_account_futures_transfer(fromEmail, toEmail, futuresType, asset, amount, recvWindow)` — Execute sub-account Futures transfer
+- `client.create_test_order(symbol, side, type, timeInForce, quantity, price, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into th...
+- `client.disable_fast_withdraw_switch(recvWindow)` — Disable Fast Withdraw Switch
+- `client.disable_isolated_margin_account(symbol)` — Disable isolated margin account for a specific symbol. Each trading pair can only be deactivated once every 24 hours.
+- `client.enable_fast_withdraw_switch(recvWindow)` — Enable Fast Withdraw Switch
+- `client.enable_isolated_margin_account(symbol)` — Enable isolated margin account for a specific symbol.
+- `client.enable_subaccount_futures(email, recvWindow)` — Enable Futures for Sub-account (For Master Account)
+- `client.enable_subaccount_margin(email, recvWindow)` — Enable Margin for Sub-account (For Master Account)
+- `client.encode_uri_component(uri, safe="~()*!.'")`
+- `client.exchange_small_liability_assets(assetNames)` — Cross Margin Small Liability Exchange
+- `client.funding_wallet()` — Query Funding Wallet
+- `client.get_account(recvWindow)` — Get current account information.
+- `client.get_account_api_permissions(recvWindow)` — Fetch api key permissions.
+- `client.get_account_api_trading_status(recvWindow)` — Fetch account api trading status detail.
+- `client.get_account_snapshot(type, startTime, endTime, limit, recvWindow)` — Get daily account snapshot of specific type.
+- `client.get_account_status(version, version, recvWindow)` — Get account status detail.
+- `client.get_aggregate_trades(symbol, fromId, startTime, endTime, limit)` — Get compressed, aggregate trades. Trades that fill at the time, from the same order, with the same price will have th...
+- `client.get_all_coins_info(recvWindow)` — Get information of coins (available for deposit and withdraw) for user.
+- `client.get_all_isolated_margin_symbols()` — Query isolated margin symbol info for all pairs .. code:: python pair_details = client.get_all_isolated_margin_symbols()
+- `client.get_all_margin_orders(symbol, isIsolated, orderId, startTime, endTime, limit, recvWindow)` — Query all margin accounts orders If orderId is set, it will get orders >= that orderId. Otherwise most recent orders ...
+- `client.get_all_orders(symbol, orderId, startTime, endTime, limit, recvWindow)` — Get all account orders; active, canceled, or filled.
+- `client.get_all_tickers()` — Latest price for all symbols.
+- `client.get_allocations(symbol, startTime, endTime, fromAllocationId, orderId, limit, recvWindow)` — Retrieves allocations resulting from SOR order placement.
+- `client.get_asset_balance(asset, recvWindow)` — Get current asset balance.
+- `client.get_asset_details(asset, recvWindow)` — Fetch details on assets.
+- `client.get_asset_dividend_history(asset, startTime, endTime, recvWindow)` — Query asset dividend record.
+- `client.get_avg_price(symbol)` — Current average price for a symbol.
+- `client.get_bnb_burn_spot_margin()` — Get BNB Burn Status .. code:: python status = client.get_bnb_burn_spot_margin()
+- `client.get_c2c_trade_history(tradeType, startTimestamp, endTimestamp, page, rows, recvWindow)` — Get C2C Trade History
+- `client.get_convert_trade_history(startTime, endTime, limit, recvWindow)` — Get C2C Trade History
+- `client.get_cross_margin_collateral_ratio()`
+- `client.get_cross_margin_data(vipLevel, recvWindow)` — Query Cross Margin Fee Data (USER_DATA)
+- `client.get_current_order_count()` — Displays the user's current order count usage for all intervals.
+- `client.get_deposit_address(coin, network, recvWindow)` — Fetch a deposit address for a symbol
+- `client.get_deposit_history(coin, startTime, endTime, offset, limit, recvWindow)` — Fetch deposit history.
+- `client.get_dust_assets()` — Get assets that can be converted into BNB
+- `client.get_dust_log(startTime, endTime, recvWindow)` — Get log of small amounts exchanged for BNB.
+- `client.get_enabled_isolated_margin_account_limit()` — Query enabled isolated margin account limit.
+- `client.get_exchange_info()` — Return rate limits and list of symbols
+- `client.get_fiat_deposit_withdraw_history(transactionType, beginTime, endTime, page, rows, recvWindow)` — Get Fiat Deposit/Withdraw History
+- `client.get_fiat_payments_history(transactionType, beginTime, endTime, page, rows, recvWindow)` — Get Fiat Payments History
+- `client.get_fixed_activity_project_list(asset, type, status, sortBy, current, size, recvWindow)` — Get Fixed and Activity Project List
+- `client.get_future_hourly_interest_rate(assets, isIsolated)` — Get user the next hourly estimate interest
+- `client.get_historical_klines(symbol, interval, start_str, end_str, limit, klines_type)` — Get Historical Klines from Binance
+- `client.get_historical_klines_generator(symbol, interval, start_str, end_str, limit, klines_type)` — Get Historical Klines generator from Binance
+- `client.get_historical_trades(symbol, limit, fromId)` — Get older trades.
+- `client.get_isolated_margin_account(symbols)` — Query isolated margin account details
+- `client.get_isolated_margin_fee_data(vipLevel, symbol)` — Get isolated margin fee data collection with any vip level or user's current specific data as https://www.binance.com...
+- `client.get_isolated_margin_symbol(symbol)` — Query isolated margin symbol info
+- `client.get_isolated_margin_tier_data(symbol, tier, recvWindow)` — Get isolated margin tier data collection with any tier as https://www.binance.com/en/margin-data
+- `client.get_isolated_margin_tranfer_history(asset, symbol, transFrom, transFrom, transTo, transTo, startTime, endTime, current, size, recvWindow)` — Get transfers to isolated margin account.
+- `client.get_klines(symbol, interval, limit, startTime, endTime)` — Kline/candlestick bars for a symbol. Klines are uniquely identified by their open time.
+- `client.get_margin_account()` — Query cross-margin account details
+- `client.get_margin_all_assets()` — Get All Margin Assets (MARKET_DATA) .. code:: python margin_assets = client.get_margin_all_assets()
+- `client.get_margin_all_pairs()` — Get All Cross Margin Pairs (MARKET_DATA) .. code:: python margin_pairs = client.get_margin_all_pairs()
+- `client.get_margin_asset(asset)` — Query cross-margin asset
+- `client.get_margin_capital_flow(asset, symbol, type, startTime, endTime, formId, limit)` — Get cross or isolated margin capital flow
+- `client.get_margin_delist_schedule(recvWindow)` — Get tokens or symbols delist schedule for cross margin and isolated margin
+- `client.get_margin_dust_assets()` — Get margin assets that can be converted into BNB.
+- `client.get_margin_dustlog(startTime, endTime)` — Query the historical information of user's margin account small-value asset conversion BNB.
+- `client.get_margin_force_liquidation_rec(startTime, endTime, isolatedSymbol, current, size, recvWindow)` — Get Force Liquidation Record (USER_DATA)
+- `client.get_margin_interest_history(asset, isolatedSymbol, startTime, endTime, current, size, archived, recvWindow)` — Get Interest History (USER_DATA)
+- `client.get_margin_loan_details(asset, isolatedSymbol, txId, startTime, endTime, current, size, recvWindow)` — Query loan record txId or startTime must be sent. txId takes precedence.
+- `client.get_margin_oco_order(isIsolated, symbol, orderListId, listClientOrderId, recvWindow)` — Retrieves a specific OCO based on provided optional parameters
+- `client.get_margin_order(symbol, isIsolated, orderId, origClientOrderId, recvWindow)` — Query margin accounts order Either orderId or origClientOrderId must be sent. For some historical orders cummulativeQ...
+- `client.get_margin_price_index(symbol)` — Query margin priceIndex
+- `client.get_margin_repay_details(asset, isolatedSymbol, txId, startTime, endTime, current, size, recvWindow)` — Query repay record txId or startTime must be sent. txId takes precedence.
+- `client.get_margin_symbol(symbol)` — Query cross-margin symbol info
+- `client.get_margin_trades(symbol, isIsolated, fromId, startTime, endTime, limit, recvWindow)` — Query margin accounts trades If fromId is set, it will get orders >= that fromId. Otherwise most recent orders are re...
+- `client.get_margin_transfer_history(asset, type, archived, startTime, endTime, current, size, recvWindow)` — Query margin transfer history
+- `client.get_max_margin_loan(asset, isolatedSymbol, recvWindow)` — Query max borrow amount for an asset
+- `client.get_max_margin_transfer(asset, isolatedSymbol, recvWindow)` — Query max transfer-out amount
+- `client.get_my_trades(symbol, startTime, endTime, limit, fromId, recvWindow)` — Get trades for a specific symbol.
+- `client.get_open_margin_oco_orders(isIsolated, symbol, fromId, startTime, endTime, limit, recvWindow)` — Retrieves open OCO trades
+- `client.get_open_margin_orders(symbol, isIsolated, recvWindow)` — Query margin accounts open orders If the symbol is not sent, orders for all symbols will be returned in an array (cro...
+- `client.get_open_oco_orders(recvWindow)` — Get all open orders on a symbol.
+- `client.get_open_orders(symbol, recvWindow)` — Get all open orders on a symbol.
+- `client.get_order(symbol, orderId, origClientOrderId, recvWindow)` — Check an order's status. Either orderId or origClientOrderId must be sent.
+- `client.get_order_book(symbol, limit)` — Get the Order Book for the market
+- `client.get_orderbook_ticker(symbol)` — Latest price for a symbol or symbols.
+- `client.get_orderbook_tickers(symbol, symbols)` — Best price/qty on the order book for all symbols.
+- `client.get_pay_trade_history(startTime, endTime, limit, recvWindow)` — Get C2C Trade History
+- `client.get_personal_left_quota()` — Get Personal Left Quota of Staking Product
+- `client.get_prevented_matches(symbol, preventedMatchId, orderId, fromPreventedMatchId, limit, recvWindow)` — Displays the list of orders that were expired because of STP.
+- `client.get_products()` — Return list of products currently listed on Binance Use get_exchange_info() call instead
+- `client.get_recent_trades(symbol, limit)` — Get recent trades (up to last 500).
+- `client.get_server_time()` — Test connectivity to the Rest API and get the current server time.
+- `client.get_simple_earn_account(recvWindow)`
+- `client.get_simple_earn_flexible_product_list(asset, current, size, recvWindow)` — Get available Simple Earn flexible product list
+- `client.get_simple_earn_flexible_product_position(asset, current, size, recvWindow)`
+- `client.get_simple_earn_locked_product_list(asset, current, size, recvWindow)` — Get available Simple Earn flexible product list
+- `client.get_simple_earn_locked_product_position(asset, current, size, recvWindow)`
+- `client.get_small_liability_exchange_assets()` — Query the coins which can be small liability exchange
+- `client.get_small_liability_exchange_history(current, size, startTime, endTime)` — Get Small liability Exchange History
+- `client.get_spot_delist_schedule(recvWindow)` — Get symbols delist schedule for spot
+- `client.get_staking_asset_us()` — Get staking information for a supported asset (or assets) :raises BinanceRegionException: If client is not configured...
+- `client.get_staking_balance_us()` — Get staking balance :raises BinanceRegionException: If client is not configured for binance.us
+- `client.get_staking_history_us()` — Get staking history :raises BinanceRegionException: If client is not configured for binance.us
+- `client.get_staking_position()` — Get Staking Product Position
+- `client.get_staking_product_list()` — Get Staking Product List
+- `client.get_staking_purchase_history()` — Get Staking Purchase History
+- `client.get_staking_rewards_history_us()` — Get staking rewards history for an asset(or assets) within a given time range. :raises BinanceRegionException: If cli...
+- `client.get_sub_account_assets(email, recvWindow)` — Fetch sub-account assets
+- `client.get_sub_account_futures_transfer_history(email, futuresType, startTime, endTime, page, limit, recvWindow)` — Query Sub-account Futures Transfer History.
+- `client.get_sub_account_list(email, isFreeze, page, limit, recvWindow)` — Query Sub-account List.
+- `client.get_sub_account_transfer_history(fromEmail, toEmail, startTime, endTime, page, limit, recvWindow)` — Query Sub-account Transfer History.
+- `client.get_subaccount_deposit_address(email, coin, network, recvWindow)` — Get Sub-account Deposit Address (For Master Account)
+- `client.get_subaccount_deposit_history(email, coin, status, startTime, endTime, limit, offset, recvWindow)` — Get Sub-account Deposit History (For Master Account)
+- `client.get_subaccount_futures_details(email, recvWindow)` — Get Detail on Sub-account's Futures Account (For Master Account)
+- `client.get_subaccount_futures_margin_status(email, recvWindow)` — Get Sub-account's Status on Margin/Futures (For Master Account)
+- `client.get_subaccount_futures_positionrisk(email, recvWindow)` — Get Futures Position-Risk of Sub-account (For Master Account)
+- `client.get_subaccount_futures_summary(recvWindow)` — Get Summary of Sub-account's Futures Account (For Master Account)
+- `client.get_subaccount_margin_details(email, recvWindow)` — Get Detail on Sub-account's Margin Account (For Master Account)
+- `client.get_subaccount_margin_summary(recvWindow)` — Get Summary of Sub-account's Margin Account (For Master Account)
+- `client.get_subaccount_transfer_history(asset, type, startTime, endTime, limit, recvWindow)` — Sub-account Transfer History (For Sub-account)
+- `client.get_symbol_info(symbol)` — Return information about a symbol
+- `client.get_symbol_ticker(symbol)` — Latest price for a symbol or symbols.
+- `client.get_symbol_ticker_window(symbol)` — Latest price for a symbol or symbols.
+- `client.get_system_status()` — Get system status detail.
+- `client.get_ticker(symbol)` — 24 hour price change statistics.
+- `client.get_trade_fee(symbol, recvWindow)` — Get trade fee.
+- `client.get_ui_klines(symbol, interval, limit, startTime, endTime)` — Kline/candlestick bars for a symbol with UI enhancements. Klines are uniquely identified by their open time.
+- `client.get_universal_transfer_history(fromEmail, toEmail, startTime, endTime, page, limit, recvWindow)` — Universal Transfer (For Master Account)
+- `client.get_user_asset()` — Get user assets, just for positive data
+- `client.get_withdraw_history(coin, offset, limit, startTime, endTime, recvWindow)` — Fetch withdraw history.
+- `client.get_withdraw_history_id(withdraw_id, asset, startTime, endTime, recvWindow)` — Fetch withdraw history.
+- `client.isolated_margin_stream_close(symbol, listenKey)` — Close out an isolated margin data stream.
+- `client.isolated_margin_stream_get_listen_key(symbol)` — Start a new isolated margin data stream and return the listen key If a stream already exists it should return the sam...
+- `client.isolated_margin_stream_keepalive(symbol, listenKey)` — PING an isolated margin data stream to prevent a time out.
+- `client.make_subaccount_futures_transfer(email, asset, amount, type)` — Futures Transfer for Sub-account (For Master Account)
+- `client.make_subaccount_margin_transfer(email, asset, amount, type)` — Margin Transfer for Sub-account (For Master Account)
+- `client.make_subaccount_to_master_transfer(asset, amount, recvWindow)` — Transfer to Master (For Sub-account)
+- `client.make_subaccount_to_subaccount_transfer(toEmail, asset, amount, recvWindow)` — Transfer to Sub-account of Same Master (For Sub-account)
+- `client.make_subaccount_universal_transfer(fromEmail, toEmail, fromAccountType, toAccountType, asset, amount, recvWindow)` — Universal Transfer (For Master Account)
+- `client.make_universal_transfer(type, asset, amount, recvWindow)` — User Universal Transfer
+- `client.new_transfer_history()` — Get future account transaction history list
+- `client.order_limit(symbol, side, quantity, price, timeInForce, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit order Any order with an icebergQty MUST have timeInForce set to GTC.
+- `client.order_limit_buy(symbol, quantity, price, timeInForce, newClientOrderId, stopPrice, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit buy order Any order with an icebergQty MUST have timeInForce set to GTC.
+- `client.order_limit_sell(symbol, quantity, price, timeInForce, newClientOrderId, stopPrice, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit sell order
+- `client.order_market(symbol, side, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market order
+- `client.order_market_buy(symbol, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market buy order
+- `client.order_market_sell(symbol, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market sell order
+- `client.order_oco_buy(symbol, listClientOrderId, quantity, limitClientOrderId, price, limitIcebergQty, stopClientOrderId, stopPrice, stopLimitPrice, stopIcebergQty, stopLimitTimeInForce, newOrderRespType, recvWindow)` — Send in a new OCO buy order
+- `client.order_oco_sell(symbol, listClientOrderId, quantity, limitClientOrderId, price, limitIcebergQty, stopClientOrderId, stopPrice, stopLimitPrice, stopIcebergQty, stopLimitTimeInForce, newOrderRespType, recvWindow)` — Send in a new OCO sell order
+- `client.ping()` — Test connectivity to the Rest API.
+- `client.purchase_staking_product()` — Purchase Staking Product
+- `client.query_subaccount_spot_summary(email, page, size, recvWindow)` — Query Sub-account Spot Assets Summary (For Master Account)
+- `client.query_universal_transfer_history(type, startTime, endTime, current, size, recvWindow)` — Query User Universal Transfer History
+- `client.redeem_simple_earn_flexible_product(productId, amount, redeemAll, recvWindow)` — Redeem a simple earn flexible product
+- `client.redeem_simple_earn_locked_product(productId, recvWindow)` — Redeem a simple earn locked product
+- `client.redeem_staking_product()` — Redeem Staking Product
+- `client.repay_margin_loan(asset, amount, isIsolated, symbol, recvWindow)` — Repay loan in cross-margin or isolated-margin account. If amount is more than the amount borrowed, the full loan will...
+- `client.set_auto_staking()` — Set Auto Staking on Locked Staking or Locked DeFi Staking
+- `client.set_margin_max_leverage(maxLeverage)` — Adjust cross margin max leverage
+- `client.stake_asset_us()` — Stake a supported asset. :raises BinanceRegionException: If client is not configured for binance.us
+- `client.stream_close(listenKey)` — Close out a user data stream.
+- `client.stream_get_listen_key()` — Start a new user data stream and return the listen key If a stream already exists it should return the same key. If t...
+- `client.stream_keepalive(listenKey)` — PING a user data stream to prevent a time out.
+- `client.subscribe_simple_earn_flexible_product(productId, amount, autoSubscribe, recvWindow)` — Subscribe to a simple earn flexible product
+- `client.subscribe_simple_earn_locked_product(productId, amount, autoSubscribe, recvWindow)` — Subscribe to a simple earn locked product
+- `client.toggle_bnb_burn_spot_margin(spotBNBBurn, interestBNBBurn)` — Toggle BNB Burn On Spot Trade And Margin Interest
+- `client.transfer_dust(asset, recvWindow)` — Convert dust assets to BNB.
+- `client.transfer_history()` — Get future account transaction history list
+- `client.transfer_isolated_margin_to_spot(asset, symbol, amount, recvWindow)` — Execute transfer between isolated margin account and spot account.
+- `client.transfer_margin_dust()` — Convert dust assets to BNB.
+- `client.transfer_margin_to_spot(asset, amount, recvWindow)` — Execute transfer between cross-margin account and spot account.
+- `client.transfer_spot_to_isolated_margin(asset, symbol, amount, recvWindow)` — Execute transfer between spot account and isolated margin account.
+- `client.transfer_spot_to_margin(asset, amount, recvWindow)` — Execute transfer between spot account and cross-margin account.
+- `client.universal_transfer()` — Unviversal transfer api accross different binance account types
+- `client.unstake_asset_us()` — Unstake a staked asset :raises BinanceRegionException: If client is not configured for binance.us
+- `client.uuid22(length=22)`
+- `client.v3_delete_order_list(params)`
+- `client.v3_get_account_commission(params)`
+- `client.v3_get_all_order_list(params)`
+- `client.v3_get_order_list(params)`
+- `client.v3_get_ticker_trading_day(params)`
+- `client.v3_post_cancel_replace(params)`
+- `client.v3_post_order_list_oto(params)`
+- `client.v3_post_order_list_otoco(params)`
+- `client.v3_post_sor_order(params)`
+- `client.v3_post_sor_order_test(params)`
+- `client.withdraw(coin, withdrawOrderId, network, address, amount, transactionFeeFlag, name, recvWindow)` — Submit a withdraw request. Assumptions: - You must have Withdraw permissions enabled on your API key - You must have ...
+
+## WebSocket API
+
+- `client.ws_cancel_all_open_orders(symbol, recvWindow)` — Cancel all open orders on a symbol or all symbols.
+- `client.ws_cancel_and_replace_order(symbol, cancelReplaceMode, cancelOrderId, cancelOrigClientOrderId, cancelNewClientOrderId, side, type, timeInForce, price, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, stopPrice, trailingDelta, icebergQty, strategyId, strategyType, selfTradePreventionMode, cancelRestrictions, recvWindow)` — Cancels an existing order and places a new order on the same symbol.
+- `client.ws_cancel_oco_order(symbol, orderListId, listClientOrderId, newClientOrderId, apiKey, recvWindow, signature, timestamp)` — Cancel an OCO (One-Cancels-the-Other) order list.
+- `client.ws_cancel_order(symbol, orderId, origClientOrderId, newClientOrderId, cancelRestrictions, recvWindow)` — Cancel an active order.
+- `client.ws_create_oco_order(symbol, side, quantity, price, stopPrice, stopLimitPrice, stopLimitTimeInForce, listClientOrderId, limitClientOrderId, stopClientOrderId, limitStrategyId, limitStrategyType, stopStrategyId, stopStrategyType, limitIcebergQty, stopIcebergQty, recvWindow)` — Create a new OCO (One-Cancels-the-Other) order.
+- `client.ws_create_order(id, symbol, side, type, quantity, kwargs)` — Create an order via WebSocket.
+- `client.ws_create_oto_order(symbol, orders, listClientOrderId, limitClientOrderId, limitStrategyId, limitStrategyType, stopClientOrderId, stopStrategyId, stopStrategyType, newOrderRespType)` — Create a new OTO (One-Triggers-Other) order list. An OTO order list consists of two orders: 1. Primary order that mus...
+- `client.ws_create_otoco_order()` — Returns: Websocket message
+- `client.ws_create_sor_order(symbol, side, type, quantity, timeInForce, price, newClientOrderId, newOrderRespType, strategyId, strategyType, selfTradePreventionMode, recvWindow)` — Place a new order using Smart Order Routing (SOR).
+- `client.ws_create_test_order(symbol, side, type, timeInForce, quantity, price, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Test new order creation and signature/recvWindow long. Creates and validates a new order but does not send it into th...
+- `client.ws_create_test_sor_order(symbol, side, type, quantity, timeInForce, price, newClientOrderId, strategyId, strategyType, selfTradePreventionMode, computeCommissionRates)` — Test new order creation using Smart Order Routing (SOR). Creates and validates a new order but does not send it into ...
+- `client.ws_get_account(omitZeroBalances, recvWindow)` — Get current account information.
+- `client.ws_get_account_rate_limits_orders(recvWindow)` — Query your current unfilled order count for all intervals.
+- `client.ws_get_aggregate_trades(symbol, fromId, startTime, endTime, limit)` — Get aggregate trades. An aggregate trade represents one or more individual trades that fill at the same time, from th...
+- `client.ws_get_all_orders(symbol, orderId, startTime, endTime, limit, recvWindow)` — Query information about all your orders – active, canceled, filled – filtered by time range.
+- `client.ws_get_allocations(symbol, preventedMatchId, orderId, fromPreventedMatchId, limit, recvWindow, timestamp)` — Get information about orders that were expired due to STP (Self-Trade Prevention).
+- `client.ws_get_avg_price(symbol)` — Get current average price for a symbol.
+- `client.ws_get_commission_rates(symbol, recvWindow)` — Get current account commission rates for a symbol.
+- `client.ws_get_exchange_info(symbol, symbols, permissions)` — Query current exchange trading rules, rate limits, and symbol information.
+- `client.ws_get_historical_trades(symbol, fromId, limit)` — Get historical trades.
+- `client.ws_get_klines(symbol, interval, startTime, endTime, timeZone, limit)` — Get klines (candlestick bars). Klines are uniquely identified by their open & close time.
+- `client.ws_get_my_trades(symbol, orderId, startTime, endTime, fromId, limit, recvWindow)` — Query information about your trades, filtered by time range.
+- `client.ws_get_oco_open_orders(recvWindow, apiKey, signature, timestamp)` — Query current open OCO (One-Cancels-the-Other) order lists.
+- `client.ws_get_oco_order(orderListId, origClientOrderId)` — Query information about a specific OCO order list.
+- `client.ws_get_open_orders(symbol, recvWindow)` — Get all open orders on a symbol or all symbols.
+- `client.ws_get_order(symbol, orderId, origClientOrderId, recvWindow)` — Check an order's status. Either orderId or origClientOrderId must be sent.
+- `client.ws_get_order_book(symbol, limit)` — Get current order book for a symbol. Note that this request returns limited market depth. If you need to continuously...
+- `client.ws_get_orderbook_ticker(symbol, symbols)` — Get the best price/quantity on the order book for a symbol or symbols.
+- `client.ws_get_prevented_matches(symbol, preventedMatchId, orderId, fromPreventedMatchId, limit, recvWindow)` — Displays the list of orders that were expired due to STP (Self-Trade Prevention).
+- `client.ws_get_recent_trades(symbol, limit)` — Get recent trades for a symbol. If you need access to real-time trading activity, please consider using WebSocket Str...
+- `client.ws_get_symbol_ticker(symbol, symbols)` — Get latest price for a symbol or symbols.
+- `client.ws_get_symbol_ticker_window(symbol, symbols, windowSize, type)` — Get rolling window price change statistics.
+- `client.ws_get_ticker(symbol, symbols, type)` — Get 24-hour rolling window price change statistics.
+- `client.ws_get_time()` — Test connectivity to the WebSocket API and get the current server time.
+- `client.ws_get_trading_day_ticker(symbol, symbols, timeZone, type)` — Price change statistics for a trading day.
+- `client.ws_get_uiKlines(symbol, interval, startTime, endTime, timeZone, limit)` — Get klines (candlestick bars) optimized for presentation. This request is similar to klines, having the same paramete...
+- `client.ws_order_limit(symbol, side, quantity, price, timeInForce, newClientOrderId, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit order Any order with an icebergQty MUST have timeInForce set to GTC.
+- `client.ws_order_limit_buy(symbol, quantity, price, timeInForce, newClientOrderId, stopPrice, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit buy order Any order with an icebergQty MUST have timeInForce set to GTC.
+- `client.ws_order_limit_sell(symbol, quantity, price, timeInForce, newClientOrderId, stopPrice, icebergQty, newOrderRespType, recvWindow)` — Send in a new limit sell order
+- `client.ws_order_market(symbol, side, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market order
+- `client.ws_order_market_buy(symbol, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market buy order
+- `client.ws_order_market_sell(symbol, quantity, quoteOrderQty, newClientOrderId, newOrderRespType, recvWindow)` — Send in a new market sell order
+- `client.ws_ping()` — Test connectivity to the WebSocket API.
+
+## WebSocket Futures
+
+- `client.ws_futures_account_balance()` — Get current account information.
+- `client.ws_futures_account_position()` — Get current position information.
+- `client.ws_futures_account_status()` — Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in re...
+- `client.ws_futures_cancel_algo_order(symbol, algoId, clientAlgoId, recvWindow)` — Cancel an active algo order.
+- `client.ws_futures_cancel_order()` — cancel an order
+- `client.ws_futures_create_algo_order(symbol, side, type, algoType, positionSide, timeInForce, quantity, price, triggerPrice, workingType, priceMatch, closePosition, priceProtect, reduceOnly, activationPrice, callbackRate, clientAlgoId, selfTradePreventionMode, goodTillDate, newOrderRespType, recvWindow)` — Send in a new algo order (conditional order).
+- `client.ws_futures_create_order()` — Send in a new order
+- `client.ws_futures_edit_order()` — Edit an order
+- `client.ws_futures_get_all_tickers()` — Latest price for a symbol or symbols
+- `client.ws_futures_get_order()` — Get an order Note: Algo/conditional orders cannot be queried via websocket API
+- `client.ws_futures_get_order_book()` — Get the order book for a symbol
+- `client.ws_futures_get_order_book_ticker()` — Best price/qty on the order book for a symbol or symbols.
+- `client.ws_futures_v2_account_balance()` — Get current account information.
+- `client.ws_futures_v2_account_position()` — Get current position information(only symbol that has position or open orders will be returned).
+- `client.ws_futures_v2_account_status()` — Get current account information. User in single-asset/ multi-assets mode will see different value, see comments in re...
