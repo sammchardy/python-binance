@@ -232,6 +232,7 @@ class ReconnectingWebsocket:
                     ConnectionClosedError,
                     ConnectionClosedOK,
                     BinanceWebsocketClosed,
+                    BinanceWebsocketUnableToConnect,
                 ) as e:
                     # reports errors and continue loop
                     self._log.error(f"{e.__class__.__name__} ({e})")
@@ -241,7 +242,6 @@ class ReconnectingWebsocket:
                         "m": f"{e}",
                     })
                 except (
-                    BinanceWebsocketUnableToConnect,
                     BinanceWebsocketQueueOverflow,
                     Exception,
                 ) as e:
