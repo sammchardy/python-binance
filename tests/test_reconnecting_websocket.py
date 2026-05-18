@@ -187,7 +187,7 @@ async def test_connect_fails_to_connect_after_disconnect():
         Exception("Connection failed"),  # Subsequent calls fail
     ]
 
-    with patch("", return_value=mock_connect.return_value):
+    with patch(f"{websockets_package_name}.connect", return_value=mock_connect.return_value):
         ws = ReconnectingWebsocket(url="wss://test.url")
         async with ws as ws:
             assert ws.ws is not None
