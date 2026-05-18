@@ -1,8 +1,7 @@
 from typing import Dict, Optional
 import asyncio
 
-from websockets import WebSocketClientProtocol  # type: ignore
-
+from .websockets_compat import websockets, WebSocketClientProtocol
 from .constants import WSListenerState
 from .reconnecting_websocket import ReconnectingWebsocket
 from binance.exceptions import BinanceAPIException, BinanceWebsocketUnableToConnect

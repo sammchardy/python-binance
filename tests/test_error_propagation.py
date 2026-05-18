@@ -10,9 +10,7 @@ import asyncio
 import pytest
 from unittest.mock import AsyncMock, PropertyMock
 
-from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
-import websockets.protocol as ws_protocol
-
+from binance.ws.websockets_compat import ws_protocol, ConnectionClosedError, ConnectionClosedOK
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.websocket_api import WebsocketAPI
 from binance.ws.constants import WSListenerState
