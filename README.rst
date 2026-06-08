@@ -156,6 +156,22 @@ pass `testnet=True` when creating the client.
     # get a deposit address for BTC
     address = client.get_deposit_address(coin='BTC')
 
+# Error Handling
+It's a best practice to handle API exceptions to prevent your app from crashing during network issues or invalid requests.
+
+```python
+from binance.exceptions import BinanceAPIException, BinanceOrderException
+
+try:
+    # Example: Fetching a non-existent symbol to trigger an error
+    ticker = client.get_symbol_ticker(symbol="INVALID_SYMBOL")
+except BinanceAPIException as e:
+    # Handles errors returned by the Binance API
+    print(f"API Error: {e.status_code} - {e.message}")
+except Exception as e:
+    # Handles other Python related errors
+    print(f"An unexpected error occurred: {e}")
+
     # get historical kline data from any date range
 
     # fetch 1 minute klines for the last day up until now
