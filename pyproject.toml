@@ -14,6 +14,7 @@ lint.ignore = [
     "SIM102","SIM117","SIM118","SIM401",
     "TRY002","TRY004","TRY201",
 ]
+exclude = ["generate_llms_txt.py"]
 
 [tool.pytest.ini_options]
 timeout = 90
