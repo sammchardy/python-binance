@@ -310,6 +310,17 @@ Python-binance also supports `orjson` for parsing JSON since it is much faster t
 
 However, `orjson` is not enabled by default because it is not supported by every python interpreter. If you want to opt-in, you just need to install it (`pip install orjson`) on your local environment. Python-binance will detect the installion and pick it up automatically.
 
+Faster websockets with picows
+-----------------------------
+Python-binance supports `picows` as a faster alternative to `websockets` library.
+
+It is not enabled by default. If you want to opt-in, you just need to install picows (any version starting from 2.1)
+
+.. code:: sh
+
+    $ pip install picows>=2.1
+
+
 LLM & AI Agent Support
 ----------------------
 

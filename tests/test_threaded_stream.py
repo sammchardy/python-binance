@@ -1,7 +1,7 @@
 import pytest
 import asyncio
 
-import websockets
+from binance.ws.websockets_compat import ConnectionClosed
 from binance.ws.threaded_stream import ThreadedApiManager
 from unittest.mock import Mock
 
@@ -71,7 +71,7 @@ async def test_start_and_stop_socket(manager):
         recv_count += 1
         # If we've stopped the socket or read enough times, simulate connection closing
         if not manager._socket_running.get(socket_name) or recv_count > 2:
-            raise websockets.exceptions.ConnectionClosed(None, None)
+            raise ConnectionClosed(None, None)
         await asyncio.sleep(0.1)
         return '{"e": "value"}'
 
@@ -95,7 +95,7 @@ async def test_start_and_stop_socket(manager):
     # Wait for the listener task to complete
     try:
         await asyncio.wait_for(listener_task, timeout=1.0)
-    except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
+    except (asyncio.TimeoutError, ConnectionClosed):
         pass  # These exceptions are expected during shutdown
 
     assert socket_name not in manager._socket_running
@@ -134,7 +134,7 @@ async def test_socket_listener_timeout(manager):
     # Wait for the listener to finish
     try:
         await asyncio.wait_for(listener_task, timeout=1.0)
-    except (asyncio.TimeoutError, websockets.exceptions.ConnectionClosed):
+    except (asyncio.TimeoutError, ConnectionClosed):
         listener_task.cancel()
 
     # Callback should not have been called (no successful messages)

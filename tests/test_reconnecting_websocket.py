@@ -3,11 +3,10 @@ import pytest
 import gzip
 import json
 from unittest.mock import patch, create_autospec, Mock
+from binance.ws.websockets_compat import WebSocketClientProtocol, State, websockets_package_name  # type: ignore
 from binance.ws.reconnecting_websocket import ReconnectingWebsocket
 from binance.ws.constants import WSListenerState
 from binance.exceptions import BinanceWebsocketUnableToConnect, ReadLoopClosed
-from websockets import WebSocketClientProtocol  # type: ignore
-from websockets.protocol import State
 import asyncio
 
 try:
@@ -132,7 +131,7 @@ async def test_recieve_invalid_json():
     mock_socket.state = AsyncMock()
 
     # Mock websockets.connect to return our mock socket
-    with patch("websockets.connect") as mock_connect:
+    with patch(f"{websockets_package_name}.connect") as mock_connect:
         mock_connect.return_value.__aenter__.return_value = mock_socket
 
         ws = ReconnectingWebsocket(url="wss://test.url")
@@ -152,7 +151,7 @@ async def test_receive_valid_json():
     mock_socket.state = AsyncMock()
 
     # Mock websockets.connect to return our mock socket
-    with patch("websockets.connect") as mock_connect:
+    with patch(f"{websockets_package_name}.connect") as mock_connect:
         mock_connect.return_value.__aenter__.return_value = mock_socket
 
         ws = ReconnectingWebsocket(url="wss://test.url")
@@ -188,7 +187,7 @@ async def test_connect_fails_to_connect_after_disconnect():
         Exception("Connection failed"),  # Subsequent calls fail
     ]
 
-    with patch("websockets.connect", return_value=mock_connect.return_value):
+    with patch(f"{websockets_package_name}.connect", return_value=mock_connect.return_value):
         ws = ReconnectingWebsocket(url="wss://test.url")
         async with ws as ws:
             assert ws.ws is not None

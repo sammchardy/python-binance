@@ -14,10 +14,7 @@ try:
 except ImportError:
     pass
 
-try:
-    from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK  # type: ignore
-except ImportError:
-    from websockets import ConnectionClosedError, ConnectionClosedOK  # type: ignore
+from .websockets_compat import ConnectionClosedError, ConnectionClosedOK  # type: ignore
 
 
 Proxy = None
@@ -30,7 +27,7 @@ try:
 except ImportError:
     pass
 
-import websockets as ws
+from .websockets_compat import websockets as ws
 
 from binance.exceptions import (
     BinanceWebsocketClosed,
