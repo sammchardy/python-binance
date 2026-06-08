@@ -17,7 +17,7 @@ def test_spot_id():
         assert url_dict["side"] == "BUY"
         assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+        assert url_dict["newClientOrderId"].startswith("x-TKT5PX2F")
 
 
 def test_spot_limit_id():
@@ -27,7 +27,7 @@ def test_spot_limit_id():
             symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
-        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+        assert url_dict["newClientOrderId"].startswith("x-TKT5PX2F")
 
 
 def test_spot_market_id():
@@ -37,7 +37,7 @@ def test_spot_market_id():
             symbol="LTCUSDT", side="BUY", type="MARKET", quantity=0.1
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
-        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+        assert url_dict["newClientOrderId"].startswith("x-TKT5PX2F")
 
 
 def test_spot_cancel_replace_id():
@@ -55,7 +55,7 @@ def test_spot_cancel_replace_id():
             quantity=0.1,
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
-        assert url_dict["newClientOrderId"].startswith("x-HNA2TXFJ")
+        assert url_dict["newClientOrderId"].startswith("x-TKT5PX2F")
 
 
 def test_spot_oco_order_id():
@@ -65,7 +65,7 @@ def test_spot_oco_order_id():
             symbol="LTCUSDT", side="BUY", aboveType="MARKET", quantity=0.1
         )
         url_dict = dict(pair.split("=") for pair in m.last_request.text.split("&"))
-        assert url_dict["listClientOrderId"].startswith("x-HNA2TXFJ")
+        assert url_dict["listClientOrderId"].startswith("x-TKT5PX2F")
 
 
 def test_swap_id():
@@ -80,7 +80,7 @@ def test_swap_id():
         assert url_dict["side"] == "BUY"
         assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
+        assert url_dict["newClientOrderId"].startswith("x-cvBPrNm9")
 
 
 def test_swap_batch_id():
@@ -90,7 +90,7 @@ def test_swap_batch_id():
         orders = [order, order]
         client.futures_place_batch_order(batchOrders=orders)
         text = m.last_request.text
-        assert "x-Cb7ytekJ" in text
+        assert "x-cvBPrNm9" in text
 
 
 def test_coin_id():
@@ -105,7 +105,7 @@ def test_coin_id():
         assert url_dict["side"] == "BUY"
         assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
+        assert url_dict["newClientOrderId"].startswith("x-cvBPrNm9")
 
 
 def test_coin_batch_id():
@@ -120,7 +120,7 @@ def test_coin_batch_id():
         orders = [order, order]
         client.futures_coin_place_batch_order(batchOrders=orders)
         text = m.last_request.text
-        assert "x-Cb7ytekJ" in text
+        assert "x-cvBPrNm9" in text
 
 
 def test_papi_um_id():
@@ -135,7 +135,7 @@ def test_papi_um_id():
         assert url_dict["side"] == "BUY"
         assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
+        assert url_dict["newClientOrderId"].startswith("x-cvBPrNm9")
 
 
 def test_papi_cm_id():
@@ -150,7 +150,7 @@ def test_papi_cm_id():
         assert url_dict["side"] == "BUY"
         assert url_dict["type"] == "MARKET"
         assert url_dict["quantity"] == "0.1"
-        assert url_dict["newClientOrderId"].startswith("x-Cb7ytekJ")
+        assert url_dict["newClientOrderId"].startswith("x-cvBPrNm9")
 
 
 @pytest.mark.asyncio()
@@ -162,7 +162,7 @@ async def test_spot_id_async():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-HNA2TXFJ")
+            assert client_order_id.startswith("x-TKT5PX2F")
 
         m.post(
             "https://api.binance.com/api/v3/order",
@@ -185,7 +185,7 @@ async def test_spot_cancel_replace_id_async():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-HNA2TXFJ")
+            assert client_order_id.startswith("x-TKT5PX2F")
 
         m.post(
             "https://api.binance.com/api/v3/order/cancelReplace",
@@ -205,7 +205,7 @@ async def test_swap_id_async():
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+            assert "x-cvBPrNm9" in kwargs["data"][0][1]
 
         url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/order")
         m.post(
@@ -225,7 +225,7 @@ async def test_swap_trigger_id_async():
     with aioresponses() as m:
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"][1][1]
+            assert "x-cvBPrNm9" in kwargs["data"][1][1]
 
         url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/algoOrder")
         m.post(
@@ -246,7 +246,7 @@ async def test_swap_trigger_endpoint_id_async():
 
         def handler(url, **kwargs):
             # print(kwargs["data"])
-            assert "x-Cb7ytekJ" in kwargs["data"][1][1]
+            assert "x-cvBPrNm9" in kwargs["data"][1][1]
 
         url_pattern = re.compile(r"https://fapi\.binance\.com/fapi/v1/algoOrder")
         m.post(
@@ -267,7 +267,7 @@ async def test_papi_um_id_async():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-Cb7ytekJ")
+            assert client_order_id.startswith("x-cvBPrNm9")
 
         m.post(
             "https://papi.binance.com/papi/v1/um/order",
@@ -288,7 +288,7 @@ async def test_papi_cm_id_async():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-Cb7ytekJ")
+            assert client_order_id.startswith("x-cvBPrNm9")
 
         m.post(
             "https://papi.binance.com/papi/v1/cm/order",
@@ -309,7 +309,7 @@ async def test_coin_id_async():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-Cb7ytekJ")
+            assert client_order_id.startswith("x-cvBPrNm9")
 
         m.post(
             "https://dapi.binance.com/dapi/v1/order",
@@ -330,7 +330,7 @@ async def test_spot_oco_id():
 
         def handler(url, **kwargs):
             client_order_id = kwargs["data"][0][1]
-            assert client_order_id.startswith("x-HNA2TXFJ")
+            assert client_order_id.startswith("x-TKT5PX2F")
 
         m.post(
             "https://api.binance.com/api/v3/orderList/oco",
@@ -350,7 +350,7 @@ async def test_swap_batch_id_async():
         clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"]
+            assert "x-cvBPrNm9" in kwargs["data"]
 
         m.post(
             "https://fapi.binance.com/fapi/v1/batchOrders",
@@ -370,7 +370,7 @@ async def test_coin_batch_id_async():
         clientAsync = AsyncClient(api_key="api_key", api_secret="api_secret")
 
         def handler(url, **kwargs):
-            assert "x-Cb7ytekJ" in kwargs["data"][0][1]
+            assert "x-cvBPrNm9" in kwargs["data"][0][1]
 
         m.post(
             "https://dapi.binance.com/dapi/v1/batchOrders",
