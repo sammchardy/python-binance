@@ -1,7 +1,8 @@
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 import asyncio
 
-from websockets import WebSocketClientProtocol  # type: ignore
+if TYPE_CHECKING:
+    from websockets import WebSocketClientProtocol  # type: ignore  # noqa: F401
 
 from .constants import WSListenerState
 from .reconnecting_websocket import ReconnectingWebsocket
@@ -117,7 +118,7 @@ class WebsocketAPI(ReconnectingWebsocket):
             try:
                 if (
                     self.ws is None
-                    or (isinstance(self.ws, WebSocketClientProtocol) and self.ws.closed)
+                    or (hasattr(self.ws, "closed") and self.ws.closed)
                     or self.ws_state != WSListenerState.STREAMING
                 ):
                     await self.connect()
