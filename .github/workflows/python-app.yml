@@ -63,6 +63,8 @@ jobs:
         pip install pytest pytest-cov pyright tox
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
+    - name: Id Tests
+      run: pytest tests/test_ids.py
     - name: Type check with pyright (Python 3.12 only)
       if: matrix.python-version == '3.12'
       run: pyright
