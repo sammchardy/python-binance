@@ -1,0 +1,19 @@
+{
+  "client": [
+    {
+      "method": "get_orderbook_ticker",
+      "args": [],
+      "kwargs": {
+        "symbol": "BTCUSDT"
+      },
+      "return": {
+        "symbol": "BTCUSDT",
+        "bidPrice": "65861.65000000",
+        "bidQty": "11.79258000",
+        "askPrice": "65861.66000000",
+        "askQty": "13.95261000"
+      },
+      "raised": null
+    }
+  ]
+}

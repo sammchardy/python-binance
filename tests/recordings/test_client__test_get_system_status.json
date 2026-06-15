@@ -1,0 +1,14 @@
+{
+  "client": [
+    {
+      "method": "get_system_status",
+      "args": [],
+      "kwargs": {},
+      "return": {
+        "status": 0,
+        "msg": "normal"
+      },
+      "raised": null
+    }
+  ]
+}

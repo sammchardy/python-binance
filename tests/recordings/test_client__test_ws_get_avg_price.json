@@ -1,0 +1,17 @@
+{
+  "client": [
+    {
+      "method": "ws_get_avg_price",
+      "args": [],
+      "kwargs": {
+        "symbol": "BTCUSDT"
+      },
+      "return": {
+        "mins": 5,
+        "price": "65874.14799416",
+        "closeTime": 1781506432133
+      },
+      "raised": null
+    }
+  ]
+}

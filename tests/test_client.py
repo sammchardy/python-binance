@@ -245,7 +245,11 @@ def test_time_unit_milloseconds():
     )
 
 
-def test_handle_response(client):
+def test_handle_response():
+    # Uses a direct Client instead of the `client` fixture: _handle_response is pure
+    # parsing (no network), and the inline mock objects carry lambdas which pickle
+    # cannot serialize — so the recorder would fail to capture or replay this test.
+    c = Client(api_key, api_secret)
     # Test successful JSON response
     mock_response = type(
         "Response",
@@ -256,11 +260,11 @@ def test_handle_response(client):
             "json": lambda: {"key": "value"},
         },
     )
-    assert client._handle_response(mock_response) == {"key": "value"}
+    assert c._handle_response(mock_response) == {"key": "value"}
 
     # Test empty response
     mock_empty_response = type("Response", (), {"status_code": 200, "text": ""})
-    assert client._handle_response(mock_empty_response) == {}
+    assert c._handle_response(mock_empty_response) == {}
 
     # Test invalid JSON response
     mock_invalid_response = type(
@@ -273,11 +277,11 @@ def test_handle_response(client):
         },
     )
     with pytest.raises(BinanceRequestException):
-        client._handle_response(mock_invalid_response)
+        c._handle_response(mock_invalid_response)
 
     # Test error status code
     mock_error_response = type(
         "Response", (), {"status_code": 400, "text": "error message"}
     )
     with pytest.raises(BinanceAPIException):
-        client._handle_response(mock_error_response)
+        c._handle_response(mock_error_response)

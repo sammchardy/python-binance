@@ -16,7 +16,20 @@ lint.ignore = [
 ]
 exclude = ["generate_llms_txt.py"]
 
+# pytest.ini was deleted: an empty pytest.ini shadowed this section entirely, so
+# timeout/timeout_method/asyncio_default_fixture_loop_scope were all silently ignored.
 [tool.pytest.ini_options]
 timeout = 90
-timeout_method = "thread"
-asyncio_default_fixture_loop_scope = "function"
+timeout_method = "thread"  # thread-based timeout is safe inside asyncio; signal-based is not
+asyncio_default_fixture_loop_scope = "function"  # each test gets an isolated event loop
+
+[tool.uv.sources]
+pytest-recorder = { path = "../recorder" }
+
+[dependency-groups]
+dev = [
+    "aioresponses>=0.7.8",
+    "pytest-recorder",
+    "pytest-timeout>=2.4.0",
+    "requests-mock>=1.12.1",
+]
