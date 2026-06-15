@@ -1,0 +1,16 @@
+{
+  "client": [
+    {
+      "method": "ws_get_symbol_ticker",
+      "args": [],
+      "kwargs": {
+        "symbol": "BTCUSDT"
+      },
+      "return": {
+        "symbol": "BTCUSDT",
+        "price": "65822.06000000"
+      },
+      "raised": null
+    }
+  ]
+}

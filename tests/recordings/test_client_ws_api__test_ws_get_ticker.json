@@ -1,0 +1,35 @@
+{
+  "client": [
+    {
+      "method": "ws_get_ticker",
+      "args": [],
+      "kwargs": {
+        "symbol": "BTCUSDT"
+      },
+      "return": {
+        "symbol": "BTCUSDT",
+        "priceChange": "1529.56000000",
+        "priceChangePercent": "2.379",
+        "weightedAvgPrice": "64774.92106562",
+        "prevClosePrice": "64292.50000000",
+        "lastPrice": "65822.07000000",
+        "lastQty": "0.00060000",
+        "bidPrice": "65822.06000000",
+        "bidQty": "9.22144000",
+        "askPrice": "65822.07000000",
+        "askQty": "8.09759000",
+        "openPrice": "64292.51000000",
+        "highPrice": "68000.00000000",
+        "lowPrice": "54000.00000000",
+        "volume": "980.44064000",
+        "quoteVolume": "63507965.06552830",
+        "openTime": 1781420346867,
+        "closeTime": 1781506746867,
+        "firstId": 1309766,
+        "lastId": 1401087,
+        "count": 91322
+      },
+      "raised": null
+    }
+  ]
+}

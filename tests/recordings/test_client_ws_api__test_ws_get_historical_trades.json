@@ -1,0 +1,4514 @@
+{
+  "client": [
+    {
+      "method": "ws_get_historical_trades",
+      "args": [],
+      "kwargs": {
+        "symbol": "BTCUSDT"
+      },
+      "return": [
+        {
+          "id": 1400578,
+          "price": "65810.35000000",
+          "qty": "0.00030000",
+          "quoteQty": "19.74310500",
+          "time": 1781505950825,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400579,
+          "price": "65810.35000000",
+          "qty": "0.00526000",
+          "quoteQty": "346.16244100",
+          "time": 1781505951536,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400580,
+          "price": "65810.36000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.76879720",
+          "time": 1781505958731,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400581,
+          "price": "65810.35000000",
+          "qty": "0.00520000",
+          "quoteQty": "342.21382000",
+          "time": 1781505960223,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400582,
+          "price": "65810.35000000",
+          "qty": "0.00515000",
+          "quoteQty": "338.92330250",
+          "time": 1781505968002,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400583,
+          "price": "65810.35000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.84586300",
+          "time": 1781505968560,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400584,
+          "price": "65810.36000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.84586480",
+          "time": 1781505971346,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400585,
+          "price": "65810.35000000",
+          "qty": "0.00510000",
+          "quoteQty": "335.63278500",
+          "time": 1781505976267,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400586,
+          "price": "65810.88000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.81088000",
+          "time": 1781505976862,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400587,
+          "price": "65812.47000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.05999040",
+          "time": 1781505976862,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400588,
+          "price": "65815.55000000",
+          "qty": "0.00505000",
+          "quoteQty": "332.36852750",
+          "time": 1781505985878,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400589,
+          "price": "65815.55000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.37728700",
+          "time": 1781505989321,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400590,
+          "price": "65815.55000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06097600",
+          "time": 1781505993105,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400591,
+          "price": "65814.23000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.81423000",
+          "time": 1781505993105,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400592,
+          "price": "65806.89000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80689000",
+          "time": 1781505994164,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400593,
+          "price": "65806.88000000",
+          "qty": "0.00500000",
+          "quoteQty": "329.03440000",
+          "time": 1781505995073,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400594,
+          "price": "65806.88000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80688000",
+          "time": 1781505996804,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400595,
+          "price": "65806.88000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80688000",
+          "time": 1781505998194,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400596,
+          "price": "65806.88000000",
+          "qty": "0.00495000",
+          "quoteQty": "325.74405600",
+          "time": 1781506003389,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400597,
+          "price": "65806.89000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.76786030",
+          "time": 1781506005070,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400598,
+          "price": "65806.00000000",
+          "qty": "0.00490000",
+          "quoteQty": "322.44940000",
+          "time": 1781506012086,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400599,
+          "price": "65806.00000000",
+          "qty": "0.00485000",
+          "quoteQty": "319.15910000",
+          "time": 1781506020776,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400600,
+          "price": "65806.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.05792000",
+          "time": 1781506025414,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400601,
+          "price": "65804.68000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80468000",
+          "time": 1781506025414,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400602,
+          "price": "65801.34000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.05642880",
+          "time": 1781506027873,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400603,
+          "price": "65804.37000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80437000",
+          "time": 1781506028158,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400604,
+          "price": "65804.38000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.36461380",
+          "time": 1781506029028,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400605,
+          "price": "65804.37000000",
+          "qty": "0.00480000",
+          "quoteQty": "315.86097600",
+          "time": 1781506029464,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400606,
+          "price": "65804.37000000",
+          "qty": "0.00475000",
+          "quoteQty": "312.57075750",
+          "time": 1781506038180,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400607,
+          "price": "65804.37000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.84478660",
+          "time": 1781506039431,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400608,
+          "price": "65804.37000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.84478660",
+          "time": 1781506040623,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400609,
+          "price": "65804.38000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.05740160",
+          "time": 1781506044604,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400610,
+          "price": "65804.90000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.80490000",
+          "time": 1781506044604,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400611,
+          "price": "65831.43000000",
+          "qty": "0.03038000",
+          "quoteQty": "1999.95884340",
+          "time": 1781506044965,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400612,
+          "price": "65831.43000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.31430000",
+          "time": 1781506045209,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400613,
+          "price": "65831.43000000",
+          "qty": "0.03038000",
+          "quoteQty": "1999.95884340",
+          "time": 1781506045333,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400614,
+          "price": "65831.43000000",
+          "qty": "0.03038000",
+          "quoteQty": "1999.95884340",
+          "time": 1781506045966,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400615,
+          "price": "65831.44000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.83144000",
+          "time": 1781506046082,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400616,
+          "price": "65831.43000000",
+          "qty": "0.00471000",
+          "quoteQty": "310.06603530",
+          "time": 1781506046882,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400617,
+          "price": "65831.43000000",
+          "qty": "0.00020000",
+          "quoteQty": "13.16628600",
+          "time": 1781506050526,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400618,
+          "price": "65831.44000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.31440000",
+          "time": 1781506052114,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400619,
+          "price": "65831.43000000",
+          "qty": "0.00466000",
+          "quoteQty": "306.77446380",
+          "time": 1781506056468,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400620,
+          "price": "65831.43000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06605760",
+          "time": 1781506060781,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400621,
+          "price": "65830.11000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.83011000",
+          "time": 1781506060781,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400622,
+          "price": "65828.00000000",
+          "qty": "0.00640000",
+          "quoteQty": "421.29920000",
+          "time": 1781506065694,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400623,
+          "price": "65828.00000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.77356000",
+          "time": 1781506066608,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400624,
+          "price": "65828.00000000",
+          "qty": "0.00634000",
+          "quoteQty": "417.34952000",
+          "time": 1781506073916,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400625,
+          "price": "65828.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06496000",
+          "time": 1781506076995,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400626,
+          "price": "65828.52000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06512640",
+          "time": 1781506076995,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400627,
+          "price": "65828.52000000",
+          "qty": "0.00068000",
+          "quoteQty": "44.76339360",
+          "time": 1781506076995,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400628,
+          "price": "65831.00000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.31000000",
+          "time": 1781506077219,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400629,
+          "price": "65831.00000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67676000",
+          "time": 1781506077505,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400630,
+          "price": "65831.00000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67676000",
+          "time": 1781506077505,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400631,
+          "price": "65830.99000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67666040",
+          "time": 1781506077540,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400632,
+          "price": "65831.00000000",
+          "qty": "0.01009000",
+          "quoteQty": "664.23479000",
+          "time": 1781506077580,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400633,
+          "price": "65831.00000000",
+          "qty": "0.01006000",
+          "quoteQty": "662.25986000",
+          "time": 1781506077641,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400634,
+          "price": "65831.00000000",
+          "qty": "0.00992000",
+          "quoteQty": "653.04352000",
+          "time": 1781506077701,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400635,
+          "price": "65831.00000000",
+          "qty": "0.00992000",
+          "quoteQty": "653.04352000",
+          "time": 1781506077760,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400636,
+          "price": "65831.00000000",
+          "qty": "0.01004000",
+          "quoteQty": "660.94324000",
+          "time": 1781506077821,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400637,
+          "price": "65831.00000000",
+          "qty": "0.00993000",
+          "quoteQty": "653.70183000",
+          "time": 1781506077880,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400638,
+          "price": "65831.00000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.60155000",
+          "time": 1781506077941,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400639,
+          "price": "65831.00000000",
+          "qty": "0.01002000",
+          "quoteQty": "659.62662000",
+          "time": 1781506078000,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400640,
+          "price": "65831.00000000",
+          "qty": "0.01007000",
+          "quoteQty": "662.91817000",
+          "time": 1781506078062,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400641,
+          "price": "65831.00000000",
+          "qty": "0.00999000",
+          "quoteQty": "657.65169000",
+          "time": 1781506078123,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400642,
+          "price": "65831.00000000",
+          "qty": "0.01003000",
+          "quoteQty": "660.28493000",
+          "time": 1781506078180,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400643,
+          "price": "65831.00000000",
+          "qty": "0.00994000",
+          "quoteQty": "654.36014000",
+          "time": 1781506078240,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400644,
+          "price": "65831.00000000",
+          "qty": "0.00993000",
+          "quoteQty": "653.70183000",
+          "time": 1781506078299,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400645,
+          "price": "65831.00000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.60155000",
+          "time": 1781506080376,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400646,
+          "price": "65831.00000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.60155000",
+          "time": 1781506080377,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400647,
+          "price": "65830.99000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.60144950",
+          "time": 1781506080416,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400648,
+          "price": "65831.00000000",
+          "qty": "0.01001000",
+          "quoteQty": "658.96831000",
+          "time": 1781506080457,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400649,
+          "price": "65831.00000000",
+          "qty": "0.00992000",
+          "quoteQty": "653.04352000",
+          "time": 1781506080517,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400650,
+          "price": "65831.00000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.31000000",
+          "time": 1781506080577,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400651,
+          "price": "65831.00000000",
+          "qty": "0.00995000",
+          "quoteQty": "655.01845000",
+          "time": 1781506080636,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400652,
+          "price": "65831.00000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67676000",
+          "time": 1781506080696,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400653,
+          "price": "65831.00000000",
+          "qty": "0.00999000",
+          "quoteQty": "657.65169000",
+          "time": 1781506080756,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400654,
+          "price": "65831.00000000",
+          "qty": "0.01001000",
+          "quoteQty": "658.96831000",
+          "time": 1781506080816,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400655,
+          "price": "65831.00000000",
+          "qty": "0.01004000",
+          "quoteQty": "660.94324000",
+          "time": 1781506080877,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400656,
+          "price": "65831.00000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.60155000",
+          "time": 1781506080937,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400657,
+          "price": "65831.00000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67676000",
+          "time": 1781506080996,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400658,
+          "price": "65831.00000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.57648000",
+          "time": 1781506081056,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400659,
+          "price": "65831.00000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.67676000",
+          "time": 1781506081116,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400660,
+          "price": "65831.00000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.31000000",
+          "time": 1781506082219,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400661,
+          "price": "65831.00000000",
+          "qty": "0.00628000",
+          "quoteQty": "413.41868000",
+          "time": 1781506082622,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400662,
+          "price": "65831.00000000",
+          "qty": "0.00303000",
+          "quoteQty": "199.46793000",
+          "time": 1781506091899,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400663,
+          "price": "65831.00000000",
+          "qty": "0.01006000",
+          "quoteQty": "662.25986000",
+          "time": 1781506091917,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400664,
+          "price": "65831.00000000",
+          "qty": "0.01006000",
+          "quoteQty": "662.25986000",
+          "time": 1781506091930,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400665,
+          "price": "65830.99000000",
+          "qty": "0.01006000",
+          "quoteQty": "662.25975940",
+          "time": 1781506091957,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400666,
+          "price": "65831.00000000",
+          "qty": "0.00621000",
+          "quoteQty": "408.81051000",
+          "time": 1781506092224,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400667,
+          "price": "65831.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06592000",
+          "time": 1781506093252,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400668,
+          "price": "65831.52000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.83152000",
+          "time": 1781506093252,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400669,
+          "price": "65839.99000000",
+          "qty": "0.00076000",
+          "quoteQty": "50.03839240",
+          "time": 1781506094202,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400670,
+          "price": "65839.99000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.39990000",
+          "time": 1781506095121,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400671,
+          "price": "65839.99000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85119820",
+          "time": 1781506095874,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400672,
+          "price": "65839.99000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.38559660",
+          "time": 1781506097199,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400673,
+          "price": "65840.00000000",
+          "qty": "0.00615000",
+          "quoteQty": "404.91600000",
+          "time": 1781506101200,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400674,
+          "price": "65839.99000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.72552410",
+          "time": 1781506104124,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400675,
+          "price": "65840.00000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.41840000",
+          "time": 1781506105380,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400676,
+          "price": "65840.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.72560000",
+          "time": 1781506107310,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400677,
+          "price": "65840.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06880000",
+          "time": 1781506109417,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400678,
+          "price": "65840.52000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.84052000",
+          "time": 1781506109417,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400679,
+          "price": "65844.00000000",
+          "qty": "0.00609000",
+          "quoteQty": "400.98996000",
+          "time": 1781506109948,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400680,
+          "price": "65844.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.75596000",
+          "time": 1781506110170,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400681,
+          "price": "65844.00000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.77788000",
+          "time": 1781506112959,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400682,
+          "price": "65844.00000000",
+          "qty": "0.00303000",
+          "quoteQty": "199.50732000",
+          "time": 1781506117202,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400683,
+          "price": "65844.00000000",
+          "qty": "0.00227000",
+          "quoteQty": "149.46588000",
+          "time": 1781506117823,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400684,
+          "price": "65843.99000000",
+          "qty": "0.00220000",
+          "quoteQty": "144.85677800",
+          "time": 1781506119869,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400685,
+          "price": "65844.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.75596000",
+          "time": 1781506121526,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400686,
+          "price": "65844.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07008000",
+          "time": 1781506128008,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400687,
+          "price": "65844.00000000",
+          "qty": "0.00571000",
+          "quoteQty": "375.96924000",
+          "time": 1781506128008,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400688,
+          "price": "65844.00000000",
+          "qty": "0.03796000",
+          "quoteQty": "2499.43824000",
+          "time": 1781506132647,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400689,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506135359,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400690,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506136221,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400691,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506136623,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400692,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506137283,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400693,
+          "price": "65844.00000000",
+          "qty": "0.00597000",
+          "quoteQty": "393.08868000",
+          "time": 1781506137741,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400694,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506139127,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400695,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506139382,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400696,
+          "price": "65844.00000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87660000",
+          "time": 1781506139826,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400697,
+          "price": "65844.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07008000",
+          "time": 1781506141696,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400698,
+          "price": "65844.52000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.84452000",
+          "time": 1781506141696,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400699,
+          "price": "65856.33000000",
+          "qty": "0.01009000",
+          "quoteQty": "664.49036970",
+          "time": 1781506141716,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400700,
+          "price": "65856.33000000",
+          "qty": "0.01002000",
+          "quoteQty": "659.88042660",
+          "time": 1781506141727,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400701,
+          "price": "65856.33000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.83180640",
+          "time": 1781506141739,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400702,
+          "price": "65856.33000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.56330000",
+          "time": 1781506141752,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400703,
+          "price": "65856.33000000",
+          "qty": "0.01001000",
+          "quoteQty": "659.22186330",
+          "time": 1781506141761,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400704,
+          "price": "65856.33000000",
+          "qty": "0.00995000",
+          "quoteQty": "655.27048350",
+          "time": 1781506141771,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400705,
+          "price": "65856.33000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.85611650",
+          "time": 1781506141781,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400706,
+          "price": "65856.33000000",
+          "qty": "0.00994000",
+          "quoteQty": "654.61192020",
+          "time": 1781506141791,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400707,
+          "price": "65856.33000000",
+          "qty": "0.00990000",
+          "quoteQty": "651.97766700",
+          "time": 1781506141801,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400708,
+          "price": "65856.33000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.85611650",
+          "time": 1781506141815,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400709,
+          "price": "65856.33000000",
+          "qty": "0.01006000",
+          "quoteQty": "662.51467980",
+          "time": 1781506141829,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400710,
+          "price": "65856.33000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.83180640",
+          "time": 1781506141840,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400711,
+          "price": "65856.33000000",
+          "qty": "0.03037000",
+          "quoteQty": "2000.05674210",
+          "time": 1781506141967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400712,
+          "price": "65856.33000000",
+          "qty": "0.03037000",
+          "quoteQty": "2000.05674210",
+          "time": 1781506142965,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400713,
+          "price": "65856.33000000",
+          "qty": "0.00361000",
+          "quoteQty": "237.74135130",
+          "time": 1781506143338,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400714,
+          "price": "65856.33000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.39115220",
+          "time": 1781506143824,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400715,
+          "price": "65856.34000000",
+          "qty": "0.00591000",
+          "quoteQty": "389.21096940",
+          "time": 1781506149146,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400716,
+          "price": "65856.34000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07402880",
+          "time": 1781506158258,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400717,
+          "price": "65856.34000000",
+          "qty": "0.00553000",
+          "quoteQty": "364.18556020",
+          "time": 1781506158258,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400718,
+          "price": "65856.34000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78121180",
+          "time": 1781506159570,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400719,
+          "price": "65856.33000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85413940",
+          "time": 1781506160963,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400720,
+          "price": "65856.34000000",
+          "qty": "0.00579000",
+          "quoteQty": "381.30820860",
+          "time": 1781506167318,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400721,
+          "price": "65856.34000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.39848240",
+          "time": 1781506173337,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400722,
+          "price": "65856.34000000",
+          "qty": "0.00527000",
+          "quoteQty": "347.06291180",
+          "time": 1781506173967,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400723,
+          "price": "65856.34000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07402880",
+          "time": 1781506174012,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400724,
+          "price": "65856.86000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.85686000",
+          "time": 1781506174012,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400725,
+          "price": "65877.26000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.40794500",
+          "time": 1781506174012,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400726,
+          "price": "65877.99000000",
+          "qty": "0.00992000",
+          "quoteQty": "653.50966080",
+          "time": 1781506174103,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400727,
+          "price": "65877.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.05577640",
+          "time": 1781506174332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400728,
+          "price": "65878.00000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.78000000",
+          "time": 1781506175371,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400729,
+          "price": "65878.00000000",
+          "qty": "0.00573000",
+          "quoteQty": "377.48094000",
+          "time": 1781506177617,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400730,
+          "price": "65877.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87799000",
+          "time": 1781506177893,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400731,
+          "price": "65877.99000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85803820",
+          "time": 1781506182038,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400732,
+          "price": "65877.99000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85803820",
+          "time": 1781506182317,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400733,
+          "price": "65878.00000000",
+          "qty": "0.00567000",
+          "quoteQty": "373.52826000",
+          "time": 1781506187166,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400734,
+          "price": "65878.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.08096000",
+          "time": 1781506190090,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400735,
+          "price": "65878.52000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87852000",
+          "time": 1781506190090,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400736,
+          "price": "65887.99000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.40191660",
+          "time": 1781506190317,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400737,
+          "price": "65887.99000000",
+          "qty": "0.01795000",
+          "quoteQty": "1182.68942050",
+          "time": 1781506190338,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400738,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506191161,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400739,
+          "price": "65888.00000000",
+          "qty": "0.00562000",
+          "quoteQty": "370.29056000",
+          "time": 1781506196724,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400740,
+          "price": "65887.99000000",
+          "qty": "0.00759000",
+          "quoteQty": "500.08984410",
+          "time": 1781506197721,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400741,
+          "price": "65887.99000000",
+          "qty": "0.00759000",
+          "quoteQty": "500.08984410",
+          "time": 1781506200586,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400742,
+          "price": "65888.00000000",
+          "qty": "0.00477000",
+          "quoteQty": "314.28576000",
+          "time": 1781506201901,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400743,
+          "price": "65887.99000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.87990000",
+          "time": 1781506202749,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400744,
+          "price": "65888.00000000",
+          "qty": "0.00273000",
+          "quoteQty": "179.87424000",
+          "time": 1781506203265,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400745,
+          "price": "65888.00000000",
+          "qty": "0.00556000",
+          "quoteQty": "366.33728000",
+          "time": 1781506206044,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400746,
+          "price": "65888.00000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78976000",
+          "time": 1781506206225,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400747,
+          "price": "65887.99000000",
+          "qty": "0.03796000",
+          "quoteQty": "2501.10810040",
+          "time": 1781506207247,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400748,
+          "price": "65888.00000000",
+          "qty": "0.00005000",
+          "quoteQty": "3.29440000",
+          "time": 1781506208733,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400749,
+          "price": "65888.00000000",
+          "qty": "1.01534000",
+          "quoteQty": "66898.72192000",
+          "time": 1781506208733,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400750,
+          "price": "65887.99000000",
+          "qty": "0.00759000",
+          "quoteQty": "500.08984410",
+          "time": 1781506211791,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400751,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506211967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400752,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506212335,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400753,
+          "price": "65888.00000000",
+          "qty": "0.00298000",
+          "quoteQty": "196.34624000",
+          "time": 1781506212695,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400754,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506212962,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400755,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506213332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400756,
+          "price": "65887.99000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.88319850",
+          "time": 1781506213650,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400757,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506213962,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400758,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506214332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400759,
+          "price": "65887.99000000",
+          "qty": "0.00768000",
+          "quoteQty": "506.01976320",
+          "time": 1781506214963,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400760,
+          "price": "65888.00000000",
+          "qty": "0.00061000",
+          "quoteQty": "40.19168000",
+          "time": 1781506215172,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400761,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506215332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400762,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506215963,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400763,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506216331,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400764,
+          "price": "65888.00000000",
+          "qty": "0.00550000",
+          "quoteQty": "362.38400000",
+          "time": 1781506216611,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400765,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506216962,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400766,
+          "price": "65887.99000000",
+          "qty": "0.01470000",
+          "quoteQty": "968.55345300",
+          "time": 1781506217332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400767,
+          "price": "65887.99000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.49086490",
+          "time": 1781506217533,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400768,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506217962,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400769,
+          "price": "65887.99000000",
+          "qty": "0.02615000",
+          "quoteQty": "1722.97093850",
+          "time": 1781506218332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400770,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506218963,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400771,
+          "price": "65887.99000000",
+          "qty": "0.01335000",
+          "quoteQty": "879.60466650",
+          "time": 1781506219332,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400772,
+          "price": "65887.99000000",
+          "qty": "0.02408000",
+          "quoteQty": "1586.58279920",
+          "time": 1781506220967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400773,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221001,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400774,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221036,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400775,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221076,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400776,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221121,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400777,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221146,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400778,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221175,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400779,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221206,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400780,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221246,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400781,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221284,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400782,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221327,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400783,
+          "price": "65887.99000000",
+          "qty": "0.00727000",
+          "quoteQty": "479.00568730",
+          "time": 1781506221336,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400784,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221367,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400785,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221400,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400786,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221436,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400787,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221476,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400788,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221516,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400789,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221547,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400790,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221586,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400791,
+          "price": "65887.99000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88799000",
+          "time": 1781506221615,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400792,
+          "price": "65887.99000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.22911010",
+          "time": 1781506221656,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400793,
+          "price": "65887.99000000",
+          "qty": "0.03037000",
+          "quoteQty": "2001.01825630",
+          "time": 1781506221965,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400794,
+          "price": "65887.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "2000.35937640",
+          "time": 1781506222335,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400795,
+          "price": "65887.99000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.08415680",
+          "time": 1781506222428,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400796,
+          "price": "65886.67000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88667000",
+          "time": 1781506222428,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400797,
+          "price": "65860.02000000",
+          "qty": "0.03037000",
+          "quoteQty": "2000.16880740",
+          "time": 1781506222967,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400798,
+          "price": "65860.02000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.51020720",
+          "time": 1781506223338,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400799,
+          "price": "65860.01000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87900150",
+          "time": 1781506223638,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400800,
+          "price": "65860.02000000",
+          "qty": "0.00545000",
+          "quoteQty": "358.93710900",
+          "time": 1781506226186,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400801,
+          "price": "65860.02000000",
+          "qty": "0.00254000",
+          "quoteQty": "167.28445080",
+          "time": 1781506233269,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400802,
+          "price": "65860.01000000",
+          "qty": "0.00099000",
+          "quoteQty": "65.20140990",
+          "time": 1781506233287,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400803,
+          "price": "65860.02000000",
+          "qty": "0.00540000",
+          "quoteQty": "355.64410800",
+          "time": 1781506234800,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400804,
+          "price": "65860.02000000",
+          "qty": "0.00303000",
+          "quoteQty": "199.55586060",
+          "time": 1781506237254,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400805,
+          "price": "65860.02000000",
+          "qty": "0.00534000",
+          "quoteQty": "351.69250680",
+          "time": 1781506244342,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400806,
+          "price": "65860.01000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86001000",
+          "time": 1781506246698,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400807,
+          "price": "65860.01000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07520320",
+          "time": 1781506252557,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400808,
+          "price": "65860.02000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78220540",
+          "time": 1781506252838,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400809,
+          "price": "65860.02000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85480360",
+          "time": 1781506253038,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400810,
+          "price": "65860.02000000",
+          "qty": "0.00529000",
+          "quoteQty": "348.39950580",
+          "time": 1781506253842,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400811,
+          "price": "65860.01000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07520320",
+          "time": 1781506254782,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400812,
+          "price": "65858.69000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.85869000",
+          "time": 1781506254782,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400813,
+          "price": "65855.04000000",
+          "qty": "0.00337000",
+          "quoteQty": "221.93148480",
+          "time": 1781506254782,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400814,
+          "price": "65845.74000000",
+          "qty": "0.01001000",
+          "quoteQty": "659.11585740",
+          "time": 1781506254821,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400815,
+          "price": "65845.74000000",
+          "qty": "0.01999000",
+          "quoteQty": "1316.25634260",
+          "time": 1781506254826,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400816,
+          "price": "65845.73000000",
+          "qty": "0.01001000",
+          "quoteQty": "659.11575730",
+          "time": 1781506254861,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400817,
+          "price": "65845.74000000",
+          "qty": "0.01007000",
+          "quoteQty": "663.06660180",
+          "time": 1781506254901,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400818,
+          "price": "65845.74000000",
+          "qty": "0.00996000",
+          "quoteQty": "655.82357040",
+          "time": 1781506254952,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400819,
+          "price": "65845.74000000",
+          "qty": "0.00997000",
+          "quoteQty": "656.48202780",
+          "time": 1781506255009,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400820,
+          "price": "65845.74000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.45740000",
+          "time": 1781506255061,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400821,
+          "price": "65845.74000000",
+          "qty": "0.01001000",
+          "quoteQty": "659.11585740",
+          "time": 1781506255124,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400822,
+          "price": "65845.74000000",
+          "qty": "0.00992000",
+          "quoteQty": "653.18974080",
+          "time": 1781506255170,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400823,
+          "price": "65845.74000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.72505920",
+          "time": 1781506255220,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400824,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506257335,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400825,
+          "price": "65845.74000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.73512380",
+          "time": 1781506257964,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400826,
+          "price": "65845.73000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85223140",
+          "time": 1781506258288,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400827,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506258332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400828,
+          "price": "65845.74000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.73512380",
+          "time": 1781506258963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400829,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506259332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400830,
+          "price": "65845.74000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.73512380",
+          "time": 1781506259963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400831,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506260332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400832,
+          "price": "65845.74000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.73512380",
+          "time": 1781506260963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400833,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506261332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400834,
+          "price": "65845.74000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.73512380",
+          "time": 1781506261962,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400835,
+          "price": "65845.74000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.07666640",
+          "time": 1781506262332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400836,
+          "price": "65845.74000000",
+          "qty": "0.00524000",
+          "quoteQty": "345.03167760",
+          "time": 1781506264440,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400837,
+          "price": "65845.74000000",
+          "qty": "0.00727000",
+          "quoteQty": "478.69852980",
+          "time": 1781506269966,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400838,
+          "price": "65845.74000000",
+          "qty": "0.00362000",
+          "quoteQty": "238.36157880",
+          "time": 1781506270338,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400839,
+          "price": "65845.74000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07063680",
+          "time": 1781506270338,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400840,
+          "price": "65846.26000000",
+          "qty": "0.00064000",
+          "quoteQty": "42.14160640",
+          "time": 1781506270876,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400841,
+          "price": "65846.26000000",
+          "qty": "0.00036000",
+          "quoteQty": "23.70465360",
+          "time": 1781506270876,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400842,
+          "price": "65871.99000000",
+          "qty": "0.00995000",
+          "quoteQty": "655.42630050",
+          "time": 1781506270888,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400843,
+          "price": "65871.99000000",
+          "qty": "0.01003000",
+          "quoteQty": "660.69605970",
+          "time": 1781506270898,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400844,
+          "price": "65871.99000000",
+          "qty": "0.01005000",
+          "quoteQty": "662.01349950",
+          "time": 1781506270909,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400845,
+          "price": "65871.99000000",
+          "qty": "0.00997000",
+          "quoteQty": "656.74374030",
+          "time": 1781506270918,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400846,
+          "price": "65871.99000000",
+          "qty": "0.00991000",
+          "quoteQty": "652.79142090",
+          "time": 1781506270928,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400847,
+          "price": "65871.99000000",
+          "qty": "0.00993000",
+          "quoteQty": "654.10886070",
+          "time": 1781506270939,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400848,
+          "price": "65871.99000000",
+          "qty": "0.00990000",
+          "quoteQty": "652.13270100",
+          "time": 1781506270949,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400849,
+          "price": "65871.99000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.98965920",
+          "time": 1781506270958,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400850,
+          "price": "65871.99000000",
+          "qty": "0.02800000",
+          "quoteQty": "1844.41572000",
+          "time": 1781506270966,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400851,
+          "price": "65871.99000000",
+          "qty": "0.01002000",
+          "quoteQty": "660.03733980",
+          "time": 1781506270968,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400852,
+          "price": "65872.00000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.72000000",
+          "time": 1781506271218,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400853,
+          "price": "65871.99000000",
+          "qty": "0.00020000",
+          "quoteQty": "13.17439800",
+          "time": 1781506271336,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400854,
+          "price": "65872.00000000",
+          "qty": "0.00518000",
+          "quoteQty": "341.21696000",
+          "time": 1781506273064,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400855,
+          "price": "65872.00000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87200000",
+          "time": 1781506277219,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400856,
+          "price": "65871.99000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85695820",
+          "time": 1781506278576,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400857,
+          "price": "65872.00000000",
+          "qty": "0.00513000",
+          "quoteQty": "337.92336000",
+          "time": 1781506282095,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400858,
+          "price": "65872.00000000",
+          "qty": "0.02397000",
+          "quoteQty": "1578.95184000",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400859,
+          "price": "65872.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07904000",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400860,
+          "price": "65872.01000000",
+          "qty": "0.00264000",
+          "quoteQty": "173.90210640",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400861,
+          "price": "65872.02000000",
+          "qty": "0.00064000",
+          "quoteQty": "42.15809280",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400862,
+          "price": "65872.27000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07912640",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400863,
+          "price": "65872.41000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07917120",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400864,
+          "price": "65872.52000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87252000",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400865,
+          "price": "65872.62000000",
+          "qty": "0.00036000",
+          "quoteQty": "23.71414320",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400866,
+          "price": "65873.29000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07945280",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400867,
+          "price": "65873.99000000",
+          "qty": "0.00064000",
+          "quoteQty": "42.15935360",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400868,
+          "price": "65874.00000000",
+          "qty": "0.00742000",
+          "quoteQty": "488.78508000",
+          "time": 1781506283712,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400869,
+          "price": "65874.00000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87400000",
+          "time": 1781506284066,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400870,
+          "price": "65874.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.98366000",
+          "time": 1781506286529,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400871,
+          "price": "65878.66000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.40899500",
+          "time": 1781506287087,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400872,
+          "price": "65887.32000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.87320000",
+          "time": 1781506288172,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400873,
+          "price": "65887.33000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.41549750",
+          "time": 1781506288669,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400874,
+          "price": "65887.33000000",
+          "qty": "0.00758000",
+          "quoteQty": "499.42596140",
+          "time": 1781506289368,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400875,
+          "price": "65887.33000000",
+          "qty": "0.00508000",
+          "quoteQty": "334.70763640",
+          "time": 1781506291188,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400876,
+          "price": "65887.33000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.87330000",
+          "time": 1781506292060,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400877,
+          "price": "65887.33000000",
+          "qty": "0.00758000",
+          "quoteQty": "499.42596140",
+          "time": 1781506300706,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400878,
+          "price": "65887.33000000",
+          "qty": "0.00503000",
+          "quoteQty": "331.41326990",
+          "time": 1781506300750,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400879,
+          "price": "65887.33000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88733000",
+          "time": 1781506302648,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400880,
+          "price": "65887.32000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.08394240",
+          "time": 1781506308267,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400881,
+          "price": "65887.32000000",
+          "qty": "0.00968000",
+          "quoteQty": "637.78925760",
+          "time": 1781506308267,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400882,
+          "price": "65887.32000000",
+          "qty": "0.00030000",
+          "quoteQty": "19.76619600",
+          "time": 1781506308284,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400883,
+          "price": "65887.33000000",
+          "qty": "0.00498000",
+          "quoteQty": "328.11890340",
+          "time": 1781506309593,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400884,
+          "price": "65887.32000000",
+          "qty": "0.00303000",
+          "quoteQty": "199.63857960",
+          "time": 1781506311319,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400885,
+          "price": "65887.33000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78957910",
+          "time": 1781506314442,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400886,
+          "price": "65887.33000000",
+          "qty": "0.00493000",
+          "quoteQty": "324.82453690",
+          "time": 1781506318163,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400887,
+          "price": "65887.32000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.08394240",
+          "time": 1781506319376,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400888,
+          "price": "65886.00000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.88600000",
+          "time": 1781506319376,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400889,
+          "price": "65872.47000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85704460",
+          "time": 1781506319855,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400890,
+          "price": "65872.47000000",
+          "qty": "0.00064000",
+          "quoteQty": "42.15838080",
+          "time": 1781506320939,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400891,
+          "price": "65872.47000000",
+          "qty": "0.10000000",
+          "quoteQty": "6587.24700000",
+          "time": 1781506325521,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400892,
+          "price": "65872.47000000",
+          "qty": "0.33713000",
+          "quoteQty": "22207.58581110",
+          "time": 1781506325665,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400893,
+          "price": "65872.47000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87247000",
+          "time": 1781506326735,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400894,
+          "price": "65872.47000000",
+          "qty": "0.00488000",
+          "quoteQty": "321.45765360",
+          "time": 1781506327281,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400895,
+          "price": "65872.46000000",
+          "qty": "0.00152000",
+          "quoteQty": "100.12613920",
+          "time": 1781506329708,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400896,
+          "price": "65872.47000000",
+          "qty": "0.00483000",
+          "quoteQty": "318.16403010",
+          "time": 1781506335856,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400897,
+          "price": "65872.46000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07918720",
+          "time": 1781506345028,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400898,
+          "price": "65872.46000000",
+          "qty": "0.00002000",
+          "quoteQty": "1.31744920",
+          "time": 1781506345028,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400899,
+          "price": "65872.47000000",
+          "qty": "0.00478000",
+          "quoteQty": "314.87040660",
+          "time": 1781506345994,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400900,
+          "price": "65872.47000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.46742970",
+          "time": 1781506347715,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400901,
+          "price": "65872.47000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.46742970",
+          "time": 1781506351298,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400902,
+          "price": "65872.46000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07918720",
+          "time": 1781506351641,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400903,
+          "price": "65871.14000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87114000",
+          "time": 1781506351641,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400904,
+          "price": "65861.66000000",
+          "qty": "0.00473000",
+          "quoteQty": "311.52565180",
+          "time": 1781506356526,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400905,
+          "price": "65861.65000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86165000",
+          "time": 1781506358152,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400906,
+          "price": "65861.65000000",
+          "qty": "0.03795000",
+          "quoteQty": "2499.44961750",
+          "time": 1781506360148,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400907,
+          "price": "65861.66000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78264820",
+          "time": 1781506360784,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400908,
+          "price": "65861.66000000",
+          "qty": "0.14464000",
+          "quoteQty": "9526.23050240",
+          "time": 1781506363635,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400909,
+          "price": "65861.66000000",
+          "qty": "0.00469000",
+          "quoteQty": "308.89118540",
+          "time": 1781506365143,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400910,
+          "price": "65861.66000000",
+          "qty": "0.00464000",
+          "quoteQty": "305.59810240",
+          "time": 1781506374462,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400911,
+          "price": "65861.65000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07572800",
+          "time": 1781506375791,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400912,
+          "price": "65861.65000000",
+          "qty": "0.00727000",
+          "quoteQty": "478.81419550",
+          "time": 1781506375791,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400913,
+          "price": "65861.65000000",
+          "qty": "0.00758000",
+          "quoteQty": "499.23130700",
+          "time": 1781506378574,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400914,
+          "price": "65861.66000000",
+          "qty": "0.00459000",
+          "quoteQty": "302.30501940",
+          "time": 1781506383016,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400915,
+          "price": "65861.66000000",
+          "qty": "0.00152000",
+          "quoteQty": "100.10972320",
+          "time": 1781506383978,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400916,
+          "price": "65861.65000000",
+          "qty": "0.00303000",
+          "quoteQty": "199.56079950",
+          "time": 1781506387891,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400917,
+          "price": "65861.65000000",
+          "qty": "0.00758000",
+          "quoteQty": "499.23130700",
+          "time": 1781506390349,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400918,
+          "price": "65861.65000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.39296100",
+          "time": 1781506391389,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400919,
+          "price": "65861.65000000",
+          "qty": "0.00646000",
+          "quoteQty": "425.46625900",
+          "time": 1781506393058,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400920,
+          "price": "65861.66000000",
+          "qty": "0.00152000",
+          "quoteQty": "100.10972320",
+          "time": 1781506401501,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400921,
+          "price": "65861.65000000",
+          "qty": "0.00640000",
+          "quoteQty": "421.51456000",
+          "time": 1781506401631,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400922,
+          "price": "65861.66000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78264820",
+          "time": 1781506407163,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400923,
+          "price": "65861.65000000",
+          "qty": "0.00634000",
+          "quoteQty": "417.56286100",
+          "time": 1781506410665,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400924,
+          "price": "65861.65000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.45109150",
+          "time": 1781506414694,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400925,
+          "price": "65861.66000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07573120",
+          "time": 1781506416073,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400926,
+          "price": "65862.18000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86218000",
+          "time": 1781506416073,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400927,
+          "price": "65875.62000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.98382320",
+          "time": 1781506416335,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400928,
+          "price": "65875.62000000",
+          "qty": "0.01096000",
+          "quoteQty": "721.99679520",
+          "time": 1781506416966,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400929,
+          "price": "65875.62000000",
+          "qty": "0.00084000",
+          "quoteQty": "55.33552080",
+          "time": 1781506417337,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400930,
+          "price": "65875.62000000",
+          "qty": "0.00092000",
+          "quoteQty": "60.60557040",
+          "time": 1781506417966,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400931,
+          "price": "65875.62000000",
+          "qty": "0.00627000",
+          "quoteQty": "413.04013740",
+          "time": 1781506420745,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400932,
+          "price": "65875.62000000",
+          "qty": "0.00621000",
+          "quoteQty": "409.08760020",
+          "time": 1781506431564,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400933,
+          "price": "65875.63000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87563000",
+          "time": 1781506432133,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400934,
+          "price": "65875.63000000",
+          "qty": "0.03795000",
+          "quoteQty": "2499.98015850",
+          "time": 1781506435758,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400935,
+          "price": "65875.62000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.39771080",
+          "time": 1781506437758,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400936,
+          "price": "65875.62000000",
+          "qty": "0.00615000",
+          "quoteQty": "405.13506300",
+          "time": 1781506440477,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400937,
+          "price": "65875.62000000",
+          "qty": "0.00609000",
+          "quoteQty": "401.18252580",
+          "time": 1781506448886,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400938,
+          "price": "65875.63000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78642010",
+          "time": 1781506453571,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400939,
+          "price": "65875.62000000",
+          "qty": "0.00603000",
+          "quoteQty": "397.22998860",
+          "time": 1781506458761,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400940,
+          "price": "65875.62000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.08019840",
+          "time": 1781506464585,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400941,
+          "price": "65874.30000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87430000",
+          "time": 1781506464585,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400942,
+          "price": "65867.57000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.67570000",
+          "time": 1781506465214,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400943,
+          "price": "65867.57000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.93485630",
+          "time": 1781506465249,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400944,
+          "price": "65867.56000000",
+          "qty": "0.00597000",
+          "quoteQty": "393.22933320",
+          "time": 1781506468157,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400945,
+          "price": "65867.57000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.93485630",
+          "time": 1781506468646,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400946,
+          "price": "65867.57000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85616260",
+          "time": 1781506473963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400947,
+          "price": "65867.56000000",
+          "qty": "0.00591000",
+          "quoteQty": "389.27727960",
+          "time": 1781506477283,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400948,
+          "price": "65867.57000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.40067750",
+          "time": 1781506478439,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400949,
+          "price": "65867.57000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.93485630",
+          "time": 1781506480378,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400950,
+          "price": "65866.24000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86624000",
+          "time": 1781506480730,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400951,
+          "price": "65842.82000000",
+          "qty": "0.01997000",
+          "quoteQty": "1314.88111540",
+          "time": 1781506480775,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400952,
+          "price": "65842.82000000",
+          "qty": "0.01997000",
+          "quoteQty": "1314.88111540",
+          "time": 1781506480778,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400953,
+          "price": "65842.81000000",
+          "qty": "0.01997000",
+          "quoteQty": "1314.88091570",
+          "time": 1781506480808,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400954,
+          "price": "65842.82000000",
+          "qty": "0.00994000",
+          "quoteQty": "654.47763080",
+          "time": 1781506480848,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400955,
+          "price": "65842.82000000",
+          "qty": "0.01001000",
+          "quoteQty": "659.08662820",
+          "time": 1781506480897,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400956,
+          "price": "65842.82000000",
+          "qty": "0.00997000",
+          "quoteQty": "656.45291540",
+          "time": 1781506480958,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400957,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506480962,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400958,
+          "price": "65842.82000000",
+          "qty": "0.01005000",
+          "quoteQty": "661.72034100",
+          "time": 1781506481008,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400959,
+          "price": "65842.82000000",
+          "qty": "0.00997000",
+          "quoteQty": "656.45291540",
+          "time": 1781506481069,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400960,
+          "price": "65842.82000000",
+          "qty": "0.01008000",
+          "quoteQty": "663.69562560",
+          "time": 1781506481128,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400961,
+          "price": "65842.82000000",
+          "qty": "0.01007000",
+          "quoteQty": "663.03719740",
+          "time": 1781506481189,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400962,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506481333,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400963,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506481962,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400964,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506482334,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400965,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506482965,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400966,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506483334,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400967,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506483964,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400968,
+          "price": "65842.81000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.38655540",
+          "time": 1781506484316,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400969,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506484332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400970,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506484962,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400971,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506485331,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400972,
+          "price": "65842.81000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.84281000",
+          "time": 1781506485437,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400973,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506485963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400974,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506486332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400975,
+          "price": "65842.81000000",
+          "qty": "0.00585000",
+          "quoteQty": "385.18043850",
+          "time": 1781506486897,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400976,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506486963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400977,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506487332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400978,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506487963,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400979,
+          "price": "65842.82000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.98801520",
+          "time": 1781506488331,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400980,
+          "price": "65842.82000000",
+          "qty": "0.00038000",
+          "quoteQty": "25.02027160",
+          "time": 1781506491332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400981,
+          "price": "65842.82000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.42265820",
+          "time": 1781506493352,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400982,
+          "price": "65842.82000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.06970240",
+          "time": 1781506496928,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400983,
+          "price": "65843.34000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.84334000",
+          "time": 1781506496928,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400984,
+          "price": "65849.93000000",
+          "qty": "0.00579000",
+          "quoteQty": "381.27109470",
+          "time": 1781506497486,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400985,
+          "price": "65849.94000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.77948380",
+          "time": 1781506500065,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400986,
+          "price": "65849.93000000",
+          "qty": "0.00573000",
+          "quoteQty": "377.32009890",
+          "time": 1781506505927,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400987,
+          "price": "65849.93000000",
+          "qty": "0.03795000",
+          "quoteQty": "2499.00484350",
+          "time": 1781506511282,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400988,
+          "price": "65849.94000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.84994000",
+          "time": 1781506512645,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400989,
+          "price": "65850.46000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.85046000",
+          "time": 1781506513056,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400990,
+          "price": "65854.90000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07356800",
+          "time": 1781506513101,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400991,
+          "price": "65854.90000000",
+          "qty": "0.00567000",
+          "quoteQty": "373.39728300",
+          "time": 1781506514407,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400992,
+          "price": "65854.90000000",
+          "qty": "0.00030000",
+          "quoteQty": "19.75647000",
+          "time": 1781506517712,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400993,
+          "price": "65854.90000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85388200",
+          "time": 1781506522095,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400994,
+          "price": "65854.90000000",
+          "qty": "0.00562000",
+          "quoteQty": "370.10453800",
+          "time": 1781506525245,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400995,
+          "price": "65854.91000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07357120",
+          "time": 1781506529167,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400996,
+          "price": "65855.43000000",
+          "qty": "0.00064000",
+          "quoteQty": "42.14747520",
+          "time": 1781506529167,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400997,
+          "price": "65855.43000000",
+          "qty": "0.00036000",
+          "quoteQty": "23.70795480",
+          "time": 1781506529167,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400998,
+          "price": "65873.99000000",
+          "qty": "0.03036000",
+          "quoteQty": "1999.93433640",
+          "time": 1781506529334,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1400999,
+          "price": "65873.99000000",
+          "qty": "0.02036000",
+          "quoteQty": "1341.19443640",
+          "time": 1781506529967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401000,
+          "price": "65873.99000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.73990000",
+          "time": 1781506530127,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401001,
+          "price": "65873.99000000",
+          "qty": "0.00080000",
+          "quoteQty": "52.69919200",
+          "time": 1781506530338,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401002,
+          "price": "65873.99000000",
+          "qty": "0.01544000",
+          "quoteQty": "1017.09440560",
+          "time": 1781506530967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401003,
+          "price": "65873.99000000",
+          "qty": "0.00127000",
+          "quoteQty": "83.65996730",
+          "time": 1781506531338,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401004,
+          "price": "65873.99000000",
+          "qty": "0.00048000",
+          "quoteQty": "31.61951520",
+          "time": 1781506531967,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401005,
+          "price": "65874.00000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87400000",
+          "time": 1781506532180,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401006,
+          "price": "65873.99000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07967680",
+          "time": 1781506532338,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401007,
+          "price": "65873.99000000",
+          "qty": "0.00556000",
+          "quoteQty": "366.25938440",
+          "time": 1781506535080,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401008,
+          "price": "65874.00000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.40550000",
+          "time": 1781506544065,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401009,
+          "price": "65873.99000000",
+          "qty": "0.00550000",
+          "quoteQty": "362.30694500",
+          "time": 1781506544391,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401010,
+          "price": "65873.99000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07967680",
+          "time": 1781506545213,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401011,
+          "price": "65872.67000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87267000",
+          "time": 1781506545213,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401012,
+          "price": "65872.00000000",
+          "qty": "0.00545000",
+          "quoteQty": "359.00240000",
+          "time": 1781506552781,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401013,
+          "price": "65872.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.96848000",
+          "time": 1781506554758,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401014,
+          "price": "65872.01000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.88080150",
+          "time": 1781506556179,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401015,
+          "price": "65872.00000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.96848000",
+          "time": 1781506557954,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401016,
+          "price": "65872.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07904000",
+          "time": 1781506561284,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401017,
+          "price": "65870.68000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.87068000",
+          "time": 1781506561284,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401018,
+          "price": "65861.42000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78258340",
+          "time": 1781506561612,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401019,
+          "price": "65861.41000000",
+          "qty": "0.00539000",
+          "quoteQty": "354.99299990",
+          "time": 1781506562474,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401020,
+          "price": "65861.41000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.88810190",
+          "time": 1781506568396,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401021,
+          "price": "65861.41000000",
+          "qty": "0.00534000",
+          "quoteQty": "351.69992940",
+          "time": 1781506570736,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401022,
+          "price": "65861.42000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07565440",
+          "time": 1781506577426,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401023,
+          "price": "65861.94000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86194000",
+          "time": 1781506577426,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401024,
+          "price": "65867.82000000",
+          "qty": "0.00529000",
+          "quoteQty": "348.44076780",
+          "time": 1781506579685,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401025,
+          "price": "65867.83000000",
+          "qty": "0.01000000",
+          "quoteQty": "658.67830000",
+          "time": 1781506580191,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401026,
+          "price": "65867.83000000",
+          "qty": "0.03795000",
+          "quoteQty": "2499.68414850",
+          "time": 1781506587449,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401027,
+          "price": "65867.83000000",
+          "qty": "0.00578000",
+          "quoteQty": "380.71605740",
+          "time": 1781506588954,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401028,
+          "price": "65867.82000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.39505880",
+          "time": 1781506592199,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401029,
+          "price": "65867.83000000",
+          "qty": "0.00572000",
+          "quoteQty": "376.76398760",
+          "time": 1781506599720,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401030,
+          "price": "65867.83000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86783000",
+          "time": 1781506606431,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401031,
+          "price": "65867.83000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.46042330",
+          "time": 1781506606694,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401032,
+          "price": "65867.83000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78431410",
+          "time": 1781506607947,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401033,
+          "price": "65867.83000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86783000",
+          "time": 1781506608534,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401034,
+          "price": "65867.83000000",
+          "qty": "0.00566000",
+          "quoteQty": "372.81191780",
+          "time": 1781506608906,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401035,
+          "price": "65867.83000000",
+          "qty": "0.00500000",
+          "quoteQty": "329.33915000",
+          "time": 1781506615728,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401036,
+          "price": "65867.83000000",
+          "qty": "0.00561000",
+          "quoteQty": "369.51852630",
+          "time": 1781506619103,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401037,
+          "price": "65867.82000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07770240",
+          "time": 1781506625770,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401038,
+          "price": "65866.50000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86650000",
+          "time": 1781506625770,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401039,
+          "price": "65861.67000000",
+          "qty": "0.00555000",
+          "quoteQty": "365.53226850",
+          "time": 1781506629089,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401040,
+          "price": "65861.67000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85510060",
+          "time": 1781506632717,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401041,
+          "price": "65861.67000000",
+          "qty": "0.00550000",
+          "quoteQty": "362.23918500",
+          "time": 1781506638260,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401042,
+          "price": "65861.66000000",
+          "qty": "0.00034000",
+          "quoteQty": "22.39296440",
+          "time": 1781506638542,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401043,
+          "price": "65861.66000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86166000",
+          "time": 1781506640180,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401044,
+          "price": "65861.67000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.89007530",
+          "time": 1781506643327,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401045,
+          "price": "65861.66000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07573120",
+          "time": 1781506644278,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401046,
+          "price": "65860.34000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.86034000",
+          "time": 1781506644278,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401047,
+          "price": "65854.01000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.83193590",
+          "time": 1781506645862,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401048,
+          "price": "65854.01000000",
+          "qty": "0.00544000",
+          "quoteQty": "358.24581440",
+          "time": 1781506647872,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401049,
+          "price": "65854.01000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78058270",
+          "time": 1781506654287,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401050,
+          "price": "65854.00000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.43954000",
+          "time": 1781506654951,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401051,
+          "price": "65854.01000000",
+          "qty": "0.00539000",
+          "quoteQty": "354.95311390",
+          "time": 1781506657487,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401052,
+          "price": "65854.01000000",
+          "qty": "0.00759000",
+          "quoteQty": "499.83193590",
+          "time": 1781506657781,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401053,
+          "price": "65854.00000000",
+          "qty": "0.03795000",
+          "quoteQty": "2499.15930000",
+          "time": 1781506662083,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401054,
+          "price": "65854.01000000",
+          "qty": "0.00533000",
+          "quoteQty": "351.00187330",
+          "time": 1781506666886,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401055,
+          "price": "65854.01000000",
+          "qty": "0.00075000",
+          "quoteQty": "49.39050750",
+          "time": 1781506672379,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401056,
+          "price": "65854.01000000",
+          "qty": "0.00528000",
+          "quoteQty": "347.70917280",
+          "time": 1781506676725,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401057,
+          "price": "65854.01000000",
+          "qty": "0.00045000",
+          "quoteQty": "29.63430450",
+          "time": 1781506682897,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401058,
+          "price": "65854.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07328000",
+          "time": 1781506685044,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401059,
+          "price": "65854.00000000",
+          "qty": "0.00002000",
+          "quoteQty": "1.31708000",
+          "time": 1781506685044,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401060,
+          "price": "65854.00000000",
+          "qty": "0.00579000",
+          "quoteQty": "381.29466000",
+          "time": 1781506685892,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401061,
+          "price": "65854.00000000",
+          "qty": "0.00573000",
+          "quoteQty": "377.34342000",
+          "time": 1781506695056,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401062,
+          "price": "65854.01000000",
+          "qty": "0.00027000",
+          "quoteQty": "17.78058270",
+          "time": 1781506700800,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401063,
+          "price": "65854.00000000",
+          "qty": "0.00567000",
+          "quoteQty": "373.39218000",
+          "time": 1781506703837,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401064,
+          "price": "65854.00000000",
+          "qty": "0.00230000",
+          "quoteQty": "151.46420000",
+          "time": 1781506708206,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401065,
+          "price": "65854.00000000",
+          "qty": "0.00562000",
+          "quoteQty": "370.09948000",
+          "time": 1781506712988,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401066,
+          "price": "65854.00000000",
+          "qty": "0.00556000",
+          "quoteQty": "366.14824000",
+          "time": 1781506722598,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401067,
+          "price": "65854.01000000",
+          "qty": "0.00018000",
+          "quoteQty": "11.85372180",
+          "time": 1781506723381,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401068,
+          "price": "65854.00000000",
+          "qty": "0.00032000",
+          "quoteQty": "21.07328000",
+          "time": 1781506724835,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401069,
+          "price": "65854.00000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.85400000",
+          "time": 1781506724835,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401070,
+          "price": "65852.68000000",
+          "qty": "0.00100000",
+          "quoteQty": "65.85268000",
+          "time": 1781506724835,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401071,
+          "price": "65831.30000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.29658100",
+          "time": 1781506724962,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401072,
+          "price": "65831.30000000",
+          "qty": "0.03036000",
+          "quoteQty": "1998.63826800",
+          "time": 1781506725332,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401073,
+          "price": "65831.30000000",
+          "qty": "0.03037000",
+          "quoteQty": "1999.29658100",
+          "time": 1781506725967,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401074,
+          "price": "65831.29000000",
+          "qty": "0.00550000",
+          "quoteQty": "362.07209500",
+          "time": 1781506730849,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401075,
+          "price": "65831.29000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.40524790",
+          "time": 1781506731754,
+          "isBuyerMaker": true,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401076,
+          "price": "65831.30000000",
+          "qty": "0.00015000",
+          "quoteQty": "9.87469500",
+          "time": 1781506731958,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        },
+        {
+          "id": 1401077,
+          "price": "65831.30000000",
+          "qty": "0.00151000",
+          "quoteQty": "99.40526300",
+          "time": 1781506733431,
+          "isBuyerMaker": false,
+          "isBestMatch": true
+        }
+      ],
+      "raised": null
+    }
+  ]
+}

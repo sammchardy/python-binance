@@ -1,0 +1,11 @@
+{
+  "client": [
+    {
+      "method": "ws_ping",
+      "args": [],
+      "kwargs": {},
+      "return": {},
+      "raised": null
+    }
+  ]
+}

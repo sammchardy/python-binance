@@ -1,0 +1,13 @@
+{
+  "client": [
+    {
+      "method": "ws_get_time",
+      "args": [],
+      "kwargs": {},
+      "return": {
+        "serverTime": 1781506447079
+      },
+      "raised": null
+    }
+  ]
+}
