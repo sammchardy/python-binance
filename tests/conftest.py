@@ -70,7 +70,11 @@ def futuresClient():
 # pyproject.toml provides per-function isolation without the mismatch.
 @pytest_asyncio.fixture(scope="function")
 async def clientAsync():
-    client = AsyncClient(api_key, api_secret, https_proxy=proxy, testnet=testnet)
+    # Use AsyncClient.create() instead of the constructor so it calls get_server_time()
+    # and sets timestamp_offset, correcting for clock skew between local machine and
+    # Binance server. Without this, timestamp_offset stays 0 and signed requests fail
+    # with -1021 when local clock is >1000ms ahead of server.
+    client = await AsyncClient.create(api_key, api_secret, https_proxy=proxy, testnet=testnet)
     try:
         yield client
     finally:
