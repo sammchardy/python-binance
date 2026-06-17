@@ -1,0 +1,2300 @@
+Logo
+Spot/Margin/Savings/Mining
+USDⓈ-M Futures
+COIN-M Futures
+European Options
+WebSocket API
+Portfolio Margin
+简体中文
+Search
+Change Log
+General Info
+Market Data Endpoints
+Account/Trades Endpoints
+Websocket Market Streams
+User Data Streams
+Market Maker Endpoints
+Error Codes
+Binance Futures
+Change Log
+Important Documentation Notice
+
+Binance has launched its new API Documentation Portal. The existing GitHub API documentation is now deprecated and set to go offline in the upcoming few months following user migration; the exact date will be determined and communicated in due course.
+
+During this transition phase, both sites will be maintained. However, any new services will only be published in the new portal moving forward.
+
+Here's a reference table of the links for the current and new API documentation:
+
+Functionality	Current Documentation	New Documentation
+Spot Trading	Current Documentation	New Documentation
+Spot Websocket API	Current Documentation	New Documentation
+Margin Trading	Current Documentation	New Documentation
+Derivative UM Futures	Current Documentation	New Documentation
+Derivative CM Futures	Current Documentation	New Documentation
+Derivative Options	Current Documentation	New Documentation
+Derivative Portfolio Margin	Current Documentation	New Documentation
+Wallet	Current Documentation	New Documentation
+Sub Account	Current Documentation	New Documentation
+Simple Earn	Current Documentation	New Documentation
+Dual Investment	Current Documentation	New Documentation
+Auto Invest	Current Documentation	New Documentation
+Staking	Current Documentation	New Documentation
+Mining	Current Documentation	New Documentation
+Algo Trading	Current Documentation	New Documentation
+Copy Trading	Current Documentation	New Documentation
+Derivative Porfolio Margin Pro	Current Documentation	New Documentation
+Fiat	Current Documentation	New Documentation
+C2C	Current Documentation	New Documentation
+VIP Loan	Current Documentation	New Documentation
+Crypto Loan	Current Documentation	New Documentation
+Pay	Current Documentation	New Documentation
+Convert	Current Documentation	New Documentation
+Rebate	Current Documentation	New Documentation
+NFT	Current Documentation	New Documentation
+Gift Card	Current Documentation	New Documentation
+2023-10-19
+
+Binance Option is doing Websocket Service upgrade and the upgrade impacts the following：
+
+Before upgrade:
+
+The websocket server will send a ping frame every 5 minutes. If the websocket server does not receive a pong frame back from the connection within a 15 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+To connect websocket server without subscription, user can connect by using
+wss://nbstream.binance.com/eoptions/ws
+wss://nbstream.binance.com/eoptions/stream
+wss://nbstream.binance.com/eoptions/ws/
+wss://nbstream.binance.com/eoptions/stream/
+After upgrade:
+
+The websocket server will send a ping frame every 3 minutes. If the websocket server does not receive a pong frame back from the connection within a 10 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+To connect websocket server without subscription:
+Connect websocket server with subscription:
+wss://nbstream.binance.com/eoptions/ws
+wss://nbstream.binance.com/eoptions/stream
+/ at the end is no longer supported
+Raw stream like wss://nbstream.binance.com/eoptions/illegal_parameter/stream?steams=<streamName> or wss://fstream.binance.com/illegal_parameter/ws/<streamName>is not supported, please use remove illegal_parameter/ before /ws and /stream.
+2023-08-29
+
+REST
+
+GET /eapi/v1/account: add new field riskLevel to show account risk level
+GET /eapi/v1/marginAccount: add new fieldriskLevel to show account risk level
+Websocket User Data Stream
+
+Add new event RISK_LEVEL_CHANGE to show account riskLevel change
+2023-07-21
+
+REST
+
+New endpointGET /eapi/v1/income/asynto get Download Id For Option Transaction History
+New endpointGET /eapi/v1/income/asyn/idto get Option Transaction History Download Link by Id
+2023-07-13
+
+Websocket Market Streams
+
+These change will be effective from 2023-07-14:
+Add field T in streams <symbol>@ticker and <underlyingAsset>@ticker@<expirationDate> to show transaction time
+Add field E in stream <symbol>@depth<levels> to show event time
+2023-05-30
+
+General Information on Endpoints
+
+For GET endpoints, parameters must be sent as a query string without setting content type in the http headers.
+2023-02-02
+
+REST
+
+Endpoint POST /eapi/v1/transfer is disabled.
+2023-01-11
+
+REST
+
+Add endpoint GET /eapi/v1/order to check order status.
+2022-12-13
+
+WEBSOCKET
+
+Add u and pu in stream<symbol>@depth1000 to get diff orderbook update.
+2022-12-09
+
+REST
+
+Add updateId field u in GET /eapi/v1/depth
+Add parameter underlying in GET /eapi/v1/exerciseHistory to query exercise histroy by underlying
+2022-11-18
+
+REST
+
+New endpoint GET /eapi/v1/openInterest is added to get options open interest for specific underlying on certain expiration date.
+WEBSOCKET
+
+New stream <underlyingAsset>@openInterest@<expirationDate> is added for real-time option open interest feed.
+2022-11-16
+
+WEBSOCKET
+
+New trade stream <underlyingAsset>@trade is added for all option trades on specific underlying asset.
+Adjust format in stream option_pair.
+2022-11-03
+
+REST
+
+New endpoint for Auto-Cancel All Open Orders will be added on 2022-11-07:
+POST /eapi/v1/countdownCancelAll：Set Auto-Cancel All Open Orders (Kill-Switch) Config
+GET /eapi/v1/countdownCancelAll：Get Auto-Cancel All Open Orders (Kill-Switch) Config
+POST /eapi/v1/countdownCancelAllHeartBeat：Auto-Cancel All Open Orders (Kill-Switch) Heartbeat
+2022-09-20
+
+WEBSOCKET
+
+New streams <underlyingAsset>@markPrice and <underlyingAsset>@ticker@<expirationDate> are added.
+Streams <!miniTicker@arr> will be deprecated on 2022/10/30.
+2022-09-14
+
+REST
+
+Adjust endpoint field strikePrice,makerFeeRate,takerFeeRate,minQty,maxQty,initialMargin,maintenanceMargin,minInitialMargin,minMaintenanceMargin to string in endpoint GET /eapi/v1/exchangeInfo
+Only finished orders within 5 days can be queried in GET /eapi/v1/historyOrders
+2022-09-05
+
+REST
+
+Adjust response result in endpoint DELETE /eapi/v1/allOpenOrdersByUnderlying
+2022-08-22
+
+REST
+
+Add rateLimits information in endpoint GET /eapi/v1/exchangeInfo
+Parameters symbol set to not mandatory in GET /eapi/v1/userTrades
+General Info
+General API Information
+Some endpoints will require an API Key. Please refer to this page
+The base endpoint is: **https://eapi.binance.com
+All endpoints return either a JSON object or array.
+Data is returned in ascending order. Oldest first, newest last.
+All time and timestamp related fields are in milliseconds.
+HTTP Return Codes
+HTTP 4XX return codes are used for for malformed requests; the issue is on the sender's side.
+HTTP 403 return code is used when the WAF Limit (Web Application Firewall) has been violated.
+HTTP 429 return code is used when breaking a request rate limit.
+HTTP 418 return code is used when an IP has been auto-banned for continuing to send requests after receiving 429 codes.
+HTTP 5XX return codes are used for internal errors; the issue is on Binance's side.
+HTTP 503 return code is used when:
+If there is an error message "Unknown error, please check your request or try again later." returned in the response, the API successfully sent the request but not get a response within the timeout period.
+It is important to NOT treat this as a failure operation; the execution status is UNKNOWN and could have been a success;
+If there is an error message "Service Unavailable." returned in the response, it means this is a failure API operation and the service might be unavailable at the moment, you need to retry later.
+If there is an error message "Internal error; unable to process your request. Please try again." returned in the response, it means this is a failure API operation and you can resend your request if you need.
+Error Codes and Messages
+Any endpoint can return an ERROR
+The error payload is as follows:
+
+{
+  "code": -1121,
+  "msg": "Invalid symbol."
+}
+Specific error codes and messages defined in Error Codes.
+General Information on Endpoints
+For GET endpoints, parameters must be sent as a query string without setting content type in the http headers.
+For POST, PUT, and DELETE endpoints, the parameters may be sent as a query string or in the request body with content type application/x-www-form-urlencoded. You may mix parameters between both the query string and request body if you wish to do so.
+Parameters may be sent in any order.
+If a parameter sent in both the query string and request body, the query string parameter will be used.
+LIMITS
+The /eapi/v1/exchangeInfo rateLimits array contains objects related to the exchange's RAW_REQUEST, REQUEST_WEIGHT, and ORDER rate limits. These are further defined in the ENUM definitions section under Rate limiters (rateLimitType).
+A 429 will be returned when either rate limit is violated.
+ Binance has the right to further tighten the rate limits on users with intent to attack.
+IP Limits
+Every request will contain X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter) in the response headers which has the current used weight for the IP for all request rate limiters defined.
+Each route has a weight which determines for the number of requests each endpoint counts for. Heavier endpoints and endpoints that do operations on multiple symbols will have a heavier weight.
+When a 429 is received, it's your obligation as an API to back off and not spam the API.
+Repeatedly violating rate limits and/or failing to back off after receiving 429s will result in an automated IP ban (HTTP status 418).
+IP bans are tracked and scale in duration for repeat offenders, from 2 minutes to 3 days.
+The limits on the API are based on the IPs, not the API keys.
+ It is strongly recommended to use websocket stream for getting data as much as possible, which can not only ensure the timeliness of the message, but also reduce the access restriction pressure caused by the request.
+Order Rate Limits
+Every order response will contain a X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter) header which has the current order count for the account for all order rate limiters defined.
+Rejected/unsuccessful orders are not guaranteed to have X-MBX-ORDER-COUNT-** headers in the response.
+The order rate limit is counted against each account.
+Endpoint Security Type
+Each endpoint has a security type that determines the how you will interact with it.
+API-keys are passed into the Rest API via the X-MBX-APIKEY header.
+API-keys and secret-keys are case sensitive.
+API-keys can be configured to only access certain types of secure endpoints. For example, one API-key could be used for TRADE only, while another API-key can access everything except for TRADE routes.
+By default, API-keys can access all secure routes.
+Security Type	Description
+NONE	Endpoint can be accessed freely.
+TRADE	Endpoint requires sending a valid API-Key and signature.
+USER_DATA	Endpoint requires sending a valid API-Key and signature.
+USER_STREAM	Endpoint requires sending a valid API-Key.
+MARKET_DATA	Endpoint requires sending a valid API-Key.
+TRADE and USER_DATA endpoints are SIGNED endpoints.
+SIGNED (TRADE and USER_DATA) Endpoint Security
+SIGNED endpoints require an additional parameter, signature, to be sent in the query string or request body.
+Endpoints use HMAC SHA256 signatures. The HMAC SHA256 signature is a keyed HMAC SHA256 operation. Use your secretKey as the key and totalParams as the value for the HMAC operation.
+The signature is not case sensitive.
+Please make sure the signature is the end part of your query string or request body.
+totalParams is defined as the query string concatenated with the request body.
+Timing Security
+A SIGNED endpoint also requires a parameter, timestamp, to be sent which should be the millisecond timestamp of when the request was created and sent.
+An additional parameter, recvWindow, may be sent to specify the number of milliseconds after timestamp the request is valid for. If recvWindow is not sent, it defaults to 5000.
+The logic is as follows:
+
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow){
+    // process request
+  }
+  else {
+    // reject request
+  }
+Serious trading is about timing. Networks can be unstable and unreliable, which can lead to requests taking varying amounts of time to reach the servers. With recvWindow, you can specify that the request must be processed within a certain number of milliseconds or be rejected by the server.
+
+ It is recommended to use a small recvWindow of 5000 or less!
+SIGNED Endpoint Examples for POST /eapi/v1/order
+Here is a step-by-step example of how to send a vaild signed payload from the Linux command line using echo, openssl, and curl.
+
+Key	Value
+apiKey	dbefbc809e3e83c283a984c3a1459732ea7db1360ca80c5c2c8867408d28cc83
+secretKey	2b5eb11e18796d12d88f13dc27dbbd02c2cc51ff7059765ed9821957d82bb4d9
+Parameter	Value
+symbol	BTCUSDT
+side	BUY
+type	LIMIT
+timeInForce	GTC
+quantity	1
+price	9000
+recvWindow	5000
+timestamp	1591702613943
+Example 1: As a query string
+Example 1
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= 7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://eapi.binance.com/eapi/v1/order' -d 'symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400&signature=7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7'
+
+requestBody:
+symbol=BTC-210129-40000-C
+&side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=2000
+&recvWindow=5000
+&timestamp=1611825601400
+
+Example 2: As a request body
+Example 2
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= 7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7
+
+curl command:
+
+    (HMAC SHA256)
+   $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://eapi.binance.com/eapi/v1/order?symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400&signature=7c12045972f6140e765e0f2b67d28099718df805732676494238f50be830a7d7'
+
+queryString:
+symbol=BTC-210129-40000-C
+&side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=2000
+&recvWindow=5000
+&timestamp=1611825601400
+
+Example 3: Mixed query string and request body
+Example 3
+
+HMAC SHA256 signature:
+
+   $ echo -n "symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTCquantity=0.01&price=2000&recvWindow=5000&timestamp=1611825601400" | openssl dgst -sha256 -hmac "YtP1BudNOWZE1ag5uzCkh4hIC7qSmQOu797r5EJBFGhxBYivjj8HIX0iiiPof5yG"
+    (stdin)= fa6045c54fb02912b766442be1f66fab619217e551a4fb4f8a1ee000df914d8e
+
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: 22BjeOROKiXJ3NxbR3zjh3uoGcaflPu3VMyBXAg8Jj2J1xVSnY0eB4dzacdE9IWn" -X POST 'https://eapi.binance.com/eapi/v1/order?symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=0.01&price=2000&recvWindow=5000&timestamp=1611825601400&signature=fa6045c54fb02912b766442be1f66fab619217e551a4fb4f8a1ee000df914d8e'
+queryString:
+symbol=BTC-210129-40000-C&side=BUY&type=LIMIT&timeInForce=GTC
+
+requestBody:
+quantity=1&price=2000&recvWindow=5000&timestamp=1611825601400
+
+Note that the signature is different in example 3. There is no & between "GTC" and "quantity=1".
+
+Public Endpoints Info
+Terminology
+symbol refers to the symbol name of a options contract symbol
+underlying refers to the underlying symbol of a options contract symbol
+quoteAsset refers to the asset that is the price of a symbol.
+settleAsset refers to the settlement asset when options are exercised
+ENUM definitions
+Options contract type
+
+CALL
+PUT
+Order side
+
+BUY
+SELL
+Position side
+
+LONG
+SHORT
+Time in force
+
+GTC - Good Till Cancel
+IOC - Immediate or Cancel
+FOK - Fill or Kill
+Response Type (newOrderRespType)
+
+ACK
+RESULT
+Order types (type)
+
+LIMIT
+Order status (status)
+
+ACCEPTED
+REJECTED
+PARTIALLY_FILLED
+FILLED
+CANCELLED
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Rate limiters (rateLimitType)
+
+REQUEST_WEIGHT javascript { "rateLimitType": "REQUEST_WEIGHT", "interval": "MINUTE", "intervalNum": 1, "limit": 2400 }
+
+ORDERS javascript { "rateLimitType": "ORDERS", "interval": "MINUTE", "intervalNum": 1, "limit": 1200 }
+
+REQUEST_WEIGHT
+
+ORDERS
+
+Rate limit intervals (interval)
+
+MINUTE
+Filters
+Filters define trading rules on a symbol or an exchange.
+
+Symbol filters
+PRICE_FILTER
+/exchangeInfo format:
+
+  {
+    "filterType": "PRICE_FILTER",
+    "minPrice": "0.00000100",
+    "maxPrice": "100000.00000000",
+    "tickSize": "0.00000100"
+  }
+The PRICE_FILTER defines the price rules for a symbol. There are 3 parts:
+
+minPrice defines the minimum price/stopPrice allowed; disabled on minPrice == 0.
+maxPrice defines the maximum price/stopPrice allowed; disabled on maxPrice == 0.
+tickSize defines the intervals that a price/stopPrice can be increased/decreased by; disabled on tickSize == 0.
+Any of the above variables can be set to 0, which disables that rule in the price filter. In order to pass the price filter, the following must be true for price/stopPrice of the enabled rules:
+
+sell order price >= minPrice
+buy order price <= maxPrice
+(price-minPrice) % tickSize == 0
+LOT_SIZE
+/exchangeInfo format:
+
+  {
+    "filterType": "LOT_SIZE",
+    "minQty": "0.00100000",
+    "maxQty": "100000.00000000",
+    "stepSize": "0.00100000"
+  }
+The LOT_SIZE filter defines the quantity (aka "lots" in auction terms) rules for a symbol. There are 3 parts:
+
+minQty defines the minimum quantity allowed.
+maxQty defines the maximum quantity allowed.
+stepSize defines the intervals that a quantity can be increased/decreased by.
+In order to pass the lot size, the following must be true for quantity:
+
+quantity >= minQty
+quantity <= maxQty
+(quantity-minQty) % stepSize == 0
+Market Data Endpoints
+Test Connectivity
+Response:
+
+{}
+GET /eapi/v1/ping
+
+Test connectivity to the Rest API.
+
+Weight: 1
+
+Parameters: NONE
+
+Check Server Time
+Response:
+
+{
+  "serverTime": 1499827319559
+}
+GET /eapi/v1/time
+
+Test connectivity to the Rest API and get the current server time.
+
+Weight: 1
+
+Parameters: NONE
+
+Exchange Information
+Response:
+
+{
+  "timezone": "UTC",                    // Time zone used by the server
+  "serverTime": 1592387337630,          // Current system time
+  "optionContracts": [                  // Option contract underlying asset info
+    {
+      "id": 1,
+      "baseAsset": "BTC",               // Base currency
+      "quoteAsset": "USDT",             // Quotation asset
+      "underlying": "BTCUSDT",          // Name of the underlying asset of the option contract
+      "settleAsset": "USDT"             // Settlement currency
+    }
+  ],
+  "optionAssets": [                     // Option asset info
+    {
+      "id": 1,
+      "name": "USDT"                    // Asset name
+    }
+  ],
+  "optionSymbols": [                    // Option trading pair info
+    {
+        "contractId": 2,
+        "expiryDate": 1660521600000,    // expiry time
+        "filters": [
+            {
+                "filterType": "PRICE_FILTER",
+                "minPrice": "0.02",
+                "maxPrice": "80000.01",
+                "tickSize": "0.01"
+            },
+            {
+                "filterType": "LOT_SIZE",
+                "minQty": "0.01",
+                "maxQty": "100",
+                "stepSize": "0.01"
+            }
+        ],
+        "id": 17,
+        "symbol": "BTC-220815-50000-C",   // Trading pair name
+        "side": "CALL",                   // Direction: CALL long, PUT short
+        "strikePrice": "50000",           // Strike price
+        "underlying": "BTCUSDT",          // Underlying asset of the contract
+        "unit": 1,                        // Contract unit, the quantity of the underlying asset represented by a single contract.
+        "makerFeeRate": "0.0002",         // maker commission rate
+        "takerFeeRate": "0.0002",         // taker commission rate
+        "minQty": "0.01",                 // Minimum order quantity
+        "maxQty": "100",                  // Maximum order quantity
+        "initialMargin": "0.15",          // Initial Magin Ratio
+        "maintenanceMargin": "0.075",     // Maintenance Margin Ratio
+        "minInitialMargin": "0.1",        // Min Initial Margin Ratio
+        "minMaintenanceMargin": "0.05",   // Min Maintenance Margin Ratio
+        "priceScale": 2,                  // price precision
+        "quantityScale": 2,               // quantity precision
+        "quoteAsset": "USDT"              // Quotation asset
+    }
+  ],
+  "rateLimits": [
+    {
+        "rateLimitType": "REQUEST_WEIGHT",
+        "interval": "MINUTE",
+        "intervalNum": 1,
+        "limit": 2400
+    },
+    {
+        "rateLimitType": "ORDERS",
+        "interval": "MINUTE",
+        "intervalNum": 1,
+        "limit": 1200
+    },
+    {
+        "rateLimitType": "ORDERS",
+        "interval": "SECOND",
+        "intervalNum": 10,
+        "limit": 300
+    }
+  ]
+}
+GET /eapi/v1/exchangeInfo
+
+Current exchange trading rules and symbol information
+
+Weight: 1
+
+Parameters: NONE
+
+Order Book
+Response:
+
+{
+  "T": 1589436922972,   // transaction time
+  "u": 37461            // update id
+  "bids": [             // Buy order
+    [
+      "1000",            // Price
+      "0.9"              // Quantity
+    ]
+  ],
+  "asks": [              // Sell order
+    [
+      "1100",            // Price
+      "0.1"              // Quantity
+    ]
+  ]
+}
+GET /eapi/v1/depth
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+limit	INT	NO	Default:100 Max:1000.Optional value:[10, 20, 50, 100, 500, 1000]
+Recent Trades List
+Response:
+
+[
+  {
+    "id":"1",             // TradeId
+    "symbol": "BTC-220722-19000-C",
+    "price": "1000",      // Completed trade price
+    "qty": "-0.1",        // Completed trade quantity
+    "quoteQty": "-100",   // Completed trade amount
+    "side": -1            // Completed trade direction（-1 Sell，1 Buy）
+    "time": 1592449455993,// Time
+  }
+]
+GET /eapi/v1/trades
+
+Get recent market trades
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+limit	INT	NO	Number of records Default:100 Max:500
+Old Trades Lookup (MARKET_DATA)
+Response:
+
+[
+  {
+    "id":"1",             // UniqueId
+    "tradeId": "159244329455993",    // TradeId
+    "price": "1000",      // Completed trade price
+    "qty": "-0.1",        // Completed trade Quantity
+    "quoteQty": "-100",   // Completed trade amount
+    "side": -1            // Completed trade direction（-1 Sell，1 Buy）
+    "time": 1592449455993,// Time
+  }
+]
+GET /eapi/v1/historicalTrades
+
+Get older market historical trades.
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+fromId	LONG	NO	The UniqueId ID from which to return. The latest deal record is returned by default
+limit	INT	NO	Number of records Default:100 Max:500
+Kline/Candlestick Data
+Response:
+
+[
+  {
+      "open": "950",              // Opening price
+      "high": "1100",             // Highest price
+      "low": "900",               // Lowest price
+      "close": "1000",            // Closing price (latest price if the current candle has not closed)
+      "volume": "100"             // Trading volume(contracts)
+      "amount": "2",              // Trading amount(in quote asset)
+      "interval": "5m",           // Candle type
+      "tradeCount": 10,           // Number of completed trades
+      "takerVolume": "100",       // Taker trading volume(contracts)
+      "takerAmount": "10000",     // Taker trade amount(in quote asset)
+      "openTime": 1499040000000,  // Opening time
+      "closeTime": 1499644799999, // Closing time
+  }
+]
+GET /eapi/v1/klines
+
+Kline/candlestick bars for an option symbol. Klines are uniquely identified by their open time.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+interval	STRING	YES	Time interval
+startTime	LONG	NO	Start Time 1592317127349
+endTime	LONG	NO	End Time
+limit	INT	NO	Number of records Default:500 Max:1500
+If startTime and endTime are not sent, the most recent klines are returned.
+Option Mark Price
+Response:
+
+[
+  {
+    "symbol": "BTC-200730-9000-C",
+    "markPrice": "1343.2883",       // Mark price
+    "bidIV": "1.40000077",          // Implied volatility Buy
+    "askIV": "1.50000153",          // Implied volatility Sell
+    "markIV": "1.45000000"          // Implied volatility mark
+    "delta": "0.55937056",          // delta
+    "theta": "3739.82509871",       // theta
+    "gamma": "0.00010969",          // gamma
+    "vega": "978.58874732",         // vega
+    "highPriceLimit": "1618.241",   // Current highest buy price
+    "lowPriceLimit": "1068.3356"    // Current lowest sell price
+  }
+]
+GET /eapi/v1/mark
+
+Option mark price and greek info.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	Option trading pair, e.g BTC-200730-9000-C
+24hr Ticker Price Change Statistics
+Response:
+
+[
+  {
+    "symbol": "BTC-200730-9000-C",
+    "priceChange": "-16.2038",        //24-hour price change
+    "priceChangePercent": "-0.0162",  //24-hour percent price change
+    "lastPrice": "1000",              //Last trade price
+    "lastQty": "1000",                //Last trade amount
+    "open": "1016.2038",              //24-hour open price
+    "high": "1016.2038",              //24-hour high
+    "low": "0",                       //24-hour low
+    "volume": "5",                    //Trading volume(contracts)
+    "amount": "1",                    //Trade amount(in quote asset)
+    "bidPrice":"999.34",              //The best buy price
+    "askPrice":"1000.23",             //The best sell price
+    "openTime": 1592317127349,        //Time the first trade occurred within the last 24 hours
+    "closeTime": 1592380593516,       //Time the last trade occurred within the last 24 hours
+    "firstTradeId": 1,                //First trade ID
+    "tradeCount": 5,                  //Number of trades
+    "strikePrice": "9000",            //Strike price
+    "exercisePrice": "3000.3356"      //return estimated settlement price one hour before exercise, return index price at other times
+  }
+]
+GET /eapi/v1/ticker
+
+24 hour rolling window price change statistics.
+
+Weight:
+5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	Option trading pair, e.g BTC-200730-9000-C
+Symbol Price Ticker
+Response:
+
+{
+   "time": 1656647305000,
+   "indexPrice": "9200" // Current spot index price
+}
+GET /eapi/v1/index
+
+Get spot index price for option underlying.
+
+Weight:
+1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	YES	Spot pair（Option contract underlying asset, e.g BTCUSDT)
+Historical Exercise Records
+Response:
+
+[
+  {
+    "symbol": "BTC-220121-60000-P",            // symbol
+    "strikePrice": "60000",                    // strike price
+    "realStrikePrice": "38844.69652571",       // real strike price
+    "expiryDate": 1642752000000,               // Exercise time
+    "strikeResult": "REALISTIC_VALUE_STRICKEN" // strike result
+  }
+]
+GET /eapi/v1/exerciseHistory
+
+REALISTIC_VALUE_STRICKEN -> Exercised
+
+EXTRINSIC_VALUE_EXPIRED -> Expired OTM
+
+Get historical exercise records.
+
+Weight:
+3
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	NO	Underlying index like BTCUSDT
+startTime	LONG	NO	Start Time
+endTime	LONG	NO	End Time
+limit	INT	NO	Number of records Default:100 Max:100
+Open interest
+Response:
+
+[
+    {
+        "symbol": "ETH-221119-1175-P",
+        "sumOpenInterest": "4.01",
+        "sumOpenInterestUsd": "4880.2985615624",
+        "timestamp": "1668754020000"
+    }
+]
+GET /eapi/v1/openInterest
+
+Get open interest for specific underlying asset on specific expiration date.
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlyingAsset	STRING	YES	underlying asset, e.g ETH/BTC
+expiration	STRING	YES	expiration date, e.g 221225
+Account/Trades Endpoints
+ Considering the possible data latency from RESTful endpoints during an extremely volatile market, it is highly recommended to get the order status, position, etc from the Websocket user data stream.
+Option Account Information (TRADE)
+Response:
+
+{
+  "asset": [
+    {
+      "asset": "USDT",                    // Asset type
+      "marginBalance": "1877.52214415",   // Account balance
+      "equity": "617.77711415",           // Account equity
+      "available": "0",                   // Available funds
+      "locked": "2898.92389933",          // locked balance for order and position
+      "unrealizedPNL": "222.23697000",    // Unrealized profit/loss
+   }
+  ],
+  "greek": [
+    {
+      "underlying":"BTCUSDT"            // Option Underlying
+      "delta": "-0.05"                  // Account delta
+      "gamma": "-0.002"                 // Account gamma
+      "theta": "-0.05"                  // Account theta
+      "vega": "-0.002"                  // Account vega
+    }
+  ],
+  "riskLevel": "NORMAL",                // Account risk level
+  "time": 1592449455993                 // Time
+}
+GET /eapi/v1/account (HMAC SHA256)
+
+Get current account information.
+
+Weight: 3
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Funds Transfer (TRADE)
+Please find details from here.
+
+New Order (TRADE)
+Response ACK:
+
+{
+  "orderId": 4611875134427365377,     // System order number
+  "clientOrderId": ""                 // Client order ID
+  "symbol": "BTC-200730-9000-C",      // Option trading pair
+  "price": "100",                     // Order Price
+  "quantity": "1",                    // Order Quantity
+  "side": "BUY",                      // Buy/sell direction
+  "type": "LIMIT",                    // Order type
+  "createDate": 1592465880683,        // Order Time
+  "updateTime": 1566818724722,        // Update time
+}
+Response RESULT:
+
+{
+  "orderId": 4611875134427365377,     // System order number
+  "symbol": "BTC-200730-9000-C",      // Option trading pair
+  "price": "100",                     // Order Price
+  "quantity": "1",                    // Order Quantity
+  "executedQty": "0",                 // Number of executed quantity
+  "fee": "0",                         // Fee
+  "side": "BUY",                      // Buy/sell direction
+  "type": "LIMIT",                    // Order type
+  "timeInForce": "GTC",               // Time in force method
+  "reduceOnly": false,                // Order is reduce only Y/N
+  "postOnly": false,                  // Order is post only
+  "createTime": 1592465880683,        // Order Time
+  "updateTime": 1566818724722,        // Update time
+  "status": "ACCEPTED",               // Order status
+  "avgPrice": "0",                    // Average price of completed trade
+  "clientOrderId": ""                 // Client order ID
+  "priceScale": 2,
+  "quantityScale": 2,
+  "optionSide": "CALL",
+  "quoteAsset": "USDT",
+  "mmp": false
+}
+POST /eapi/v1/order (HMAC SHA256)
+
+Send a new order.
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+side	ENUM	YES	Buy/sell direction: SELL, BUY
+type	ENUM	YES	Order Type: LIMIT(only support limit)
+quantity	DECIMAL	YES	Order Quantity
+price	DECIMAL	NO	Order Price
+timeInForce	ENUM	NO	Time in force method（Default GTC）
+reduceOnly	BOOLEAN	NO	Reduce Only（Default false）
+postOnly	BOOLEAN	NO	Post Only（Default false）
+newOrderRespType	ENUM	NO	"ACK", "RESULT", Default "ACK"
+clientOrderId	STRING	NO	User-defined order ID cannot be repeated in pending orders
+isMmp	BOOLEAN	NO	is market maker protection order, true/false
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Some parameters are mandatory depending on the order type as follows:
+
+Type	Mandatory parameters
+LIMIT	timeInForce, quantity, price
+Place Multiple Orders (TRADE)
+Response:
+
+[
+    {
+        "orderId": 4612288550799409153,  // System order number
+        "symbol": "ETH-220826-1800-C",   // Option trading pair
+        "price": "100",                  // Order Price
+        "quantity": "0.01",              // Order Quantity
+        "side": "BUY",                   // Buy/sell direction
+        "type": "LIMIT",                 // Order type
+        "reduceOnly": false,             // Order is reduce only Y/N
+        "postOnly": false,               // Post only or not
+        "clientOrderId": "1001",         // Client order ID
+        "mmp": false                     // MMP
+    }
+]
+POST /eapi/v1/batchOrders
+
+Send multiple option orders.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+orders	LIST	YES	order list. Max 5 orders
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Where batchOrders is the list of order parameters in JSON:
+
+example: /eapi/v1/batchOrders?orders=[{"symbol":"BTC-210115-35000-C", "price":"100","quantity":"0.0002","side":"BUY","type":"LIMIT"}]
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+side	ENUM	YES	Buy/sell direction: SELL, BUY
+type	ENUM	YES	Order Type: LIMIT (Only support LIMIT)
+quantity	DECIMAL	YES	Order Quantity
+price	DECIMAL	NO	Order Price
+timeInForce	ENUM	NO	Time in force method（Default GTC）
+reduceOnly	BOOLEAN	NO	Reduce Only（Default false）
+postOnly	BOOLEAN	NO	Post Only（Default false）
+clientOrderId	STRING	NO	User-defined order ID cannot be repeated in pending orders
+isMmp	BOOLEAN	NO	is market maker protection order, true/false
+  Some parameters are mandatory depending on the order type as follows:
+
+Type	Mandatory parameters
+LIMIT	timeInForce, quantity, price
+Parameter rules are same with New Order
+Batch orders are processed concurrently, and the order of matching is not guaranteed.
+The order of returned contents for batch orders is the same as the order of the order list.
+Query Single Order (TRADE)
+Response:
+
+{
+  "orderId": 4611875134427365377,     // System order id
+  "symbol": "BTC-200730-9000-C",      // Option trading pair
+  "price": "100",                     // Order Price
+  "quantity": "1",                    // Order Quantity
+  "executedQty": "0",                 // Number of executed quantity
+  "fee": "0",                         // Fee
+  "side": "BUY",                      // Buy/sell direction
+  "type": "LIMIT",                    // Order type
+  "timeInForce": "GTC",               // Time in force method
+  "reduceOnly": false,                // Order is reduce only Y/N
+  "postOnly": false,                  // Order is post only
+  "createTime": 1592465880683,        // Order Time
+  "updateTime": 1566818724722,        // Update time
+  "status": "ACCEPTED",               // Order status
+  "avgPrice": "0",                    // Average price of completed trade
+  "source": "API",                    // Order source
+  "clientOrderId": ""                 // Client order ID
+  "priceScale": 2,
+  "quantityScale": 2,
+  "optionSide": "CALL",
+  "quoteAsset": "USDT",
+  "mmp": false
+}
+No Order Response:
+
+{
+    "code": -2013,
+    "msg": "Order does not exist"
+}
+GET /eapi/v1/order (HMAC SHA256)
+
+Check an order status.
+
+Weight: 1
+
+These orders will not be found:
+order status is CANCELED or REJECTED, AND
+order has NO filled trade, AND
+created time + 3 days < current time
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+orderId	LONG	NO	Order id
+clientOrderId	STRING	NO	User-defined order ID cannot be repeated in pending orders
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or clientOrderId must be sent.
+Cancel Option Order (TRADE)
+Response:
+
+{
+  "orderId": 4611875134427365377,     // System order number
+  "symbol": "BTC-200730-9000-C",      // Option trading pair
+  "price": "100",                     // Order Price
+  "quantity": "1",                    // Order Quantity
+  "executedQty": "0",                 // Number of executed quantity
+  "fee": "0",                         // Fee
+  "side": "BUY",                      // Buy/sell direction
+  "type": "LIMIT",                    // Order type
+  "timeInForce": "GTC",               // Time in force method
+  "reduceOnly": false,                // Order is reduce only Y/N
+  "postOnly": false,
+  "createDate": 1592465880683,        // Order Time
+  "updateTime": 1566818724722,        // Update time
+  "status": "ACCEPTED",               // Order status
+  "avgPrice": "0",                    // Average price of completed trade
+  "source": "API",
+  "clientOrderId": "",                // Client order ID
+  "priceScale": 4,
+  "quantityScale": 4,
+  "optionSide": "CALL",
+  "quoteAsset": "USDT",
+  "mmp": false
+}
+DELETE /eapi/v1/order (HMAC SHA256)
+
+Cancel an active order.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+orderId	LONG	NO	Order ID, e.g 4611875134427365377
+clientOrderId	STRING	NO	User-defined order ID, e.g 10000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+At least one instance of orderId and clientOrderId must be sent.
+
+Cancel Multiple Option Orders (TRADE)
+Response:
+
+[
+  {
+    "orderId": 4611875134427365377,     // System order number
+    "symbol": "BTC-200730-9000-C",      // Option trading pair
+    "price": "100",                     // Order Price
+    "quantity": "1",                    // Order Quantity
+    "executedQty": "0",                 // Number of completed quantity
+    "fee": 0,                           // Fee
+    "side": "BUY",                      // Buy/sell direction
+    "type": "LIMIT",                    // Order type
+    "timeInForce": "GTC",               // Time in force method
+    "createTime": 1592465880683,        // Order Time
+    "status": "ACCEPTED",               // Order status
+    "avgPrice": "0",                    // Average price of completed trade
+    "reduceOnly": false,                // Order is reduce only Y/N
+    "clientOrderId": ""                 // Client order ID
+    "updateTime": 1566818724722,        // Update time
+  }
+]
+DELETE /eapi/v1/batchOrders (HMAC SHA256)
+
+Cancel an active order.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+orderIds	LIST<LONG>	NO	Order ID, e.g [4611875134427365377,4611875134427365378]
+clientOrderIds	LIST<STRING>	NO	User-defined order ID, e.g ["my_id_1","my_id_2"]
+recvWindow	LONG	NO
+timestamp	LONG	YES
+At least one instance of orderId and clientOrderId must be sent.
+
+Cancel all Option orders on specific symbol (TRADE)
+Response:
+
+{
+  "code": 0,
+  "msg": "success"
+}
+DELETE /eapi/v1/allOpenOrders (HMAC SHA256)
+
+Cancel all active order on a symbol.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair, e.g BTC-200730-9000-C
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Cancel All Option Orders By Underlying (TRADE)
+Response:
+
+{
+    "code": 0,
+    "msg": "success",
+    "data": 0
+}
+DELETE /eapi/v1/allOpenOrdersByUnderlying (HMAC SHA256)
+
+Cancel all active orders on specified underlying.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	YES	Option underlying, e.g BTCUSDT
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Query Current Open Option Orders (USER_DATA)
+Response:
+
+[
+  {
+    "orderId": 4611875134427365377,     // System order number
+    "symbol": "BTC-200730-9000-C",      // Option trading pair
+    "price": "100",                     // Order Price
+    "quantity": "1",                    // Order Quantity
+    "executedQty": "0",                 // Number of completed trades
+    "fee": "0",                         // Fee
+    "side": "BUY",                      // Buy/sell direction
+    "type": "LIMIT",                    // Order type
+    "timeInForce": "GTC",               // Time in force method
+    "reduceOnly": false,                // Order is reduce only Y/N
+    "postOnly": false,
+    "createTime": 1592465880683,        // Order Time
+    "updateTime": 1592465880683,        // Update Time
+    "status": "ACCEPTED",               // Order status
+    "avgPrice": "0",                    // Average price of completed trade
+    "clientOrderId": ""                 // Client order ID
+    "priceScale": 2,
+    "quantityScale": 2,
+    "optionSide": "CALL",
+    "quoteAsset": "USDT",
+    "mmp": false
+  }
+]
+GET /eapi/v1/openOrders (HMAC SHA256)
+
+Query current all open orders, status: ACCEPTED PARTIALLY_FILLED
+
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	return all orders if don't pass, Option trading pair, e.g BTC-200730-9000-C,
+orderId	LONG	NO	Returns the orderId and subsequent orders, the most recent order is returned by default
+startTime	LONG	NO	Start Time
+endTime	LONG	NO	End Time
+limit	INT	NO	Number of result sets returned Default:100 Max:1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Query Option Order History (TRADE)
+Response:
+
+[
+    {
+        "orderId": 4611922413427359795,
+        "symbol": "BTC-220715-2000-C",
+        "price": "18000.00000000",
+        "quantity": "-0.50000000",
+        "executedQty": "-0.50000000",
+        "fee": "3.00000000",
+        "side": "SELL",
+        "type": "LIMIT",
+        "timeInForce": "GTC",
+        "reduceOnly": false,
+        "postOnly": false,
+        "createTime": 1657867694244,
+        "updateTime": 1657867888216,
+        "status": "FILLED",
+        "reason": "0",
+        "avgPrice": "18000.00000000",
+        "source": "API",
+        "clientOrderId": "",
+        "priceScale": 2,
+        "quantityScale": 2,
+        "optionSide": "CALL",
+        "quoteAsset": "USDT",
+        "mmp": false
+    }
+]
+GET /eapi/v1/historyOrders (HMAC SHA256)
+
+Query all finished orders within 5 days, finished status: CANCELLED FILLED REJECTED.
+
+Weight: 3
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	Option trading pair
+orderId	LONG	NO	Returns the orderId and subsequent orders, the most recent order is returned by default
+startTime	LONG	NO	Start Time, e.g 1593511200000
+endTime	LONG	NO	End Time, e.g 1593512200000
+limit	INT	NO	Number of result sets returned Default:100 Max:1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Option Position Information (USER_DATA)
+Response:
+
+[
+  {
+    "entryPrice": "1000",               // Average entry price
+    "symbol": "BTC-200730-9000-C",      // Option trading pair
+    "side": "SHORT",                    // Position direction
+    "quantity": "-0.1",                 // Number of positions (positive numbers represent long positions, negative number represent short positions)
+    "reducibleQty": "0",                // Number of positions that can be reduced
+    "markValue": "105.00138",           // Current market value
+    "ror": "-0.05",                     // Rate of return
+    "unrealizedPNL": "-5.00138",        // Unrealized profit/loss
+    "markPrice": "1050.0138",           // Mark price
+    "strikePrice": "9000",              // Strike price
+    "positionCost": "1000.0000",        // Position cost
+    "expiryDate": 1593511200000         // Exercise time
+    "priceScale": 2,
+    "quantityScale": 2,
+    "optionSide": "CALL",
+    "quoteAsset": "USDT"
+   }
+]
+GET /eapi/v1/position (HMAC SHA256)
+
+Get current position information.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	Option trading pair, e.g BTC-200730-9000-C
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Account Trade List (USER_DATA)
+Response:
+
+[
+  {
+    "id": 4611875134427365377,          // unique id
+    "tradeId": 239,                     // trade id
+    "orderId": 4611875134427365377,     // order id
+    "symbol": "BTC-200730-9000-C",      // option symbol
+    "price": "100",                     // trade price
+    "quantity": "1",                    // trade quantity
+    "fee": "0",                         // fee
+    "realizedProfit": "0.00000000",     // realized profit/loss
+    "side": "BUY",                      // order side
+    "type": "LIMIT",                    // order type
+    "volatility": "0.9",                // volatility
+    "liquidity": "TAKER",               // TAKER or MAKER
+    "quoteAsset": "USDT",               // quote asset
+    "time": 1592465880683               // trade time
+    "priceScale": 2,
+    "quantityScale": 2,
+    "optionSide": "CALL",
+    "quoteAsset": "USDT"
+  }
+]
+GET /eapi/v1/userTrades (HMAC SHA256)
+
+Get trades for a specific account and symbol.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	Option symbol, e.g BTC-200730-9000-C
+fromId	LONG	NO	Trade id to fetch from. Default gets most recent trades, e.g 4611875134427365376
+startTime	LONG	NO	Start time, e.g 1593511200000
+endTime	LONG	NO	End time, e.g 1593512200000
+limit	INT	NO	Default 100; max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+User Exercise Record (USER_DATA)
+Response:
+
+[
+    {
+        "id": "1125899906842624042",
+        "currency": "USDT",
+        "symbol": "BTC-220721-25000-C",
+        "exercisePrice": "25000.00000000",
+        "markPrice": "25000.00000000",
+        "quantity": "1.00000000",
+        "amount": "0.00000000",
+        "fee": "0.00000000",
+        "createDate": 1658361600000,
+        "priceScale": 2,
+        "quantityScale": 2,
+        "optionSide": "CALL",
+        "positionSide": "LONG",
+        "quoteAsset": "USDT"
+    }
+]
+GET /eapi/v1/exerciseRecord (HMAC SHA256)
+
+Get account exercise records.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO	Option trading pair, e.g BTC-200730-9000-C
+startTime	LONG	NO	startTime
+endTime	LONG	NO	endTime
+limit	INT	NO	default 1000, max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Account Funding Flow (USER_DATA)
+Response:
+
+[
+  {
+    "id": 1125899906842624000,
+    "asset": "USDT",              // Asset type
+    "amount": "-0.552",           // Amount (positive numbers represent inflow, negative numbers represent outflow)
+    "type": "FEE",                // type (fees)
+    "createDate": 1592449456000,  // Time
+  },
+  {
+    "id": 1125899906842624000,
+    "asset": "USDT",              // Asset type
+    "amount": "100",              // Amount (positive numbers represent inflow, negative numbers represent outflow)
+    "type": "CONTRACT",           // type (buy/sell contracts)
+    "createDate": 1592449456000,  // Time
+  },
+  {
+    "id": 1125899906842624000,
+    "asset": "USDT",              // Asset type
+    "amount": "10000",            // Amount (positive numbers represent inflow, negative numbers represent outflow)
+    "type": "TRANSFER",           // type（Funds transfer）
+    "createDate": 1592448410000,  // Time
+  }
+]
+GET /eapi/v1/bill (HMAC SHA256)
+
+Query account funding flows.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+currency	STRING	YES	Asset type, e.g USDT
+recordId	LONG	NO	Return the recordId and subsequent data, the latest data is returned by default, e.g 100000
+startTime	LONG	NO	Start Time, e.g 1593511200000
+endTime	LONG	NO	End Time, e.g 1593512200000
+limit	INT	NO	Number of result sets returned Default:100 Max:1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get Download Id For Option Transaction History (USER_DATA)
+Response:
+
+{
+    "avgCostTimestampOfLast30d":7241837, // Average time taken for data download in the past 30 days
+    "downloadId":"546975389218332672",
+}
+GET /eapi/v1/income/asyn (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+startTime	LONG	YES	Timestamp in ms
+endTime	LONG	YES	Timestamp in ms
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Request Limitation is 5 times per month, shared by front end download page and rest api
+The time between startTime and endTime can not be longer than 1 year
+Get Option Transaction History Download Link by Id (USER_DATA)
+Response:
+
+{
+    "downloadId":"545923594199212032",
+    "status":"completed",     // Enum：completed，processing
+    "url":"www.binance.com",  // The link is mapped to download id
+    "notified":true,          // ignore
+    "expirationTimestamp":1645009771000,  // The link would expire after this timestamp
+    "isExpired":null,
+}
+OR (Response when server is processing)
+
+{
+    "downloadId":"545923594199212032",
+    "status":"processing",
+    "url":"",
+    "notified":false,
+    "expirationTimestamp":-1
+    "isExpired":null,
+
+}
+GET /eapi/v1/income/asyn/id (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+downloadId	STRING	YES	get by download id api
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Download link expiration: 24h
+Websocket Market Streams
+The baseurl of the websocket interface is: *wss://nbstream.binance.com/eoptions/*
+Streams can be access either in a single raw stream or a combined stream
+Raw streams are accessed at /ws/<streamName>
+Combined streams are accessed at /stream?streams=<streamName1>/<streamName2>/<streamName3>
+Example:
+wss://nbstream.binance.com/eoptions/ws/BTC-210630-9000-P@ticker
+wss://nbstream.binance.com/eoptions/stream?streams=BTC-210630-9000-P@trade/BTC-210630-9000-P@ticker
+
+A single connection is only valid for 24 hours; expect to be disconnected at the 24 hour mark
+
+The websocket server will send a ping frame every 5 minutes. If the websocket server does not receive a pong frame back from the connection within a 15 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+
+WebSocket connections have a limit of 10 incoming messages per second.
+
+A connection that goes beyond the limit will be disconnected; IPs that are repeatedly disconnected may be banned.
+
+A single connection can listen to a maximum of 200 streams.
+
+Considering the possible data latency from RESTful endpoints during an extremely volatile market, it is highly recommended to get the order status, position, etc from the Websocket user data stream.
+
+Combined stream events are wrapped as follows: {"stream":"<streamName>","data":<rawPayload>}
+
+All symbols for streams are uppercase
+
+Live Subscribing/Unsubscribing to streams
+The following data can be sent through the websocket instance in order to subscribe/unsubscribe from streams. Examples can be seen below.
+The id used in the JSON payloads is an unsigned INT used as an identifier to uniquely identify the messages going back and forth.
+Subscribe to a stream
+Response
+
+{
+  "result": null,
+  "id": 1
+}
+Request
+{
+"method": "SUBSCRIBE",
+"params":
+[
+"BTC-210630-9000-P@ticker",
+"BTC-210630-9000-P@depth"
+],
+"id": 1
+}
+
+Unsubscribe to a stream
+Response
+
+  {
+    "result": null,
+    "id": 312
+  }
+Request
+{
+"method": "UNSUBSCRIBE",
+"params":
+[
+"BTC-210630-9000-P@ticker"
+],
+"id": 312
+}
+
+Listing Subscriptions
+Response
+
+  {
+    "result": [
+      "BTC-210630-9000-P@ticker"
+    ],
+    "id": 3
+  }
+Request
+{
+"method": "LIST_SUBSCRIPTIONS",
+"id": 3
+}
+
+Setting Properties
+Currently, the only property can be set is to set whether combined stream payloads are enabled are not. The combined property is set to false when connecting using /ws/ ("raw streams") and true when connecting using /stream/.
+
+Response
+
+  {
+    "result": null,
+    "id": 5
+  }
+Request
+{
+"method": "SET_PROPERTY",
+"params":
+[
+"combined",
+true
+],
+"id": 5
+}
+
+Retrieving Properties
+Response javascript { "result": true, // Indicates that combined is set to true. "id": 2 }
+
+Request
+{
+"method": "GET_PROPERTY",
+"params":
+[
+"combined"
+],
+"id": 2
+}
+
+Error Messages
+Error Message	Description
+{"code": 0, "msg": "Unknown property"}	Parameter used in the SET_PROPERTY or GET_PROPERTY was invalid
+{"code": 1, "msg": "Invalid value type: expected Boolean"}	Value should only be true or false
+{"code": 2, "msg": "Invalid request: property name must be a string"}	Property name provided was invalid
+{"code": 2, "msg": "Invalid request: request ID must be an unsigned integer"}	Parameter id had to be provided or the value provided in the id parameter is an unsupported type
+{"code": 2, "msg": "Invalid request: unknown variant %s, expected one of SUBSCRIBE, UNSUBSCRIBE, LIST_SUBSCRIPTIONS, SET_PROPERTY, GET_PROPERTY at line 1 column 28"}	Possible typo in the provided method or provided method was neither of the expected values
+{"code": 2, "msg": "Invalid request: too many parameters"}	Unnecessary parameters provided in the data
+{"code": 2, "msg": "Invalid request: property name must be a string"}	Property name was not provided
+{"code": 2, "msg": "Invalid request: missing field method at line 1 column 73"}	method was not provided in the data
+{"code":3,"msg":"Invalid JSON: expected value at line %s column %s"}	JSON data sent has incorrect syntax.    ## Trade Streams
+Trade Streams
+** Payload: **
+
+{
+    "e":"trade",                        // event type
+    "E":1591677941092,                  // event time
+    "s":"BTC-200630-9000-P",            // Option trading symbol
+    "t":1,                              // trade ID
+    "p":"1000",                         // price
+    "q":"-2",                           // quantity
+    "b":4611781675939004417,            // buy order ID
+    "a":4611781675939004418,            // sell order ID
+    "T":1591677567872,                  // trade completed time
+    "S":"-1"                            // direction, -1 for taker sell, 1 for taker buy
+}
+The Trade Streams push raw trade information for specific symbol or underlying asset. E.g.ETH@trade
+
+Stream Name:
+<symbol>@trade or <underlyingAsset>@trade
+
+Update Speed: 50ms
+
+Index Price Streams
+** Payload: **
+
+{
+    "e":"index",         // event type
+    "E":1661415480351,   // time
+    "s":"ETHUSDT",       // underlying symbol
+    "p":"1707.89008607"  // index price
+}
+Underlying(e.g ETHUSDT) index stream.
+
+Stream Name:
+<symbol>@index
+
+Update Speed: 1000ms
+
+Mark Price
+** Payload: **
+
+[
+    {
+      "e":"markPrice",         // Event Type
+      "E":1663684594227,       // Event time
+      "s":"ETH-220930-1500-C", // Symbol
+      "mp":"30.3"              // Option mark price
+    },
+    {
+      "e":"markPrice",
+      "E":1663684594228,
+      "s":"ETH-220923-1000-C",
+      "mp":"341.5"
+    }
+】
+The mark price for all option symbols on specific underlying asset. E.g.ETH@markPrice
+
+Stream Name:
+<underlyingAsset>@markPrice
+
+Update Speed: 1000ms
+
+Kline/Candlestick Streams
+** Payload: **
+
+{
+    "e":"kline",                        // event type
+    "E":1638747660000,                  // event time
+    "s":"BTC-200630-9000-P",            // Option trading symbol
+    "k":{
+        "t":1638747660000,              // kline start time
+        "T":1638747719999,              // kline end time
+        "s":"BTC-200630-9000-P",        // Option trading symbol
+        "i":"1m",                       // candle period
+        "F":0,                          // first trade ID
+        "L":0,                          // last trade ID
+        "o":"1000",                     // open
+        "c":"1000",                     // close
+        "h":"1000",                     // high
+        "l":"1000",                     // low
+        "v":"0",                        // volume(in contracts)
+        "n":0,                          // number of trades
+        "x":false,                      // current candle has been completed Y/N
+        "q":"0",                        // completed trade amount   (in quote asset)
+        "V":"0",                        // taker completed trade volume (in contracts)
+        "Q":"0"                         // taker trade amount(in quote asset)
+    }
+}
+The Kline/Candlestick Stream push updates to the current klines/candlestick every 1000 milliseconds (if existing).
+
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+"1m", "3m", "5m", "15m" "30m" "1h", "2h", "4h", "6h", "12h", "1d", "3d", "1w",
+
+Stream Name:
+<symbol>@kline_<interval>
+
+Update Speed: 1000ms
+
+24-hour TICKER
+** Payload: **
+
+{
+    "e":"24hrTicker",           // event type
+    "E":1657706425200,          // event time
+    "T":1657706425220,          // transaction time
+    "s":"BTC-220930-18000-C",   // Option symbol
+    "o":"2000",                 // 24-hour opening price
+    "h":"2020",                 // Highest price
+    "l":"2000",                 // Lowest price
+    "c":"2020",                 // latest price
+    "V":"1.42",                 // Trading volume(in contracts)
+    "A":"2841",                 // trade amount(in quote asset)
+    "P":"0.01",                 // price change percent
+    "p":"20",                   // price change
+    "Q":"0.01",                 // volume of last completed trade(in contracts)
+    "F":"27",                   // first trade ID
+    "L":"48",                   // last trade ID
+    "n":22,                     // number of trades
+    "bo":"2012",                // The best buy price
+    "ao":"2020",                // The best sell price
+    "bq":"4.9",                 // The best buy quantity
+    "aq":"0.03",                // The best sell quantity
+    "b":"0.1202",               // BuyImplied volatility
+    "a":"0.1318",               // SellImplied volatility
+    "d":"0.98911",              // delta
+    "t":"-0.16961",             // theta
+    "g":"0.00004",              // gamma
+    "v":"2.66584",              // vega
+    "vo":"0.10001",             // Implied volatility
+    "mp":"2003.5102",           // Mark price
+    "hl":"2023.511",            // Buy Maximum price
+    "ll":"1983.511",            // Sell Minimum price
+    "eep":"0"                   // Estimated strike price (return estimated strike price half hour before exercise)
+  }
+24hr ticker info for all symbols. Only symbols whose ticker info changed will be sent.
+
+Stream Name:
+<symbol>@ticker
+
+Update Speed: 1000ms
+
+24-hour TICKER by underlying asset and expiration data
+** Payload: **
+
+[
+{
+      "e":"24hrTicker",           // event type
+      "E":1657706425200,          // event time
+      "T":1657706425220,          // transaction time
+      "s":"ETH-220930-1600-C",    // Option symbol
+      "o":"2000",                 // 24-hour opening price
+      "h":"2020",                 // Highest price
+      "l":"2000",                 // Lowest price
+      "c":"2020",                 // latest price
+      "V":"1.42",                 // Trading volume(in contracts)
+      "A":"2841",                 // trade amount(in quote asset)
+      "P":"0.01",                 // price change percent
+      "p":"20",                   // price change
+      "Q":"0.01",                 // volume of last completed trade(in contracts)
+      "F":"27",                   // first trade ID
+      "L":"48",                   // last trade ID
+      "n":22,                     // number of trades
+      "bo":"2012",                // The best buy price
+      "ao":"2020",                // The best sell price
+      "bq":"4.9",                 // The best buy quantity
+      "aq":"0.03",                // The best sell quantity
+      "b":"0.1202",               // BuyImplied volatility
+      "a":"0.1318",               // SellImplied volatility
+      "d":"0.98911",              // delta
+      "t":"-0.16961",             // theta
+      "g":"0.00004",              // gamma
+      "v":"2.66584",              // vega
+      "vo":"0.10001",             // Implied volatility
+      "mp":"2003.5102",           // Mark price
+      "hl":"2023.511",            // Buy Maximum price
+      "ll":"1983.511",            // Sell Minimum price
+      "eep":"0"                   // Estimated strike price (return estimated strike price half hour before exercise)
+    },
+    {
+      "e":"24hrTicker",
+      "E":1663685112123,
+      "s":"ETH-220930-1500-C",
+      "o":"34.9",
+      "h":"44.6",
+      "l":"26.8",
+      "c":"26.8",
+      "V":"11.84",
+      "A":"444.37",
+      "P":"-0.232",
+      "p":"-8.1",
+      "Q":"0",
+      "F":"91",
+      "L":"129",
+      "n":39,
+      "bo":"26.8",
+      "ao":"33.9",
+      "bq":"0.65",
+      "aq":"0.01",
+      "b":"0.88790536",
+      "a":"0.98729014",
+      "d":"0.2621153",
+      "t":"-3.44806807",
+      "g":"0.00158298",
+      "v":"0.7148147",
+      "vo":"0.93759775",
+      "mp":"30.3",
+      "hl":"228.7",
+      "ll":"0.1",
+      "eep":"0"
+    }
+]
+24hr ticker info by underlying asset and expiration date. E.g.ETH@ticker@220930
+
+Stream Name:
+<underlyingAsset>@ticker@<expirationDate>
+
+Update Speed: 1000ms
+
+Open Interest
+[
+    {
+      "e":"openInterest",         // Event type
+      "E":1668759300045,          // Event time
+      "s":"ETH-221125-2700-C",    // option symbol
+      "o":"1580.87",              // Open interest in contracts
+      "h":"1912992.178168204"     // Open interest in USDT
+    }
+]
+Option open interest for specific underlying asset on specific expiration date. E.g.ETH@openInterest@221125
+
+Stream Name:
+<underlyingAsset>@openInterest@<expirationDate>
+
+Update Speed: 60s
+
+New Symbol Info
+{
+    "e":"OPTION_PAIR",         //eventType
+    "E":1668573571842,         //eventTime
+    "id":652,                  //option id
+    "cid":2,                   //underlying asset id
+    "u":"BTCUSDT",             //Underlying index of the contract
+    "qa":"USDT",               //Quotation asset
+    "s":"BTC-221116-21000-C",  //Trading pair name
+    "unit":1,                  //Conversion ratio, the quantity of the underlying asset represented by a single contract.
+    "mq":"0.01",               //Minimum trade volume of the underlying asset
+    "d":"CALL",                //Option type
+    "sp":"21000",              //Strike price
+    "ed":1668585600000         //expiration time
+}
+New symbol listing stream.
+
+Stream Name:
+option_pair
+
+Update Speed: 50ms
+
+Partial Book Depth Streams
+** Payload: **
+
+{
+    "e":"depth",                    // event type
+    "E":1591695934010,              // event time
+    "T":1591695934000,              // transaction time
+    "s":"BTC-200630-9000-P",        // Option symbol
+    "u":162,                                    // update id in event
+    "pu":162,                                   // same as update id in event
+    "b":[                           // Buy order
+      [
+          "200",                    // Price
+          "3",                      // quantity
+      ],
+      [
+          "101",
+          "1"
+      ],
+      [
+          "100",
+          "2"
+      ]
+    ],
+    "a":[                           // Sell order
+        [
+            "1000",
+            "89"
+        ]
+    ]
+}
+Top bids and asks, Valid levels are are 10, 20, 50, 100.
+
+Stream Names: <symbol>@depth<levels> OR <symbol>@depth<levels>@100ms OR <symbol>@depth<levels>@1000ms.
+
+Update Speed: 100ms or 1000ms, 500ms(default when update speed isn't used)
+
+User Data Streams
+The base API endpoint is: https://eapi.binance.com
+A User Data Stream listenKey is valid for 60 minutes after creation.
+Doing a PUT on a listenKey will extend its validity for 60 minutes.
+Doing a DELETE on a listenKey will close the stream and invalidate the listenKey.
+Doing a POST on an account with an active listenKey will return the currently active listenKey and extend its validity for 60 minutes.
+Connection method for Websocket：
+Base Url: wss://nbstream.binance.com/eoptions/
+User Data Streams are accessed at /ws/<listenKey>
+Example: wss://nbstream.binance.com/eoptions/ws/XaEAKTsQSRLZAGH9tuIu37plSRsdjmlAVBoNYPUITlTAko1WI22PgmBMpI1rS8Yh
+A single connection is only valid for 24 hours; expect to be disconnected at the 24 hour mark
+Start User Data Stream (USER_STREAM)
+Response:
+
+{
+  "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1",
+  "expiration":1710140106000
+}
+POST /eapi/v1/listenKey
+
+Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active listenKey, that listenKey will be returned and its validity will be extended for 60 minutes.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Keepalive User Data Stream (USER_STREAM)
+Response:
+
+{}
+PUT /eapi/v1/listenKey
+
+Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes. It's recommended to send a ping about every 60 minutes.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Close User Data Stream (USER_STREAM)
+Response:
+
+{}
+DELETE /eapi/v1/listenKey
+
+Close out a user data stream.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Event: Risk level change
+Payload:
+
+{
+    "e":"RISK_LEVEL_CHANGE", //Event Type
+    "E":1587727187525, //Event Time
+    "s":"REDUCE_ONLY", //risk level
+    "mb":"1534.11708371", //margin balance
+    "mm":"254789.11708371" //maintenance margin
+}
+Update Speed: 50ms
+Updates whenever there is an account risk level change. The following are possibly values:
+NORMAL
+REDUCE_ONLY
+Note: Risk level changes are only applicable to VIP and Market Makers user accounts. VIP and certain Market Maker accounts will be automatically placed into REDUCE_ONLY mode if their margin balance is insufficient to meet their maintenance margin obligations. Once in REDUCE_ONLY mode, the system will re-evaluate the risk level only upon the following events:
+Funds transfer
+Trade fill
+Option expiry
+Event: Account data
+Payload:
+
+{
+    "e":"ACCOUNT_UPDATE",                 // Event type
+    "E":1591696384141,                    // Event time
+    "B":[
+        {
+          "b":"100007992.26053177",       // Account balance
+          "m":"0",                        // Position value
+          "u":"458.782655111111",         // Unrealized profit/loss
+          "U":200,                        // Positive unrealized profit for long position
+          "M":"-15452.328456",            // Maintenance margin
+          "i":"-18852.328456",            // Initial margin
+          "a":"USDT",                     // Margin asset
+        }
+    ],
+    "G":[
+        {
+         "ui":"SOLUSDT",                  // Underlying
+         "d":-33.2933905,                 // Delta
+         "t":35.5926375,                  // Theta
+         "g":-14.3023855,                 // Gamma
+         "v":-0.1929375                   // Vega
+        }
+    ],
+    "P":[
+      {
+       "s":"SOL-220912-35-C",             // Contract symbol
+       "c":"-50",                         // Number of current positions
+       "r":"-50",                         // Number of positions that can be reduced
+       "p":"-100",                        // Position value
+       "a":"2.2",                         // Average entry price
+      }
+    ],
+    "uid":1000006559949
+}
+Update Speed: 50ms
+Update under the following conditions:
+Account deposit or withdrawal
+Position info change. Includes a P attribute if there are changes, otherwise does not include a P attribute.
+Greek update
+Event: Order update
+Payload:
+
+{
+  "e":"ORDER_TRADE_UPDATE",           //Event Type
+  "E":1657613775883,                  //Event Time
+  "o":[
+    {
+      "T":1657613342918,              //Order Create Time
+      "t":1657613342918,              //Order Update Time
+      "s":"BTC-220930-18000-C",       //Symbol
+      "c":"",                         //clientOrderId
+      "oid":"4611869636869226548",    //order id
+      "p":"1993",                     //order price
+      "q":"1",                        //order quantity
+      "stp":0,                        //not used for now
+      "r":false,                      //reduce only
+      "po":true,                      //post only
+      "S":"PARTIALLY_FILLED",         //status
+      "e":"0.1",                      //completed trade volume(in contracts)
+      "ec":"199.3",                   //completed trade amount(in quote asset)
+      "f":"2",                        //fee
+      "tif": "GTC",                   //time in force
+      "oty":"LIMIT",                  //order type
+      "fi":[
+        {
+          "t":"20",                   //tradeId
+          "p":"1993",                 //trade price
+          "q":"0.1",                  //trade quantity
+          "T":1657613774336,          //trade time
+          "m":"TAKER"                 //taker or maker
+          "f":"0.0002"                //commission(>0) or rebate(<0)
+        }
+      ]
+    }
+  ]
+}
+Update Speed: 50ms
+Update under the following conditions:
+Order fills
+Order placed
+Order cancelled
+Market Maker Endpoints
+Market maker endpoints only work for option market makers, api users will get error when send requests to these endpoints.
+
+Option Margin Account Information (USER_DATA)
+Response:
+
+{
+  "asset": [
+    {
+      "asset": "USDT",                  // Asset type
+      "marginBalance": "10099.448"      // Account balance
+      "equity": "10094.44662",          // Account equity
+      "available": "8725.92524",        // Available funds
+      "initialMargin": "1084.52138",    // Initial margin
+      "maintMargin": "151.00138",       // Maintenance margin
+      "unrealizedPNL": "-5.00138",      // Unrealized profit/loss
+      "lpProfit": "-5.00138",           // Unrealized profit for long position
+     }
+  ],
+  "greek": [
+    {
+      "underlying":"BTCUSDT"            // Option Underlying
+      "delta": "-0.05"                  // Account delta
+      "gamma": "-0.002"                 // Account gamma
+      "theta": "-0.05"                  // Account theta
+      "vega": "-0.002"                  // Account vega
+    }
+  ],
+  "riskLevel": "NORMAL",                // Account risk level
+  "time": 1592449455993                 // Time
+}
+GET /eapi/v1/marginAccount (HMAC SHA256)
+
+Get current account information.
+
+Weight: 3
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Set Market Maker Protection Config (TRADE)
+{
+    "underlyingId": 2,
+    "underlying": "BTCUSDT",
+    "windowTimeInMilliseconds": 3000,
+    "frozenTimeInMilliseconds": 300000,
+    "qtyLimit": "2",
+    "deltaLimit": "2.3",
+    "lastTriggerTime": 0
+
+}
+POST /eapi/v1/mmpSet (HMAC SHA256)
+
+Set config for MMP. Market Maker Protection(MMP) is a set of protection mechanism for option market maker, this mechanism is able to prevent mass trading in short period time. Once market maker's account branches the threshold, the Market Maker Protection will be triggered. When Market Maker Protection triggers, all the current MMP orders will be canceled, new MMP orders will be rejected. Market maker can use this time to reevaluate market and modify order price.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	TRUE	underlying, e.g BTCUSDT
+windowTimeInMilliseconds	LONG	TRUE	MMP Interval in milliseconds; Range (0,5000]
+frozenTimeInMilliseconds	LONG	TRUE	MMP frozen time in milliseconds, if set to 0 manual reset is required
+qtyLimit	DECIMAL	TRUE	quantity limit
+deltaLimit	DECIMAL	TRUE	net delta limit
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get Market Maker Protection Config (TRADE)
+{
+    "underlyingId": 2,
+    "underlying": "BTCUSDT",
+    "windowTimeInMilliseconds": 3000,
+    "frozenTimeInMilliseconds": 300000,
+    "qtyLimit": "2",
+    "deltaLimit": "2.3",
+    "lastTriggerTime": 0
+}
+Get /eapi/v1/mmp (HMAC SHA256)
+
+Get config for MMP.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	TRUE	underlying, e.g BTCUSDT
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Reset Market Maker Protection Config (TRADE)
+{
+    "underlyingId": 2,
+    "underlying": "BTCUSDT",
+    "windowTimeInMilliseconds": 3000,
+    "frozenTimeInMilliseconds": 300000,
+    "qtyLimit": "2",
+    "deltaLimit": "2.3",
+    "lastTriggerTime": 0
+}
+POST /eapi/v1/mmpReset (HMAC SHA256)
+
+Reset MMP, start MMP order again.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	TRUE	underlying, e.g BTCUSDT
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Set Auto-Cancel All Open Orders (Kill-Switch) Config (TRADE)
+Response:
+
+{
+  "underlying": "ETHUSDT",
+  "countdownTime": 30000
+}
+POST /eapi/v1/countdownCancelAll (HMAC SHA256)
+
+This endpoint sets the parameters of the auto-cancel feature which cancels all open orders (both market maker protection and non market maker protection order types) of the underlying symbol at the end of the specified countdown time period if no heartbeat message is sent. After the countdown time period, all open orders will be cancelled and new orders will be rejected with error code -2010 until either a heartbeat message is sent or the auto-cancel feature is turned off by setting countdownTime to 0.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	YES	Option underlying, e.g BTCUSDT
+countdownTime	LONG	YES	Countdown time in milliseconds (ex. 1,000 for 1 second). 0 to disable the timer. Negative values (ex. -10000) are not accepted. Minimum acceptable value is 5,000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+This rest endpoint sets up the parameters to cancel your open orders in case of an outage or disconnection.
+Example usage: Call this endpoint with a countdownTime value of 10000 (10 seconds) to turn on the auto-cancel feature. If the corresponding countdownCancelAllHeartBeat endpoint is not called within 10 seconds with the specified underlying symbol, all open orders of the specified symbol will be automatically canceled. If this endpoint is called with an countdownTime of 0, the countdown timer will be stopped.
+The system will check all countdowns approximately every 1000 milliseconds, please note that sufficient redundancy should be considered when using this function. We do not recommend setting the countdown time to be too precise or too small.
+Get Auto-Cancel All Open Orders (Kill-Switch) Config (TRADE)
+Response:
+
+{
+  "underlying": "ETHUSDT",
+  "countdownTime": 100000
+}
+GET /eapi/v1/countdownCancelAll (HMAC SHA256)
+
+This endpoint returns the auto-cancel parameters for each underlying symbol. Note only active auto-cancel parameters will be returned, if countdownTime is set to 0 (ie. countdownTime has been turned off), the underlying symbol and corresponding countdownTime parameter will not be returned in the response.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlying	STRING	NO	Option underlying, e.g BTCUSDT
+recvWindow	LONG	NO
+timestamp	LONG	YES
+countdownTime = 0 means the function is disabled.
+Auto-Cancel All Open Orders (Kill-Switch) Heartbeat (TRADE)
+Response:
+
+{
+ "underlyings":["BTCUSDT","ETHUSDT"]
+}
+POST /eapi/v1/countdownCancelAllHeartBeat (HMAC SHA256)
+
+This endpoint resets the time from which the countdown will begin to the time this messaged is received. It should be called repeatedly as heartbeats. Multiple heartbeats can be updated at once by specifying the underlying symbols as a list (ex. BTCUSDT,ETHUSDT) in the underlyings parameter.
+
+Weight: 10
+
+Parameters:
+
+Name	Type	Mandatory	Description
+underlyings	STRING	YES	Option Underlying Symbols, e.g BTCUSDT,ETHUSDT
+recvWindow	LONG	NO
+timestamp	LONG	YES
+The response will only include underlying symbols where the heartbeat has been successfully updated.
+Error Codes
+Here is the error JSON payload:
+
+{
+  "code":-1121,
+  "msg":"Invalid symbol."
+}
+Errors consist of two parts: an error code and a message.
+Codes are universal,but messages can vary.
+
+## 10xx - General Server or Network issues
+
+-1000 UNKNOWN
+An unknown error occurred while processing the request.
+-1001 DISCONNECTED
+Internal error; unable to process your request. Please try again.
+-1002 UNAUTHORIZED
+You are not authorized to execute this request.
+-1008 TOO_MANY_REQUESTS
+Too many requests queued.
+Too much request weight used; please use the websocket for live updates to avoid polling the API.
+Too much request weight used; current limit is %s request weight per %s %s. Please use the websocket for live updates to avoid polling the API.
+Way too much request weight used; IP banned until %s. Please use the websocket for live updates to avoid bans.
+-1014 UNKNOWN_ORDER_COMPOSITION
+Unsupported order combination.
+-1015 TOO_MANY_ORDERS
+Too many new orders.
+Too many new orders; current limit is %s orders per %s.
+-1016 SERVICE_SHUTTING_DOWN
+This service is no longer available.
+-1020 UNSUPPORTED_OPERATION
+This operation is not supported.
+-1021 INVALID_TIMESTAMP
+Timestamp for this request is outside of the recvWindow.
+Timestamp for this request was 1000ms ahead of the server's time.
+-1022 INVALID_SIGNATURE
+Signature for this request is not valid.
+11xx - 2xxx Request issues
+-1100 ILLEGAL_CHARS
+Illegal characters found in a parameter.
+Illegal characters found in a parameter. %s
+Illegal characters found in parameter %s; legal range is %s.
+-1101 TOO_MANY_PARAMETERS
+Too many parameters sent for this endpoint.
+Too many parameters; expected %s and received %s.
+Duplicate values for a parameter detected.
+-1102 MANDATORY_PARAM_EMPTY_OR_MALFORMED
+A mandatory parameter was not sent, was empty/null, or malformed.
+Mandatory parameter %s was not sent, was empty/null, or malformed.
+Param %s or %s must be sent, but both were empty/null!
+-1103 UNKNOWN_PARAM
+An unknown parameter was sent.
+-1104 UNREAD_PARAMETERS
+Not all sent parameters were read.
+Not all sent parameters were read; read %s parameter(s) but was sent %s.
+-1105 PARAM_EMPTY
+A parameter was empty.
+Parameter %s was empty.
+-1106 PARAM_NOT_REQUIRED
+A parameter was sent when not required.
+Parameter %s sent when not required.
+-1111 BAD_PRECISION
+Precision is over the maximum defined for this asset.
+-1115 INVALID_TIF
+Invalid timeInForce.
+-1116 INVALID_ORDER_TYPE
+Invalid orderType.
+-1117 INVALID_SIDE
+Invalid side.
+-1118 EMPTY_NEW_CL_ORD_ID
+New client order ID was empty.
+-1119 EMPTY_ORG_CL_ORD_ID
+Original client order ID was empty.
+-1120 BAD_INTERVAL
+Invalid interval.
+-1121 BAD_SYMBOL
+Invalid symbol.
+-1125 INVALID_LISTEN_KEY
+This listenKey does not exist.
+-1127 MORE_THAN_XX_HOURS
+Lookup interval is too big.
+More than %s hours between startTime and endTime.
+-1128 BAD_CONTRACT
+Invalid underlying
+-1129 BAD_CURRENCY
+Invalid asset。
+-1130 INVALID_PARAMETER
+Invalid data sent for a parameter.
+Data sent for paramter %s is not valid.
+-1131 BAD_RECV_WINDOW
+recvWindow must be less than 60000
+-2010 NEW_ORDER_REJECTED
+NEW_ORDER_REJECTED
+-2013 NO_SUCH_ORDER
+Order does not exist.
+-2014 BAD_API_KEY_FMT
+API-key format invalid.
+-2015 INVALID_API_KEY
+Invalid API-key, IP, or permissions for action.
+-2018 BALANCE_NOT_SUFFICIENT
+Balance is insufficient.
+-2027 OPTION_MARGIN_NOT_SUFFICIENT
+Option margin is insufficient.
+3xxx-5xxx Filters and other issues
+-3029 TRANSFER_FAILED
+Asset transfer fail.
+-4001 PRICE_LESS_THAN_ZERO
+Price less than 0.
+-4002 PRICE_GREATER_THAN_MAX_PRICE
+Price greater than max price.
+-4003 QTY_LESS_THAN_ZERO
+Quantity less than zero.
+-4004 QTY_LESS_THAN_MIN_QTY
+Quantity less than min quantity.
+-4005 QTY_GREATER_THAN_MAX_QTY
+Quantity greater than max quantity.
+-4013 PRICE_LESS_THAN_MIN_PRICE
+Price less than min price.
+-4029 INVALID_TICK_SIZE_PRECISION
+Tick size precision is invalid.
+-4030 INVALID_QTY_PRECISION
+Step size precision is invalid.
+-4055 AMOUNT_MUST_BE_POSITIVE
+Amount must be positive.

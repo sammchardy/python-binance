@@ -1,0 +1,4807 @@
+Logo
+Spot/Margin/Savings/Mining
+USDⓈ-M Futures
+COIN-M Futures
+European Options
+WebSocket API
+Portfolio Margin
+简体中文
+Search
+Change Log
+General Info
+Market Data Endpoints
+Websocket Market Streams
+Account/Trades Endpoints
+User Data Streams
+Classic Portfolio Margin Endpoints
+Error Codes
+Binance Futures
+Change Log
+Important Documentation Notice
+
+Binance has launched its new API Documentation Portal. The existing GitHub API documentation is now deprecated and set to go offline in the upcoming few months following user migration; the exact date will be determined and communicated in due course.
+
+During this transition phase, both sites will be maintained. However, any new services will only be published in the new portal moving forward.
+
+Here's a reference table of the links for the current and new API documentation:
+
+Functionality	Current Documentation	New Documentation
+Spot Trading	Current Documentation	New Documentation
+Spot Websocket API	Current Documentation	New Documentation
+Margin Trading	Current Documentation	New Documentation
+Derivative UM Futures	Current Documentation	New Documentation
+Derivative CM Futures	Current Documentation	New Documentation
+Derivative Options	Current Documentation	New Documentation
+Derivative Portfolio Margin	Current Documentation	New Documentation
+Wallet	Current Documentation	New Documentation
+Sub Account	Current Documentation	New Documentation
+Simple Earn	Current Documentation	New Documentation
+Dual Investment	Current Documentation	New Documentation
+Auto Invest	Current Documentation	New Documentation
+Staking	Current Documentation	New Documentation
+Mining	Current Documentation	New Documentation
+Algo Trading	Current Documentation	New Documentation
+Copy Trading	Current Documentation	New Documentation
+Derivative Porfolio Margin Pro	Current Documentation	New Documentation
+Fiat	Current Documentation	New Documentation
+C2C	Current Documentation	New Documentation
+VIP Loan	Current Documentation	New Documentation
+Crypto Loan	Current Documentation	New Documentation
+Pay	Current Documentation	New Documentation
+Convert	Current Documentation	New Documentation
+Rebate	Current Documentation	New Documentation
+NFT	Current Documentation	New Documentation
+Gift Card	Current Documentation	New Documentation
+2024-04-09
+
+Good-Till-Cancel (GTC) timeInForce will have a one-year validity period after order placement. GTC orders longer than one-year will be automatically canceled. This applies to all order types including reduceOnly but does not affect part-filled orders or strategy trading or copy-trading orders.
+2023-11-01
+
+REST
+
+Update on GET dapi/v1/fundingRate:
+add response field markPrice to display mark price associated with a particular funding fee charge
+2023-10-19
+
+REST
+
+New Market Data Endpoints
+GET /futures/data/delivery-price: query quarterly contract settlement price
+Update Rate Limit to 1000/5min/IP on Market Data Endpoints below:
+GET /futures/data/openInterestHist
+GET /futures/data/topLongShortAccountRatio
+GET /futures/data/topLongShortPositionRatio
+GET /futures/data/globalLongShortAccountRatio
+GET /futures/data/takerlongshortRatio
+2023-10-16
+
+REST
+
+New Market Data Endpoints
+GET /dapi/v1/constituents: query index constituents
+2023-09-25
+
+REST
+
+New Market Data Endpoints Update
+GET /dapi/v1/fundingInfo: query adjusted funding info
+2023-09-20
+
+REST
+
+Update on GET /dapi/v1/ticker/bookTicker:
+
+add response field lastUpdateId
+Update on GET /dapi/v1/account:
+
+add response field updateTime in assets
+2023-09-07
+
+REST
+
+New endpointGET /dapi/v1/income/asynto get Download Id For Futures Transaction History
+New endpointGET /dapi/v1/income/asyn/idto get Futures Transaction History Download Link by Id
+2023-08-31
+
+Binance Future is doing Websocket Service upgrade and the upgrade impacts the following：
+
+Before upgrade:
+
+The websocket server will send a ping frame every 5 minutes. If the websocket server does not receive a pong frame back from the connection within a 15 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+After upgrade:
+
+The websocket server will send a ping frame every 3 minutes. If the websocket server does not receive a pong frame back from the connection within a 10 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+2023-08-25
+
+Binance Future is doing Websocket Service upgrade and the upgrade impacts the following：
+Connect websocket server without subscription:
+Before upgrade, user can connect by using:
+wss://dstream.binance.com/ws
+wss://dstream.binance.com/stream
+wss://dstream.binance.com/ws/
+wss://dstream.binance.com/stream/
+After upgrade, user can connect by using:
+wss://dstream.binance.com/ws
+wss://dstream.binance.com/stream
+/ at the end is no longer supported
+Connect websocket server with subscription:
+Raw stream like wss://dstream.binance.com/illegal_parameter/stream?steams=<streamName> or wss://dstream.binance.com/illegal_parameter/ws/<streamName>is not supported, please use remove illegal_parameter/ before /ws and /stream.
+2023-08-14
+
+Update endpoint for Account/Trade:
+GET /dapi/v1/income: Add parameter page for pagination
+2023-07-19
+
+REST
+
+Add field notionalCoef in GET /dapi/v2/leverageBracket to show the bracket multiplier comparing to default leverage bracket
+2023-07-12
+
+REST
+
+New field breakEvenPrice represents Break-Even Price in position of response to:
+GET /dapi/v1/account (HMAC SHA256)
+GET /dapi/v1/positionRisk (HMAC SHA256)
+WEBSOCKET
+
+New field bep represents Break-Even Price in position P of payload to event: Balance and Position Update – "e": "ACCOUNT_UPDATE"
+2023-06-22
+
+Notice:
+
+WEBSOCKET
+
+Raw stream like /ws?<streamName> is not supported, for example wss://dstream.binance.com/ws?btcusd@depth is invalid.
+Sending websocket message with invalid JSON format will cause disconnection now, returning this error {"error":{"code":3,"msg":"Invalid JSON: expected value at line 1 column 1"}}
+2023-06-14
+
+WEBSOCKET
+
+New field i for quote asset and index price added in streams <symbol>@markPrice and <pair>@markPrice
+2023-04-17
+
+RELEASE DATE TBD
+
+The recvWindow check will also be performed when orders reach matching engine. The recvWindow will be checked more precisely on order placing endpoints.
+
+{
+    "code": -4188,
+    "msg": "Timestamp for this request is outside of the ME recvWindow"
+}
+recvWindow Logic Before Release:
+
+The order placing requests are valid if recvWindow + timestamp => REST API service server timestamp
+recvWindow Logic After Release:
+
+Add new recwWindow check: the order placing requests are valid if recvWindow + timestamp => matching engine timestamp
+
+Impacted Endpoints:
+
+POST /dapi/v1/order (HMAC SHA256)
+PUT /dapi/v1/order (HMAC SHA256)
+POST /dapi/v1/batchOrders (HMAC SHA256)
+PUT /dapi/v1/batchOrders (HMAC SHA256)
+2022-12-16
+
+WEBSOCKET
+
+New WebSocket stream !contractInfo for symbol information update
+2022-11-29
+
+WEB SOCKET USER DATA STREAM
+
+New WebSocket stream STRATEGY_UPDATE in USER-DATA-STREAM: update when a strategy is created/cancelled/expired, ...etc.
+New WebSocket stream GRID_UPDATE in USER-DATA-STREAM: update when a sub order of a grid is filled or partially filled.
+2022-10-13
+
+Note: This change will be effictive on 2022-10-17
+
+REST RATE LIMIT WEIGHT
+
+Endpoint GET /dapi/v1/ticker/bookTicker
+
+Weight Update:
+
+2 for a single symbol;
+5 when the symbol parameter is omitted
+
+2022-09-22
+
+Add new endpoint for Portfolio Margin:
+GET /dapi/v1/pmAccountInfo: Get Portfolio Margin current account information.
+2022-07-27
+
+REST RATE LIMIT WEIGHT
+
+The weight of endpoint GET /dapi/v1/trades is updated to 5
+2022-06-28
+
+REST
+
+New endpoint GET /dapi/v1/pmExchangeInfo to get current Portfolio Margin exchange trading rules.
+2022-04-28
+
+REST
+
+New endpoints PUT /dapi/v1/order and PUT /dapi/v1/batchOrders to support limit order modify
+New endpoint GET /dapi/v1/orderAmendment to get order modify history
+WEBSOCKET
+
+New type "AMENDMENT" as order modify in Execution Type x of Order Update event ORDER_TRADE_UPDATE
+2022-04-14
+
+WEB SOCKET USER DATA STREAM
+
+New WebSocket stream ACCOUNT_CONFIG_UPDATE in USER-DATA-STREAM for leverage changed update
+2022-02-18
+
+REST
+
+The maximum value of limit in GET /dapi/v1/userTrades is adjusted to 1000
+2021-08-18
+
+REST
+
+New field positionAmt as position amount in response of GET /dapi/v1/account
+2021-08-17
+
+REST
+
+New endpoints PUT /dapi/v1/order and PUT /dapi/v1/batchOrders to support limit order modify
+New endpoint GET /dapi/v1/orderAmendment to get order modify history
+WEBSOCKET
+
+New type "AMENDMENT" as order modify in Execution Type x of Order Update event ORDER_TRADE_UPDATE
+2021-07-23
+
+REST
+
+New field updateTime as last update time of asset and position in response of GET /dapi/v1/account and GET /dapi/v1/positionRisk
+2021-07-06
+
+REST
+
+New fields in the response of GET /dapi/v1/exchangeInfo:
+"liquidationFee" for liquidation fee rate
+"marketTakeBound" for he max price difference rate( from mark price) a market order can make
+2021-05-06
+
+WEBSOCKET
+
+New field "bc" for balance change in event "ACCOUNT_UPDATE"
+2021-04-27
+
+WEBSOCKET
+
+The following liquidation orders streams do not push realtime order data anymore. Instead, they push snapshot order data at a maximum frequency of 1 order push per second.:
+<symbol>@forceOrder
+!forceOrder@arr
+REST
+
+The endpoint GET /dapi/v1/allForceOrders stop being maintained and no longer accepts request.
+2021-03-10
+
+REST
+
+The query time period for endpoint GET /dapi/v1/allForceOrders must be less than 7 days (default as the recent 7 days).
+2021-01-26
+
+REST RATE LIMIT WEIGHT
+
+Following endpoints' weights will be updated to 20 with symbol and 50 without symbol:
+GET /dapi/v1/allForceOrders
+GET /dapi/v1/forceOrders
+2021-01-21
+
+The regular expression rule for newClientOrderId updated as ^[\.A-Z\:/a-z0-9_-]{1,36}$
+
+2020-12-30
+
+REST
+
+Following DAPI endpoints will use new weight rule based on the parameter "LIMIT" in the request:
+
+GET /dapi/v1/klines
+GET /dapi/v1/continuousKlines
+GET /dapi/v1/indexPriceKlines
+GET /dapi/v1/markPriceKlines
+Following DAPI endpoints' weights will be updated to 20:
+
+GET /dapi/v1/historicalTrades
+GET /dapi/v1/allForceOrders
+GET /dapi/v1/forceOrders
+GET /dapi/v1/aggTrades
+2020-11-27
+
+New endpoint GET /dapi/v1/commissionRate to get user commission rate.
+2020-08-16
+
+WEBSOCKET
+
+Websocket Request for user data:
+<listenKey>@account request for user's account information
+<listenKey>@balance request for user's account balance
+<listenKey>@balance request for user's position information
+REST
+
+New endpoint GET /dapi/v1/adlQuantile to get the positions' ADL quantile estimation values
+2020-08-12
+
+New endpoint GET /dapi/v1/forceOrders to get the user's force orderes.
+2020-08-11
+
+COIN MARGINED PERPETUAL FUTURES
+
+New contract type ("contractType") PERPETUAL for coin margined perpetual futures countract.
+
+New fields in the reponse to endpoint GET /dapi/v1/premiumIndex:
+
+lastFundingRate for the lasted funding rate of the perpetual futures contract
+nextFundingTime for the next funding time of the perpetual futures contract
+New endpoint GET /dapi/v1/fundingRate to get funding rate history of perpetual futures
+
+New fields in the payload of WSS <symbol>@markPrice, <symbol>@markPrice@1s, <pair>@markPrice, and <pair>@markPrice@1s:
+
+r for the lasted funding rate of the perpetual futures contract
+T for the next funding time of the perpetual futures contract
+2020-07-22
+
+New endpoints of coin margined futures trading data:
+GET /futures/data/openInterestHist
+GET /futures/data/topLongShortAccountRatio
+GET /futures/data/topLongShortPositionRatio
+GET /futures/data/globalLongShortAccountRatio
+GET /futures/data/takerBuySellVol
+GET /futures/data/basis
+2020-07-17
+
+Weights of endpoint GET /dapi/v1/income has been changed as 20
+General Info
+testnet
+Most of the endpoints can be also used in the testnet platform.
+The REST baseurl for testnet is "https://testnet.binancefuture.com"
+The Websocket baseurl for testnet is "wss://dstream.binancefuture.com"
+General API Information
+The base endpoint is: https://dapi.binance.com
+All endpoints return either a JSON object or array.
+Data is returned in ascending order. Oldest first, newest last.
+All time and timestamp related fields are in milliseconds.
+All data types adopt definition in JAVA.
+HTTP Return Codes
+HTTP 4XX return codes are used for for malformed requests; the issue is on the sender's side.
+HTTP 403 return code is used when the WAF Limit (Web Application Firewall) has been violated.
+HTTP 408 return code is used when a timeout has occurred while waiting for a response from the backend server.
+HTTP 429 return code is used when breaking a request rate limit.
+HTTP 418 return code is used when an IP has been auto-banned for continuing to send requests after receiving 429 codes.
+HTTP 5XX return codes are used for internal errors; the issue is on Binance's side.
+If there is an error message "Request occur unknown error.", please retry later.
+HTTP 503 return code is used when:
+If there is an error message "Unknown error, please check your request or try again later." returned in the response, the API successfully sent the request but not get a response within the timeout period.
+It is important to NOT treat this as a failure operation; the execution status is UNKNOWN and could have been a success;
+If there is an error message "Service Unavailable." returned in the response, it means this is a failure API operation and the service might be unavailable at the moment, you need to retry later.
+If there is an error message "Internal error; unable to process your request. Please try again." returned in the response, it means this is a failure API operation and you can resend your request if you need.
+Error Codes and Messages
+Any endpoint can return an ERROR
+The error payload is as follows:
+
+{
+  "code": -1121,
+  "msg": "Invalid symbol."
+}
+Specific error codes and messages defined in Error Codes.
+General Information on Endpoints
+For GET endpoints, parameters must be sent as a query string.
+For POST, PUT, and DELETE endpoints, the parameters may be sent as a query string or in the request body with content type application/x-www-form-urlencoded. You may mix parameters between both the query string and request body if you wish to do so.
+Parameters may be sent in any order.
+If a parameter sent in both the query string and request body, the query string parameter will be used.
+LIMITS
+The /dapi/v1/exchangeInfo rateLimits array contains objects related to the exchange's RAW_REQUEST, REQUEST_WEIGHT, and ORDER rate limits. These are further defined in the ENUM definitions section under Rate limiters (rateLimitType).
+A 429 will be returned when either rate limit is violated.
+ Binance has the right to further tighten the rate limits on users with intent to attack.
+IP Limits
+Every request will contain X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter) in the response headers which has the current used weight for the IP for all request rate limiters defined.
+Each route has a weight which determines for the number of requests each endpoint counts for. Heavier endpoints and endpoints that do operations on multiple symbols will have a heavier weight.
+When a 429 is received, it's your obligation as an API to back off and not spam the API.
+Repeatedly violating rate limits and/or failing to back off after receiving 429s will result in an automated IP ban (HTTP status 418).
+IP bans are tracked and scale in duration for repeat offenders, from 2 minutes to 3 days.
+The limits on the API are based on the IPs, not the API keys.
+ It is strongly recommended to use websocket stream for getting data as much as possible, which can not only ensure the timeliness of the message, but also reduce the access restriction pressure caused by the request.
+Order Rate Limits
+Every order response will contain a X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter) header which has the current order count for the account for all order rate limiters defined.
+Rejected/unsuccessful orders are not guaranteed to have X-MBX-ORDER-COUNT-** headers in the response.
+The order rate limit is counted against each account.
+Endpoint Security Type
+Each endpoint has a security type that determines the how you will interact with it.
+API-keys are passed into the Rest API via the X-MBX-APIKEY header.
+API-keys and secret-keys are case sensitive.
+API-keys can be configured to only access certain types of secure endpoints. For example, one API-key could be used for TRADE only, while another API-key can access everything except for TRADE routes.
+By default, API-keys can access all secure routes.
+Security Type	Description
+NONE	Endpoint can be accessed freely.
+TRADE	Endpoint requires sending a valid API-Key and signature.
+USER_DATA	Endpoint requires sending a valid API-Key and signature.
+USER_STREAM	Endpoint requires sending a valid API-Key.
+MARKET_DATA	Endpoint requires sending a valid API-Key.
+TRADE and USER_DATA endpoints are SIGNED endpoints.
+SIGNED (TRADE and USER_DATA) Endpoint Security
+SIGNED endpoints require an additional parameter, signature, to be sent in the query string or request body.
+Endpoints use HMAC SHA256 signatures. The HMAC SHA256 signature is a keyed HMAC SHA256 operation. Use your secretKey as the key and totalParams as the value for the HMAC operation.
+The signature is not case sensitive.
+Please make sure the signature is the end part of your query string or request body.
+totalParams is defined as the query string concatenated with the request body.
+Timing security
+A SIGNED endpoint also requires a parameter, timestamp, to be sent which should be the millisecond timestamp of when the request was created and sent.
+An additional parameter, recvWindow, may be sent to specify the number of milliseconds after timestamp the request is valid for. If recvWindow is not sent, it defaults to 5000.
+If the server determines that the timestamp sent by the client is more than one second in the future of the server time, the request will also be rejected.
+The logic is as follows:
+
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow){
+    // process request
+  }
+  else {
+    // reject request
+  }
+Serious trading is about timing. Networks can be unstable and unreliable, which can lead to requests taking varying amounts of time to reach the servers. With recvWindow, you can specify that the request must be processed within a certain number of milliseconds or be rejected by the server.
+
+ It is recommended to use a small recvWindow of 5000 or less!
+SIGNED Endpoint Examples for POST /dapi/v1/order - HMAC Keys
+Here is a step-by-step example of how to send a vaild signed payload from the Linux command line using echo, openssl, and curl.
+
+Key	Value
+apiKey	dbefbc809e3e83c283a984c3a1459732ea7db1360ca80c5c2c8867408d28cc83
+secretKey	2b5eb11e18796d12d88f13dc27dbbd02c2cc51ff7059765ed9821957d82bb4d9
+Parameter	Value
+symbol	BTCUSD_200925
+side	BUY
+type	LIMIT
+timeInForce	GTC
+quantity	1
+price	9000
+recvWindow	5000
+timestamp	1591702613943
+Example 1: As a query string
+Example 1
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTCUSD_200925&side=BUY&type=LIMIT&quantity=1&price=9000&timeInForce=GTC&recvWindow=5000&timestamp=1591702613943" | openssl dgst -sha256 -hmac "2b5eb11e18796d12d88f13dc27dbbd02c2cc51ff7059765ed9821957d82bb4d9"
+    (stdin)= 21fd819734bf0e5c68740eed892909414d693635c5f7fffab1313925ae13556a
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: dbefbc809e3e83c283a984c3a1459732ea7db1360ca80c5c2c8867408d28cc83" -X POST 'https://dapi.binance.com/dapi/v1/order?symbol=BTCUSD_200925&side=BUY&type=LIMIT&quantity=1&price=9000&timeInForce=GTC&recvWindow=5000&timestamp=1591702613943&signature= 21fd819734bf0e5c68740eed892909414d693635c5f7fffab1313925ae13556a'
+queryString:
+
+symbol=BTCUSD_200925
+&side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=9000
+&recvWindow=5000
+&timestamp=1591702613943
+
+Example 2: As a request body
+Example 2
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTCUSD_200925&side=BUY&type=LIMIT&quantity=1&price=9000&timeInForce=GTC&recvWindow=5000&timestamp=1591702613943" | openssl dgst -sha256 -hmac "2b5eb11e18796d12d88f13dc27dbbd02c2cc51ff7059765ed9821957d82bb4d9"
+    (stdin)= 21fd819734bf0e5c68740eed892909414d693635c5f7fffab1313925ae13556a
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: dbefbc809e3e83c283a984c3a1459732ea7db1360ca80c5c2c8867408d28cc83" -X POST 'https://dapi.binance.com/dapi/v1/order' -d 'symbol=BTCUSD_200925&side=BUY&type=LIMIT&quantity=1&price=9000&timeInForce=GTC&recvWindow=5000&timestamp=1591702613943&signature= 21fd819734bf0e5c68740eed892909414d693635c5f7fffab1313925ae13556a'
+requestBody:
+
+symbol=BTCUSD_200925
+&side=BUY
+&type=LIMIT
+&timeInForce=GTC
+&quantity=1
+&price=9000
+&recvWindow=5000
+&timestamp=1591702613943
+
+Example 3: Mixed query string and request body
+Example 3
+
+HMAC SHA256 signature:
+
+    $ echo -n "symbol=BTCUSD_200925&side=BUY&type=LIMIT&timeInForce=GTCquantity=1&price=9000&recvWindow=5000&timestamp= 1591702613943" | openssl dgst -sha256 -hmac "2b5eb11e18796d12d88f13dc27dbbd02c2cc51ff7059765ed9821957d82bb4d9"
+    (stdin)= f3129e7c72c7727037891ad8a86b76a7dc514ba125a536775c8ba403b2d1b222
+curl command:
+
+    (HMAC SHA256)
+    $ curl -H "X-MBX-APIKEY: dbefbc809e3e83c283a984c3a1459732ea7db1360ca80c5c2c8867408d28cc83" -X POST 'https://dapi.binance.com/dapi/v1/order?symbol=BTCUSD_200925&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=1&price=9000&recvWindow=5000&timestamp= 1591702613943&signature=f3129e7c72c7727037891ad8a86b76a7dc514ba125a536775c8ba403b2d1b222'
+queryString: symbol=BTCUSD_200925&side=BUY&type=LIMIT&timeInForce=GTC
+requestBody: quantity=1&price=9000&recvWindow=5000&timestamp= 1591702613943
+Note that the signature is different in example 3.
+There is no & between "GTC" and "quantity=1".
+
+SIGNED Endpoint Examples for POST /dapi/v1/order - RSA Keys
+This will be a step by step process how to create the signature payload to send a valid signed payload.
+We support PKCS#8 currently.
+To get your API key, you need to upload your RSA Public Key to your account and a corresponding API key will be provided for you.
+For this example, the private key will be referenced as test-prv-key.pem
+
+Key	Value
+apiKey	vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2
+Parameter	Value
+symbol	BTCUSD_PERP
+side	SELL
+type	MARKET
+quantity	100
+recvWindow	9999999
+timestamp	1671090801999
+Signature payload (with the listed parameters):
+
+timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100
+Step 1: Construct the payload
+
+Arrange the list of parameters into a string. Separate each parameter with a &.
+
+Step 2: Compute the signature:
+
+2.1 - Encode signature payload as ASCII data.
+
+Step 2.2
+
+ $ echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem
+2.2 - Sign payload using RSASSA-PKCS1-v1_5 algorithm with SHA-256 hash function.
+
+Step 2.3
+
+$ echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem | openssl enc -base64
+aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+2.3 - Encode output as base64 string.
+
+Step 2.4
+
+$  echo -n 'timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100' | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem | openssl enc -base64 | tr -d '\n'
+aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+2.4 - Delete any newlines in the signature.
+
+Step 2.5
+
+aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D
+2.5 - Since the signature may contain / and =, this could cause issues with sending the request. So the signature has to be URL encoded.
+
+Step 2.6
+
+ curl -H "X-MBX-APIKEY: vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2" -X POST 'https://dapi.binance.com/dapi/v1/order?timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100&signature=aap36wD5loVXizxvvPI3wz9Cjqwmb3KVbxoym0XeWG1jZq8umqrnSk8H8dkLQeySjgVY91Ufs%2BBGCW%2B4sZjQEpgAfjM76riNxjlD3coGGEsPsT2lG39R%2F1q72zpDs8pYcQ4A692NgHO1zXcgScTGgdkjp%2Brp2bcddKjyz5XBrBM%3D'
+2.6 - curl command
+
+Bash script
+
+#!/usr/bin/env bash
+
+# Set up authentication:
+apiKey="vE3BDAL1gP1UaexugRLtteaAHg3UO8Nza20uexEuW1Kh3tVwQfFHdAiyjjY428o2"   ### REPLACE THIS WITH YOUR API KEY
+
+# Set up the request:
+apiMethod="POST"
+apiCall="v1/order"
+apiParams="timestamp=1671090801999&recvWindow=9999999&symbol=BTCUSD_PERP&side=SELL&type=MARKET&quantity=100"
+function rawurlencode {
+    local value="$1"
+    local len=${#value}
+    local encoded=""
+    local pos c o
+    for (( pos=0 ; pos<len ; pos++ ))
+    do
+        c=${value:$pos:1}
+        case "$c" in
+            [-_.~a-zA-Z0-9] ) o="${c}" ;;
+            * )   printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="$o"
+    done
+    echo "$encoded"
+}
+ts=$(date +%s000)
+paramsWithTs="$apiParams&timestamp=$ts"
+rawSignature=$(echo -n "$paramsWithTs" \
+               | openssl dgst -keyform PEM -sha256 -sign ./test-prv-key.pem \  ### THIS IS YOUR PRIVATE KEY. DO NOT SHARE THIS FILE WITH ANYONE.
+               | openssl enc -base64 \
+               | tr -d '\n')
+signature=$(rawurlencode "$rawSignature")
+curl -H "X-MBX-APIKEY: $apiKey" -X $apiMethod \
+    "https://dapi.binance.com/dapi/$apiCall?$paramsWithTs&signature=$signature"
+A sample Bash script containing similar steps is available in the right side.
+
+Public Endpoints Info
+Terminology
+symbol refers to the symbol name of a contract symbol
+pair refers to the underlying symbol of a contracrt symbol
+base asset refers to the asset that is the quantity of a symbol.
+quote asset refers to the asset that is the price of a symbol.
+margin asset refers to the asset that is the margin of a symbol
+ENUM definitions
+Symbol type:
+
+DELIVERY_CONTRACT
+PERPETUAL_CONTRACT
+Contract type (contractType):
+
+PERPETUAL
+CURRENT_QUARTER
+NEXT_QUARTER
+CURRENT_QUARTER DELIVERING // only used for DELIVERING status
+NEXT_QUARTER DELIVERING // only used for DELIVERING status
+PERPETUAL DELIVERING // only used for DELIVERING status
+Contract status (contractStatus, status):
+
+PENDING_TRADING
+TRADING
+PRE_DELIVERING
+DELIVERING
+DELIVERED
+Order status (status):
+
+NEW
+PARTIALLY_FILLED
+FILLED
+CANCELED
+EXPIRED
+Order types (type):
+
+LIMIT
+MARKET
+STOP
+STOP_MARKET
+TAKE_PROFIT
+TAKE_PROFIT_MARKET
+TRAILING_STOP_MARKET
+Order side (side):
+
+BUY
+SELL
+Position side (positionSide):
+
+BOTH
+LONG
+SHORT
+Time in force (timeInForce):
+
+GTC - Good Till Cancel(GTC order valitidy is 1 year from placement)
+IOC - Immediate or Cancel
+FOK - Fill or Kill
+GTX - Good Till Crossing (Post Only)
+Working Type (workingType)
+
+MARK_PRICE
+CONTRACT_PRICE
+Response Type (newOrderRespType)
+
+ACK
+RESULT
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Rate limiters (rateLimitType)
+
+REQUEST_WEIGHT
+
+  {
+    "rateLimitType": "REQUEST_WEIGHT",
+    "interval": "MINUTE",
+    "intervalNum": 1,
+    "limit": 6000
+  }
+ORDERS
+
+  {
+    "rateLimitType": "ORDERS",
+    "interval": "MINUTE",
+    "intervalNum": 1,
+    "limit": 1200
+   }
+REQUEST_WEIGHT
+
+ORDERS
+
+Rate limit intervals (interval)
+
+MINUTE
+Filters
+Filters define trading rules on a symbol or an exchange.
+
+Symbol filters
+PRICE_FILTER
+/exchangeInfo format:
+
+  {
+    "filterType": "PRICE_FILTER",
+    "minPrice": "0.00000100",
+    "maxPrice": "100000.00000000",
+    "tickSize": "0.00000100"
+  }
+The PRICE_FILTER defines the price rules for a symbol. There are 3 parts:
+
+minPrice defines the minimum price/stopPrice allowed; disabled on minPrice == 0.
+maxPrice defines the maximum price/stopPrice allowed; disabled on maxPrice == 0.
+tickSize defines the intervals that a price/stopPrice can be increased/decreased by; disabled on tickSize == 0.
+Any of the above variables can be set to 0, which disables that rule in the price filter. In order to pass the price filter, the following must be true for price/stopPrice of the enabled rules:
+
+price >= minPrice
+price <= maxPrice
+(price-minPrice) % tickSize == 0
+LOT_SIZE
+/exchangeInfo format:
+
+  {
+    "filterType": "LOT_SIZE",
+    "minQty": "0.00100000",
+    "maxQty": "100000.00000000",
+    "stepSize": "0.00100000"
+  }
+The LOT_SIZE filter defines the quantity (aka "lots" in auction terms) rules for a symbol. There are 3 parts:
+
+minQty defines the minimum quantity allowed.
+maxQty defines the maximum quantity allowed.
+stepSize defines the intervals that a quantity can be increased/decreased by.
+In order to pass the lot size, the following must be true for quantity:
+
+quantity >= minQty
+quantity <= maxQty
+(quantity-minQty) % stepSize == 0
+MARKET_LOT_SIZE
+/exchangeInfo format:
+
+  {
+    "filterType": "MARKET_LOT_SIZE",
+    "minQty": "0.00100000",
+    "maxQty": "100000.00000000",
+    "stepSize": "0.00100000"
+  }
+The MARKET_LOT_SIZE filter defines the quantity (aka "lots" in auction terms) rules for MARKET orders on a symbol. There are 3 parts:
+
+minQty defines the minimum quantity allowed.
+maxQty defines the maximum quantity allowed.
+stepSize defines the intervals that a quantity can be increased/decreased by.
+In order to pass the market lot size, the following must be true for quantity:
+
+quantity >= minQty
+quantity <= maxQty
+(quantity-minQty) % stepSize == 0
+MAX_NUM_ORDERS
+/exchangeInfo format:
+
+  {
+    "filterType": "MAX_NUM_ORDERS",
+    "limit": 200
+  }
+The MAX_NUM_ORDERS filter defines the maximum number of orders an account is allowed to have open on a symbol.
+
+Note that both "algo" orders and normal orders are counted for this filter.
+
+PERCENT_PRICE
+/exchangeInfo format:
+
+  {
+    "filterType": "PERCENT_PRICE",
+    "multiplierUp": "1.0500",
+    "multiplierDown": "0.9500",
+    "multiplierDecimal": 4
+  }
+The PERCENT_PRICE filter defines valid range for a price based on the mark price.
+
+In order to pass the percent price, the following must be true for price:
+
+BUY: price <= markPrice * multiplierUp
+SELL: price >= markPrice * multiplierDown
+Market Data Endpoints
+Test Connectivity
+Response:
+
+{}
+GET /dapi/v1/ping
+
+Test connectivity to the Rest API.
+
+Weight: 1
+
+Parameters: NONE
+
+Check Server time
+Response:
+
+{
+  "serverTime": 1499827319559
+}
+GET /dapi/v1/time
+
+Test connectivity to the Rest API and get the current server time.
+
+Weight: 1
+
+Parameters: NONE
+
+Exchange Information
+Response:
+
+{
+    "exchangeFilters": [],
+    "rateLimits": [
+        {
+            "interval": "MINUTE",
+            "intervalNum": 1,
+            "limit": 6000,
+            "rateLimitType": "REQUEST_WEIGHT"
+        },
+        {
+            "interval": "MINUTE",
+            "intervalNum": 1,
+            "limit": 6000,
+            "rateLimitType": "ORDERS"
+        }
+    ],
+    "serverTime": 1565613908500, // Ignore please. If you want to check current server time, please check via "GET /dapi/v1/time"
+    "symbols": [ // contract symbols
+        {
+            "filters": [
+                {
+                    "filterType": "PRICE_FILTER",
+                    "maxPrice": "100000",
+                    "minPrice": "0.1",
+                    "tickSize": "0.1"
+                },
+                {
+                    "filterType": "LOT_SIZE",
+                    "maxQty": "100000",
+                    "minQty": "1",
+                    "stepSize": "1"
+                },
+                {
+                    "filterType": "MARKET_LOT_SIZE",
+                    "maxQty": "100000",
+                    "minQty": "1",
+                    "stepSize": "1"
+                },
+                {
+                    "filterType": "MAX_NUM_ORDERS",
+                    "limit": 200
+                },
+                {
+                    "filterType": "PERCENT_PRICE",
+                    "multiplierUp": "1.0500",
+                    "multiplierDown": "0.9500",
+                    "multiplierDecimal": 4
+                }
+            ],
+            "OrderType": [
+                "LIMIT",
+                "MARKET",
+                "STOP",
+                "TAKE_PROFIT",
+                "TRAILING_STOP_MARKET"
+            ],
+            "timeInForce": [
+                "GTC",
+                "IOC",
+                "FOK",
+                "GTX"
+            ],
+            "liquidationFee": "0.010000",   // liquidation fee rate
+            "marketTakeBound": "0.30",  // the max price difference rate( from mark price) a market order can make
+            "symbol": "BTCUSD_200925", // contract symbol name
+            "pair": "BTCUSD",  // underlying symbol
+            "contractType": "CURRENT_QUARTER",
+            "deliveryDate": 1601020800000,
+            "onboardDate": 1590739200000,
+            "contractStatus": "TRADING",
+            "contractSize": 100,
+            "quoteAsset": "USD",
+            "baseAsset": "BTC",
+            "marginAsset": "BTC",
+            "pricePrecision": 1,    // please do not use it as tickSize
+            "quantityPrecision": 0, // please do not use it as stepSize
+            "baseAssetPrecision": 8,
+            "quotePrecision": 8,
+            "equalQtyPrecision": 4,  // ignore
+            "triggerProtect": "0.0500", // threshold for algo order with "priceProtect"
+            "maintMarginPercent": "2.5000",  // ignore
+            "requiredMarginPercent": "5.0000",  // ignore
+            "underlyingType": "COIN",
+            "underlyingSubType": []
+        }
+    ],
+    "timezone": "UTC"
+}
+
+GET /dapi/v1/exchangeInfo
+
+Current exchange trading rules and symbol information
+
+Weight: 1
+
+Parameters: NONE
+
+Order Book
+Response:
+
+{
+  "lastUpdateId": 16769853,
+  "symbol": "BTCUSD_PERP", // Symbol
+  "pair": "BTCUSD",      // Pair
+  "E": 1591250106370,   // Message output time
+  "T": 1591250106368,   // Transaction time
+  "bids": [
+    [
+      "9638.0",         // PRICE
+      "431"             // QTY
+    ]
+  ],
+  "asks": [
+    [
+      "9638.2",
+      "12"
+    ]
+  ]
+}
+GET /dapi/v1/depth
+
+Weight:
+
+Adjusted based on the limit:
+
+Update Speed: 15ms
+
+Limit	Weight
+5, 10, 20, 50	2
+100	5
+500	10
+1000	20
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+limit	INT	NO	Default 500; Valid limits:[5, 10, 20, 50, 100, 500, 1000]
+Recent Trades List
+Response:
+
+[
+  {
+    "id": 28457,
+    "price": "9635.0",
+    "qty": "1",
+    "baseQty": "0.01037883",
+    "time": 1591250192508,
+    "isBuyerMaker": true,
+  }
+]
+GET /dapi/v1/trades
+
+Get recent market trades
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+limit	INT	NO	Default 500; max 1000.
+Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
+Old Trades Lookup (MARKET_DATA)
+Response:
+
+[
+  {
+    "id": 595103,
+    "price": "9642.2",
+    "qty": "1",
+    "baseQty": "0.01037108",
+    "time": 1499865549590,
+    "isBuyerMaker": true,
+  }
+]
+GET /dapi/v1/historicalTrades
+
+Get older market historical trades.
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+limit	INT	NO	Default 500; max 1000.
+fromId	LONG	NO	TradeId to fetch from. Default gets most recent trades.
+Market trades means trades filled in the order book. Only market trades will be returned, which means the insurance fund trades and ADL trades won't be returned.
+Only supports returning data from the last three months (the earliest available time is currently 2023/12/08 00:00:00).
+Compressed/Aggregate Trades List
+Response:
+
+[
+  {
+    "a": 416690,            // Aggregate tradeId
+    "p": "9642.4",          // Price
+    "q": "3",               // Quantity
+    "f": 595259,            // First tradeId
+    "l": 595259,            // Last tradeId
+    "T": 1591250548649,     // Timestamp
+    "m": false,             // Was the buyer the maker?
+  }
+]
+GET /dapi/v1/aggTrades
+
+Get compressed, aggregate trades. Market trades that fill in 100ms with the same price and the same taking side will have the quantity aggregated.
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+fromId	LONG	NO	ID to get aggregate trades from INCLUSIVE.
+startTime	LONG	NO	Timestamp in ms to get aggregate trades from INCLUSIVE.
+endTime	LONG	NO	Timestamp in ms to get aggregate trades until INCLUSIVE.
+limit	INT	NO	Default 500; max 1000.
+If both startTime and endTime are sent, time between startTime and endTime must be less than 1 hour.
+If fromId, startTime, and endTime are not sent, the most recent aggregate trades will be returned.
+Only market trades will be aggregated and returned, which means the insurance fund trades and ADL trades won't be aggregated.
+Sending both startTime/endTime and fromId might cause response timeout, please send either fromId or startTime/endTime
+Index Price and Mark Price
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "markPrice": "11029.69574559",  // mark price
+        "indexPrice": "10979.14437500", // index price
+        "estimatedSettlePrice": "10981.74168236",  // Estimated Settle Price, only useful in the last hour before the settlement starts.
+        "lastFundingRate": "0.00071003",     // the lasted funding rate, for perpetual contract symbols only. For delivery symbols, "" will be shown.
+        "interestRate": "0.00010000",       // the base asset interest rate, for perpetual contract symbols only. For delivery symbols, "" will be shown.
+        "nextFundingTime": 1596096000000,    // For perpetual contract symbols only. For delivery symbols, 0 will be shown
+        "time": 1596094042000
+    },
+    {
+        "symbol": "BTCUSD_200925",
+        "pair": "BTCUSD",
+        "markPrice": "12077.01343750",
+        "indexPrice": "10979.10312500",
+        "estimatedSettlePrice": "10981.74168236",
+        "lastFundingRate": "",
+        "interestRate": "",
+        "nextFundingTime": 0,
+        "time": 1596094042000
+    }
+]
+GET /dapi/v1/premiumIndex
+
+Weight: 10
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+Get Funding Rate History of Perpetual Futures
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_PERP",
+    "fundingTime": 1698768000000,
+    "fundingRate": "-0.00300000",
+    "markPrice": "34651.40000000"  // mark price associated with a particular funding fee charge
+  },
+    {
+        "symbol": "BTCUSD_PERP",
+    "fundingTime": 1698796800000,
+    "fundingRate": "-0.00300000",
+    "markPrice": "34651.40000000"
+  }
+]
+GET /dapi/v1/fundingRate
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+startTime	LONG	NO	Timestamp in ms to get funding rate from INCLUSIVE.
+endTime	LONG	NO	Timestamp in ms to get funding rate until INCLUSIVE.
+limit	INT	NO	Default 100; max 1000
+empty array will be returned for delivery symbols.
+Get Funding Rate Info
+Response:
+
+[
+    {
+        "symbol": "BLZUSDT",
+        "adjustedFundingRateCap": "0.02500000",
+        "adjustedFundingRateFloor": "-0.02500000",
+        "fundingIntervalHours": 8,
+        "disclaimer": false   // ingore
+    }
+]
+GET /dapi/v1/fundingInfo
+
+Query funding rate info for symbols that had FundingRateCap/ FundingRateFloor / fundingIntervalHours adjustment
+
+Kline/Candlestick Data
+Response:
+
+[
+  [
+    1591258320000,          // Open time
+    "9640.7",               // Open
+    "9642.4",               // High
+    "9640.6",               // Low
+    "9642.0",               // Close (or latest price)
+    "206",                  // Volume
+    1591258379999,          // Close time
+    "2.13660389",           // Base asset volume
+    48,                     // Number of trades
+    "119",                  // Taker buy volume
+    "1.23424865",           // Taker buy base asset volume
+    "0"                     // Ignore.
+  ]
+]
+GET /dapi/v1/klines
+
+Kline/candlestick bars for a symbol.
+
+Klines are uniquely identified by their open time.
+
+Weight: based on parameter LIMIT
+
+LIMIT	weight
+[1,100)	1
+[100, 500)	2
+[500, 1000]	5
+> 1000	10
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+interval	ENUM	YES
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1500.
+The difference between startTime and endTime can only be up to 200 days
+Between startTime and endTime, the most recent limit data from endTime will be returned:
+
+If startTime and endTime are not sent, current timestamp will be set as endTime, and the most recent data will be returned.
+If startTime is sent only, the timestamp of 200 days after startTime will be set as endTime(up to the current time)
+If endTime is sent only, the timestamp of 200 days before endTime will be set as startTime
+Kline/Candlestick chart intervals:
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Continuous Contract Kline/Candlestick Data
+Response:
+
+[
+  [
+    1591258320000,          // Open time
+    "9640.7",               // Open
+    "9642.4",               // High
+    "9640.6",               // Low
+    "9642.0",               // Close (or latest price)
+    "206",                  // Volume
+    1591258379999,          // Close time
+    "2.13660389",           // Base asset volume
+    48,                     // Number of trades
+    "119",                  // Taker buy volume
+    "1.23424865",           // Taker buy base asset volume
+    "0"                     // Ignore.
+  ]
+]
+GET /dapi/v1/continuousKlines
+
+Kline/candlestick bars for a specific contract type.
+
+Klines are uniquely identified by their open time.
+
+Weight: based on parameter LIMIT
+
+LIMIT	weight
+[1,100)	1
+[100, 500)	2
+[500, 1000]	5
+> 1000	10
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES
+contractType	ENUM	YES
+interval	ENUM	YES
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1500.
+The difference between startTime and endTime can only be up to 200 days
+Between startTime and endTime, the most recent limit data from endTime will be returned:
+
+If startTime and endTime are not sent, current timestamp will be set as endTime, and the most recent data will be returned.
+If startTime is sent only, the timestamp of 200 days after startTime will be set as endTime(up to the current time)
+If endTime is sent only, the timestamp of 200 days before endTime will be set as startTime
+Contract type:
+
+PERPETUAL
+CURRENT_QUARTER
+NEXT_QUARTER
+Index Price Kline/Candlestick Data
+Response:
+
+[
+  [
+    1591256400000,          // Open time
+    "9653.69440000",        // Open
+    "9653.69640000",        // High
+    "9651.38600000",        // Low
+    "9651.55200000",        // Close (or latest price)
+    "0  ",                  // Ignore
+    1591256459999,          // Close time
+    "0",                    // Ignore
+    60,                     // Number of bisic data
+    "0",                    // Ignore
+    "0",                    // Ignore
+    "0"                     // Ignore
+  ]
+]
+GET /dapi/v1/indexPriceKlines
+
+Kline/candlestick bars for the index price of a pair.
+
+Klines are uniquely identified by their open time.
+
+Weight: based on parameter LIMIT
+
+LIMIT	weight
+[1,100)	1
+[100, 500)	2
+[500, 1000]	5
+> 1000	10
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES
+interval	ENUM	YES
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1500.
+The difference between startTime and endTime can only be up to 200 days
+Between startTime and endTime, the most recent limit data from endTime will be returned:
+If startTime and endTime are not sent, current timestamp will be set as endTime, and the most recent data will be returned.
+If startTime is sent only, the timestamp of 200 days after startTime will be set as endTime(up to the current time)
+If endTime is sent only, the timestamp of 200 days before endTime will be set as startTime
+Mark Price Kline/Candlestick Data
+Response:
+
+[
+  [
+    1591256460000,          // Open time
+    "9653.29201333",        // Open
+    "9654.56401333",        // High
+    "9653.07367333",        // Low
+    "9653.07367333",        // Close (or latest price)
+    "0  ",                  // Ignore
+    1591256519999,          // Close time
+    "0",                    // Ignore
+    60,                     // Number of bisic data
+    "0",                    // Ignore
+    "0",                    // Ignore
+    "0"                     // Ignore
+  ]
+]
+GET /dapi/v1/markPriceKlines
+
+Kline/candlestick bars for the mark price of a symbol.
+
+Klines are uniquely identified by their open time.
+
+Weight: based on parameter LIMIT
+
+LIMIT	weight
+[1,100)	1
+[100, 500)	2
+[500, 1000]	5
+> 1000	10
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+interval	ENUM	YES
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1500.
+The difference between startTime and endTime can only be up to 200 days
+Between startTime and endTime, the most recent limit data from endTime will be returned:
+If startTime and endTime are not sent, current timestamp will be set as endTime, and the most recent data will be returned.
+If startTime is sent only, the timestamp of 200 days after startTime will be set as endTime(up to the current time)
+If endTime is sent only, the timestamp of 200 days before endTime will be set as startTime
+Premium index Kline Data
+Response:
+
+[
+  [
+    1691603820000,          // Open time
+    "-0.00042931",          // Open
+    "-0.00023641",          // High
+    "-0.00059406",          // Low
+    "-0.00043659",          // Close
+    "0",                    // Ignore
+    1691603879999,          // Close time
+    "0",                    // Ignore
+    12,                     // Ignore
+    "0",                    // Ignore
+    "0",                    // Ignore
+    "0"                     // Ignore
+  ]
+]
+GET /dapi/v1/premiumIndexKlines
+
+Premium index kline bars of a symbol.
+
+Klines are uniquely identified by their open time.
+
+Weight: based on parameter LIMIT
+
+LIMIT	weight
+[1,100)	1
+[100, 500)	2
+[500, 1000]	5
+> 1000	10
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+interval	ENUM	YES
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 500; max 1500.
+If startTime and endTime are not sent, the most recent klines are returned.
+24hr Ticker Price Change Statistics
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_200925",
+        "pair": "BTCUSD",
+        "priceChange": "136.6",
+        "priceChangePercent": "1.436",
+        "weightedAvgPrice": "9547.3",
+        "lastPrice": "9651.6",
+        "lastQty": "1",
+        "openPrice": "9515.0",
+        "highPrice": "9687.0",
+        "lowPrice": "9499.5",
+        "volume": "494109",
+        "baseVolume": "5192.94797687",
+        "openTime": 1591170300000,
+        "closeTime": 1591256718418,
+        "firstId": 600507, // First tradeId
+        "lastId": 697803,  // Last tradeId
+        "count": 97297    // Trade count
+    }
+]
+GET /dapi/v1/ticker/24hr
+
+24 hour rolling window price change statistics.
+Careful when accessing this with no symbol.
+
+Weight:
+
+1 for a single symbol;
+40 when the symbol parameter is omitted
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+Symbol and pair cannot be sent together
+If a pair is sent,tickers for all symbols of the pair will be returned
+If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+Symbol Price Ticker
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_200626",
+        "ps": "9647.8",             // pair
+        "price": "9647.8",
+        "time": 1591257246176
+    }
+]
+GET /dapi/v1/ticker/price
+
+Latest price for a symbol or symbols.
+
+Weight:
+1 for a single symbol;
+2 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+Symbol and pair cannot be sent together
+If a pair is sent,tickers for all symbols of the pair will be returned
+If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+Symbol Order Book Ticker
+[
+    {
+        "lastUpdateId": 1027024,
+        "symbol": "BTCUSD_200626",
+        "pair": "BTCUSD",
+        "bidPrice": "9650.1",
+        "bidQty": "16",
+        "askPrice": "9650.3",
+        "askQty": "7",
+        "time": 1591257300345
+    }
+]
+GET /dapi/v1/ticker/bookTicker
+
+Best price/qty on the order book for a symbol or symbols.
+
+Weight:
+2 for a single symbol;
+5 when the symbol parameter is omitted
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+Symbol and pair cannot be sent together
+If a pair is sent,tickers for all symbols of the pair will be returned
+If either a pair or symbol is sent, tickers for all symbols of all pairs will be returned
+Query Index Price Constituents
+Response:
+
+{
+    "symbol": "BTCUSD",
+    "time": 1697422647853,
+    "constituents": [
+        {
+            "exchange": "bitstamp",
+            "symbol": "btcusd"
+        },
+        {
+            "exchange": "coinbase",
+            "symbol": "BTC-USD"
+        },
+        {
+            "exchange": "kraken",
+            "symbol": "XBT/USD"
+        },
+        {
+            "exchange": "binance_cross",
+            "symbol": "BTCUSDC*index(USDCUSD)"
+        }
+    ]
+}
+GET /dapi/v1/constituents
+
+Query index price constituents
+
+Weight: 2
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES	symbol underlying e.g BTCUSD
+Open Interest
+Response:
+
+{
+    "symbol": "BTCUSD_200626",
+    "pair": "BTCUSD",
+    "openInterest": "15004",
+    "contractType": "CURRENT_QUARTER",
+    "time": 1591261042378
+}
+
+Get present open interest of a specific symbol.
+
+GET /dapi/v1/openInterest
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+Quarterly Contract Settlement Price
+Response:
+
+[
+{
+        "deliveryPrice": 27101.10000000,
+        "deliveryTime": 1695945600000
+    },
+    {
+        "deliveryPrice": 30729.40000000,
+        "deliveryTime": 1688083200000
+    },
+    {
+        "deliveryPrice": 27823.70000000,
+        "deliveryTime": 1680220800000
+    },
+    {
+        "deliveryPrice": 44094.70000000,
+        "deliveryTime": 1648166400000
+    }
+]
+GET /futures/data/delivery-price
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	e.g BTCUSD
+Open Interest Statistics
+Response:
+
+[
+   {
+      "pair": "BTCUSD",
+      "contractType": "CURRENT_QUARTER",
+      "sumOpenInterest": "20403",  //unit: cont
+      "sumOpenInterestValue": "176196512.23400000", //unit: base asset
+      "timestamp": 1591261042378
+   },
+   {
+     "pair": "BTCUSD",
+      "contractType": "CURRENT_QUARTER",
+      "sumOpenInterest": "20401",
+      "sumOpenInterestValue": "176178704.98700000",
+      "timestamp": 1583128200000
+   }
+]
+GET /futures/data/openInterestHist
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+contractType	ENUM	YES	ALL, CURRENT_QUARTER, NEXT_QUARTER, PERPETUAL
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+IP rate limit 1000 requests/5min
+Top Trader Long/Short Ratio (Accounts)
+Response:
+
+[
+   {
+      "pair": "BTCUSD",
+      "longShortRatio": "1.8105",
+      "longAccount": "0.6442",  //64.42%
+      "shortAccount": "0.3558",  //35.58%
+      "timestamp": 1591261042378
+   },
+   {
+     "pair": "BTCUSD",
+      "longShortRatio": "1.1110",
+      "longAccount": "0.5263",
+      "shortAccount": "0.4737",
+      "timestamp": 1592870400000
+    }
+]
+GET /futures/data/topLongShortAccountRatio
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+IP rate limit 1000 requests/5min
+Top Trader Long/Short Ratio (Positions)
+Response:
+
+[
+   {
+      "pair": "BTCUSD",
+      "longShortRatio": "0.7869",
+      "longPosition": "0.6442",  //64.42%
+      "shortPosition": "0.4404",  //44.04%
+      "timestamp": 1592870400000
+   },
+   {
+     "pair": "BTCUSD",
+      "longShortRatio": "1.1231",
+      "longPosition": "0.2363",
+      "shortPosition": "0.4537",
+      "timestamp": 1592956800000
+    }
+]
+GET /futures/data/topLongShortPositionRatio
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+IP rate limit 1000 requests/5min
+Long/Short Ratio
+Response:
+
+[
+   {
+      "pair": "BTCUSD",
+      "longShortRatio": "0.1960",
+      "longAccount": "0.6622",  //66.22%
+      "shortAccount": "0.3378",  //33.78%
+      "timestamp": 1583139600000
+   },
+   {
+     "pair": "BTCUSD",
+      "longShortRatio": "1.9559",
+      "longAccount": "0.6617",
+      "shortAccount": "0.3382",
+      "timestamp": 1583139900000
+    }
+]
+GET /futures/data/globalLongShortAccountRatio
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+IP rate limit 1000 requests/5min
+Taker Buy/Sell Volume
+Response:
+
+[
+   {
+      "pair": "BTCUSD",
+      "contractType": CURRENT_QUARTER,
+      "takerBuyVol": "387",  //unit: cont
+      "takerSellVol": "248",  //unit: cont
+      "takerBuyVolValue": "2342.1220", //unit: base asset
+      "takerSellVolValue": "4213.9800", //unit: base asset
+      "timestamp": 1591261042378
+   },
+   {
+     "pair": "BTCUSD",
+      "contractType": CURRENT_QUARTER,
+      "takerBuyVol": "234",  //unit: cont
+      "takerSellVol": "121",  //unit: cont
+      "takerBuyVolValue": "4563.1320", //unit: base asset
+      "takerSellVolValue": "3313.3940", //unit: base asset
+      "timestamp": 1585615200000
+   }
+]
+GET /futures/data/takerBuySellVol
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+contractType	ENUM	YES	ALL, CURRENT_QUARTER, NEXT_QUARTER, PERPETUAL
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+IP rate limit 1000 requests/5min
+Basis
+Response:
+
+[
+   {
+        "indexPrice": "29269.93972727",
+        "contractType": "CURRENT_QUARTER",
+        "basisRate": "0.0024",
+        "futuresPrice": "29341.3",
+        "annualizedBasisRate": "0.0283",
+        "basis": "71.36027273",
+        "pair": "BTCUSD",
+        "timestamp": 1653381600000
+   }
+]
+GET /futures/data/basis
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	YES	BTCUSD
+contractType	ENUM	YES	CURRENT_QUARTER, NEXT_QUARTER, PERPETUAL
+period	ENUM	YES	"5m","15m","30m","1h","2h","4h","6h","12h","1d"
+limit	LONG	NO	Default 30,Max 500
+startTime	LONG	NO
+endTime	LONG	NO
+If startTime and endTime are not sent, the most recent data is returned.
+Only the data of the latest 30 days is available.
+Websocket Market Streams
+The base endpoint is: wss://dstream.binance.com
+Streams can be access either in a single raw stream or a combined stream
+Raw streams are accessed at /ws/<streamName>
+Combined streams are accessed at /stream?streams=<streamName1>/<streamName2>/<streamName3>
+Combined stream events are wrapped as follows: {"stream":"<streamName>","data":<rawPayload>}
+All symbols, pairs, and contract types for streams are lowercase
+A single connection is only valid for 24 hours; expect to be disconnected at the 24 hour mark
+The websocket server will send a ping frame every 3 minutes. If the websocket server does not receive a pong frame back from the connection within a 10 minute period, the connection will be disconnected. Unsolicited pong frames are allowed.
+WebSocket connections have a limit of 10 incoming messages per second.
+A connection that goes beyond the limit will be disconnected; IPs that are repeatedly disconnected may be banned.
+A single connection is not recommended to listen to more than 200 streams.
+Considering the possible data latency from RESTful endpoints during an extremely volatile market, it is highly recommended to get the order status, position, etc from the Websocket user data stream.
+Live Subscribing/Unsubscribing to streams
+The following data can be sent through the websocket instance in order to subscribe/unsubscribe from streams. Examples can be seen below.
+The id used in the JSON payloads is an unsigned INT used as an identifier to uniquely identify the messages going back and forth.
+Subscribe to a stream
+Response
+
+  {
+    "result": null,
+    "id": 1
+  }
+Request
+
+{
+"method": "SUBSCRIBE",
+"params":
+[
+"btcusd_200925@aggTrade",
+"btcusd_200925@depth"
+],
+"id": 1
+}
+
+Unsubscribe to a stream
+Response
+
+  {
+    "result": null,
+    "id": 312
+  }
+Request
+{
+"method": "UNSUBSCRIBE",
+"params":
+[
+"btcusd_200925@depth"
+],
+"id": 312
+}
+
+Listing Subscriptions
+Response
+
+  {
+    "result": [
+      "btcusd_200925@aggTrade"
+    ],
+    "id": 3
+  }
+Request
+{
+"method": "LIST_SUBSCRIPTIONS",
+"id": 3
+}
+
+Setting Properties
+Currently, the only property can be set is to set whether combined stream payloads are enabled are not. The combined property is set to false when connecting using /ws/ ("raw streams") and true when connecting using /stream/.
+
+Response
+
+  {
+    "result": null,
+    "id": 5
+  }
+Request
+{
+"method": "SET_PROPERTY",
+"params":
+[
+"combined",
+true
+],
+"id": 5
+}
+
+Retrieving Properties
+Response
+
+  {
+    "result": true, // Indicates that combined is set to true.
+    "id": 2
+  }
+Request
+{
+"method": "GET_PROPERTY",
+"params":
+[
+"combined"
+],
+"id": 2
+}
+
+Aggregate Trade Streams
+Payload:
+
+{
+  "e":"aggTrade",       // Event type
+  "E":1591261134288,    // Event time
+  "a":424951,           // Aggregate trade ID
+  "s":"BTCUSD_200626",  // Symbol
+  "p":"9643.5",         // Price
+  "q":"2",              // Quantity
+  "f":606073,           // First trade ID
+  "l":606073,           // Last trade ID
+  "T":1591261134199,    // Trade time
+  "m":false             // Is the buyer the market maker?
+}
+The Aggregate Trade Streams push market trade information that is aggregated for fills with same price and taking side every 100 milliseconds.
+
+Stream Name:
+<symbol>@aggTrade
+
+Update Speed: 100ms
+
+Index Price Stream
+Payload:
+
+  {
+    "e": "indexPriceUpdate",  // Event type
+    "E": 1591261236000,       // Event time
+    "i": "BTCUSD",            // Pair
+    "p": "9636.57860000",     // Index Price
+  }
+Stream Name:
+<pair>@indexPrice OR <pair>@indexPrice@1s
+
+Update Speed: 3000ms OR 1000ms
+
+Mark Price Stream
+Payload:
+
+{
+    "e":"markPriceUpdate",  // Event type
+    "E":1596095725000,      // Event time
+    "s":"BTCUSD_201225",    // Symbol
+    "p":"10934.62615417",   // Mark Price
+    "P":"10962.17178236",   // Estimated Settle Price, only useful in the last hour before the settlement starts.
+    "i":"10933.62615417",   // Index Price
+    "r":"",                 // funding rate for perpetual symbol, "" will be shown for delivery symbol
+    "T":0                   // next funding time for perpetual symbol, 0 will be shown for delivery symbol
+}
+Stream Name:
+<symbol>@markPrice OR <symbol>@markPrice@1s
+
+Update Speed: 3000ms OR 1000ms
+
+Mark Price of All Symbols of a Pair
+Payload:
+
+[
+  {
+    "e":"markPriceUpdate",  // Event type
+    "E":1596095725000,      // Event time
+    "s":"BTCUSD_201225",    // Symbol
+    "p":"10934.62615417",   // Mark Price
+    "P":"10962.17178236",   // Estimated Settle Price, only useful in the last hour before the settlement starts.
+    "i":"10933.62615417",   // Index Price
+    "r":"",                 // funding rate for perpetual symbol, "" will be shown for delivery symbol
+    "T":0                   // next funding time for perpetual symbol, 0 will be shown for delivery symbol
+  },
+  {
+    "e":"markPriceUpdate",
+    "E":1596095725000,
+    "s":"BTCUSD_PERP",
+    "p":"11012.31359011",
+    "P":"10962.17178236",
+    "i":"10933.62615417",   // Index Price
+    "r":"0.00000000",
+    "T":1596096000000
+  }
+]
+Stream Name:
+<pair>@markPrice OR <pair>@markPrice@1s
+
+Update Speed: 3000ms OR 1000ms
+
+Kline/Candlestick Streams
+Payload:
+
+{
+  "e":"kline",              // Event type
+  "E":1591261542539,        // Event time
+  "s":"BTCUSD_200626",      // Symbol
+  "k":{
+    "t":1591261500000,      // Kline start time
+    "T":1591261559999,      // Kline close time
+    "s":"BTCUSD_200626",    // Symbol
+    "i":"1m",               // Interval
+    "f":606400,             // First trade ID
+    "L":606430,             // Last trade ID
+    "o":"9638.9",           // Open price
+    "c":"9639.8",           // Close price
+    "h":"9639.8",           // High price
+    "l":"9638.6",           // Low price
+    "v":"156",              // volume
+    "n":31,                 // Number of trades
+    "x":false,              // Is this kline closed?
+    "q":"1.61836886",       // Base asset volume
+    "V":"73",               // Taker buy volume
+    "Q":"0.75731156",       // Taker buy base asset volume
+    "B":"0"                 // Ignore
+  }
+}
+The Kline/Candlestick Stream push updates to the current klines/candlestick every 250 milliseconds (if existing).
+
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Stream Name:
+<symbol>@kline_<interval>
+
+e.g. "btcusd_200626@kline_1m"
+
+Update Speed: 250ms
+
+Continuous Contract Kline/Candlestick Streams
+Payload:
+
+{
+  "e":"continuous_kline",   // Event type
+  "E":1591261542539,        // Event time
+  "ps":"BTCUSD",            // Pair
+  "ct":"NEXT_QUARTER"       // Contract type
+  "k":{
+    "t":1591261500000,      // Kline start time
+    "T":1591261559999,      // Kline close time
+    "i":"1m",               // Interval
+    "f":606400,             // First update ID
+    "L":606430,             // Last update ID
+    "o":"9638.9",           // Open price
+    "c":"9639.8",           // Close price
+    "h":"9639.8",           // High price
+    "l":"9638.6",           // Low price
+    "v":"156",              // volume
+    "n":31,                 // Number of trades
+    "x":false,              // Is this kline closed?
+    "q":"1.61836886",       // Base asset volume
+    "V":"73",               // Taker buy volume
+    "Q":"0.75731156",       // Taker buy base asset volume
+    "B":"0"                 // Ignore
+  }
+}
+Contract type:
+
+perpetual
+current_quarter
+next_quarter
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Stream Name:
+<pair>_<contractType>@continuousKline_<interval>
+
+e.g. "btcusd_next_quarter@continuousKline_1m"
+
+Update Speed: 250ms
+
+Index Kline/Candlestick Streams
+Payload:
+
+
+{
+  "e":"indexPrice_kline",       // Event Name
+  "E":1591267070033,            // Event Time
+  "ps":"BTCUSD",                // Pair
+  "k":{
+    "t":1591267020000,          // Kline start time
+    "T":1591267079999,          // Kline close time
+    "s":"0",                    // ignore
+    "i":"1m",                   // Interval
+    "f":1591267020000,          // ignore
+    "L":1591267070000,          // ignore
+    "o":"9542.21900000",        // Open price
+    "c":"9542.50440000",        // Close price
+    "h":"9542.71640000",        // High price
+    "l":"9542.21040000",        // Low price
+    "v":"0",                    // ignore
+    "n":51,                     // Number of basic data
+    "x":false,                  // Is this kline closed?
+    "q":"0",                    // ignore
+    "V":"0",                    // ignore
+    "Q":"0",                    // ignore
+    "B":"0"                     // ignore
+  }
+}
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Stream Name:
+<pair>@indexPriceKline_<interval>
+
+e.g. "btcusd@indexPriceKline_1m"
+
+Update Speed: 250ms
+
+Mark Price Kline/Candlestick Streams
+Payload:
+
+{
+  "e":"markPrice_kline",        // Event Name
+  "E":1591267398004,            // Event Time
+  "ps":"BTCUSD",                // Pair
+  "k":{
+    "t":1591267380000,          // Kline start time
+    "T":1591267439999,          // Kline close time
+    "s":"BTCUSD_200626",        // Symbol
+    "i":"1m",                   // Interval
+    "f":1591267380000,          // ignore
+    "L":1591267398000,          // ignore
+    "o":"9539.67161333",        // Open price
+    "c":"9540.82761333",        // Close price
+    "h":"9540.82761333",        // High price
+    "l":"9539.66961333",        // Low price
+    "v":"0",                    // ignore
+    "n":19,                     // Number of basic data
+    "x":false,                  // Is this kline closed?
+    "q":"0",                    // ignore
+    "V":"0",                    // ignore
+    "Q":"0",                    // ignore
+    "B":"0"                     // ignore
+  }
+}
+Kline/Candlestick chart intervals:
+
+m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
+
+1m
+3m
+5m
+15m
+30m
+1h
+2h
+4h
+6h
+8h
+12h
+1d
+3d
+1w
+1M
+Stream Name:
+<symbol>@markPriceKline_<interval>
+
+e.g. "btcusd_200626@markPriceKline_1m"
+
+Update Speed: 250ms
+
+Individual Symbol Mini Ticker Stream
+Payload:
+
+{
+  "e":"24hrMiniTicker",         // Event type
+  "E":1591267704450,            // Event time
+  "s":"BTCUSD_200626",          // Symbol
+  "ps":"BTCUSD",                // Pair
+  "c":"9561.7",                 // Close price
+  "o":"9580.9",                 // Open price
+  "h":"10000.0",                // High price
+  "l":"7000.0",                 // Low price
+  "v":"487476",                 // Total traded volume
+  "q":"33264343847.22378500"    // Total traded base asset volume
+}
+24hr rolling window mini-ticker statistics for a single symbol. These are NOT the statistics of the UTC day, but a 24hr rolling window from requestTime to 24hrs before.
+
+Stream Name:
+<symbol>@miniTicker
+
+Update Speed: 500ms
+
+All Market Mini Tickers Stream
+Payload:
+
+[
+    {
+      "e":"24hrMiniTicker",         // Event type
+      "E":1591267704450,            // Event time
+      "s":"BTCUSD_200626",          // Symbol
+      "ps":"BTCUSD",                // Pair
+      "c":"9561.7",                 // Close price
+      "o":"9580.9",                 // Open price
+      "h":"10000.0",                // High price
+      "l":"7000.0",                 // Low price
+      "v":"487476",                 // Total traded volume
+      "q":"33264343847.22378500"    // Total traded base asset volume
+    }
+]
+24hr rolling window mini-ticker statistics for all symbols. These are NOT the statistics of the UTC day, but a 24hr rolling window from requestTime to 24hrs before. Note that only tickers that have changed will be present in the array.
+
+Stream Name:
+!miniTicker@arr
+
+Update Speed: 1000ms
+
+Individual Symbol Ticker Streams
+Payload:
+
+{
+  "e":"24hrTicker",             // Event type
+  "E":1591268262453,            // Event time
+  "s":"BTCUSD_200626",          // Symbol
+  "ps":"BTCUSD",                // Pair
+  "p":"-43.4",                  // Price change
+  "P":"-0.452",                 // Price change percent
+  "w":"0.00147974",             // Weighted average price
+  "c":"9548.5",                 // Last price
+  "Q":"2",                      // Last quantity
+  "o":"9591.9",                 // Open price
+  "h":"10000.0",                // High price
+  "l":"7000.0",                 // Low price
+  "v":"487850",                 // Total traded volume
+  "q":"32968676323.46222700",   // Total traded base asset volume
+  "O":1591181820000,            // Statistics open time
+  "C":1591268262442,            // Statistics close time
+  "F":512014,                   // First trade ID
+  "L":615289,                   // Last trade Id
+  "n":103272                    // Total number of trades
+}
+24hr rolling window ticker statistics for a single symbol. These are NOT the statistics of the UTC day, but a 24hr rolling window from requestTime to 24hrs before.
+
+Stream Name:
+<symbol>@ticker
+
+Update Speed: 2000ms
+
+All Market Tickers Streams
+Payload:
+
+[
+    {
+      "e":"24hrTicker",             // Event type
+      "E":1591268262453,            // Event time
+      "s":"BTCUSD_200626",          // Symbol
+      "ps":"BTCUSD",                // Pair
+      "p":"-43.4",                  // Price change
+      "P":"-0.452",                 // Price change percent
+      "w":"0.00147974",             // Weighted average price
+      "c":"9548.5",                 // Last price
+      "Q":"2",                      // Last quantity
+      "o":"9591.9",                 // Open price
+      "h":"10000.0",                // High price
+      "l":"7000.0",                 // Low price
+      "v":"487850",                 // Total traded volume
+      "q":"32968676323.46222700",   // Total traded base asset volume
+      "O":1591181820000,            // Statistics open time
+      "C":1591268262442,            // Statistics close time
+      "F":512014,                   // First trade ID
+      "L":615289,                   // Last trade Id
+      "n":103272                    // Total number of trades
+    }
+]
+24hr rolling window ticker statistics for all symbols. These are NOT the statistics of the UTC day, but a 24hr rolling window from requestTime to 24hrs before. Note that only tickers that have changed will be present in the array.
+
+Stream Name:
+!ticker@arr
+
+Update Speed: 1000ms
+
+Individual Symbol Book Ticker Streams
+Payload:
+
+{
+  "e":"bookTicker",         // Event type
+  "u":17242169,             // Order book update Id
+  "s":"BTCUSD_200626",      // Symbol
+  "ps":"BTCUSD",            // Pair
+  "b":"9548.1",             // Best bid price
+  "B":"52",                 // Best bid qty
+  "a":"9548.5",             // Best ask price
+  "A":"11",                 // Best ask qty
+  "T":1591268628155,        // Transaction time
+  "E":1591268628166         // Event time
+}
+Pushes any update to the best bid or ask's price or quantity in real-time for a specified symbol.
+
+Stream Name: <symbol>@bookTicker
+
+Update Speed: Real-time
+
+All Book Tickers Stream
+Payload:
+
+{
+  // Same as <symbol>@bookTicker payload
+}
+Pushes any update to the best bid or ask's price or quantity in real-time for all symbols.
+
+Stream Name: !bookTicker
+
+Update Speed: Real-time
+
+Liquidation Order Streams
+Payload:
+
+{
+
+    "e":"forceOrder",                   // Event Type
+    "E": 1591154240950,                 // Event Time
+    "o":{
+
+        "s":"BTCUSD_200925",       // Symbol
+        "ps": "BTCUSD",                 // Pair
+        "S":"SELL",                     // Side
+        "o":"LIMIT",                    // Order Type
+        "f":"IOC",                      // Time in Force
+        "q":"1",                        // Original Quantity
+        "p":"9425.5",                   // Price
+        "ap":"9496.5",                  // Average Price
+        "X":"FILLED",                   // Order Status
+        "l":"1",                        // Order Last Filled Quantity
+        "z":"1",                        // Order Filled Accumulated Quantity
+        "T": 1591154240949,             // Order Trade Time
+
+    }
+}
+The Liquidation Order Snapshot Streams push force liquidation order information for specific symbol.
+
+For each symbol，only the latest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
+
+Stream Name:  <symbol>@forceOrder
+
+Update Speed: 1000ms
+
+All Market Liquidation Order Streams
+Payload:
+
+{
+
+    "e":"forceOrder",                   // Event Type
+    "E": 1591154240950,                 // Event Time
+    "o":{
+
+        "s":"BTCUSD_200925",       // Symbol
+        "ps": "BTCUSD",                 // Pair
+        "S":"SELL",                     // Side
+        "o":"LIMIT",                    // Order Type
+        "f":"IOC",                      // Time in Force
+        "q":"1",                        // Original Quantity
+        "p":"9425.5",                   // Price
+        "ap":"9496.5",                  // Average Price
+        "X":"FILLED",                   // Order Status
+        "l":"1",                        // Order Last Filled Quantity
+        "z":"1",                        // Order Filled Accumulated Quantity
+        "T": 1591154240949,             // Order Trade Time
+
+    }
+}
+The All Liquidation Order Snapshot Streams push force liquidation order information for all symbols in the market.
+
+For each symbol，only the latest one liquidation order within 1000ms will be pushed as the snapshot. If no liquidation happens in the interval of 1000ms, no stream will be pushed.
+
+Stream Name: !forceOrder@arr
+
+Update Speed: 1000ms
+
+Contract Info Stream
+Payload:
+
+{
+    "e":"contractInfo",          // Event Type
+    "E":1669647330375,           // Event Time
+    "s":"APTUSD_PERP",           // Symbol
+    "ps":"APTUSD",               // Pair
+    "ct":"PERPETUAL",            // Contract type
+    "dt":4133404800000,          // Delivery date time
+    "ot":1666594800000,          // onboard date time
+    "cs":"TRADING",              // Contract status
+    "bks":[
+        {
+            "bs":1,              // Notional bracket
+            "bnf":0,             // Floor notional of this bracket
+            "bnc":5000,          // Cap notional of this bracket
+            "mmr":0.01,          // Maintenance ratio for this bracket
+            "cf":0,              // Auxiliary number for quick calculation
+            "mi":21,             // Min leverage for this bracket
+            "ma":50              // Max leverage for this bracket
+        },
+        {
+            "bs":2,
+            "bnf":5000,
+            "bnc":25000,
+            "mmr":0.025,
+            "cf":75,
+            "mi":11,
+            "ma":20
+        }
+    ]
+}
+ContractInfo stream pushes when contract info updates(listing/settlement/contract bracket update). bks field only shows up when bracket gets updated.
+
+Stream Name: !contractInfo
+
+Update Speed: Real-time
+
+Partial Book Depth Streams
+Payload:
+
+{
+  "e":"depthUpdate",        // Event type
+  "E":1591269996801,        // Event time
+  "T":1591269996646,        // Transaction time
+  "s":"BTCUSD_200626",      // Symbol
+  "ps":"BTCUSD",            // Pair
+  "U":17276694,
+  "u":17276701,
+  "pu":17276678,
+  "b":[                     // Bids to be updated
+    [
+      "9523.0",             // Price Level
+      "5"                   // Quantity
+    ],
+    [
+      "9522.8",
+      "8"
+    ],
+    [
+      "9522.6",
+      "2"
+    ],
+    [
+      "9522.4",
+      "1"
+    ],
+    [
+      "9522.0",
+      "5"
+    ]
+  ],
+  "a":[                     // Asks to be updated
+    [
+      "9524.6",             // Price level to be updated
+      "2"                   // Quantity
+    ],
+    [
+      "9524.7",
+      "3"
+    ],
+    [
+      "9524.9",
+      "16"
+    ],
+    [
+      "9525.1",
+      "10"
+    ],
+    [
+      "9525.3",
+      "6"
+    ]
+  ]
+}
+Top bids and asks, Valid are 5, 10, or 20.
+
+Stream Names: <symbol>@depth<levels> OR <symbol>@depth<levels>@500ms OR <symbol>@depth<levels>@100ms.
+
+Update Speed: 250ms, 500ms or 100ms
+
+Diff. Book Depth Streams
+Payload:
+
+{
+  "e": "depthUpdate",           // Event type
+  "E": 1591270260907,           // Event time
+  "T": 1591270260891,           // Transction time
+  "s": "BTCUSD_200626",         // Symbol
+  "ps": "BTCUSD",               // Pair
+  "U": 17285681,                // First update ID in event
+  "u": 17285702,                // Final update ID in event
+  "pu": 17285675,               // Final update Id in last stream(ie `u` in last stream)
+  "b": [                        // Bids to be updated
+    [
+      "9517.6",                 // Price level to be updated
+      "10"                      // Quantity
+    ]
+  ],
+  "a": [                        // Asks to be updated
+    [
+      "9518.5",                 // Price level to be updated
+      "45"                      // Quantity
+    ]
+  ]
+}
+Bids and asks, pushed every 250 milliseconds, 500 milliseconds, or 100 milliseconds
+
+Stream Name:
+<symbol>@depth OR <symbol>@depth@500ms OR <symbol>@depth@100ms
+
+Update Speed: 250ms, 500ms, 100ms
+
+How to manage a local order book correctly
+Open a stream to wss://dstream.binance.com/stream?streams=btcusd_200925@depth.
+Buffer the events you receive from the stream. For same price, latest received update covers the previous one.
+Get a depth snapshot from https://dapi.binance.com/dapi/v1/depth?symbol=BTCUSD_200925&limit=1000 .
+Drop any event where u is < lastUpdateId in the snapshot
+The first processed event should have U <= lastUpdateId AND u >= lastUpdateId
+While listening to the stream, each new event's pu should be equal to the previous event's u, otherwise initialize the process from step 3.
+The data in each event is the absolute quantity for a price level
+If the quantity is 0, remove the price level
+Receiving an event that removes a price level that is not in your local order book can happen and is normal.
+Account/Trades Endpoints
+ Considering the possible data latency from RESTful endpoints during an extremely volatile market, it is highly recommended to get the order status, position, etc from the Websocket user data stream.
+New Future Account Transfer
+Please find details from here.
+
+Get Future Account Transaction History List
+Please find details from here.
+
+Change Position Mode(TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "success"
+}
+POST /dapi/v1/positionSide/dual (HMAC SHA256)
+
+Change user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+dualSidePosition	STRING	YES	"true": Hedge Mode; "false": One-way Mode
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get Current Position Mode(USER_DATA)
+Response:
+
+{
+    "dualSidePosition": true // "true": Hedge Mode; "false": One-way Mode
+}
+GET /dapi/v1/positionSide/dual (HMAC SHA256)
+
+Get user's position mode (Hedge Mode or One-way Mode ) on EVERY symbol
+
+Weight: 30
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+New Order (TRADE)
+Response:
+
+{
+    "clientOrderId": "testOrder",
+    "cumQty": "0",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 22542179,
+    "avgPrice": "0.0",
+    "origQty": "10",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "stopPrice": "9300",               // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,            // if Close-All
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "origType": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1566818724722,
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+}
+POST /dapi/v1/order
+
+Send in a new order.
+
+Weight: 0
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent in Hedge Mode.
+type	ENUM	YES
+timeInForce	ENUM	NO
+quantity	DECIMAL	NO	quantity measured by contract number, Cannot be sent with closePosition=true
+reduceOnly	STRING	NO	"true" or "false". default "false". Cannot be sent in Hedge Mode; cannot be sent with closePosition=true(Close-All)
+price	DECIMAL	NO
+newClientOrderId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,36}$
+stopPrice	DECIMAL	NO	Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+closePosition	STRING	NO	true, false；Close-All,used with STOP_MARKET or TAKE_PROFIT_MARKET.
+activationPrice	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)
+callbackRate	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, min 0.1, max 10 where 1 for 1%
+workingType	ENUM	NO	stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE". Default "CONTRACT_PRICE"
+priceProtect	STRING	NO	"TRUE" or "FALSE", default "FALSE". Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+newOrderRespType	ENUM	NO	"ACK", "RESULT", default "ACK"
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Additional mandatory parameters based on type:
+
+Type	Additional mandatory parameters
+LIMIT	timeInForce, quantity, price
+MARKET	quantity
+STOP/TAKE_PROFIT	price, stopPrice
+STOP_MARKET/TAKE_PROFIT_MARKET	stopPrice
+TRAILING_STOP_MARKET	callbackRate,quantity
+Order with type STOP, parameter timeInForce can be sent ( default GTC).
+Order with type TAKE_PROFIT, parameter timeInForce can be sent ( default GTC).
+Condition orders will be triggered when:
+
+If parameterpriceProtectis sent as true:
+when price reaches the stopPrice ，the difference rate between "MARK_PRICE" and "CONTRACT_PRICE" cannot be larger than the "triggerProtect" of the symbol
+"triggerProtect" of a symbol can be got from GET /dapi/v1/exchangeInfo
+STOP, STOP_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+TAKE_PROFIT, TAKE_PROFIT_MARKET:
+BUY: latest price ("MARK_PRICE" or "CONTRACT_PRICE") <= stopPrice
+SELL: latest price ("MARK_PRICE" or "CONTRACT_PRICE") >= stopPrice
+TRAILING_STOP_MARKET:
+BUY: the lowest price after order placed <= activationPrice, and the latest price >= the lowest price * (1 + callbackRate)
+SELL: the highest price after order placed >= activationPrice, and the latest price <= the highest price * (1 - callbackRate)
+For TRAILING_STOP_MARKET, if you got such error code.
+{"code": -2021, "msg": "Order would immediately trigger."}
+means that the parameters you send do not meet the following requirements:
+
+BUY: activationPrice should be smaller than latest price.
+SELL: activationPrice should be larger than latest price.
+If newOrderRespType is sent as RESULT :
+
+MARKET order: the final FILLED result of the order will be return directly.
+LIMIT order with special timeInForce: the final status result of the order(FILLED or EXPIRED) will be returned directly.
+STOP_MARKET, TAKE_PROFIT_MARKET with closePosition=true:
+
+Follow the same rules for condition orders.
+If triggered,close all current long position( if SELL) or current short position( if BUY).
+Cannot be used with quantity parameter
+Cannot be used with reduceOnly parameter
+In Hedge Mode,cannot be used with BUY orders in LONG position side. and cannot be used with SELL orders in SHORT position side
+Modify Order (TRADE)
+Response:
+
+{
+    "orderId": 20072994037,
+    "symbol": "BTCUSD_PERP",
+    "pair": "BTCUSD",
+    "status": "NEW",
+    "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+    "price": "30005",
+    "avgPrice": "0.0",
+    "origQty": "1",
+    "executedQty": "0",
+    "cumQty": "0",
+    "cumBase": "0",
+    "timeInForce": "GTC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "closePosition": false,
+    "side": "BUY",
+    "positionSide": "LONG",
+    "stopPrice": "0",
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false,
+    "origType": "LIMIT",
+    "updateTime": 1629182711600
+}
+PUT /dapi/v1/order (HMAC SHA256)
+
+Order modify function, currently only LIMIT order modification is supported, modified orders will be reordered in the match queue
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+symbol	STRING	YES
+side	ENUM	YES	SELL, BUY
+quantity	DECIMAL	NO	Order quantity, cannot be sent with closePosition=true
+price	DECIMAL	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Either quantity or price must be sent.
+When the new quantity or price doesn't satisfy PRICE_FILTER / PERCENT_FILTER / LOT_SIZE, amendment will be rejected and the order will stay as it is.
+However the order will be cancelled by the amendment in the following situations:
+when the order is in partially filled status and the new quantity <= executedQty
+When the order is GTX and the new price will cause it to be executed immediately
+One order can only be modfied for less than 10000 times
+Place Multiple Orders (TRADE)
+Response:
+
+[
+    {
+        "clientOrderId": "testOrder",
+        "cumQty": "0",
+        "cumBase": "0",
+        "executedQty": "0",
+        "orderId": 22542179,
+        "avgPrice": "0.0",
+        "origQty": "10",
+        "price": "0",
+        "reduceOnly": false,
+        "side": "BUY",
+        "positionSide": "SHORT",
+        "status": "NEW",
+        "stopPrice": "9300",             // please ignore when order type is TRAILING_STOP_MARKET
+        "symbol": "BTCUSD_200925",
+        "pair": "BTCUSD",
+        "timeInForce": "GTC",
+        "type": "TRAILING_STOP_MARKET",
+        "origType": "TRAILING_STOP_MARKET",
+        "activatePrice": "9020",         // activation price, only return with TRAILING_STOP_MARKET order
+        "priceRate": "0.3",              // callback rate, only return with TRAILING_STOP_MARKET order
+        "updateTime": 1566818724722,
+        "workingType": "CONTRACT_PRICE",
+        "priceProtect": false            // if conditional order trigger is protected
+    },
+    {
+        "code": -2022,
+        "msg": "ReduceOnly Order is rejected."
+    }
+]
+POST /dapi/v1/batchOrders (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+batchOrders	LIST<JSON>	YES	order list. Max 5 orders
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Where batchOrders is the list of order parameters in JSON
+
+Example: /dapi/v1/batchOrders?batchOrders=[{"type":"LIMIT","timeInForce":"GTC",
+"symbol":"BTCUSD_PERP","side":"BUY","price":"10001","quantity":"1"}]
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+side	ENUM	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent with Hedge Mode.
+type	ENUM	YES
+timeInForce	ENUM	NO
+quantity	DECIMAL	YES
+reduceOnly	STRING	NO	"true" or "false". default "false".
+price	DECIMAL	NO
+newClientOrderId	STRING	NO	A unique id among open orders. Automatically generated if not sent. Can only be string following the rule: ^[\.A-Z\:/a-z0-9_-]{1,36}$
+stopPrice	DECIMAL	NO	Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+activationPrice	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, default as the latest price(supporting different workingType)
+callbackRate	DECIMAL	NO	Used with TRAILING_STOP_MARKET orders, min 0.1, max 4 where 1 for 1%
+workingType	ENUM	NO	stopPrice triggered by: "MARK_PRICE", "CONTRACT_PRICE". Default "CONTRACT_PRICE"
+priceProtect	STRING	NO	"TRUE" or "FALSE", default "FALSE". Used with STOP/STOP_MARKET or TAKE_PROFIT/TAKE_PROFIT_MARKET orders.
+newOrderRespType	ENUM	NO	"ACK", "RESULT", default "ACK"
+Parameter rules are same with New Order
+Batch orders are processed concurrently, and the order of matching is not guaranteed.
+The order of returned contents for batch orders is the same as the order of the order list.
+Modify Multiple Orders (TRADE)
+Response:
+
+[
+    {
+        "orderId": 20072994037,
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "status": "NEW",
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "price": "30005",
+        "avgPrice": "0.0",
+        "origQty": "1",
+        "executedQty": "0",
+        "cumQty": "0",
+        "cumBase": "0",
+        "timeInForce": "GTC",
+        "type": "LIMIT",
+        "reduceOnly": false,
+        "closePosition": false,
+        "side": "BUY",
+        "positionSide": "LONG",
+        "stopPrice": "0",
+        "workingType": "CONTRACT_PRICE",
+        "priceProtect": false,
+        "origType": "LIMIT",
+        "updateTime": 1629182711600
+    },
+    {
+        "code": -2022,
+        "msg": "ReduceOnly Order is rejected."
+    }
+]
+PUT /dapi/v1/batchOrders (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+batchOrders	list<JSON>	YES	order list. Max 5 orders
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Where batchOrders is the list of order parameters in JSON
+
+Name	Type	Mandatory	Description
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+symbol	STRING	YES
+side	ENUM	YES	SELL, BUY
+quantity	DECIMAL	NO	Order quantity, cannot be sent with closePosition=true
+price	DECIMAL	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Parameter rules are same with Modify Order
+Batch modify orders are processed concurrently, and the order of matching is not guaranteed.
+The order of returned contents for batch modify orders is the same as the order of the order list.
+One order can only be modfied for less than 10000 times
+Get Order Modify History (USER_DATA)
+Response:
+
+[
+    {
+        "amendmentId": 5363,    // Order modification ID
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184560899,  // Order modification time
+        "amendment": {
+            "price": {
+                "before": "30004",
+                "after": "30003.2"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 3  // Order modification count, representing the number of times the order has been modified
+        }
+    },
+    {
+        "amendmentId": 5361,
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629184533946,
+        "amendment": {
+            "price": {
+                "before": "30005",
+                "after": "30004"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 2
+        }
+    },
+    {
+        "amendmentId": 5325,
+        "symbol": "BTCUSD_PERP",
+        "pair": "BTCUSD",
+        "orderId": 20072994037,
+        "clientOrderId": "LJ9R4QZDihCaS8UAOOLpgW",
+        "time": 1629182711787,
+        "amendment": {
+            "price": {
+                "before": "30002",
+                "after": "30005"
+            },
+            "origQty": {
+                "before": "1",
+                "after": "1"
+            },
+            "count": 1
+        }
+    }
+]
+GET /dapi/v1/orderAmendment (HMAC SHA256)
+
+Get order modification history
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+startTime	LONG	NO	Timestamp in ms to get modification history from INCLUSIVE
+endTime	LONG	NO	Timestamp in ms to get modification history until INCLUSIVE
+limit	INT	NO	Default 50; max 100
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes:
+
+Either orderId or origClientOrderId must be sent, and the orderId will prevail if both are sent.
+Query Order (USER_DATA)
+Response:
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "TRAILING_STOP_MARKET",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "status": "NEW",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,             // if Close-All
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1579276756075,        // update time
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+}
+GET /dapi/v1/order (HMAC SHA256)
+
+Check an order's status.
+
+Weight: 1
+
+These orders will not be found:
+order status is CANCELED or EXPIRED, AND
+order has NO filled trade, AND
+created time + 3 days < current time
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes:
+
+Either orderId or origClientOrderId must be sent.
+Cancel Order (TRADE)
+Response:
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "myOrder1",
+    "cumQty": "0",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 283194212,
+    "origQty": "11",
+    "origType": "TRAILING_STOP_MARKET",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "CANCELED",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,             // if Close-All
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1571110484038,
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+}
+DELETE /dapi/v1/order (HMAC SHA256)
+
+Cancel an active order.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderId or origClientOrderId must be sent.
+
+Cancel All Open Orders (TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "The operation of cancel all open order is done."
+}
+DELETE /dapi/v1/allOpenOrders (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Cancel Multiple Orders (TRADE)
+Response:
+
+[
+    {
+        "avgPrice": "0.0",
+        "clientOrderId": "myOrder1",
+        "cumQty": "0",
+        "cumBase": "0",
+        "executedQty": "0",
+        "orderId": 283194212,
+        "origQty": "11",
+        "origType": "TRAILING_STOP_MARKET",
+        "price": "0",
+        "reduceOnly": false,
+        "side": "BUY",
+        "positionSide": "SHORT",
+        "status": "CANCELED",
+        "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+        "closePosition": false,             // if Close-All
+        "symbol": "BTCUSD_200925",
+        "timeInForce": "GTC",
+        "type": "TRAILING_STOP_MARKET",
+        "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+        "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+        "workingType": "CONTRACT_PRICE",
+        "priceProtect": false,              // if conditional order trigger is protected
+        "updateTime": 1571110484038
+    },
+    {
+        "code": -2011,
+        "msg": "Unknown order sent."
+    }
+]
+DELETE /dapi/v1/batchOrders (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderIdList	LIST<LONG>	NO	max length 10
+e.g. [1234567,2345678]
+origClientOrderIdList	LIST<STRING>	NO	max length 10
+e.g. ["my_id_1","my_id_2"], encode the double quotes. No space after comma.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either orderIdList or origClientOrderIdList must be sent.
+
+Auto-Cancel All Open Orders (TRADE)
+Response:
+
+{
+    "symbol": "BTCUSD_200925",
+    "countdownTime": "100000"
+}
+Cancel all open orders of the specified symbol at the end of the specified countdown.
+
+POST /dapi/v1/countdownCancelAll (HMAC SHA256)
+
+Weight: 10
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+countdownTime	LONG	YES	countdown time, 1000 for 1 second. 0 to cancel the timer
+recvWindow	LONG	NO
+timestamp	LONG	YES
+This rest endpoint means to ensure your open orders are canceled in case of an outage. The endpoint should be called repeatedly as heartbeats so that the existing countdown time can be canceled and repalced by a new one.
+
+Example usage:
+Call this endpoint at 30s intervals with an countdownTime of 120000 (120s).
+If this endpoint is not called within 120 seconds, all your orders of the specified symbol will be automatically canceled.
+If this endpoint is called with an countdownTime of 0, the countdown timer will be stopped.
+
+The system will check all countdowns approximately every 10 milliseconds, so please note that sufficient redundancy should be considered when using this function. We do not recommend setting the countdown time to be too precise or too small.
+
+Query Current Open Order (USER_DATA)
+Response:
+
+
+{
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "TRAILING_STOP_MARKET",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,             // if Close-All
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD"
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1579276756075,
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+}
+GET /dapi/v1/openOrder (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+orderId	LONG	NO
+origClientOrderId	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+EitherorderId or origClientOrderId must be sent
+If the queried order has been filled or cancelled, the error message "Order does not exist" will be returned.
+Current All Open Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "TRAILING_STOP_MARKET",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,             // if Close-All
+    "symbol": "BTCUSD_200925",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1579276756075,        // update time
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+  }
+]
+GET /dapi/v1/openOrders (HMAC SHA256)
+
+Get all open orders on a symbol. Careful when accessing this with no symbol.
+
+Weight:
+
+1 for a single symbol;
+40 for mutltiple symbols
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+All Orders (USER_DATA)
+Response:
+
+[
+  {
+    "avgPrice": "0.0",
+    "clientOrderId": "abc",
+    "cumBase": "0",
+    "executedQty": "0",
+    "orderId": 1917641,
+    "origQty": "0.40",
+    "origType": "TRAILING_STOP_MARKET",
+    "price": "0",
+    "reduceOnly": false,
+    "side": "BUY",
+    "positionSide": "SHORT",
+    "status": "NEW",
+    "stopPrice": "9300",                // please ignore when order type is TRAILING_STOP_MARKET
+    "closePosition": false,             // if Close-All
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "time": 1579276756075,              // order time
+    "timeInForce": "GTC",
+    "type": "TRAILING_STOP_MARKET",
+    "activatePrice": "9020",            // activation price, only return with TRAILING_STOP_MARKET order
+    "priceRate": "0.3",                 // callback rate, only return with TRAILING_STOP_MARKET order
+    "updateTime": 1579276756075,        // update time
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false               // if conditional order trigger is protected
+  }
+]
+GET /dapi/v1/allOrders (HMAC SHA256)
+
+Get all account orders; active, canceled, or filled.
+
+These orders will not be found:
+order status is CANCELED or EXPIRED, AND
+order has NO filled trade, AND
+created time + 3 days < current time
+Weight:
+
+20 with symbol 40 with pair
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+orderId	LONG	NO
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 50; max 100.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notes:
+
+Either symbol or pair must be sent.
+If orderId is set, it will get orders >= that orderId. Otherwise most recent orders are returned.
+Futures Account Balance (USER_DATA)
+Response:
+
+[
+    {
+        "accountAlias": "SgsR",    // unique account code
+        "asset": "BTC",
+        "balance": "0.00250000",
+        "withdrawAvailable": "0.00250000",
+        "crossWalletBalance": "0.00241969",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00241969",
+        "updateTime": 1592468353979
+    }
+]
+GET /dapi/v1/balance (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Account Information (USER_DATA)
+Response:
+
+
+{
+    "assets": [
+        {
+            "asset": "BTC",  // asset name
+            "walletBalance": "0.00241969",  // total wallet balance
+            "unrealizedProfit": "0.00000000",  // unrealized profit or loss
+            "marginBalance": "0.00241969",  // margin balance
+            "maintMargin": "0.00000000",    // maintenance margin
+            "initialMargin": "0.00000000",  // total intial margin required with the latest mark price
+            "positionInitialMargin": "0.00000000",  // positions" margin required with the latest mark price
+            "openOrderInitialMargin": "0.00000000",  // open orders" intial margin required with the latest mark price
+            "maxWithdrawAmount": "0.00241969",  // available amount for transfer out
+            "crossWalletBalance": "0.00241969",  // wallet balance for crossed margin
+            "crossUnPnl": "0.00000000",  // total unrealized profit or loss of crossed positions
+            "availableBalance": "0.00241969"，  // available margin balance
+            "updateTime": 1625474304765  //update time
+        }
+     ],
+     "positions": [
+         {
+            "symbol": "BTCUSD_201225",
+            "positionAmt":"0",  // position amount
+            "initialMargin": "0",
+            "maintMargin": "0",
+            "unrealizedProfit": "0.00000000",
+            "positionInitialMargin": "0",
+            "openOrderInitialMargin": "0",
+            "leverage": "125",
+            "isolated": false,
+            "positionSide": "BOTH", // BOTH means that it is the position of One-way Mode
+            "entryPrice": "0.0",
+            "breakEvenPrice": "0.0",  // break-even price
+            "maxQty": "50",  // maximum quantity of base asset
+            "updateTime": 0
+        },
+        {
+            "symbol": "BTCUSD_201225",
+            "positionAmt":"0",
+            "initialMargin": "0",
+            "maintMargin": "0",
+            "unrealizedProfit": "0.00000000",
+            "positionInitialMargin": "0",
+            "openOrderInitialMargin": "0",
+            "leverage": "125",
+            "isolated": false,
+            "positionSide": "LONG",  // LONG or SHORT means that it is the position of Hedge Mode
+            "entryPrice": "0.0",
+            "breakEvenPrice": "0.0",  // break-even price
+            "maxQty": "50",
+            "updateTime": 0
+        },
+        {
+            "symbol": "BTCUSD_201225",
+            "positionAmt":"0",
+            "initialMargin": "0",
+            "maintMargin": "0",
+            "unrealizedProfit": "0.00000000",
+            "positionInitialMargin": "0",
+            "openOrderInitialMargin": "0",
+            "leverage": "125",
+            "isolated": false,
+            "positionSide": "SHORT",  // LONG or SHORT means that it is the position of Hedge Mode
+            "entryPrice": "0.0",
+            "breakEvenPrice": "0.0",  // break-even price
+            "maxQty": "50"
+            "updateTime":1627026881327
+        }
+     ],
+     "canDeposit": true,
+     "canTrade": true,
+     "canWithdraw": true,
+     "feeTier": 2,
+     "updateTime": 0
+ }
+
+GET /dapi/v1/account (HMAC SHA256)
+
+Get current account information.
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+recvWindow	LONG	NO
+timestamp	LONG	YES
+for One-way Mode user, the "positions" will only show the "BOTH" positions
+for Hedge Mode user, the "positions" will show "BOTH", "LONG", and "SHORT" positions.
+Change Initial Leverage (TRADE)
+Response:
+
+{
+    "leverage": 21,
+    "maxQty": "1000",  // maximum quantity of base asset
+    "symbol": "BTCUSD_200925"
+}
+POST /dapi/v1/leverage (HMAC SHA256)
+
+Change user's initial leverage in the specific symbol market.
+For Hedge Mode, LONG and SHORT positions of one symbol use the same initial leverage and share a total notional value.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+leverage	INT	YES	target initial leverage: int from 1 to 125
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Change Margin Type (TRADE)
+Response:
+
+{
+    "code": 200,
+    "msg": "success"
+}
+Change user's margin type in the specific symbol market.For Hedge Mode, LONG and SHORT positions of one symbol use the same margin type.
+With ISOLATED margin type, margins of the LONG and SHORT positions are isolated from each other.
+
+POST /dapi/v1/marginType (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+marginType	ENUM	YES	ISOLATED, CROSSED
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Modify Isolated Position Margin (TRADE)
+Response:
+
+{
+    "amount": 100.0,
+    "code": 200,
+    "msg": "Successfully modify position margin.",
+    "type": 1
+}
+POST /dapi/v1/positionMargin (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+positionSide	ENUM	NO	Default BOTH for One-way Mode ; LONG or SHORT for Hedge Mode. It must be sent with Hedge Mode.
+amount	DECIMAL	YES
+type	INT	YES	1: Add position margin,2: Reduce position margin
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Only for isolated symbol
+Get Position Margin Change History (TRADE)
+Response:
+
+[
+    {
+        "amount": "23.36332311",
+        "asset": "BTC",
+        "symbol": "BTCUSD_200925",
+        "time": 1578047897183,
+        "type": 1,
+        "positionSide": "BOTH"
+    },
+    {
+        "amount": "100",
+        "asset": "BTC",
+        "symbol": "BTCUSD_200925",
+        "time": 1578047900425,
+        "type": 1,
+        "positionSide": "LONG"
+    }
+]
+GET /dapi/v1/positionMargin/history (HMAC SHA256)
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+type	INT	NO	1: Add position margin,2: Reduce position margin
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default: 50
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Position Information (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "0",
+        "entryPrice": "0.0",
+        "breakEvenPrice": "0.0",  // break-even price
+        "markPrice": "0.00000000",
+        "unRealizedProfit": "0.00000000",
+        "liquidationPrice": "0",
+        "leverage": "125",
+        "maxQty": "50",  // maximum quantity of base asset
+        "marginType": "cross",
+        "isolatedMargin": "0.00000000",
+        "isAutoAddMargin": "false",
+        "positionSide": "BOTH",
+        "notionalValue":"0",
+        "updateTime": 0
+    },
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "1",
+        "entryPrice": "11707.70000003",
+        "breakEvenPrice": "11707.80000005",  // break-even price
+        "markPrice": "11788.66626667",
+        "unRealizedProfit": "0.00005866",
+        "liquidationPrice": "11667.63509587",
+        "leverage": "125",
+        "maxQty": "50",
+        "marginType": "cross",
+        "isolatedMargin": "0.00000000",
+        "isAutoAddMargin": "false",
+        "positionSide": "LONG",
+        "notionalValue":"11788.66626667",
+        "updateTime": 1627026881327
+     },
+    {
+        "symbol": "BTCUSD_201225",
+        "positionAmt": "0",
+        "entryPrice": "0.0",
+        "breakEvenPrice": "0.0",  // break-even price
+        "markPrice": "0.00000000",
+        "unRealizedProfit": "0.00000000",
+        "liquidationPrice": "0",
+        "leverage": "125",
+        "maxQty": "50",
+        "marginType": "cross",
+        "isolatedMargin": "0.00000000",
+        "isAutoAddMargin": "false",
+        "positionSide": "SHORT",
+        "notionalValue":"0",
+        "updateTime":1627026881327
+  }
+]
+GET /dapi/v1/positionRisk (HMAC SHA256) Get current account information.
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+marginAsset	STRING	NO
+pair	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If neither marginAsset nor pair is sent, positions of all symbols with TRADING status will be returned.
+
+for One-way Mode user, the response will only show the "BOTH" positions
+
+for Hedge Mode user, the response will show "BOTH", "LONG", and "SHORT" positions.
+
+Note
+Please use with user data stream ACCOUNT_UPDATE to meet your timeliness and accuracy needs.
+
+Account Trade List (USER_DATA)
+Response:
+
+[
+    {
+        'symbol': 'BTCUSD_200626',
+        'id': 6,
+        'orderId': 28,
+        'pair': 'BTCUSD',
+        'side': 'SELL',
+        'price': '8800',
+        'qty': '1',
+        'realizedPnl': '0',
+        'marginAsset': 'BTC',
+        'baseQty': '0.01136364',
+        'commission': '0.00000454',
+        'commissionAsset': 'BTC',
+        'time': 1590743483586,
+        'positionSide': 'BOTH',
+        'buyer': false,
+        'maker': false
+    }
+]
+GET /dapi/v1/userTrades (HMAC SHA256)
+
+Get trades for a specific account and symbol.
+
+Weight:
+
+20 with symbol 40 with pair
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+orderId	STRING	NO
+startTime	LONG	NO
+endTime	LONG	NO
+fromId	LONG	NO	Trade id to fetch from. Default gets most recent trades.
+limit	INT	NO	Default 50; max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Either symbol or pair must be sent
+Symbol and pair cannot be sent together
+Pair and fromId cannot be sent together
+Pair and orderId cannot be sent together
+If a pair is sent,tickers for all symbols of the pair will be returned
+The parameter fromId cannot be sent with startTime or endTime
+Get Income History(USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "",               // trade symbol, if existing
+        "incomeType": "TRANSFER",   // income type
+        "income": "-0.37500000",    // income amount
+        "asset": "BTC",             // income asset
+        "info":"WITHDRAW",          // extra information
+        "time": 1570608000000,
+        "tranId":"9689322392",      // transaction id
+        "tradeId":""                // trade id, if existing
+    },
+    {
+        "symbol": "BTCUSD_200925",
+        "incomeType": "COMMISSION",
+        "income": "-0.01000000",
+        "asset": "BTC",
+        "info":"",
+        "time": 1570636800000,
+        "tranId":"9689322392",
+        "tradeId":"2059192"
+    }
+]
+GET /dapi/v1/income (HMAC SHA256)
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+incomeType	STRING	NO	"TRANSFER","WELCOME_BONUS", "FUNDING_FEE", "REALIZED_PNL", "COMMISSION", "INSURANCE_CLEAR", "API_REBATE" and "DELIVERED_SETTELMENT"
+startTime	LONG	NO	Timestamp in ms to get funding from INCLUSIVE.
+endTime	LONG	NO	Timestamp in ms to get funding until INCLUSIVE.
+page	INT	NO
+limit	INT	NO	Default 100; max 1000
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If incomeType is not sent, all kinds of flow will be returned
+"trandId" is unique in the same "incomeType" for a user
+The interval between startTime and endTime can not exceed 200 days:
+If startTime and endTime are not sent, the last 200 days will be returned
+Notional Bracket for Pair(USER_DATA)
+Response:
+
+[
+    {
+        "pair": "BTCUSD",
+        "brackets": [
+            {
+                "bracket": 1,   // bracket level
+                "initialLeverage": 125,  // the maximum leverage
+                "qtyCap": 50,  // upper edge of base asset quantity
+                "qtylFloor": 0,  // lower edge of base asset quantity
+                "maintMarginRatio": 0.004 // maintenance margin rate
+                "cum": 0.0  // Auxiliary number for quick calculation
+            },
+        ]
+    }
+]
+Not recommended to continue using this v1 endpoint
+
+Get the pair's default notional bracket list, may return ambiguous values when there have been multiple different symbol brackets under the pair, suggest using the following GET /dapi/v2/leverageBracket query instead to get the specific symbol notional bracket list.
+
+GET /dapi/v1/leverageBracket
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+pair	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Notional Bracket for Symbol(USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_PERP",
+        "notionalCoef": 1.50,  //user symbol bracket multiplier, only appears when user's symbol bracket is adjusted
+        "brackets": [
+            {
+                "bracket": 1,   // bracket level
+                "initialLeverage": 125,  // the maximum leverage
+                "qtyCap": 50,  // upper edge of base asset quantity
+                "qtylFloor": 0,  // lower edge of base asset quantity
+                "maintMarginRatio": 0.004 // maintenance margin rate
+                "cum": 0.0 // Auxiliary number for quick calculation
+            },
+        ]
+    }
+]
+Get the symbol's notional bracket list.
+
+GET /dapi/v2/leverageBracket
+
+Weight: 1
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+User's Force Orders (USER_DATA)
+Response:
+
+[
+  {
+    "orderId": 165123080,
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "status": "FILLED",
+    "clientOrderId": "autoclose-1596542005017000006",
+    "price": "11326.9",
+    "avgPrice": "11326.9",
+    "origQty": "1",
+    "executedQty": "1",
+    "cumBase": "0.00882854",
+    "timeInForce": "IOC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "closePosition": false,
+    "side": "SELL",
+    "positionSide": "BOTH",
+    "stopPrice": "0",
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false,
+    "origType": "LIMIT",
+    "time": 1596542005019,
+    "updateTime": 1596542005050
+  },
+  {
+    "orderId": 207251986,
+    "symbol": "BTCUSD_200925",
+    "pair": "BTCUSD",
+    "status": "FILLED",
+    "clientOrderId": "autoclose-1597307316020000006",
+    "price": "11619.4",
+    "avgPrice": "11661.2",
+    "origQty": "1",
+    "executedQty": "1",
+    "cumBase": "0.00857544",
+    "timeInForce": "IOC",
+    "type": "LIMIT",
+    "reduceOnly": false,
+    "closePosition": false,
+    "side": "SELL",
+    "positionSide": "LONG",
+    "stopPrice": "0",
+    "workingType": "CONTRACT_PRICE",
+    "priceProtect": false,
+    "origType": "LIMIT",
+    "time": 1597307316022,
+    "updateTime": 1597307316035
+  }
+]
+GET /dapi/v1/forceOrders
+
+Weight: 20 with symbol, 50 without symbol
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+autoCloseType	ENUM	NO	"LIQUIDATION" for liquidation orders, "ADL" for ADL orders.
+startTime	LONG	NO
+endTime	LONG	NO
+limit	INT	NO	Default 50; max 100.
+recvWindow	LONG	NO
+timestamp	LONG	YES
+If "autoCloseType" is not sent, orders with both of the types will be returned
+If "startTime" is not sent, data within 200 days before "endTime" can be queried
+Position ADL Quantile Estimation (USER_DATA)
+Response:
+
+[
+    {
+        "symbol": "BTCUSD_200925",
+        "adlQuantile":
+            {
+                // if the positions of the symbol are crossed margined in Hedge Mode, "LONG" and "SHORT" will be returned a same quantile value, and "HEDGE" will be returned instead of "BOTH".
+                "LONG": 3,
+                "SHORT": 3,
+                "HEDGE": 0   // only a sign, ignore the value
+            }
+        },
+    {
+        "symbol": "BTCUSD_201225",
+        "adlQuantile":
+            {
+                // for positions of the symbol are in One-way Mode or isolated margined in Hedge Mode
+                "LONG": 1,      // adl quantile for "LONG" position in hedge mode
+                "SHORT": 2,     // adl qauntile for "SHORT" position in hedge mode
+                "BOTH": 0       // adl qunatile for position in one-way mode
+            }
+    }
+ ]
+GET /dapi/v1/adlQuantile
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Values update every 30s.
+
+Values 0, 1, 2, 3, 4 shows the queue position and possibility of ADL from low to high.
+
+For positions of the symbol are in One-way Mode or isolated margined in Hedge Mode, "LONG", "SHORT", and "BOTH" will be returned to show the positions' adl quantiles of different position sides.
+
+If the positions of the symbol are crossed margined in Hedge Mode:
+
+"HEDGE" as a sign will be returned instead of "BOTH";
+A same value caculated on unrealized pnls on long and short sides' positions will be shown for "LONG" and "SHORT" when there are positions in both of long and short sides.
+User Commission Rate (USER_DATA)
+Response:
+
+{
+    "symbol": "BTCUSD_PERP",
+    "makerCommissionRate": "0.00015",  // 0.015%
+    "takerCommissionRate": "0.00040"   // 0.040%
+}
+GET /dapi/v1/commissionRate (HMAC SHA256)
+
+Weight: 20
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	YES
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Get Download Id For Futures Transaction History (USER_DATA)
+Response:
+
+{
+    "avgCostTimestampOfLast30d":7241837, // Average time taken for data download in the past 30 days
+    "downloadId":"546975389218332672",
+}
+GET /dapi/v1/income/asyn (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+startTime	LONG	YES	Timestamp in ms
+endTime	LONG	YES	Timestamp in ms
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Request Limitation is 5 times per month, shared by front end download page and rest api
+The time between startTime and endTime can not be longer than 1 year
+Get Futures Transaction History Download Link by Id (USER_DATA)
+Response:
+
+{
+    "downloadId":"545923594199212032",
+    "status":"completed",     // Enum：completed，processing
+    "url":"www.binance.com",  // The link is mapped to download id
+    "notified":true,          // ignore
+    "expirationTimestamp":1645009771000,  // The link would expire after this timestamp
+    "isExpired":null,
+}
+OR (Response when server is processing)
+
+{
+    "downloadId":"545923594199212032",
+    "status":"processing",
+    "url":"",
+    "notified":false,
+    "expirationTimestamp":-1
+    "isExpired":null,
+
+}
+GET /dapi/v1/income/asyn/id (HMAC SHA256)
+
+Weight: 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+downloadId	STRING	YES	get by download id api
+recvWindow	LONG	NO
+timestamp	LONG	YES
+Download link expiration: 24h
+User Data Streams
+The base API endpoint is: https://dapi.binance.com
+A User Data Stream listenKey is valid for 60 minutes after creation.
+Doing a PUT on a listenKey will extend its validity for 60 minutes, if response -1125 error "This listenKey does not exist." Please use POST /fapi/v1/listenKey to recreate listenKey.
+Doing a DELETE on a listenKey will close the stream and invalidate the listenKey.
+Doing a POST on an account with an active listenKey will return the currently active listenKey and extend its validity for 60 minutes.
+The base websocket endpoint is: wss://dstream.binance.com
+User Data Streams are accessed at /ws/<listenKey>
+For one stream (one user data), the user data stream payloads can be guaranteed to be in order during heavy periods. Strongly recommend you order your updates using E.
+A single connection to dstream.binance.com is only valid for 24 hours; expect to be disconnected at the 24 hour mark
+Start User Data Stream (USER_STREAM)
+Response:
+
+{
+  "listenKey": "pqia91ma19a5s61cv6a81va65sdf19v8a65a1a5s61cv6a81va65sdf19v8a65a1"
+}
+POST /dapi/v1/listenKey
+
+Start a new user data stream. The stream will close after 60 minutes unless a keepalive is sent. If the account has an active listenKey, that listenKey will be returned and its validity will be extended for 60 minutes.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Keepalive User Data Stream (USER_STREAM)
+Response:
+
+{}
+PUT /dapi/v1/listenKey
+
+Keepalive a user data stream to prevent a time out. User data streams will close after 60 minutes.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Close User Data Stream (USER_STREAM)
+Response:
+
+{}
+DELETE /dapi/v1/listenKey
+
+Close out a user data stream.
+
+Weight: 1
+
+Parameters:
+
+None
+
+Event: User Data Stream Expired
+Payload:
+
+{
+    "stream": "OfYGbUzi3PraNagEkdKuFwUHn48brFsItTdsuiIXrucEvD0rhRXZ7I6URWfE8YE8",
+    "data": {
+        "e": "listenKeyExpired",   // event type
+        "E": "1699596037418",      // event time
+        "listenKey": "OfYGbUzi3PraNagEkdKuFwUHn48brFsItTdsuiIXrucEvD0rhRXZ7I6URWfE8YE8"
+    }
+}
+When the listenKey used for the user data stream turns expired, this event will be pushed.
+
+Notice:
+
+This event is not related to the websocket disconnection.
+This event will be received only when a valid listenKey in connection got expired.
+No more user data event will be updated after this event received until a new valid listenKey used.
+Event: Margin Call
+Payload:
+
+{
+    "e":"MARGIN_CALL",        // Event Type
+    "E":1587727187525,        // Event Time
+    "i": "SfsR",              // Account Alias
+    "cw":"3.16812045",        // Cross Wallet Balance. Only pushed with crossed position margin call
+    "p":[                     // Position(s) of Margin Call
+      {
+        "s":"BTCUSD_200925",  // Symbol
+        "ps":"LONG",          // Position Side
+        "pa":"132",           // Position Amount
+        "mt":"CROSSED",       // Margin Type
+        "iw":"0",             // Isolated Wallet (if isolated position)
+        "mp":"9187.17127000", // Mark Price
+        "up":"-1.166074",     // Unrealized PnL
+        "mm":"1.614445"       // Maintenance Margin Required
+      }
+    ]
+}
+
+When the user's position risk ratio is too high, this stream will be pushed.
+This message is only used as risk guidance information and is not recommended for investment strategies.
+In the case of a highly volatile market, there may be the possibility that the user's position has been liquidated at the same time when this stream is pushed out.
+Under cross margin mode, this stream will be pushed 1 time every 1 hour if margin call triggered; Under isolated margin mode, this stream will be pushed 1 time every 1 hour for each symbol if margin call triggered
+Event: Balance and Position Update
+Payload:
+
+{
+  "e": "ACCOUNT_UPDATE",            // Event Type
+  "E": 1564745798939,               // Event Time
+  "T": 1564745798938 ,              // Transaction
+  "i": "SfsR",                      // Account Alias
+  "a":                              // Update Data
+    {
+      "m":"ORDER",                  // Event reason type
+      "B":[                         // Balances
+        {
+          "a":"BTC",                // Asset
+          "wb":"122624.12345678",   // Wallet Balance
+          "cw":"100.12345678",      // Cross Wallet Balance
+          "bc":"50.12345678"            // Balance Change except PnL and Commission
+        },
+        {
+          "a":"ETH",
+          "wb":"1.00000000",
+          "cw":"0.00000000",
+          "bc":"-49.12345678"
+        }
+      ],
+      "P":[
+        {
+          "s":"BTCUSD_200925",      // Symbol
+          "pa":"0",                 // Position Amount
+          "ep":"0.0",               // Entry Price
+          "bep":"0.0",               // Break-Even Price
+          "cr":"200",               // (Pre-fee) Accumulated Realized
+          "up":"0",                 // Unrealized PnL
+          "mt":"isolated",          // Margin Type
+          "iw":"0.00000000",        // Isolated Wallet (if isolated position)
+          "ps":"BOTH"               // Position Side
+        },
+        {
+            "s":"BTCUSD_200925",
+            "pa":"20",
+            "ep":"6563.6",
+            "bep":"6563.7",
+            "cr":"0",
+            "up":"2850.21200000",
+            "mt":"isolated",
+            "iw":"13200.70726908",
+            "ps":"LONG"
+         },
+        {
+            "s":"BTCUSD_200925",
+            "pa":"-10",
+            "ep":"6563.8"
+            "bep":"6563.6",,
+            "cr":"-45.04000000",
+            "up":"-1423.15600000",
+            "mt":"isolated",
+            "iw":"6570.42511771",
+            "ps":"SHORT"
+        }
+      ]
+    }
+}
+Event type is ACCOUNT_UPDATE.
+
+When balance or position get updated, this event will be pushed.
+
+ACCOUNT_UPDATE will be pushed only when update happens on user's account, including changes on balances, positions, or margin type.
+Unfilled orders or cancelled orders will not make the event ACCOUNT_UPDATE pushed, since there's no change on positions.
+"position" in ACCOUNT_UPDATE: All symbols will be pushed.
+The field "m" represents the reason type for the event and may shows the following possible types:
+
+DEPOSIT
+WITHDRAW
+ORDER
+FUNDING_FEE
+ADJUSTMENT
+INSURANCE_CLEAR
+ADMIN_DEPOSIT
+ADMIN_WITHDRAW
+MARGIN_TRANSFER
+MARGIN_TYPE_CHANGE
+ASSET_TRANSFER
+COIN_SWAP_DEPOSIT
+COIN_SWAP_WITHDRAW
+The field "bc" represents the balance change except for PnL and commission.
+
+Event: Order Update
+Payload:
+
+{
+
+  "e":"ORDER_TRADE_UPDATE",     // Event Type
+  "E":1591274595442,            // Event Time
+  "T":1591274595442,            // Transaction Time
+  "i":"SfsR",                   // Account Alias
+  "o":{
+    "s":"BTCUSD_200925",        // Symbol
+    "c":"TEST",                 // Client Order Id
+      // special client order id:
+      // starts with "autoclose-": liquidation order
+      // "adl_autoclose": ADL auto close order
+      // "delivery_autoclose-": settlement order for delisting or delivery
+    "S":"SELL",                 // Side
+    "o":"TRAILING_STOP_MARKET", // Order Type
+    "f":"GTC",                  // Time in Force
+    "q":"2",                    // Original Quantity
+    "p":"0",                    // Original Price
+    "ap":"0",                   // Average Price
+    "sp":"9103.1",              // Stop Price. Please ignore with TRAILING_STOP_MARKET order
+    "x":"NEW",                  // Execution Type
+    "X":"NEW",                  // Order Status
+    "i":8888888,                // Order Id
+    "l":"0",                    // Order Last Filled Quantity
+    "z":"0",                    // Order Filled Accumulated Quantity
+    "L":"0",                    // Last Filled Price
+    "ma": "BTC",                // Margin Asset
+    "N":"BTC",                  // Commission Asset of the trade, will not push if no commission
+    "n":"0",                    // Commission of the trade, will not push if no commission
+    "T":1591274595442,          // Order Trade Time
+    "t":0,                      // Trade Id
+    "rp": "0",                  // Realized Profit of the trade
+    "b":"0",                    // Bid quantity of base asset
+    "a":"0",                    // Ask quantity of base asset
+    "m":false,                  // Is this trade the maker side?
+    "R":false,                  // Is this reduce only
+    "wt":"CONTRACT_PRICE",      // Stop Price Working Type
+    "ot":"TRAILING_STOP_MARKET",// Original Order Type
+    "ps":"LONG",                // Position Side
+    "cp":false,                 // If Close-All, pushed with conditional order
+    "AP":"9476.8",              // Activation Price, only puhed with TRAILING_STOP_MARKET order
+    "cr":"5.0",                 // Callback Rate, only puhed with TRAILING_STOP_MARKET order
+    "pP": false                 // If price protection is turned on
+  }
+
+}
+When new order created, modified, order status changed will push such event. event type is ORDER_TRADE_UPDATE.
+
+Side
+
+BUY
+SELL
+Position side:
+
+BOTH
+LONG
+SHORT
+Order Type
+
+MARKET
+LIMIT
+STOP
+TAKE_PROFIT
+LIQUIDATION
+Execution Type
+
+NEW
+CANCELED
+CALCULATED - Liquidation Execution
+EXPIRED
+TRADE
+AMENDMENT - Order Modified
+Order Status
+
+NEW
+PARTIALLY_FILLED
+FILLED
+CANCELED
+EXPIRED
+NEW_INSURANCE insurance fund liquidation
+NEW_ADL ADL liquiation
+Time in force
+
+GTC
+IOC
+FOK
+GTX
+Liquidation and ADL:
+
+If user gets liquidated due to insufficient margin balance:
+
+If liquidation Counterparty is market：c shows as "autoclose-XXX"，X shows as "NEW"
+If liquidation Counterparty is insurance fund: c shows as "autoclose-XXX"，X shows as "NEW_INSURANCE"
+If liquidation Counterparty is ADL counterparty：c shows as "autoclose-XXX"，X shows as "NEW_ADL"
+If user has enough margin balance but gets ADL:
+
+c shows as “adl_autoclose”，X shows as “NEW”
+Websocket User Data Request
+User data request need a successful connection with the user data stream with a listenKey.
+The following data can be sent through the websocket instance in order to request for user data. Examples can be seen below.
+The id used in the JSON payloads is an unsigned INT used as an identifier to uniquely identify the messages going back and forth.
+Request Form
+Response
+
+{
+    "result"[
+        {
+            "req":"<listenKey>@account",   // request name 1
+            "res":            // response to the request name 1
+                ...
+        },
+        {
+            "req":"<listenKey>@balance",   // request name 2, if existing
+            "res":            // response to the request name 2, if existing
+                ...
+        }
+    ]
+    "id": 12     // request ID
+}
+Request
+
+{
+"method": "REQUEST",
+"params":
+[
+"<listenKey>@account", // request name 1
+"<listenKey>@balance" // request name 2, if existing
+],
+"id": 12 // request ID.
+}
+
+Request: User's Account Information
+Response
+
+{
+  "id":1,       // request ID
+  "result":[
+    {
+      "req":"gN0SiRrevtS4O0ufdCpzd4N0MzHu2lVmwbHh6hj4g9eTT9Yfe55eUc4klmsEhnwC@account",  // request name
+      "res":{
+        "feeTier":0,         // account fee tier
+        "canTrade":true,     // if can trade
+        "canDeposit":true,   // if can transfer in asset
+        "canWithdraw":true,  // if can transfer out asset
+        "accountAlias":"fsR" // the unique account alias
+      }
+    }
+  ]
+}
+Request Name <listenKey>@account
+
+Request: User's Account Balance
+Response
+
+{
+  "id":2,       // request ID
+  "result":[
+    {
+      "req":"gN0SiRrevtS4O0ufdCpzd4N0MzHu2lVmwbHh6hj4g9eTT9Yfe55eUc4klmsEhnwC@balance", // request name
+      "res":{
+        "accountAlias":"fsR",       // unique account alias
+        "balances":[                // account balance
+          {
+            "asset":"BTC",          // asset name
+            "balance":"0.00241628", // asset wallet balance
+            "crossWalletBalance":"0.00235137", // wallet balance for cross margin
+            "crossUnPnl":"0.00000000",  // unrealized profit of cross margin positions
+            "availableBalance":"0.00235137",  // available margin balance for order
+            "maxWithdrawAmount":"0.00235137"  // available balance for transfer out
+          }
+        ]
+      }
+    }
+  ]
+}
+Request Name <listenKey>@balance
+
+Request: User's Position
+Response
+
+{
+  "id":3,
+  "result":[
+    {
+      "req":"gN0SiRrevtS4O0ufdCpzd4N0MzHu2lVmwbHh6hj4g9eTT9Yfe55eUc4klmsEhnwC@position",
+      "res":{
+        "positions":[
+          {
+            "entryPrice":"12044.90000003",
+            "marginType":"ISOLATED", // margin type, "CROSSED" or "ISOLATED"
+            "isAutoAddMargin":false,
+            "isolatedMargin":"0.00006388", // isolated margin balance
+            "leverage":125, // current leverage
+            "liquidationPrice":"12002.39091452",  // estimated liquidation price
+            "markPrice":"12046.06021667",  // current mark price
+            "maxQty":"50",       // maximum quantity of base asset
+            "positionAmt":"1",  // position amount
+            "symbol":"BTCUSD_200925",   // symbol
+            "unRealizedProfit":"0.00000079",  // unrealized PnL
+            "positionSide":"LONG"       // position side
+          },
+          {
+            "entryPrice":"0.0",
+            "marginType":"ISOLATED",
+            "isAutoAddMargin":false,
+            "isolatedMargin":"0",
+            "leverage":125,
+            "liquidationPrice":"0",
+            "markPrice":"12046.06021667",
+            "maxQty":"50",
+            "positionAmt":"0",
+            "symbol":"BTCUSD_200925",
+            "unRealizedProfit":"0.00000000",
+            "positionSide":"SHORT"
+          }
+        ]
+      }
+    }
+  ]
+}
+Request Name <listenKey>@position
+
+for One-way Mode user, the response will only show the "BOTH" positions
+
+for Hedge Mode user, the response will show "LONG" and "SHORT" positions.
+
+Event: Account Configuration Update (Leverage Update)
+Payload:
+
+{
+    "e":"ACCOUNT_CONFIG_UPDATE",       // Event Type
+    "E":1611646737479,                 // Event Time
+    "T":1611646737476,                 // Transaction Time
+    "ac":{
+    "s":"BTCUSD_PERP",                     // symbol
+    "l":25                             // leverage
+
+    }
+}
+
+When the account configuration is changed, the event type will be pushed as ACCOUNT_CONFIG_UPDATE
+
+When the leverage of a trade pair changes, the payload will contain the object ac to represent the account configuration of the trade pair, where s represents the specific trade pair and l represents the leverage
+
+Event: STRATEGY_UPDATE
+Payload:
+
+{
+    "e": "STRATEGY_UPDATE", // Event Type
+    "T": 1669261797627, // Transaction Time
+    "E": 1669261797628, // Event Time
+    "su": {
+            "si": 176054594, // Strategy ID
+            "st": "GRID", // Strategy Type
+            "ss": "NEW", // Strategy Status
+            "s": "BTCUSDT", // Symbol
+            "ut": 1669261797627, // Update Time
+            "c": 8007 // opCode
+        }
+}
+STRATEGY_UPDATE update when a strategy is created/cancelled/expired, ...etc.
+
+Strategy Status
+
+NEW
+WORKING
+CANCELLED
+EXPIRED
+opCode
+
+8001: The strategy params have been updated
+8002: User cancelled the strategy
+8003: User manually placed or cancelled an order
+8004: The stop limit of this order reached
+8005: User position liquidated
+8006: Max open order limit reached
+8007: New grid order
+8008: Margin not enough
+8009: Price out of bounds
+8010: Market is closed or paused
+8011: Close position failed, unable to fill
+8012: Exceeded the maximum allowable notional value at current leverage
+8013: Grid expired due to incomplete KYC verification or access from a restricted jurisdiction
+8014: User can only place reduce only order
+8015: User position empty or liquidated
+Event: GRID_UPDATE
+Payload:
+
+{
+    "e": "GRID_UPDATE", // Event Type
+    "T": 1669262908216, // Transaction Time
+    "E": 1669262908218, // Event Time
+    "gu": {
+            "si": 176057039, // Strategy ID
+            "st": "GRID", // Strategy Type
+            "ss": "WORKING", // Strategy Status
+            "s": "BTCUSDT", // Symbol
+            "r": "-0.00300716", // Realized PNL
+            "up": "16720", // Unmatched Average Price
+            "uq": "-0.001", // Unmatched Qty
+            "uf": "-0.00300716", // Unmatched Fee
+            "mp": "0.0", // Matched PNL
+            "ut": 1669262908197 // Update Time
+        }
+}
+GRID_UPDATE update when a sub order of a grid is filled or partially filled.
+
+Strategy Status
+
+NEW
+WORKING
+CANCELLED
+EXPIRED
+Classic Portfolio Margin Endpoints
+The Binance Classic Portfolio Margin Program is a cross-asset margin program supporting consolidated margin balance across trading products with over 200+ effective crypto collaterals. It is designed for professional traders, market makers, and institutional users looking to actively trade & hedge cross-asset and optimize risk-management in a consolidated setup.
+
+FAQ: Classic Portfolio Margin Program
+
+Only Classic Portfolio Margin Account is accessible to these endpoints. To enroll, kindly refer to: How to Enroll into the Binance Classic Portfolio Margin Program
+
+Query Classic Portfolio Margin Notional Limit (USER_DATA)
+Response:
+
+{
+    "notionalLimits": [                 // Classic Portfolio Margin notional limit
+        {
+            "symbol": "BTCUSD_PERP",     // Symbol
+            "pair": "BTCUSD",        // Pair
+            "notionalLimit": "500"     // Classic Portfolio Margin Notional Limit in coin
+        },
+        {
+            "symbol": "BTCUSD_220624",
+            "pair": "BTCUSD",
+            " notionalLimit": "200"
+        }
+    ]
+}
+GET /dapi/v1/pmExchangeInfo
+
+Get Classic Portfolio Margin notional limit.
+
+Weight(IP): 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+symbol	STRING	NO
+pair	STRING	NO
+Classic Portfolio Margin Account Information (USER_DATA)
+Response:
+
+{
+    "maxWithdrawAmountUSD": "25347.92083245",   // Classic Portfolio margin maximum virtual amount for transfer out in USD
+    "asset": "BTC",            // asset name
+    "maxWithdrawAmount": "1.33663654",        // maximum amount for transfer out
+}
+GET /dapi/v1/pmAccountInfo
+
+Get Classic Portfolio Margin current account information.
+
+Weight(IP): 5
+
+Parameters:
+
+Name	Type	Mandatory	Description
+asset	STRING	YES
+recvWindow	LONG	NO
+maxWithdrawAmount is for asset transfer out to the spot wallet.
+Error Codes
+Here is the error JSON payload:
+
+{
+  "code":-1121,
+  "msg":"Invalid symbol."
+}
+Errors consist of two parts: an error code and a message.
+Codes are universal,but messages can vary.
+
+10xx - General Server or Network issues
+-1000 UNKNOWN
+An unknown error occured while processing the request.
+-1001 DISCONNECTED
+Internal error; unable to process your request. Please try again.
+-1002 UNAUTHORIZED
+You are not authorized to execute this request.
+-1003 TOO_MANY_REQUESTS
+Too many requests queued.
+Too many requests; please use the websocket for live updates.
+Too many requests; current limit is %s requests per minute. Please use the websocket for live updates to avoid polling the API.
+Way too many requests; IP banned until %s. Please use the websocket for live updates to avoid bans.
+-1004 DUPLICATE_IP
+This IP is already on the white list
+-1005 NO_SUCH_IP
+No such IP has been white listed
+-1006 UNEXPECTED_RESP
+An unexpected response was received from the message bus. Execution status unknown.
+-1007 TIMEOUT
+Timeout waiting for response from backend server. Send status unknown; execution status unknown.
+-1010 ERROR_MSG_RECEIVED
+ERROR_MSG_RECEIVED.
+-1011 NON_WHITE_LIST
+This IP cannot access this route.
+-1013 INVALID_MESSAGE
+INVALID_MESSAGE.
+-1014 UNKNOWN_ORDER_COMPOSITION
+Unsupported order combination.
+-1015 TOO_MANY_ORDERS
+Too many new orders.
+Too many new orders; current limit is %s orders per %s.
+-1016 SERVICE_SHUTTING_DOWN
+This service is no longer available.
+-1020 UNSUPPORTED_OPERATION
+This operation is not supported.
+-1021 INVALID_TIMESTAMP
+Timestamp for this request is outside of the recvWindow.
+Timestamp for this request was 1000ms ahead of the server's time.
+-1022 INVALID_SIGNATURE
+Signature for this request is not valid.
+-1023 START_TIME_GREATER_THAN_END_TIME
+Start time is greater than end time.
+11xx - Request issues
+-1100 ILLEGAL_CHARS
+Illegal characters found in a parameter.
+Illegal characters found in parameter '%s'; legal range is '%s'.
+-1101 TOO_MANY_PARAMETERS
+Too many parameters sent for this endpoint.
+Too many parameters; expected '%s' and received '%s'.
+Duplicate values for a parameter detected.
+-1102 MANDATORY_PARAM_EMPTY_OR_MALFORMED
+A mandatory parameter was not sent, was empty/null, or malformed.
+Mandatory parameter '%s' was not sent, was empty/null, or malformed.
+Param '%s' or '%s' must be sent, but both were empty/null!
+-1103 UNKNOWN_PARAM
+An unknown parameter was sent.
+-1104 UNREAD_PARAMETERS
+Not all sent parameters were read.
+Not all sent parameters were read; read '%s' parameter(s) but was sent '%s'.
+-1105 PARAM_EMPTY
+A parameter was empty.
+Parameter '%s' was empty.
+-1106 PARAM_NOT_REQUIRED
+A parameter was sent when not required.
+Parameter '%s' sent when not required.
+-1108 BAD_ASSET
+Invalid asset.
+-1109 BAD_ACCOUNT
+Invalid account.
+-1110 BAD_INSTRUMENT_TYPE
+Invalid symbolType.
+-1111 BAD_PRECISION
+Precision is over the maximum defined for this asset.
+-1112 NO_DEPTH
+No orders on book for symbol.
+-1113 WITHDRAW_NOT_NEGATIVE
+Withdrawal amount must be negative.
+-1114 TIF_NOT_REQUIRED
+TimeInForce parameter sent when not required.
+-1115 INVALID_TIF
+Invalid timeInForce.
+-1116 INVALID_ORDER_TYPE
+Invalid orderType.
+-1117 INVALID_SIDE
+Invalid side.
+-1118 EMPTY_NEW_CL_ORD_ID
+New client order ID was empty.
+-1119 EMPTY_ORG_CL_ORD_ID
+Original client order ID was empty.
+-1120 BAD_INTERVAL
+Invalid interval.
+-1121 BAD_SYMBOL
+Invalid symbol.
+-1125 INVALID_LISTEN_KEY
+This listenKey does not exist. Please use POST /fapi/v1/listenKey to recreate listenKey
+-1127 MORE_THAN_XX_HOURS
+Lookup interval is too big.
+More than %s hours between startTime and endTime.
+-1128 OPTIONAL_PARAMS_BAD_COMBO
+Combination of optional parameters invalid.
+-1130 INVALID_PARAMETER
+Invalid data sent for a parameter.
+Data sent for parameter '%s' is not valid.
+-1136 INVALID_NEW_ORDER_RESP_TYPE
+Invalid newOrderRespType.
+20xx - Processing Issues
+-2010 NEW_ORDER_REJECTED
+NEW_ORDER_REJECTED
+-2011 CANCEL_REJECTED
+CANCEL_REJECTED
+-2013 NO_SUCH_ORDER
+Order does not exist.
+-2014 BAD_API_KEY_FMT
+API-key format invalid.
+-2015 REJECTED_MBX_KEY
+Invalid API-key, IP, or permissions for action.
+-2016 NO_TRADING_WINDOW
+No trading window could be found for the symbol. Try ticker/24hrs instead.
+-2018 BALANCE_NOT_SUFFICIENT
+Balance is insufficient.
+-2019 MARGIN_NOT_SUFFICIEN
+Margin is insufficient.
+-2020 UNABLE_TO_FILL
+Unable to fill.
+-2021 ORDER_WOULD_IMMEDIATELY_TRIGGER
+Order would immediately trigger.
+-2022 REDUCE_ONLY_REJECT
+ReduceOnly Order is rejected.
+-2023 USER_IN_LIQUIDATION
+User in liquidation mode now.
+-2024 POSITION_NOT_SUFFICIENT
+Position is not sufficient.
+-2025 MAX_OPEN_ORDER_EXCEEDED
+Reach max open order limit.
+-2026 REDUCE_ONLY_ORDER_TYPE_NOT_SUPPORTED
+This OrderType is not supported when reduceOnly.
+-2027 MAX_LEVERAGE_RATIO
+Exceeded the maximum allowable position at current leverage.
+-2028 MIN_LEVERAGE_RATIO
+Leverage is smaller than permitted: insufficient margin balance.
+40xx - Filters and other Issues
+-4000 INVALID_ORDER_STATUS
+Invalid order status.
+-4001 PRICE_LESS_THAN_ZERO
+Price less than 0.
+-4002 PRICE_GREATER_THAN_MAX_PRICE
+Price greater than max price.
+-4003 QTY_LESS_THAN_ZERO
+Quantity less than zero.
+-4004 QTY_LESS_THAN_MIN_QTY
+Quantity less than min quantity.
+-4005 QTY_GREATER_THAN_MAX_QTY
+Quantity greater than max quantity.
+-4006 STOP_PRICE_LESS_THAN_ZERO
+Stop price less than zero.
+-4007 STOP_PRICE_GREATER_THAN_MAX_PRICE
+Stop price greater than max price.
+-4008 TICK_SIZE_LESS_THAN_ZERO
+Tick size less than zero.
+-4009 MAX_PRICE_LESS_THAN_MIN_PRICE
+Max price less than min price.
+-4010 MAX_QTY_LESS_THAN_MIN_QTY
+Max qty less than min qty.
+-4011 STEP_SIZE_LESS_THAN_ZERO
+Step size less than zero.
+-4012 MAX_NUM_ORDERS_LESS_THAN_ZERO
+Max mum orders less than zero.
+-4013 PRICE_LESS_THAN_MIN_PRICE
+Price less than min price.
+-4014 PRICE_NOT_INCREASED_BY_TICK_SIZE
+Price not increased by tick size.
+-4015 INVALID_CL_ORD_ID_LEN
+Client order id is not valid.
+Client order id length should not be more than 36 chars
+-4016 PRICE_HIGHTER_THAN_MULTIPLIER_UP
+Price is higher than mark price multiplier cap.
+-4017 MULTIPLIER_UP_LESS_THAN_ZERO
+Multiplier up less than zero.
+-4018 MULTIPLIER_DOWN_LESS_THAN_ZERO
+Multiplier down less than zero.
+-4019 COMPOSITE_SCALE_OVERFLOW
+Composite scale too large.
+-4020 TARGET_STRATEGY_INVALID
+Target strategy invalid for orderType '%s',reduceOnly '%b'.
+-4021 INVALID_DEPTH_LIMIT
+Invalid depth limit.
+'%s' is not valid depth limit.
+-4022 WRONG_MARKET_STATUS
+market status sent is not valid.
+-4023 QTY_NOT_INCREASED_BY_STEP_SIZE
+Qty not increased by step size.
+-4024 PRICE_LOWER_THAN_MULTIPLIER_DOWN
+Price is lower than mark price multiplier floor.
+-4025 MULTIPLIER_DECIMAL_LESS_THAN_ZERO
+Multiplier decimal less than zero.
+-4026 COMMISSION_INVALID
+Commission invalid.
+%s less than zero.
+%s absolute value greater than %s
+-4027 INVALID_ACCOUNT_TYPE
+Invalid account type.
+-4028 INVALID_LEVERAGE
+Invalid leverage
+Leverage %s is not valid
+Leverage %s already exist with %s
+-4029 INVALID_TICK_SIZE_PRECISION
+Tick size precision is invalid.
+-4030 INVALID_STEP_SIZE_PRECISION
+Step size precision is invalid.
+-4031 INVALID_WORKING_TYPE
+Invalid parameter working type
+Invalid parameter working type: %s
+-4032 EXCEED_MAX_CANCEL_ORDER_SIZE
+Exceed maximum cancel order size.
+Invalid parameter working type: %s
+-4033 INSURANCE_ACCOUNT_NOT_FOUND
+Insurance account not found.
+-4044 INVALID_BALANCE_TYPE
+Balance Type is invalid.
+-4045 MAX_STOP_ORDER_EXCEEDED
+Reach max stop order limit.
+-4046 NO_NEED_TO_CHANGE_MARGIN_TYPE
+No need to change margin type.
+-4047 THERE_EXISTS_OPEN_ORDERS
+Margin type cannot be changed if there exists open orders.
+-4048 THERE_EXISTS_QUANTITY
+Margin type cannot be changed if there exists position.
+-4049 ADD_ISOLATED_MARGIN_REJECT
+Add margin only support for isolated position.
+-4050 CROSS_BALANCE_INSUFFICIENT
+Cross balance insufficient.
+-4051 ISOLATED_BALANCE_INSUFFICIENT
+Isolated balance insufficient.
+-4052 NO_NEED_TO_CHANGE_AUTO_ADD_MARGIN
+No need to change auto add margin.
+-4053 AUTO_ADD_CROSSED_MARGIN_REJECT
+Auto add margin only support for isolated position.
+-4054 ADD_ISOLATED_MARGIN_NO_POSITION_REJECT
+Cannot add position margin: position is 0.
+-4055 AMOUNT_MUST_BE_POSITIVE
+Amount must be positive.
+-4056 INVALID_API_KEY_TYPE
+Invalid api key type.
+-4057 INVALID_RSA_PUBLIC_KEY
+Invalid api public key
+-4058 MAX_PRICE_TOO_LARGE
+maxPrice and priceDecimal too large,please check.
+-4059 NO_NEED_TO_CHANGE_POSITION_SIDE
+No need to change position side.
+-4060 INVALID_POSITION_SIDE
+Invalid position side.
+-4061 POSITION_SIDE_NOT_MATCH
+Order's position side does not match user's setting.
+-4062 REDUCE_ONLY_CONFLICT
+Invalid or improper reduceOnly value.
+-4067 POSITION_SIDE_CHANGE_EXISTS_OPEN_ORDERS
+Position side cannot be changed if there exists open orders.
+-4068 POSITION_SIDE_CHANGE_EXISTS_QUANTITY
+Position side cannot be changed if there exists position.
+-4082 INVALID_BATCH_PLACE_ORDER_SIZE
+Invalid number of batch place orders.
+Invalid number of batch place orders: %s
+-4083 PLACE_BATCH_ORDERS_FAIL
+Fail to place batch orders.
+-4084 UPCOMING_METHOD
+Method is not allowed currently. Upcoming soon.
+-4086 INVALID_PRICE_SPREAD_THRESHOLD
+Invalid price spread threshold.
+-4087 INVALID_PAIR
+Invalid pair.
+-4088 INVALID_TIME_INTERVAL
+Invalid time interval.
+Maximum time interval is %s days.
+-4089 REDUCE_ONLY_ORDER_PERMISSION
+User can only place reduce only order.
+-4090 NO_PLACE_ORDER_PERMISSION
+User can not place order currently.
+-4104 INVALID_CONTRACT_TYPE
+Invalid contract type.
+-4110 INVALID_CLIENT_TRAN_ID_LEN
+clientTranId is not valid.
+Client tran id length should be less than 64 chars.
+-4111 DUPLICATED_CLIENT_TRAN_ID
+clientTranId is duplicated.
+Client tran id should be unique within 7 days.
+-4112 REDUCE_ONLY_MARGIN_CHECK_FAILED
+ReduceOnly Order Failed. Please check your existing position and open orders.
+-4113 MARKET_ORDER_REJECT
+The counterparty's best price does not meet the PERCENT_PRICE filter limit.
+-4135 INVALID_ACTIVATION_PRICE
+Invalid activation price.
+-4137 QUANTITY_EXISTS_WITH_CLOSE_POSITION
+Quantity must be zero with closePosition equals true.
+-4138 REDUCE_ONLY_MUST_BE_TRUE
+Reduce only must be true with closePosition equals true.
+-4139 ORDER_TYPE_CANNOT_BE_MKT
+Order type can not be market if it's unable to cancel.
+-4142 STRATEGY_INVALID_TRIGGER_PRICE
+REJECT: take profit or stop order will be triggered immediately.
+-4150 ISOLATED_LEVERAGE_REJECT_WITH_POSITION
+Leverage reduction is not supported in Isolated Margin Mode with open positions.
+-4151 PRICE_HIGHTER_THAN_STOP_MULTIPLIER_UP
+Price is higher than stop price multiplier cap.
+Limit price can't be higher than %s.
+-4152 PRICE_LOWER_THAN_STOP_MULTIPLIER_DOWN
+Price is lower than stop price multiplier floor.
+Limit price can't be lower than %s.
+-4154 STOP_PRICE_HIGHER_THAN_PRICE_MULTIPLIER_LIMIT
+Stop price is higher than price multiplier cap.
+Stop price can't be higher than %s
+-4155 STOP_PRICE_LOWER_THAN_PRICE_MULTIPLIER_LIMIT
+PStop price is lower than price multiplier floor.
+Stop price can't be lower than %s
+-4178 MIN_NOTIONAL
+Order's notional must be no smaller than one (unless you choose reduce only)
+Order's notional must be no smaller than %s (unless you choose reduce only)
+-4192 COOLING_OFF_PERIOD
+Trade forbidden due to Cooling-off Period.
+-4194 ADJUST_LEVERAGE_KYC_FAILED
+Intermediate Personal Verification is required for adjusting leverage over 20x.
+-4195 ADJUST_LEVERAGE_ONE_MONTH_FAILED
+More than 20x leverage is available one month after account registration.
+-4196 LIMIT_ORDER_ONLY
+Only limit order is supported.
+-4197 SAME_ORDER
+No need to modify the order.
+-4198 EXCEED_MAX_MODIFY_ORDER_LIMIT
+Exceed maximum modify order limit.
+-4199 MOVE_ORDER_NOT_ALLOWED_SYMBOL_REASON
+Symbol is not in trading status. Order amendment is not permitted.
+-4200 ADJUST_LEVERAGE_X_DAYS_FAILED
+More than 20x leverage is available 30 days after Futures account registration.
+More than 20x leverage is available %s days after Futures account registration.
+-4201 ADJUST_LEVERAGE_KYC_LIMIT
+Users in this country has limited adjust leverage.
+Users in your location/country can only access a maximum leverage of %s
+-4202 ADJUST_LEVERAGE_ACCOUNT_SYMBOL_FAILED
+Current symbol leverage cannot exceed 20 when using position limit adjustment service.
+-4188 ME_INVALID_TIMESTAMP
+Timestamp for this request is outside of the ME recvWindow.
