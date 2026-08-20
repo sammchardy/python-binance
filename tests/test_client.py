@@ -1,4 +1,5 @@
 import sys
+from unittest.mock import MagicMock
 import pytest
 from binance.client import Client
 from binance.exceptions import BinanceAPIException, BinanceRequestException
@@ -281,3 +282,67 @@ def test_handle_response(client):
     )
     with pytest.raises(BinanceAPIException):
         client._handle_response(mock_error_response)
+
+
+def _no_network_client():
+    # aggregate_trade_iter's pagination logic doesn't need a live connection;
+    # ping=False avoids the network round-trip Client() otherwise makes.
+    return Client(
+        api_key, api_secret, {"proxies": proxies}, testnet=testnet, ping=False
+    )
+
+
+def test_aggregate_trade_iter_end_str_stops_at_boundary():
+    """Regression test for #497: without end_str the iterator has no way to
+    stop, so a long-running collection can grow unbounded. With end_str set,
+    it should yield only trades at/before that time and stop without
+    fetching further pages."""
+    client = _no_network_client()
+    client.get_aggregate_trades = MagicMock(
+        return_value=[
+            {"a": 1, "T": 1000},
+            {"a": 2, "T": 2000},
+            {"a": 3, "T": 3000},
+        ]
+    )
+
+    result = list(
+        client.aggregate_trade_iter(symbol="BTCUSDT", start_str=500, end_str=2000)
+    )
+
+    assert [t["a"] for t in result] == [1, 2]
+    client.get_aggregate_trades.assert_called_once()
+
+
+def test_aggregate_trade_iter_end_str_with_last_id_spans_pages():
+    client = _no_network_client()
+    client.get_aggregate_trades = MagicMock(
+        side_effect=[
+            # first page: fromId=100 echoes id 100, then two new trades
+            [{"a": 100, "T": 900}, {"a": 101, "T": 1000}, {"a": 102, "T": 2000}],
+            # second page: fromId=102 echoes id 102, then trades past end_ts
+            [{"a": 102, "T": 2000}, {"a": 103, "T": 2600}, {"a": 104, "T": 3000}],
+        ]
+    )
+
+    result = list(
+        client.aggregate_trade_iter(symbol="BTCUSDT", last_id=100, end_str=2500)
+    )
+
+    assert [t["a"] for t in result] == [101, 102]
+    assert client.get_aggregate_trades.call_count == 2
+
+
+def test_aggregate_trade_iter_without_end_str_keeps_old_behavior():
+    client = _no_network_client()
+    client.get_aggregate_trades = MagicMock(
+        side_effect=[
+            [{"a": 5, "T": 100}, {"a": 6, "T": 200}],
+            [{"a": 6, "T": 200}],  # no new trades after the echoed id -> stop
+        ]
+    )
+
+    result = list(client.aggregate_trade_iter(symbol="BTCUSDT", last_id=5))
+
+    assert [t["a"] for t in result] == [6]
+    assert client.get_aggregate_trades.call_count == 2

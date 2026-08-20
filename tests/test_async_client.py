@@ -1,5 +1,6 @@
 import pytest
 import sys
+from unittest.mock import AsyncMock
 
 from binance.async_client import AsyncClient
 from .conftest import proxy, api_key, api_secret, testnet
@@ -314,3 +315,26 @@ async def test_handle_response(clientAsync):
     mock_response._body = b"error message"
     with pytest.raises(BinanceAPIException):
         await clientAsync._handle_response(mock_response)
+
+
+async def test_aggregate_trade_iter_end_str_with_last_id_spans_pages_async():
+    """Async counterpart of the sync end_str test (see test_client.py) --
+    AsyncClient() mirrors Client's pagination logic and had the same
+    unbounded-iteration bug."""
+    client = AsyncClient(api_key, api_secret, {"proxies": {}}, testnet=testnet)
+    client.get_aggregate_trades = AsyncMock(
+        side_effect=[
+            [{"a": 100, "T": 900}, {"a": 101, "T": 1000}, {"a": 102, "T": 2000}],
+            [{"a": 102, "T": 2000}, {"a": 103, "T": 2600}, {"a": 104, "T": 3000}],
+        ]
+    )
+
+    result = [
+        t
+        async for t in client.aggregate_trade_iter(
+            symbol="BTCUSDT", last_id=100, end_str=2500
+        )
+    ]
+
+    assert [t["a"] for t in result] == [101, 102]
+    assert client.get_aggregate_trades.await_count == 2

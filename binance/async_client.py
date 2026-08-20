@@ -400,11 +400,22 @@ class AsyncClient(BaseClient):
 
     get_aggregate_trades.__doc__ = Client.get_aggregate_trades.__doc__
 
-    async def aggregate_trade_iter(self, symbol, start_str=None, last_id=None):
+    async def aggregate_trade_iter(
+        self, symbol, start_str=None, last_id=None, end_str=None
+    ):
         if start_str is not None and last_id is not None:
             raise ValueError(
                 "start_time and last_id may not be simultaneously specified."
             )
+
+        end_ts = convert_ts_str(end_str)
+
+        def cutoff(trades):
+            """Drop any trades at/after end_ts; report whether that happened."""
+            if end_ts is None:
+                return trades, False
+            kept = [t for t in trades if t[self.AGG_TIME] <= end_ts]
+            return kept, len(kept) < len(trades)
 
         # If there's no last_id, get one.
         if last_id is None:
@@ -417,23 +428,34 @@ class AsyncClient(BaseClient):
                 # or equal than an hour and the result set should contain at
                 # least one trade.
                 start_ts = convert_ts_str(start_str)
+                if end_ts is not None and start_ts > end_ts:
+                    return
                 # If the resulting set is empty (i.e. no trades in that interval)
                 # then we just move forward hour by hour until we find at least one
-                # trade or reach present moment
+                # trade or reach present moment (or end_ts, if given)
                 while True:
-                    end_ts = start_ts + (60 * 60 * 1000)
+                    window_end_ts = start_ts + (60 * 60 * 1000)
+                    if end_ts is not None:
+                        window_end_ts = min(window_end_ts, end_ts)
                     trades = await self.get_aggregate_trades(
-                        symbol=symbol, startTime=start_ts, endTime=end_ts
+                        symbol=symbol, startTime=start_ts, endTime=window_end_ts
                     )
                     if len(trades) > 0:
                         break
-                    # If we reach present moment and find no trades then there is
-                    # nothing to iterate, so we're done
-                    if end_ts > int(time.time() * 1000):
+                    # If we reach present moment (or end_ts) and find no trades
+                    # then there is nothing to iterate, so we're done
+                    if window_end_ts > int(time.time() * 1000) or (
+                        end_ts is not None and window_end_ts >= end_ts
+                    ):
                         return
-                    start_ts = end_ts
+                    start_ts = window_end_ts
+            trades, reached_end = cutoff(trades)
+            if not trades:
+                return
             for t in trades:
                 yield t
+            if reached_end:
+                return
             last_id = trades[-1][self.AGG_ID]
 
         while True:
@@ -449,8 +471,13 @@ class AsyncClient(BaseClient):
             trades = trades[1:]
             if len(trades) == 0:
                 return
+            trades, reached_end = cutoff(trades)
+            if not trades:
+                return
             for t in trades:
                 yield t
+            if reached_end:
+                return
             last_id = trades[-1][self.AGG_ID]
 
     aggregate_trade_iter.__doc__ = Client.aggregate_trade_iter.__doc__
