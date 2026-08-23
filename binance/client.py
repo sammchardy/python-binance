@@ -5325,7 +5325,7 @@ class Client(BaseClient):
             ]
         """
         return self._request_margin_api(
-            "get", "/margin/delist-schedule", signed=True, data=params
+            "get", "margin/delist-schedule", signed=True, data=params
         )
 
     # Margin OCO
