@@ -8057,6 +8057,12 @@ class Client(BaseClient):
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Query-Order
 
+        Note: :meth:`futures_create_order` sends the conditional order types
+        (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET)
+        to the algo order endpoint and returns an
+        ``algoId``. To query such an order, pass that ``algoId`` (or ``clientAlgoId``, or
+        ``conditional=True``); an ``orderId`` alone goes to the regular order endpoint.
+
         :param conditional: optional - Set to True to query algo/conditional order
         :type conditional: bool
         :param algoId: optional - Algo order ID (for conditional orders)
@@ -8081,6 +8087,12 @@ class Client(BaseClient):
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Current-All-Open-Orders
 
+        Note: :meth:`futures_create_order` sends the conditional order types
+        (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET)
+        to the algo order endpoint. Without
+        ``conditional=True`` this method reads ``openOrders`` only, so the result does not
+        include those orders. :meth:`futures_get_open_algo_orders` reads them as well.
+
         :param conditional: optional - Set to True to query algo/conditional orders
         :type conditional: bool
 
@@ -8097,6 +8109,12 @@ class Client(BaseClient):
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/All-Orders
 
+        Note: :meth:`futures_create_order` sends the conditional order types
+        (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET)
+        to the algo order endpoint. Without
+        ``conditional=True`` this method reads ``allOrders`` only, so the result does not
+        include those orders.
+
         :param conditional: optional - Set to True to query algo/conditional orders
         :type conditional: bool
 
@@ -8112,6 +8130,13 @@ class Client(BaseClient):
         """Cancel an active futures order.
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-Order
+
+        Note: :meth:`futures_create_order` sends the conditional order types
+        (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET)
+        to the algo order endpoint and returns an
+        ``algoId``. To cancel such an order, pass that ``algoId`` (or ``clientAlgoId``, or
+        ``conditional=True``); an ``orderId`` alone goes to the regular order endpoint.
+        :meth:`futures_cancel_algo_order` does the same.
 
         :param conditional: optional - Set to True to cancel algo/conditional order
         :type conditional: bool
@@ -8136,6 +8161,12 @@ class Client(BaseClient):
         """Cancel all open futures orders
 
         https://developers.binance.com/docs/derivatives/usds-margined-futures/trade/rest-api/Cancel-All-Open-Orders
+
+        Note: :meth:`futures_create_order` sends the conditional order types
+        (STOP, STOP_MARKET, TAKE_PROFIT, TAKE_PROFIT_MARKET, TRAILING_STOP_MARKET)
+        to the algo order endpoint. Without
+        ``conditional=True`` this method calls ``allOpenOrders``; with it, ``algoOpenOrders``,
+        as :meth:`futures_cancel_all_algo_open_orders` does.
 
         :param conditional: optional - Set to True to cancel algo/conditional orders
         :type conditional: bool
