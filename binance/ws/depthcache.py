@@ -427,13 +427,13 @@ class FuturesDepthCacheManager(BaseDepthCacheManager):
         self._depth_cache.update_time = msg.get("E") or msg.get("lastUpdateId")
 
     def _get_socket(self):
-        sock = self._bm.futures_depth_socket(self._symbol)
+        sock = self._bm.futures_depth_socket(self._symbol, depth=str(self._limit))
         return sock
 
 
 class OptionsDepthCacheManager(BaseDepthCacheManager):
     def _get_socket(self):
-        return self._bm.options_depth_socket(self._symbol)
+        return self._bm.options_depth_socket(self._symbol, depth=str(self._limit))
 
 
 class ThreadedDepthCacheManager(ThreadedApiManager):

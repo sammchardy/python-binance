@@ -47,3 +47,53 @@ def test_add_asks(fresh_cache):
 
     assert isinstance(asks[0][0], Decimal)
     assert isinstance(asks[0][1], Decimal)
+
+
+def _stub_client():
+    from types import SimpleNamespace
+
+    return SimpleNamespace(tld="com", testnet=False, demo=False, https_proxy=None)
+
+
+def _socket_manager(client):
+    from binance.ws.streams import BinanceSocketManager
+
+    return BinanceSocketManager(client)
+
+
+@pytest.mark.parametrize("limit", [5, 20])
+def test_futures_depth_cache_manager_uses_limit_for_stream(limit):
+    """The futures depth stream must subscribe with the requested limit"""
+    from binance.ws.depthcache import FuturesDepthCacheManager
+
+    client = _stub_client()
+    dcm = FuturesDepthCacheManager(
+        client, "BTCUSDT", bm=_socket_manager(client), limit=limit
+    )
+    socket = dcm._get_socket()
+
+    assert socket._path == f"btcusdt@depth{limit}"
+
+
+def test_futures_depth_cache_manager_default_limit_stream():
+    from binance.ws.depthcache import FuturesDepthCacheManager
+
+    client = _stub_client()
+    dcm = FuturesDepthCacheManager(client, "BTCUSDT", bm=_socket_manager(client))
+    socket = dcm._get_socket()
+
+    assert socket._path == "btcusdt@depth10"
+
+
+@pytest.mark.parametrize("limit", [5, 20])
+def test_options_depth_cache_manager_uses_limit_for_stream(limit):
+    """The options depth stream must subscribe with the requested limit"""
+    from binance.ws.depthcache import OptionsDepthCacheManager
+
+    client = _stub_client()
+    dcm = OptionsDepthCacheManager(
+        client, "BTC-200630-9000-P", bm=_socket_manager(client), limit=limit
+    )
+    socket = dcm._get_socket()
+
+    assert socket._path == f"btc-200630-9000-p@depth{limit}@500ms"
